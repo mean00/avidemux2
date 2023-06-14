@@ -423,28 +423,28 @@ static tp_obj zzpy__pyEditor_help(TP)
   PythonEngine *engine = (PythonEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
 
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "methods:\n");
-  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "void\t dumpAllSegments(void)\n");
-  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t dumpRefVideo(void)\n");
-  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "void\t dumpSegment(int)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "void\t dumpAllSegments()\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t dumpRefVideo()\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "void\t dumpSegment(int segment)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t getCurrentFlags()\n");
-  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "double\t getCurrentPts(void)\n");
-  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "double\t getDts(int)\n");
-  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "double\t getDurationForSegment(int)\n");
-  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t getFrameSize(int)\n");
-  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "double\t getNextKFramePts(double)\n");
-  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "double\t getPrevKFramePts(double)\n");
-  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "double\t getPts(int)\n");
-  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t getRefIdxForSegment(int)\n");
-  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "double\t getRefVideoDuration(int)\n");
-  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "str\t getRefVideoName(int)\n");
-  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "double\t getTimeOffsetForSegment(int)\n");
-  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "double\t getVideoDuration(void)\n");
-  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t hexDumpFrame(int)\n");
-  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t nbSegments(void)\n");
-  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t nbVideos(void)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "double\t getCurrentPts()\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "double\t getDts(int frameNum)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "double\t getDurationForSegment(int segment)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t getFrameSize(int frameNum)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "double\t getNextKFramePts(double time)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "double\t getPrevKFramePts(double time)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "double\t getPts(int frameNum)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t getRefIdxForSegment(int segment)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "double\t getRefVideoDuration(int videoIndex)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "str\t getRefVideoName(int videoIndex)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "double\t getTimeOffsetForSegment(int segment)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "double\t getVideoDuration()\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t hexDumpFrame(int frameNum)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t nbSegments()\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t nbVideos()\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t nextFrame()\n");
-  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t printFrameInfo(int)\n");
-  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t printTiming(int)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t printFrameInfo(int frameNum)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t printTiming(int frameNum)\n");
 
   return tp_None;
 }
