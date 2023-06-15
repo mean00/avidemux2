@@ -65,6 +65,7 @@ char *pyGetContainerEx(IEditor *editor);
 int pyGetFps1000(IEditor *editor);
 int pyGetWidth(IEditor *editor);
 int pyGetHeight(IEditor *editor);
+int pyVersion(IEditor *editor);
 
 /* Editing-related info */
 int pyGetCurrentFrameFlags(IEditor *editor);

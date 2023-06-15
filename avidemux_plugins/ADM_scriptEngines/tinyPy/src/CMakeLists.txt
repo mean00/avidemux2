@@ -15,6 +15,8 @@ INSTALL_SCRIPT_ENGINE(ADM_script_tinyPy)
 
 add_definitions(-DCPYTHON_MOD)
 
+ADD_DEFINITIONS(-DADM_VERSION_NUM=${CPACK_PACKAGE_VERSION_MAJOR}${CPACK_PACKAGE_VERSION_MINOR}${CPACK_PACKAGE_VERSION_P})
+
 include_directories(.)
 include_directories(../include)
 include_directories(modules/re)
