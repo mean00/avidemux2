@@ -6,6 +6,7 @@
 /* METHOD */ int editor->clearSegment:clearSegments  (void)
 /* METHOD */ int editor->appendFile:appendVideo      (str fileName)
 /* METHOD */ void editor->closeFile:closeVideo       (void)
+/* METHOD */ int editor->isFileOpen:isFileOpen       (void)
 /* METHOD */ int editor->addSegment:addSegment        (int ref, double startRef, double duration)
 /* METHOD */ int editor->setPostProc:setPostProc      (int type, int strength, int swapuv)
 /* METHOD */ int editor->setHDRConfig:setHDRConfig    (int toneMappingMethod, double saturationAdjust, double boostAdjust, int adaptiveRGB, int gamutMethod)
