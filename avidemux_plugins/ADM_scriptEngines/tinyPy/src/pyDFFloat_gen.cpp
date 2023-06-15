@@ -57,6 +57,8 @@ static tp_obj zzpy__pyDFFloat_help(TP)
 {
   PythonEngine *engine = (PythonEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
 
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "variables:\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "double\t value\n");
 
   return tp_None;
 }

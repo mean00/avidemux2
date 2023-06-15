@@ -170,6 +170,7 @@ void PythonEngine::registerClass(const char *className, pyRegisterClass classPy,
 	pyClassDescriptor classDesc;
 	classDesc.className = string(className);
 	classDesc.desc = string(desc);
+        classDesc.staticClass = false;
 	_pyClasses.push_back(classDesc);
 
 	tp_set(_vm, _vm->builtins, tp_string(className), classPy(_vm));
@@ -196,6 +197,7 @@ void PythonEngine::registerStaticClass(const char *thisClass,pyFunc *funcs,const
         pyClassDescriptor classDesc;
 	classDesc.className = string(thisClass);
 	classDesc.desc = string(desc);
+        classDesc.staticClass = true;
 	_pyClasses.push_back(classDesc);
         
 	while (funcs->funcName)
@@ -427,6 +429,7 @@ tp_obj PythonEngine::dumpBuiltin(tp_vm *tp)
 
 	for (int i = 0; i < n; i++)
 	{
+            if (!engine->_pyClasses[i].staticClass)
 		pyPrintf(tp, "%s \t%s\n", engine->_pyClasses[i].className.c_str(), engine->_pyClasses[i].desc.c_str());
 	}
 

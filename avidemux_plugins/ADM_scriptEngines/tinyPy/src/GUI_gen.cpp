@@ -188,13 +188,14 @@ static tp_obj zzpy__pyGui_help(TP)
 {
   PythonEngine *engine = (PythonEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
 
-  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "dirSelect(IEditor,str)\n");
-  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "displayError(IEditor,str,str)\n");
-  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "displayInfo(IEditor,str,str)\n");
-  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "fileReadSelect(IEditor,str)\n");
-  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "fileReadSelectEx(IEditor,str,str)\n");
-  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "fileWriteSelect(IEditor,str)\n");
-  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "fileWriteSelectEx(IEditor,str,str)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "methods:\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "str\t dirSelect(str title)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "void\t displayError(str primaryMsg, str secondaryMsg)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "void\t displayInfo(str primaryMsg, str secondaryMsg)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "str\t fileReadSelect(str title)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "str\t fileReadSelectEx(str title, str extension)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "str\t fileWriteSelect(str title)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "str\t fileWriteSelectEx(str title, str extension)\n");
 
   return tp_None;
 }

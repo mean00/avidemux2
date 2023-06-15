@@ -71,8 +71,9 @@ static tp_obj zzpy__pyDialogFactory_help(TP)
 {
   PythonEngine *engine = (PythonEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
 
-  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "addControl(ptr@ADM_scriptDFBaseHelper)\n");
-  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "show(void)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "methods:\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "void\t addControl(ptr@ADM_scriptDFBaseHelper)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t show()\n");
 
   return tp_None;
 }

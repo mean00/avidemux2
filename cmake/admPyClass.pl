@@ -24,6 +24,7 @@ my $staticClass=0;
 my %cFuncs;
 my %rType;
 my %funcParams;
+my %helpParams;
 my @ctorParams;
 #
 # Variables
@@ -85,14 +86,28 @@ sub processMETHOD
         my $proto=shift;
         my $args=$proto;
         my @params;
+        my @paramsWithName;
         my $retType=$proto;;
         my $pyfunc=$proto;;
         my $cfunc;
         $args=~s/^.*\(//g;
         $args=~s/\).*$//g;
-        $args=~s/ *//g;
+        @paramsWithName=split ",",$args;
+        foreach (@paramsWithName)
+        {
+            #remove leading spaces
+            $_=~ s/^\s+//;
+        }
+        foreach my $par (@paramsWithName)
+        {
+            my $par2 = $par;
+            #remove all after first space
+            $par2=~s/ .*//g;
+            push(@params, $par2);
+        }
+        ####$args=~s/ *//g;
         #print "args => $args\n";
-        @params=split ",",$args;
+        ####@params=split ",",$args;
         #print "params -> @params\n";
         # Get return type...
         $retType=~s/^ *//g;
@@ -114,7 +129,12 @@ sub processMETHOD
             unshift @params, "IEditor";
         }
 
+        if (@paramsWithName[0] =~ m/^void$/)
+        {
+            @paramsWithName = ();
+        }
         push @{$funcParams{$pyfunc}}, @params;
+        push @{$helpParams{$pyfunc}}, @paramsWithName;
         #print " $pyfunc -> @params \n";
 }
 
@@ -578,10 +598,26 @@ my $pyFunc;
                 print OUTPUT "static tp_obj ".$helpName."(TP)\n{\n";
                 print OUTPUT "  PythonEngine *engine = (PythonEngine*)tp_get(tp, tp->builtins, tp_string(\"userdata\")).data.val;\n\n";
 
-                foreach $f( sort keys %cFuncs)
+                my @m=sort keys %cFuncs;
+                if (@m > 0)
                 {
-                        my @params=@{$funcParams{$f}};
-                        print OUTPUT "  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, \"$f(".join(",",@params) .")\\n\");\n";
+                        print OUTPUT "  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, \"methods:\\n\");\n";
+                }
+                foreach $f( @m)
+                {
+                        my @params=@{$helpParams{$f}};
+                        my $ret=$rType{$f};
+                        print OUTPUT "  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, \"$ret\\t $f(".join(", ",@params) .")\\n\");\n";
+                }
+                my @v=sort keys %typeVars;
+                if (@v > 0)
+                {
+                        print OUTPUT "  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, \"variables:\\n\");\n";
+                }
+                foreach $f( @v)
+                {
+                        my $ret=$typeVars{$f};
+                        print OUTPUT "  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, \"$ret\\t $f\\n\");\n";
                 }
                 print OUTPUT "\n  return tp_None;\n";
                 print OUTPUT "}\n";
