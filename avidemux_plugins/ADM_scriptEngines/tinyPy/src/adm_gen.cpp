@@ -482,6 +482,18 @@ static tp_obj zzpy_clearVideoFilters(TP)
   editor->clearFilters();
   return tp_None;
 }
+// closeVideo -> void editor->closeFile(void)
+static tp_obj zzpy_closeVideo(TP)
+{
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->editor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
+
+  editor->closeFile();
+  return tp_None;
+}
 // getFps1000 -> int pyGetFps1000(IEditor)
 static tp_obj zzpy_getFps1000(TP)
 {
@@ -576,6 +588,18 @@ static tp_obj zzpy_getWidth(TP)
 
   IEditor *p0 = editor;
   int r = pyGetWidth(p0);
+  return tp_number(r);
+}
+// isFileOpen -> int editor->isFileOpen(void)
+static tp_obj zzpy_isFileOpen(TP)
+{
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->editor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
+
+  int r = editor->isFileOpen();
   return tp_number(r);
 }
 // loadVideo -> int editor->openFile(str)
@@ -755,6 +779,19 @@ static tp_obj zzpy_setSourceTrackLanguage(TP)
   int p0 = pm.asInt();
   const char *p1 = pm.asString();
   int r = editor->audioSetAudioPoolLanguage(p0, p1);
+  return tp_number(r);
+}
+// version -> int pyVersion(IEditor)
+static tp_obj zzpy_version(TP)
+{
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->editor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
+
+  IEditor *p0 = editor;
+  int r = pyVersion(p0);
   return tp_number(r);
 }
 // videoCodec -> int editor->setVideoCodec(str couples)
@@ -941,6 +978,10 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   {
     return tp_method(vm, self, zzpy_clearVideoFilters);
   }
+  if (!strcmp(key, "closeVideo"))
+  {
+    return tp_method(vm, self, zzpy_closeVideo);
+  }
   if (!strcmp(key, "getFps1000"))
   {
     return tp_method(vm, self, zzpy_getFps1000);
@@ -968,6 +1009,10 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   if (!strcmp(key, "getWidth"))
   {
     return tp_method(vm, self, zzpy_getWidth);
+  }
+  if (!strcmp(key, "isFileOpen"))
+  {
+    return tp_method(vm, self, zzpy_isFileOpen);
   }
   if (!strcmp(key, "loadVideo"))
   {
@@ -1020,6 +1065,10 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   if (!strcmp(key, "setSourceTrackLanguage"))
   {
     return tp_method(vm, self, zzpy_setSourceTrackLanguage);
+  }
+  if (!strcmp(key, "version"))
+  {
+    return tp_method(vm, self, zzpy_version);
   }
   if (!strcmp(key, "videoCodec"))
   {
@@ -1108,6 +1157,7 @@ static tp_obj zzpy__pyAdm_help(TP)
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t audioTracksCount()\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t clearSegments()\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "void\t clearVideoFilters()\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "void\t closeVideo()\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t getFps1000()\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t getHeight()\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "str\t getOutputExtension()\n");
@@ -1115,6 +1165,7 @@ static tp_obj zzpy__pyAdm_help(TP)
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t getPARWidth()\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "str\t getVideoCodec()\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t getWidth()\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t isFileOpen()\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t loadVideo(str fileName)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t save(str fileName)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t saveAudio(int track, str fileName)\n");
@@ -1128,6 +1179,7 @@ static tp_obj zzpy__pyAdm_help(TP)
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t setHDRConfig(int toneMappingMethod, double saturationAdjust, double boostAdjust, int adaptiveRGB, int gamutMethod)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t setPostProc(int type, int strength, int swapuv)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t setSourceTrackLanguage(int track, str language)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t version()\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t videoCodec(str codec, couples)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t videoCodecChangeParam(str codec, couples)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t videoCodecSetProfile(str codec, str profile)\n");
