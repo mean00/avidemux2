@@ -448,7 +448,7 @@ bool DIA_encodingQt4::isAlive( void )
     if(!stopRequest)
         return true;
 
-    if(GUI_Alternate((char*)QT_TRANSLATE_NOOP("qencoding","The encoding is paused. Do you want to resume or abort?"),
+    if(0 == GUI_Alternate((char*)QT_TRANSLATE_NOOP("qencoding","The encoding is paused. Do you want to resume or abort?"),
                      (char*)QT_TRANSLATE_NOOP("qencoding","Resume"),(char*)QT_TRANSLATE_NOOP("qencoding","Abort")))
     {
         stopRequest=false;
