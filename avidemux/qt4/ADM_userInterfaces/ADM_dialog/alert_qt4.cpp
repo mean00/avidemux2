@@ -12,11 +12,13 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "ADM_inttype.h"
 #include <QtCore/QCoreApplication>
 #include <QDialog>
 #include <QMessageBox>
 #include <QWidget>
+#include <QPushButton>
+
+#include "ADM_inttype.h"
 #include "DIA_coreToolkit.h"
 #include "DIA_coreUI_internal.h"
 #include "ADM_default.h"
@@ -47,9 +49,11 @@ void GUI_Info_HIG(const ADM_LOG_LEVEL level,const char *primary, const char *sec
 
     prefs->get(MESSAGE_LEVEL,&msglvl);
 
+    printf("Info message: \"%s\"\n", primary);
+
     if(msglvl<level)
     {
-        printf("Info : %s \n",primary);
+        printf("Silent mode, not showing info message\n");
         return;
     }
 
@@ -72,9 +76,11 @@ void GUI_Error_HIG(const char *primary, const char *secondary_format)
 
     prefs->get(MESSAGE_LEVEL,&msglvl);
 
+    printf("Error message: \"%s\"\n", primary);
+
     if(msglvl==ADM_LOG_NONE)
     {
-        printf("Error :%s\n",primary);
+        printf("Silent mode, not showing error message\n");
         return;
     }
 
@@ -96,10 +102,12 @@ int GUI_Confirmation_HIG(const char *button_confirm, const char *primary, const 
     prefs->get(MESSAGE_LEVEL,&msglvl);
     QString alertString;
 
+    printf("Confirmation: \"%s\"\n", primary);
+
     if (beQuiet || msglvl==ADM_LOG_NONE)
     {
-        printf("Info: %s\n", primary);
-        return 1;
+        printf("Silent mode, confirmation dialog skipped.\n");
+        return ADM_IGN;
     }
 
     if (!secondary_format)
@@ -113,12 +121,11 @@ int GUI_Confirmation_HIG(const char *button_confirm, const char *primary, const 
     QMessageBox::StandardButton reply;
 
     reply = QMessageBox::question(qtLastRegisteredDialog(), QString::fromUtf8(QT_TRANSLATE_NOOP("qtalert","Confirmation")),
-                alertString, QMessageBox::Yes | QMessageBox::No);
+                alertString, QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
 
-    if (reply == QMessageBox::Yes)
-        return 1;
+    printf("Confirmation \"%s\": %s\n", primary, (reply == QMessageBox::Yes) ? "Yes" : "No");
 
-    return 0;
+    return (reply == QMessageBox::Yes) ? ADM_OK : ADM_ERR;
 }
 
 int GUI_YesNo(const char *primary, const char *secondary_format)
@@ -127,10 +134,12 @@ int GUI_YesNo(const char *primary, const char *secondary_format)
     prefs->get(MESSAGE_LEVEL,&msglvl);
     QString alertString;
 
+    printf("YesNo - \"%s\"\n", primary);
+
     if (beQuiet || msglvl==ADM_LOG_NONE)
     {
-        printf("Info: %s\n", primary);
-        return 1;
+        printf("Silent mode, ignoring YesNo\n");
+        return ADM_IGN;
     }
 
     if (!secondary_format)
@@ -144,12 +153,11 @@ int GUI_YesNo(const char *primary, const char *secondary_format)
     QMessageBox::StandardButton reply;
 
     reply = QMessageBox::question(qtLastRegisteredDialog(), QString::fromUtf8(QT_TRANSLATE_NOOP("qtalert","Confirmation")),
-                alertString, QMessageBox::Yes | QMessageBox::No );
+                alertString, QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
 
-    if (reply == QMessageBox::Yes)
-        return 1;
+    printf("YesNo \"%s\": %s\n", primary, (reply == QMessageBox::Yes) ? "Yes" : "No");
 
-    return 0;
+    return (reply == QMessageBox::Yes) ? ADM_OK : ADM_ERR;
 }
 
 int GUI_Question(const char *alertstring, bool insuppressible)
@@ -157,20 +165,20 @@ int GUI_Question(const char *alertstring, bool insuppressible)
     uint32_t msglvl=2;
     prefs->get(MESSAGE_LEVEL,&msglvl);
     QMessageBox::StandardButton reply;
+    printf("Question: \"%s\"\n", alertstring);
 
     if ((beQuiet || msglvl == ADM_LOG_NONE) && !insuppressible)
     {
-        printf("Question: %s => Yes\n", alertstring);
-        return 1;
+        printf("Silent mode, question ignored\n");
+        return ADM_IGN;
     }
 
     reply = QMessageBox::question(qtLastRegisteredDialog(), QString::fromUtf8(QT_TRANSLATE_NOOP("qtalert","Question")),
-                QString::fromUtf8(alertstring), QMessageBox::Yes | QMessageBox::No);
+                QString::fromUtf8(alertstring), QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Yes);
 
-    if (reply==QMessageBox::Yes)
-        return 1;
+    printf("Question \"%s\": %s\n", alertstring, (reply == QMessageBox::Yes) ? "Yes" : "No");
 
-    return 0;
+    return (reply == QMessageBox::Yes) ? ADM_OK : ADM_ERR;
 }
 /**
     \fn GUI_Alternate(char *title,char *choice1,char *choice2)
@@ -181,18 +189,20 @@ int GUI_Alternate(const char *title,const char *choice1,const char *choice2)
 {
     uint32_t msglvl=2;
     prefs->get(MESSAGE_LEVEL,&msglvl);
+    printf("Alternate - \"%s\": \"%s\" or \"%s\"\n", title,choice1,choice2);
 
     if (beQuiet || msglvl==ADM_LOG_NONE)
     {
-        printf("Alternate<%s>: %s or %s\n", title,choice1,choice2);
+        printf("Silent mode, choosing \"%s\"\n", choice1);
         return 0;
     }
 
     QMessageBox box(qtLastRegisteredDialog());
 
     box.setWindowTitle(QString::fromUtf8(QT_TRANSLATE_NOOP("qtalert","Question?")));
-    box.addButton(QString::fromUtf8(choice1),QMessageBox::YesRole);
-    box.addButton(QString::fromUtf8(choice2),QMessageBox::NoRole);
+    QPushButton *first = box.addButton(QString::fromUtf8(choice1),QMessageBox::YesRole);
+    QPushButton *second = box.addButton(QString::fromUtf8(choice2),QMessageBox::NoRole);
+    box.setDefaultButton(first);
 
     if (title)
         box.setText(QString::fromUtf8(title));
@@ -201,10 +211,15 @@ int GUI_Alternate(const char *title,const char *choice1,const char *choice2)
 
     box.setIcon(QMessageBox::Question);
 
-    if (box.exec() == 0)
+    box.exec();
+
+    if (box.clickedButton() == qobject_cast<QAbstractButton *>(second))
+    {
+        printf("Alternate: the second option chosen\n");
         return 1;
-    else
-        return 0;
+    }
+    printf("Alternate: the first option chosen\n");
+    return 0;
 }
 
 uint8_t GUI_getDoubleValue(double *valye, float min, float max, const char *title)

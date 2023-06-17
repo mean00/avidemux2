@@ -86,7 +86,7 @@ int GUI_Confirmation_HIG(const char *button_confirm, const char *primary, const 
     if (beQuiet)
     {
         boxAdd("--> Automatically confirmed\n");
-        return 1;
+        return ADM_IGN;
     }else
     {
         int x;
@@ -94,11 +94,11 @@ int GUI_Confirmation_HIG(const char *button_confirm, const char *primary, const 
         {
             printf("Are you sure (Y/y or N/n ):\n");
             x=tolower(getchar());
-            if(x=='y') return 1;
-            if(x=='n') return 0;
+            if(x=='y') return ADM_OK;
+            if(x=='n') return ADM_ERR;
         }
     }
-    return 0;
+    return ADM_ERR;
 }
 
 int GUI_YesNo(const char *primary, const char *secondary_format)
@@ -118,7 +118,7 @@ int GUI_YesNo(const char *primary, const char *secondary_format)
     if (beQuiet)
     {
         boxAdd("--> Automatically affirmed\n");
-        return 1;
+        return ADM_IGN;
     }else
     {
         int x;
@@ -126,19 +126,19 @@ int GUI_YesNo(const char *primary, const char *secondary_format)
         {
             printf("Yes or No (Y/y or N/n) :\n");
             x=tolower(getchar());
-            if(x=='y') return 1;
-            if(x=='n') return 0;
+            if(x=='y') return ADM_OK;
+            if(x=='n') return ADM_ERR;
         }
     }
-    return 0;
+    return ADM_ERR;
 }
 
 int GUI_Question(const char *alertstring, bool insuppressible)
 {
     if(beQuiet && !insuppressible)
     {
-        printf("%s => Yes\n",alertstring);
-        return 1;
+        printf("Silent mode: %s => Yes\n",alertstring);
+        return ADM_IGN;
     }
 
     boxStart();
@@ -150,8 +150,8 @@ int GUI_Question(const char *alertstring, bool insuppressible)
     {
         printf("Yes or No (Y/y or N/n) :\n");
         int x=tolower(getchar());
-        if(x=='y') return 1;
-        if(x=='n') return 0;
+        if(x=='y') return ADM_OK;
+        if(x=='n') return ADM_ERR;
     }
     return 0;
 }
@@ -160,7 +160,7 @@ int GUI_Alternate(const char *title,const char *choice1,const char *choice2)
 {
     if(beQuiet)
     {
-        printf("%s => %s\n",title,choice1);
+        printf("Silent mode, %s => %s\n",title,choice1);
         return 0;
     }
 
