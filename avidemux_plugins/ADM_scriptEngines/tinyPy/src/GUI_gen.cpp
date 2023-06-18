@@ -188,6 +188,8 @@ static tp_obj zzpy__pyGui_help(TP)
 {
   PythonEngine *engine = (PythonEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
 
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "constructor:\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "obj	Gui()\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "methods:\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "str\t dirSelect(str title)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "void\t displayError(str primaryMsg, str secondaryMsg)\n");

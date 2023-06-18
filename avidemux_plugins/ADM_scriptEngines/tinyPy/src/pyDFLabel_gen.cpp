@@ -42,6 +42,8 @@ static tp_obj zzpy__pyDFLabel_help(TP)
 {
   PythonEngine *engine = (PythonEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
 
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "constructor:\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "obj	DFLabel(str title)\n");
 
   return tp_None;
 }

@@ -54,6 +54,8 @@ static tp_obj zzpy__pyDFText_help(TP)
 {
   PythonEngine *engine = (PythonEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
 
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "constructor:\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "obj	DFText(str title)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "variables:\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "str\t value\n");
 

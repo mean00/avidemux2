@@ -838,7 +838,7 @@ static tp_obj zzpy_videoCodecSetProfile(TP)
   int r = editor->setVideoCodecProfile(p0, p1);
   return tp_number(r);
 }
-tp_obj zzpy__pyAdm_get(tp_vm *vm)
+tp_obj zzpy__pyAvidemux_get(tp_vm *vm)
 {
   tp_obj self = tp_getraw(vm);
   IScriptEngine *engine = (IScriptEngine*)tp_get(vm, vm->builtins, tp_string("userdata")).data.val;
@@ -1084,7 +1084,7 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   }
   return tp_get(vm, self, tp_string(key));
 }
-tp_obj zzpy__pyAdm_set(tp_vm *vm)
+tp_obj zzpy__pyAvidemux_set(tp_vm *vm)
 {
   tp_obj self = tp_getraw(vm);
   IScriptEngine *engine = (IScriptEngine*)tp_get(vm, vm->builtins, tp_string("userdata")).data.val;
@@ -1107,24 +1107,26 @@ tp_obj zzpy__pyAdm_set(tp_vm *vm)
   return tp_None;
 }
 // Dctor
-static void myDtorpyAdm(tp_vm *vm,tp_obj self)
+static void myDtorpyAvidemux(tp_vm *vm,tp_obj self)
 {
 }
 // Ctor ()
-static tp_obj myCtorpyAdm(tp_vm *vm)
+static tp_obj myCtorpyAvidemux(tp_vm *vm)
 {
   tp_obj self = tp_getraw(vm);
   TinyParams pm(vm);
   void *me = NULL;
   tp_obj cdata = tp_data(vm, ADM_PYID_AVIDEMUX, me);
-  cdata.data.info->xfree = myDtorpyAdm;
+  cdata.data.info->xfree = myDtorpyAvidemux;
   tp_set(vm, self, tp_string("cdata"), cdata);
   return tp_None;
 }
-static tp_obj zzpy__pyAdm_help(TP)
+static tp_obj zzpy__pyAvidemux_help(TP)
 {
   PythonEngine *engine = (PythonEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
 
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "constructor:\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "obj	Avidemux()\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "methods:\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t addSegment(int ref, double startRef, double duration)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t addVideoFilter(str filter, couples)\n");
@@ -1189,12 +1191,12 @@ static tp_obj zzpy__pyAdm_help(TP)
 
   return tp_None;
 }
-tp_obj initClasspyAdm(tp_vm *vm)
+tp_obj initClasspyAvidemux(tp_vm *vm)
 {
   tp_obj myClass = tp_class(vm);
-  tp_set(vm,myClass, tp_string("__init__"), tp_fnc(vm,myCtorpyAdm));
-  tp_set(vm,myClass, tp_string("__set__"), tp_fnc(vm,zzpy__pyAdm_set));
-  tp_set(vm,myClass, tp_string("__get__"), tp_fnc(vm,zzpy__pyAdm_get));
-  tp_set(vm,myClass, tp_string("help"), tp_fnc(vm,zzpy__pyAdm_help));
+  tp_set(vm,myClass, tp_string("__init__"), tp_fnc(vm,myCtorpyAvidemux));
+  tp_set(vm,myClass, tp_string("__set__"), tp_fnc(vm,zzpy__pyAvidemux_set));
+  tp_set(vm,myClass, tp_string("__get__"), tp_fnc(vm,zzpy__pyAvidemux_get));
+  tp_set(vm,myClass, tp_string("help"), tp_fnc(vm,zzpy__pyAvidemux_help));
   return myClass;
 }
