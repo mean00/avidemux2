@@ -26,6 +26,7 @@ my %rType;
 my %funcParams;
 my %helpParams;
 my @ctorParams;
+my @ctorParamsWithNames;
 #
 # Variables
 my %getVar;
@@ -72,11 +73,30 @@ sub processCTOR
         my $retType=$proto;;
         my $pyfunc=$proto;;
         my $cfunc;
+        my @params;
+        my @paramsWithName;
         $args=~s/^.*\(//g;
         $args=~s/\).*$//g;
+        @paramsWithName=split ",",$args;
+        foreach (@paramsWithName)
+        {
+            #remove leading spaces
+            $_=~ s/^\s+//;
+        }
+        foreach my $par (@paramsWithName)
+        {
+            my $par2 = $par;
+            #remove all after first space
+            $par2=~s/ .*//g;
+            push(@params, $par2);
+        }
+        
         #print "args => $args\n";
-        @ctorParams=split ",",$args;
+        #@ctorParams=split ",",$args;
         #print " $pyfunc -> @params \n";
+        
+        @ctorParams=@params;
+        @ctorParamsWithNames=@paramsWithName;
 }
 #
 # Process a function declaration and write the glue code to do tinypy<->function call
@@ -627,6 +647,15 @@ my $pyFunc;
                 print OUTPUT "static tp_obj ".$helpName."(TP)\n{\n";
                 print OUTPUT "  PythonEngine *engine = (PythonEngine*)tp_get(tp, tp->builtins, tp_string(\"userdata\")).data.val;\n\n";
 
+                print OUTPUT "  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, \"constructor:\\n\");\n";
+                my $classPrefix = substr($className, 0,2);
+                if(!($classPrefix=~m/^py$/))
+                {
+                    die "Classname shoud have start with \"py\"\n";
+                }
+                my $clsName = substr($className, 2);
+                print OUTPUT "  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, \"obj\t".$clsName."(" .join(", ",@ctorParamsWithNames).")\\n\");\n";
+                
                 my @m=sort keys %cFuncs;
                 if (@m > 0)
                 {
