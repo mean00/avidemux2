@@ -118,14 +118,21 @@ int GUI_Confirmation_HIG(const char *button_confirm, const char *primary, const 
         alertString.replace("\n", "<br>");
     }
 
-    QMessageBox::StandardButton reply;
+    QMessageBox box(qtLastRegisteredDialog());
+    box.setWindowTitle(QString::fromUtf8(QT_TRANSLATE_NOOP("qtalert","Confirmation")));
+    box.setIcon(QMessageBox::Question);
+    box.setText(alertString);
+    QPushButton *yesButton = box.addButton(QString::fromUtf8(button_confirm), QMessageBox::YesRole);
+    box.addButton(QMessageBox::No);
+    box.setDefaultButton(yesButton);
 
-    reply = QMessageBox::question(qtLastRegisteredDialog(), QString::fromUtf8(QT_TRANSLATE_NOOP("qtalert","Confirmation")),
-                alertString, QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+    box.exec();
 
-    printf("Confirmation \"%s\": %s\n", primary, (reply == QMessageBox::Yes) ? "Yes" : "No");
+    bool reply = (box.clickedButton() == qobject_cast<QAbstractButton *>(yesButton));
 
-    return (reply == QMessageBox::Yes) ? ADM_OK : ADM_ERR;
+    printf("Confirmation \"%s\": %s\n", primary, reply ? "Yes" : "No");
+
+    return reply ? ADM_OK : ADM_ERR;
 }
 
 int GUI_YesNo(const char *primary, const char *secondary_format)
