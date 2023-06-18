@@ -1,5 +1,5 @@
 #           name    cookie id
 /* CLASS */ pyDFLabel : ADM_scriptDFReadOnlyTextHelper : ADM_PYID_DF_LABEL
 #              cname:pyname
-/* CTOR */   (str) 
+/* CTOR */   (str title) 
 #

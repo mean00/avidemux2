@@ -1,7 +1,7 @@
 #           name    cookie id
 /* CLASS */ pyDFFloat : ADM_scriptDFFloatHelper : ADM_PYID_DF_FLOAT
 #              cname:pyname
-/* CTOR */   (str,double,double,int) 
+/* CTOR */   (str title,double min,double max,int precision) 
 #
 /* ATTRIBUTES */ double value:setValue,value
 #

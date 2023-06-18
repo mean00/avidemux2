@@ -155,7 +155,7 @@ void PythonEngine::registerFunctions()
 
     re_init(_vm);
     this->registerFunction("addons", addonFunctions);
-    this->registerClass("Avidemux", initClasspyAdm, "load, save videos, seek with preview");
+    this->registerClass("Avidemux", initClasspyAvidemux, "load, save videos, seek with preview");
     this->registerClass("Editor", initClasspyEditor, "segment, video info, debug");
     this->registerClass("Gui", initClasspyGui, "widget, alert boxes,..");
     this->registerClass("DFToggle", initClasspyDFToggle, "UI element : toggle");

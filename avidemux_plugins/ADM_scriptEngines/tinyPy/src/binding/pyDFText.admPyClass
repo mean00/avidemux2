@@ -1,7 +1,7 @@
 #           name    cookie id
 /* CLASS */ pyDFText : ADM_scriptDFTextHelper : ADM_PYID_DF_TEXT
 #              cname:pyname
-/* CTOR */   (str) 
+/* CTOR */   (str title) 
 #
 /* ATTRIBUTES */ str value:setValue,value
 #

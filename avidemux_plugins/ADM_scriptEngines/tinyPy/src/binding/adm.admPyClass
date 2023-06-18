@@ -1,5 +1,5 @@
 #           name    cookie id
-/* CLASS */ pyAdm : void : ADM_PYID_AVIDEMUX
+/* CLASS */ pyAvidemux : void : ADM_PYID_AVIDEMUX
 #              cname:pyname
 # Basic action load, handle seg, getInfo
 /* METHOD */ int editor->openFile:loadVideo          (str fileName)
