@@ -7,6 +7,7 @@ SET(admScript_SRCS
 	ADM_ScriptEngineLoader.cpp
         ADM_scriptDFTimeStamp.cpp
         ADM_scriptDFReadOnlyText.cpp
+        ADM_scriptDFText.cpp
 )
 
 ADM_ADD_SHARED_LIBRARY(ADM_coreScript ${admScript_SRCS})

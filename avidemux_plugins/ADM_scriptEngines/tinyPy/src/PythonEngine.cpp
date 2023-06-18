@@ -29,6 +29,7 @@
 #include "ADM_scriptDFMenu.h"
 #include "ADM_scriptDFToggle.h"
 #include "ADM_scriptDFReadOnlyText.h"
+#include "ADM_scriptDFText.h"
 #include "ADM_scriptDialogFactory.h"
 
 #define ADM_PYID_USERDATA -1
@@ -42,6 +43,7 @@
 #define ADM_PYID_DF_FLOAT    203
 #define ADM_PYID_DF_MENU     204
 #define ADM_PYID_DF_LABEL    205
+#define ADM_PYID_DF_TEXT     206
 
 extern void re_init(TP);
 /**
@@ -81,6 +83,7 @@ void pyPrintf(tp_vm *vm, const char *fmt, ...)
 #include "pyDFToggle_gen.cpp"
 #include "pyDFTimeStamp_gen.cpp"
 #include "pyDFLabel_gen.cpp"
+#include "pyDFText_gen.cpp"
 #include "pyDialogFactory_gen.cpp"
 #include "pyHelpers_gen.cpp"
 #include "tinypy/init_math.cpp"
@@ -161,6 +164,7 @@ void PythonEngine::registerFunctions()
     this->registerClass("DFMenu", initClasspyDFMenu, "UI element : drop down menu");
     this->registerClass("DFTimeStamp", initClasspyDFTimeStamp, "UI element : timestamp");
     this->registerClass("DFLabel", initClasspyDFLabel, "UI element : label");
+    this->registerClass("DFText", initClasspyDFText, "UI element : text input");
     this->registerClass("DialogFactory", initClasspyDialogFactory, "UI manager, handle all UI elements");
     this->registerFunction("test", pyHelpers_functions);
     this->registerStaticClass("os",osStaticClassFunctions,"Access to operating system");
