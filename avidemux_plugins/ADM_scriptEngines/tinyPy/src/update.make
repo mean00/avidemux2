@@ -7,6 +7,8 @@ OBJS=adm_gen.cpp  editor_gen.cpp  pyDFInteger_gen.cpp  pyDFFloat_gen.cpp pyDFTog
 	perl ../../../../cmake/admPyFunc.pl  $<  $@
 
 all: $(OBJS) $(OBJS1)
+	@if ! test -f version.txt; then echo 0 > version.txt; fi
+	@echo $$(($$(cat version.txt) + 1)) > version.txt
 
 clean:
 	rm -f $(OBJS) $(OBJS1)

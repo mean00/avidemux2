@@ -615,6 +615,19 @@ static tp_obj zzpy_loadVideo(TP)
   int r = editor->openFile(p0);
   return tp_number(r);
 }
+// pyVersion -> int pyVersion(IEditor)
+static tp_obj zzpy_pyVersion(TP)
+{
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->editor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
+
+  IEditor *p0 = editor;
+  int r = pyVersion(p0);
+  return tp_number(r);
+}
 // save -> int editor->saveFile(str)
 static tp_obj zzpy_save(TP)
 {
@@ -779,19 +792,6 @@ static tp_obj zzpy_setSourceTrackLanguage(TP)
   int p0 = pm.asInt();
   const char *p1 = pm.asString();
   int r = editor->audioSetAudioPoolLanguage(p0, p1);
-  return tp_number(r);
-}
-// version -> int pyVersion(IEditor)
-static tp_obj zzpy_version(TP)
-{
-  tp_obj self = tp_getraw(tp);
-  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
-  IEditor *editor = engine->editor();
-  TinyParams pm(tp);
-  void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
-
-  IEditor *p0 = editor;
-  int r = pyVersion(p0);
   return tp_number(r);
 }
 // videoCodec -> int editor->setVideoCodec(str couples)
@@ -1018,6 +1018,10 @@ tp_obj zzpy__pyAvidemux_get(tp_vm *vm)
   {
     return tp_method(vm, self, zzpy_loadVideo);
   }
+  if (!strcmp(key, "pyVersion"))
+  {
+    return tp_method(vm, self, zzpy_pyVersion);
+  }
   if (!strcmp(key, "save"))
   {
     return tp_method(vm, self, zzpy_save);
@@ -1065,10 +1069,6 @@ tp_obj zzpy__pyAvidemux_get(tp_vm *vm)
   if (!strcmp(key, "setSourceTrackLanguage"))
   {
     return tp_method(vm, self, zzpy_setSourceTrackLanguage);
-  }
-  if (!strcmp(key, "version"))
-  {
-    return tp_method(vm, self, zzpy_version);
   }
   if (!strcmp(key, "videoCodec"))
   {
@@ -1169,6 +1169,7 @@ static tp_obj zzpy__pyAvidemux_help(TP)
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t getWidth()\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t isFileOpen()\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t loadVideo(str fileName)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t pyVersion()\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t save(str fileName)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t saveAudio(int track, str fileName)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t saveBmp(str fileName)\n");
@@ -1181,7 +1182,6 @@ static tp_obj zzpy__pyAvidemux_help(TP)
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t setHDRConfig(int toneMappingMethod, double saturationAdjust, double boostAdjust, int adaptiveRGB, int gamutMethod)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t setPostProc(int type, int strength, int swapuv)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t setSourceTrackLanguage(int track, str language)\n");
-  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t version()\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t videoCodec(str codec, couples)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t videoCodecChangeParam(str codec, couples)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t videoCodecSetProfile(str codec, str profile)\n");

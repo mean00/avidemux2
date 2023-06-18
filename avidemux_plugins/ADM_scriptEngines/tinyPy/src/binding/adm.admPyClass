@@ -18,7 +18,7 @@
 /* METHOD */ str editor->getVideoCodec:getVideoCodec(void)
 /* METHOD */ str pyGetContainerEx:getOutputExtension(void)
 /* METHOD */ void editor->clearFilters:clearVideoFilters(void) 
-/* METHOD */ int pyVersion:version        (void)
+/* METHOD */ int pyVersion:pyVersion        (void)
 #
 # Audio filter and encoding 
 #

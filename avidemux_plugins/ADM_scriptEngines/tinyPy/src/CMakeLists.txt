@@ -14,8 +14,8 @@ ADD_SCRIPT_ENGINE(ADM_script_tinyPy ${admScriptPython_SRCS})
 INSTALL_SCRIPT_ENGINE(ADM_script_tinyPy)
 
 add_definitions(-DCPYTHON_MOD)
-
-ADD_DEFINITIONS(-DADM_VERSION_NUM=${CPACK_PACKAGE_VERSION_MAJOR}${CPACK_PACKAGE_VERSION_MINOR}${CPACK_PACKAGE_VERSION_P})
+file (STRINGS "version.txt" PY_VERSION)
+ADD_DEFINITIONS(-DPY_VERSION_NUM=${PY_VERSION})
 
 include_directories(.)
 include_directories(../include)

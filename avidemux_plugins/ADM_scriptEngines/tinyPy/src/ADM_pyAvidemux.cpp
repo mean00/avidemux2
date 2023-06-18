@@ -59,8 +59,7 @@ int pyGetHeight(IEditor *editor)
 */
 int pyVersion(IEditor *editor)
 {
-    //printf("%s\n",CPACK_PACKAGE_VERSION_MAJOR);
-    return ADM_VERSION_NUM;
+    return PY_VERSION_NUM;
 }
 /**
     \fn pyHexDumpFrame
