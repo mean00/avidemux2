@@ -26,6 +26,7 @@ my %rType;
 my %funcParams;
 my %helpParams;
 my @ctorParams;
+my @ctorParamsWithNames;
 #
 # Variables
 my %getVar;
@@ -72,11 +73,30 @@ sub processCTOR
         my $retType=$proto;;
         my $pyfunc=$proto;;
         my $cfunc;
+        my @params;
+        my @paramsWithName;
         $args=~s/^.*\(//g;
         $args=~s/\).*$//g;
+        @paramsWithName=split ",",$args;
+        foreach (@paramsWithName)
+        {
+            #remove leading spaces
+            $_=~ s/^\s+//;
+        }
+        foreach my $par (@paramsWithName)
+        {
+            my $par2 = $par;
+            #remove all after first space
+            $par2=~s/ .*//g;
+            push(@params, $par2);
+        }
+        
         #print "args => $args\n";
-        @ctorParams=split ",",$args;
+        #@ctorParams=split ",",$args;
         #print " $pyfunc -> @params \n";
+        
+        @ctorParams=@params;
+        @ctorParamsWithNames=@paramsWithName;
 }
 #
 # Process a function declaration and write the glue code to do tinypy<->function call
@@ -350,27 +370,42 @@ sub genGetSet
         my $v;
         foreach $v (@k)
         {
-			print OUTPUT "  if (!strcmp(key, \"$v\"))\n";
-			print OUTPUT "  {\n";
+            print OUTPUT "  if (!strcmp(key, \"$v\"))\n";
+            print OUTPUT "  {\n";
 
-			if($staticClass==1)
-			{
-                print OUTPUT "     return tp_number(".$getVar{$v}."(";
+            if($staticClass==1)
+            {
+                if($typeVars{$v}=~m/^str/)
+                {
+                    print OUTPUT "     return tp_string(".$getVar{$v}."(";
+                }
+                else
+                {
+                    print OUTPUT "     return tp_number(".$getVar{$v}."(";
+                }
 
                 if ($getVar{$v} !~ m/^editor/)
-				{
-					print OUTPUT "editor";
-				}
+                {
+                    print OUTPUT "editor";
+                }
 
                 print OUTPUT "));\n";
-			}
-			else
-			{
+            }
+            else
+            {
                 print OUTPUT "     if(!me) pm.raise(\"$className:No this!\");\n";
-                print OUTPUT "     return tp_number(me->".$getVar{$v}."());\n";
-			}
+                if($typeVars{$v}=~m/^str/)
+                {
+                    print OUTPUT "     return tp_string(me->".$getVar{$v}."());\n";
+                }
+                else
+                {
+                    print OUTPUT "     return tp_number(me->".$getVar{$v}."());\n";
+                }
+                
+            }
 
-			print OUTPUT "  }\n";
+            print OUTPUT "  }\n";
         }
         #
         # Functions are part of it...
@@ -406,22 +441,36 @@ sub genGetSet
         {
           print OUTPUT "  if (!strcmp(key, \"$v\"))\n";
           print OUTPUT "  {\n";
-        if($staticClass==1)
+          if($staticClass==1)
           {
-                print OUTPUT "     ".$typeVars{$v}." val = ".castFrom($typeVars{$v}).";\n";
+                if($typeVars{$v}=~m/^str/)
+                {
+                    print OUTPUT "     const char * val = ".castFrom($typeVars{$v}).";\n";
+                }
+                else
+                {
+                    print OUTPUT "     ".$typeVars{$v}." val = ".castFrom($typeVars{$v}).";\n";
+                }
                 print OUTPUT "     ".$setVar{$v}."(";
 
-				if ($setVar{$v} !~ m/^editor/)
-				{
-					print OUTPUT "editor, ";
-				}
+                if ($setVar{$v} !~ m/^editor/)
+                {
+                    print OUTPUT "editor, ";
+                }
 
                 print OUTPUT "val);\n";
                 print OUTPUT "     return tp_None;\n";
-           }else
+          }else
           {
                 print OUTPUT "     if(!me) pm.raise(\"$className:No this!\");\n";
-                print OUTPUT "     ".$typeVars{$v}." val = ".castFrom($typeVars{$v}).";\n";
+                if($typeVars{$v}=~m/^str/)
+                {
+                    print OUTPUT "     const char * val = ".castFrom($typeVars{$v}).";\n";
+                }
+                else
+                {
+                    print OUTPUT "     ".$typeVars{$v}." val = ".castFrom($typeVars{$v}).";\n";
+                }
                 print OUTPUT "     me->".$setVar{$v}."(val);\n";
                 print OUTPUT "     return tp_None;\n";
 
@@ -464,10 +513,10 @@ sub genGlue
                 debug("$f invoked\n");
                  print OUTPUT "  tp_obj self = tp_getraw(tp);\n";  # We need a this as we only deal with instance!
 
-				if($staticClass == 1)
-				{
-					print OUTPUT "  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string(\"userdata\")).data.val;\n";
-					print OUTPUT "  IEditor *editor = engine->editor();\n";
+                if($staticClass == 1)
+                {
+                    print OUTPUT "  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string(\"userdata\")).data.val;\n";
+                    print OUTPUT "  IEditor *editor = engine->editor();\n";
                 }
 
                  print OUTPUT "  TinyParams pm(tp);\n";
@@ -598,6 +647,15 @@ my $pyFunc;
                 print OUTPUT "static tp_obj ".$helpName."(TP)\n{\n";
                 print OUTPUT "  PythonEngine *engine = (PythonEngine*)tp_get(tp, tp->builtins, tp_string(\"userdata\")).data.val;\n\n";
 
+                print OUTPUT "  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, \"constructor:\\n\");\n";
+                my $classPrefix = substr($className, 0,2);
+                if(!($classPrefix=~m/^py$/))
+                {
+                    die "Classname shoud have start with \"py\"\n";
+                }
+                my $clsName = substr($className, 2);
+                print OUTPUT "  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, \"obj\t".$clsName."(" .join(", ",@ctorParamsWithNames).")\\n\");\n";
+                
                 my @m=sort keys %cFuncs;
                 if (@m > 0)
                 {

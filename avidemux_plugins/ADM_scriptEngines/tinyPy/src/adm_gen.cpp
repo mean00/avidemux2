@@ -482,6 +482,18 @@ static tp_obj zzpy_clearVideoFilters(TP)
   editor->clearFilters();
   return tp_None;
 }
+// closeVideo -> void editor->closeFile(void)
+static tp_obj zzpy_closeVideo(TP)
+{
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->editor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
+
+  editor->closeFile();
+  return tp_None;
+}
 // getFps1000 -> int pyGetFps1000(IEditor)
 static tp_obj zzpy_getFps1000(TP)
 {
@@ -578,6 +590,18 @@ static tp_obj zzpy_getWidth(TP)
   int r = pyGetWidth(p0);
   return tp_number(r);
 }
+// isFileOpen -> int editor->isFileOpen(void)
+static tp_obj zzpy_isFileOpen(TP)
+{
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->editor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
+
+  int r = editor->isFileOpen();
+  return tp_number(r);
+}
 // loadVideo -> int editor->openFile(str)
 static tp_obj zzpy_loadVideo(TP)
 {
@@ -589,6 +613,19 @@ static tp_obj zzpy_loadVideo(TP)
 
   const char *p0 = pm.asString();
   int r = editor->openFile(p0);
+  return tp_number(r);
+}
+// pyVersion -> int pyVersion(IEditor)
+static tp_obj zzpy_pyVersion(TP)
+{
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->editor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
+
+  IEditor *p0 = editor;
+  int r = pyVersion(p0);
   return tp_number(r);
 }
 // save -> int editor->saveFile(str)
@@ -801,7 +838,7 @@ static tp_obj zzpy_videoCodecSetProfile(TP)
   int r = editor->setVideoCodecProfile(p0, p1);
   return tp_number(r);
 }
-tp_obj zzpy__pyAdm_get(tp_vm *vm)
+tp_obj zzpy__pyAvidemux_get(tp_vm *vm)
 {
   tp_obj self = tp_getraw(vm);
   IScriptEngine *engine = (IScriptEngine*)tp_get(vm, vm->builtins, tp_string("userdata")).data.val;
@@ -941,6 +978,10 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   {
     return tp_method(vm, self, zzpy_clearVideoFilters);
   }
+  if (!strcmp(key, "closeVideo"))
+  {
+    return tp_method(vm, self, zzpy_closeVideo);
+  }
   if (!strcmp(key, "getFps1000"))
   {
     return tp_method(vm, self, zzpy_getFps1000);
@@ -969,9 +1010,17 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   {
     return tp_method(vm, self, zzpy_getWidth);
   }
+  if (!strcmp(key, "isFileOpen"))
+  {
+    return tp_method(vm, self, zzpy_isFileOpen);
+  }
   if (!strcmp(key, "loadVideo"))
   {
     return tp_method(vm, self, zzpy_loadVideo);
+  }
+  if (!strcmp(key, "pyVersion"))
+  {
+    return tp_method(vm, self, zzpy_pyVersion);
   }
   if (!strcmp(key, "save"))
   {
@@ -1035,7 +1084,7 @@ tp_obj zzpy__pyAdm_get(tp_vm *vm)
   }
   return tp_get(vm, self, tp_string(key));
 }
-tp_obj zzpy__pyAdm_set(tp_vm *vm)
+tp_obj zzpy__pyAvidemux_set(tp_vm *vm)
 {
   tp_obj self = tp_getraw(vm);
   IScriptEngine *engine = (IScriptEngine*)tp_get(vm, vm->builtins, tp_string("userdata")).data.val;
@@ -1058,24 +1107,26 @@ tp_obj zzpy__pyAdm_set(tp_vm *vm)
   return tp_None;
 }
 // Dctor
-static void myDtorpyAdm(tp_vm *vm,tp_obj self)
+static void myDtorpyAvidemux(tp_vm *vm,tp_obj self)
 {
 }
 // Ctor ()
-static tp_obj myCtorpyAdm(tp_vm *vm)
+static tp_obj myCtorpyAvidemux(tp_vm *vm)
 {
   tp_obj self = tp_getraw(vm);
   TinyParams pm(vm);
   void *me = NULL;
   tp_obj cdata = tp_data(vm, ADM_PYID_AVIDEMUX, me);
-  cdata.data.info->xfree = myDtorpyAdm;
+  cdata.data.info->xfree = myDtorpyAvidemux;
   tp_set(vm, self, tp_string("cdata"), cdata);
   return tp_None;
 }
-static tp_obj zzpy__pyAdm_help(TP)
+static tp_obj zzpy__pyAvidemux_help(TP)
 {
   PythonEngine *engine = (PythonEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
 
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "constructor:\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "obj	Avidemux()\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "methods:\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t addSegment(int ref, double startRef, double duration)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t addVideoFilter(str filter, couples)\n");
@@ -1108,6 +1159,7 @@ static tp_obj zzpy__pyAdm_help(TP)
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t audioTracksCount()\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t clearSegments()\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "void\t clearVideoFilters()\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "void\t closeVideo()\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t getFps1000()\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t getHeight()\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "str\t getOutputExtension()\n");
@@ -1115,7 +1167,9 @@ static tp_obj zzpy__pyAdm_help(TP)
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t getPARWidth()\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "str\t getVideoCodec()\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t getWidth()\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t isFileOpen()\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t loadVideo(str fileName)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t pyVersion()\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t save(str fileName)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t saveAudio(int track, str fileName)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t saveBmp(str fileName)\n");
@@ -1137,12 +1191,12 @@ static tp_obj zzpy__pyAdm_help(TP)
 
   return tp_None;
 }
-tp_obj initClasspyAdm(tp_vm *vm)
+tp_obj initClasspyAvidemux(tp_vm *vm)
 {
   tp_obj myClass = tp_class(vm);
-  tp_set(vm,myClass, tp_string("__init__"), tp_fnc(vm,myCtorpyAdm));
-  tp_set(vm,myClass, tp_string("__set__"), tp_fnc(vm,zzpy__pyAdm_set));
-  tp_set(vm,myClass, tp_string("__get__"), tp_fnc(vm,zzpy__pyAdm_get));
-  tp_set(vm,myClass, tp_string("help"), tp_fnc(vm,zzpy__pyAdm_help));
+  tp_set(vm,myClass, tp_string("__init__"), tp_fnc(vm,myCtorpyAvidemux));
+  tp_set(vm,myClass, tp_string("__set__"), tp_fnc(vm,zzpy__pyAvidemux_set));
+  tp_set(vm,myClass, tp_string("__get__"), tp_fnc(vm,zzpy__pyAvidemux_get));
+  tp_set(vm,myClass, tp_string("help"), tp_fnc(vm,zzpy__pyAvidemux_help));
   return myClass;
 }
