@@ -181,13 +181,12 @@ int ADM_Composer::addVideoFilter(const char *filter, CONFcouple *c)
 
 char *ADM_Composer::getVideoCodec(void)
 {
-	uint32_t fcc;
-	aviInfo info;
+    aviInfo info;
 
-	this->getVideoInfo(&info);
-	fcc = info.fcc;
+    if(0 == this->getVideoInfo(&info))
+        return NULL;
 
-	return ADM_strdup(fourCC::tostring(fcc));
+    return ADM_strdup(fourCC::tostring(info.fcc));
 }
 
 int ADM_Composer::appendFile(const char *name)
