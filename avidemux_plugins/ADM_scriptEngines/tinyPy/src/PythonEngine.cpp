@@ -17,6 +17,7 @@
 #endif
 #include "ADM_assert.h"
 #include "ADM_pyAvidemux.h"
+#include "ADM_pyTools.h"
 #include "PythonEngine.h"
 #include "PythonScriptWriter.h"
 
@@ -38,6 +39,7 @@
 #define ADM_PYID_GUI      102
 #define ADM_PYID_OS       103
 #define ADM_PYID_MEMORY   104
+#define ADM_PYID_TOOLS    105
 #define ADM_PYID_DIALOGF     200
 #define ADM_PYID_DF_TOGGLE   201
 #define ADM_PYID_DF_INTEGER  202
@@ -78,6 +80,7 @@ void pyPrintf(tp_vm *vm, const char *fmt, ...)
 #include "adm_gen.cpp"
 #include "editor_gen.cpp"
 #include "GUI_gen.cpp"
+#include "tools_gen.cpp"
 #include "pyDFInteger_gen.cpp"
 #include "pyDFFloat_gen.cpp"
 #include "pyDFMenu_gen.cpp"
@@ -161,6 +164,7 @@ void PythonEngine::registerFunctions()
     this->registerClass("Editor", initClasspyEditor, "segment, video info, debug");
     this->registerClass("Gui", initClasspyGui, "widget, alert boxes,..");
     this->registerClass("Memory", initClasspyMemory, "runtime persistent storage");
+    this->registerClass("Tools", initClasspyTools, "miscellaneous helpers");
     this->registerClass("DFToggle", initClasspyDFToggle, "UI element : toggle");
     this->registerClass("DFInteger", initClasspyDFInteger, "UI element : integer");
     this->registerClass("DFFloat", initClasspyDFFloat, "UI element : float");

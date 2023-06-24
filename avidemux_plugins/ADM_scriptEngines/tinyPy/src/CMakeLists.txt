@@ -7,6 +7,7 @@ SET(admScriptPython_SRCS
 	TinyParams.cpp
 	ADM_script_tinyPy.v
         ADM_pyTests.cpp
+        ADM_pyTools.cpp
         modules/re/init.cpp
 )
 
