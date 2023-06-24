@@ -3692,6 +3692,15 @@ void UI_notifyError(const char *message, int timeoutMs)
     ((MainWindow *)QuiMainWindows)->notifyStatusBar(2, QT_TRANSLATE_NOOP("qgui2","ERROR: %1"), message, timeoutMs);
 }
 /**
+    \fn UI_tweaks
+*/
+void UI_tweaks(const char * op, const char * paramS, int paramN)
+{
+    
+}
+
+
+/**
  * \fn dtor
  */
 myQApplication::~myQApplication()
@@ -3719,5 +3728,6 @@ myQApplication::~myQApplication()
 #endif    
     ADM_warning("Exiting app\n");
 }
+
 //********************************************
 //EOF
