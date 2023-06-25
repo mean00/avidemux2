@@ -223,6 +223,10 @@ void MainWindow::scriptFileActionHandler()
 {
     QString filePath = ((FileAction*)sender())->filePath();
     QString fileExt = QFileInfo(filePath).suffix();
+    static int block = 0;
+    
+    if (block) return;
+    block++;
 
     for (int engineIndex = 0; engineIndex < this->_scriptEngines.size(); engineIndex++)
     {
@@ -234,6 +238,7 @@ void MainWindow::scriptFileActionHandler()
             A_Resync();
         }
     }
+    block--;
 }
 
 /**
