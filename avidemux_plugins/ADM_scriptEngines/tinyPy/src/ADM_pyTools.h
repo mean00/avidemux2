@@ -19,6 +19,7 @@
 #include "IEditor.h"
 
 double pyTool_time(IEditor *editor);
+char * pyTool_date(IEditor *editor);
 int pyTool_randint(IEditor *editor, int start, int stop);
 int pyTool_isalnum(IEditor *editor, const char * str);
 int pyTool_isalpha(IEditor *editor, const char * str);

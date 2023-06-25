@@ -4,6 +4,7 @@
 # Miscellaneous helpers
 
 /* METHOD */ double pyTool_time:time            (void)
+/* METHOD */ str pyTool_date:date               (void)
 /* METHOD */ int pyTool_randint:randint         (int start, int stop)
 /* METHOD */ int pyTool_isalnum:isalnum         (str)
 /* METHOD */ int pyTool_isalpha:isalpha         (str)

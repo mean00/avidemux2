@@ -27,6 +27,19 @@ double pyTool_time(IEditor *editor)
     return t;
 }
 
+char * pyTool_date(IEditor *editor)
+{
+    struct timeval pz;
+    TIMZ tz;
+    gettimeofday(&pz, &tz);
+    time_t timez;
+    tm *t;
+    time(&timez);
+    t=localtime(&timez);
+    char tmbuf[64];
+    strftime(tmbuf, 63, "%Y-%m-%d %H:%M:%S", t);
+    return ADM_strdup(tmbuf);
+}
 
 static uint32_t rng_state = 0;
 
