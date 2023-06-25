@@ -77,6 +77,7 @@ cp /usr/lib/x86_64-linux-gnu/libQt5DBus.so.5 ../lib/qt5 || fail QtDbus
 cp /usr/lib/x86_64-linux-gnu/libQt5XcbQpa.so.5  ../lib/qt5 || fail QtXcb
 
 cp -Rap -t ../lib/qt5/plugins /usr/lib/x86_64-linux-gnu/qt5/plugins/platforms  || fail qtplugins
+cp -Rap -t ../lib/qt5/plugins /usr/lib/x86_64-linux-gnu/qt5/plugins/platformthemes || fail qtplatformthemes
 cp -Rap -t ../lib/qt5/plugins /usr/lib/x86_64-linux-gnu/qt5/plugins/xcbglintegrations || fail qxcbglintegrations
 
 cpyRootx86Lib libdouble-conversion.so.1
