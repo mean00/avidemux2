@@ -100,6 +100,10 @@ void MainWindow::addScriptShellsToToolsMenu(vector<MenuEntry>& toolMenu)
 
         it = toolMenu.insert(it, entry) + 1;
     }
+    
+    // sneak in here for now:
+    MenuEntry entry = {MENU_ACTION, QT_TRANSLATE_NOOP("qgui2menu","Script Shortcuts"), NULL, (Action)(ACT_ScriptShortcutConfig), NULL, NULL, true};
+    toolMenu.insert(it, entry);
 }
 
 void MainWindow::addScriptReferencesToHelpMenu()

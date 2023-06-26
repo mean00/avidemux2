@@ -87,6 +87,7 @@ extern void    DIA_properties( void);
 extern uint8_t DIA_Preferences(void);
 extern uint8_t DIA_builtin(void);
 extern uint8_t DIA_pluginsInfo(void);
+extern void    DIA_ScriptShortcutConfig(void);
 
 static void ReSync (void);
 static void A_RunScript(const char *a);
@@ -282,6 +283,10 @@ void HandleAction (Action action)
             int index=UI_GetCurrentFormat();
             ADM_mux_configure(index);
             return;
+        }
+    case ACT_ScriptShortcutConfig:
+        {
+            DIA_ScriptShortcutConfig();
         }
     case ACT_VIDEO_CODEC_CHANGED:
         {

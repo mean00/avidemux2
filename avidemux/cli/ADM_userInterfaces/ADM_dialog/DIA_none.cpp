@@ -61,6 +61,7 @@ uint8_t DIA_audioCodec( int *codec ) {return 0;}
 uint8_t DIA_dnr(uint32_t *llock,uint32_t *lthresh, uint32_t *clock,
 			uint32_t *cthresh, uint32_t *scene) {return 0;}
 uint8_t DIA_glyphEdit(void) {return 0;}
+void DIA_ScriptShortcutConfig(void) {}
 struct THRESHOLD_PARAM;
 struct ADMVideoThreshold;
 struct SWISSARMYKNIFE_PARAM;

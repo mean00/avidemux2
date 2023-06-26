@@ -97,6 +97,7 @@ ACT(ResetSegments)
 ACT(DecoderOption)
 ACT(SelectEncoder)
 ACT(ContainerConfigure)
+ACT(ScriptShortcutConfig)
 
 ACT(RecentFiles)
 ACT(SavePref)
