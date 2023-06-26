@@ -38,7 +38,7 @@ scriptShortcutConfigDialog::scriptShortcutConfigDialog(QWidget* parent) : QDialo
     QString dir = QString(ADM_getCustomDir().c_str());
     QStringList fileExts;
     QStringList customScriptFiles;
-    customScriptFiles << QString("");
+    customScriptFiles << QString(QT_TRANSLATE_NOOP("qscriptshortcutconfig","clear"));
     for(int i=0; i < getScriptEngines().size(); i++)
     {
         IScriptEngine *tempEngine = getScriptEngines()[i];
@@ -64,7 +64,7 @@ scriptShortcutConfigDialog::scriptShortcutConfigDialog(QWidget* parent) : QDialo
     SCRIPT_SHORTCUT_CONFIG_LIST_XMACRO
 #undef X
 
-#define X(key) connect(ui.comboBoxAlt ## key,  SIGNAL(currentIndexChanged(int)), this, SLOT(comboBoxAlt ## key ## _currentIndexChanged(int)));
+#define X(key) connect(ui.comboBoxAlt ## key,  SIGNAL(activated(int)), this, SLOT(comboBoxAlt ## key ## _activated(int)));
     SCRIPT_SHORTCUT_CONFIG_LIST_XMACRO
 #undef X
 
@@ -74,8 +74,13 @@ scriptShortcutConfigDialog::~scriptShortcutConfigDialog()
 {
 }
 
+void scriptShortcutConfigDialog::showEvent(QShowEvent *event)
+{
+    this->adjustSize();
+}
 
-#define X(key) void scriptShortcutConfigDialog::comboBoxAlt ## key ## _currentIndexChanged(int index) { \
+#define X(key) void scriptShortcutConfigDialog::comboBoxAlt ## key ## _activated(int index) { \
+        if (index == 0) ui.lineEditAlt ## key ->clear(); else \
         ui.lineEditAlt ## key ->setText(ui.comboBoxAlt ## key ->itemText(index)); \
         }
 SCRIPT_SHORTCUT_CONFIG_LIST_XMACRO

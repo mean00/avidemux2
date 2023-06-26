@@ -34,9 +34,9 @@ public:
 public:
     scriptShortcutConfigDialog(QWidget* parent);
     ~scriptShortcutConfigDialog();
-
+    void showEvent(QShowEvent *event);
 private slots:
-    #define X(key) void comboBoxAlt ## key ## _currentIndexChanged(int index);
+    #define X(key) void comboBoxAlt ## key ## _activated(int index);
     SCRIPT_SHORTCUT_CONFIG_LIST_XMACRO
     #undef X
 };
