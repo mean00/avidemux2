@@ -287,6 +287,8 @@ void HandleAction (Action action)
     case ACT_ScriptShortcutConfig:
         {
             DIA_ScriptShortcutConfig();
+            UI_refreshCustomMenu();
+            return;
         }
     case ACT_VIDEO_CODEC_CHANGED:
         {
