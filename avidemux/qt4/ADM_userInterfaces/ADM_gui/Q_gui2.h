@@ -132,6 +132,8 @@ public:
     void updateStatusBarDecoderInfo(const char * decoder);
     void updateStatusBarZoomInfo(int zoom);
     void notifyStatusBar(int level, const char * lead, const char * msg, int timeout = 2500);
+    void enterFullScreen();
+    void leaveFullScreen();
 
     void setLightTheme(void);
     void setDarkTheme(void);
@@ -170,6 +172,8 @@ protected:
     std::vector<QAction *>ActionsAvailableWhenFileLoaded;
     std::vector<QAction *>ActionsDisabledOnPlayback;
     std::vector<QAction *>ActionsAlwaysAvailable;
+    std::vector<QAction *>ActionsDisabledOnFullScreen;
+    std::vector<QAction *>ActionsRelocatedOnFullScreen;
     std::vector<QToolButton *>ButtonsAvailableWhenFileLoaded;
     std::vector<QToolButton *>ButtonsDisabledOnPlayback;
     std::vector<QPushButton *>PushButtonsAvailableWhenFileLoaded;
@@ -216,6 +220,10 @@ protected:
     /* allow to copy current pts to clipboard using a keyboard shortcut for convenience */
     void currentTimeToClipboard(void);
     bool dragWhilePlay;
+    bool isFullScreen;
+    int restoreFullScreenMargins[4];
+    int restoreFullScreenPlayFiltered;
+    
     
     QStatusBar * statusBarWidget;
     QTimer statusBarTimer, statusBarFlashTimer;
