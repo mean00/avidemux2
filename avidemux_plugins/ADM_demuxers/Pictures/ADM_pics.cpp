@@ -33,6 +33,8 @@
 #endif
 
 #define MAX_ACCEPTED_OPEN_FILE 0x7FFFF
+/* protect against integer overflow */
+#define MAX_DIGITS 8
 
 #ifdef __APPLE__
  #define MAX_LEN 1024
@@ -235,6 +237,8 @@ static void splitImageSequence(std::string inname,int &nbOfDigits, int &first,st
         const char c=workName[workName.size()-1];
         if((c<'0') || (c>'9'))
             break;       
+        if(num >= MAX_DIGITS) // else definitely false positive
+            break;
         num++;
         first=first+radix*+(c-'0');
         radix*=10;
@@ -300,9 +304,14 @@ uint8_t picHeader::open(const char *inname)
     int nbOfDigits;
     std::string name,extension;
     std::string prefix;
-    ADM_PathSplit(std::string(inname),name,extension);
+    ADM_PathSplit(inname,name,extension);
     splitImageSequence(name,nbOfDigits,_first,prefix);
-    
+    uint32_t maxCount = 1;
+    for(int i=0; i < nbOfDigits; i++)
+    {
+        maxCount *= 10;
+    }
+    maxCount--;
     if(!nbOfDigits) // no digit at all
     {
         _nbFiles=1;
@@ -311,19 +320,31 @@ uint8_t picHeader::open(const char *inname)
     else
     {
         char realstring[MAX_LEN];
-        sprintf(realstring, "%s%%0%" PRIu32"d.%s", prefix.c_str(), nbOfDigits, extension.c_str());
-        _filePrefix=std::string(realstring);
+        snprintf(realstring, MAX_LEN, "%s%%0%" PRIu32"d.%s", prefix.c_str(), nbOfDigits, extension.c_str());
+        _filePrefix = realstring;
         _nbFiles = 0;
         for (uint32_t i = 0; i < MAX_ACCEPTED_OPEN_FILE; i++)
         {
-                sprintf(realstring, _filePrefix.c_str(), i + _first);
-                ADM_info(" %" PRIu32" : %s\n", i, realstring);
+            if(i + _first > maxCount)
+                break;
+            snprintf(realstring, MAX_LEN, _filePrefix.c_str(), i + _first);
+            ADM_info(" %" PRIu32" : %s\n", i, realstring);
+            if(!i && strcmp(realstring,inname))
+            {
+                printf("[picHeader::open] Derived filename wrong, should be \"%s\"\n", inname);
+                return 0;
+            }
 
-                fd = ADM_fopen(realstring, "rb");
-                if (fd == NULL)
-                        break;
-                fclose(fd);
-                _nbFiles++;
+            fd = ADM_fopen(realstring, "rb");
+            if (fd == NULL)
+                break;
+            fclose(fd);
+            _nbFiles++;
+        }
+        if(!_nbFiles)
+        {
+            ADM_warning("Cannot read \"%s\"\n", realstring);
+            return 0;
         }
     }
     if(_type==ADM_PICTURE_BMP || _type==ADM_PICTURE_BMP2)
