@@ -449,7 +449,7 @@ static enum AVPixelFormat ADM_LIBVA_getFormat(struct AVCodecContext *avctx,  con
         return AV_PIX_FMT_NONE;
     }
 
-    avctx->hw_frames_ctx = av_buffer_ref(frameRef);
+    avctx->hw_frames_ctx = frameRef;
     return AV_PIX_FMT_VAAPI;
 }
 }
