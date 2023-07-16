@@ -1,0 +1,14 @@
+--- libavutil/hwcontext_vaapi.c.orig	2023-07-16 18:01:04.041322765 +0200
++++ libavutil/hwcontext_vaapi.c	2023-07-16 18:15:57.994409931 +0200
+@@ -108,10 +108,10 @@
+ // plane swap cases.  The frame handling below tries to hide these.
+ static const VAAPIFormatDescriptor vaapi_format_map[] = {
+     MAP(NV12, YUV420,  NV12,    0),
++    MAP(YV12, YUV420,  YUV420P, 1), // Prefer U/V swapped fourcc for yuv420 to allow direct mapping at least on Intel (eum.)
+ #ifdef VA_FOURCC_I420
+     MAP(I420, YUV420,  YUV420P, 0),
+ #endif
+-    MAP(YV12, YUV420,  YUV420P, 1),
+     MAP(IYUV, YUV420,  YUV420P, 0),
+     MAP(422H, YUV422,  YUV422P, 0),
+ #ifdef VA_FOURCC_YV16
