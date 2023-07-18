@@ -362,14 +362,23 @@ static bool checkProfile(const VAProfile &profile, ADM_coreLibVA::decoderConfig 
 bool admLibVA::setupConfig(void)
 {
     VAStatus xError;
-    int r, nb=vaMaxNumProfiles(ADM_coreLibVA::display);
+    int r = 0;
+    int nb = vaMaxNumProfiles(ADM_coreLibVA::display);
+    if(nb < 1)
+    {
+        ADM_warning("libva reports no profiles as supported.\n");
+        return false;
+    }
     ADM_info("Max config =  %d \n",nb);
     VAProfile *prof=(VAProfile *)admAlloca(sizeof(VAProfile)*nb);
     int nbProfiles;
     CHECK_ERROR(vaQueryConfigProfiles (ADM_coreLibVA::display, prof,&nbProfiles));
 
     if(xError)
+    {
+        ADM_warning("Cannot query supported VA-API profiles.\n");
         return false;
+    }
 
     // Check supported profiles
     ADM_info("Found %d config \n",nbProfiles);
