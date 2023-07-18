@@ -70,6 +70,7 @@ typedef struct {
  decoderConfig          configH26510Bits;
  decoderConfig          configVC1;
  decoderConfig          configVP9;
+ decoderConfig          configAV1;
  VAImageFormat          imageFormatNV12;
  VAImageFormat          imageFormatYV12;
  bool                   directOperation;
@@ -361,42 +362,33 @@ static bool checkProfile(const VAProfile &profile, ADM_coreLibVA::decoderConfig 
 bool admLibVA::setupConfig(void)
 {
     VAStatus xError;
-    bool r=false;
-    int nb=vaMaxNumProfiles(ADM_coreLibVA::display);
+    int r, nb=vaMaxNumProfiles(ADM_coreLibVA::display);
     ADM_info("Max config =  %d \n",nb);
     VAProfile *prof=(VAProfile *)admAlloca(sizeof(VAProfile)*nb);
     int nbProfiles;
     CHECK_ERROR(vaQueryConfigProfiles (ADM_coreLibVA::display, prof,&nbProfiles));
 
-    // Check supported profiles
-    if(!xError)
-    {
-        ADM_info("Found %d config \n",nbProfiles);
-        for(int i=0;i<nbProfiles;i++)
-        {
-            if(prof[i]==VAProfileH264High)
-            {
-                r=true;
-                ADM_info("H264 high profile found\n");
-            }
-        }
-    }
-    // if H264 is not supported, no need to go further
-    if(!r)
+    if(xError)
         return false;
 
-    checkProfile(VAProfileMPEG2Main,    &ADM_coreLibVA::configMpeg2,    "MPEG-2 Main");
-    checkProfile(VAProfileH264High,     &ADM_coreLibVA::configH264,     "H264 High");
-    checkProfile(VAProfileVC1Advanced,  &ADM_coreLibVA::configVC1 ,     "VC1");
+    // Check supported profiles
+    ADM_info("Found %d config \n",nbProfiles);
+
+    r += checkProfile(VAProfileMPEG2Main,   &ADM_coreLibVA::configMpeg2,        "MPEG-2 Main");
+    r += checkProfile(VAProfileH264High,    &ADM_coreLibVA::configH264,         "H264 High");
+    r += checkProfile(VAProfileVC1Advanced, &ADM_coreLibVA::configVC1,          "VC1");
 #ifdef LIBVA_HEVC_DEC
-    checkProfile(VAProfileHEVCMain,     &ADM_coreLibVA::configH265,     "HEVC Main");
-    checkProfile(VAProfileHEVCMain10,   &ADM_coreLibVA::configH26510Bits,"HEVC 10Bits");
+    r += checkProfile(VAProfileHEVCMain,    &ADM_coreLibVA::configH265,         "HEVC Main");
+    r += checkProfile(VAProfileHEVCMain10,  &ADM_coreLibVA::configH26510Bits,   "HEVC 10Bits");
 #endif
 
 #ifdef LIBVA_VP9_DEC
-    checkProfile(VAProfileVP9Profile0,  &ADM_coreLibVA::configVP9 ,     "VP9");
+    r += checkProfile(VAProfileVP9Profile0, &ADM_coreLibVA::configVP9,          "VP9");
 #endif
-    return true;
+#ifdef LIBVA_AV1_DEC
+    r += checkProfile(VAProfileAV1Profile0, &ADM_coreLibVA::configAV1,          "AV1");
+#endif
+    return r > 0;
 }
 /**
  * \fn fourCC_tostring
@@ -431,27 +423,35 @@ bool admLibVA::setupImageFormat()
 {
     int xError;
     bool r=false;
-        int nbImage=vaMaxNumImageFormats(ADM_coreLibVA::display);
-        VAImageFormat *list=new VAImageFormat[nbImage];
-        int nb;
-        CHECK_ERROR(vaQueryImageFormats( ADM_coreLibVA::display,list,&nb));
-        if(xError)
+    int nbImage = vaMaxNumImageFormats(ADM_coreLibVA::display);
+    if(nbImage < 1)
+    {
+        ADM_warning("libva reports no image formats as supported.\n");
+        return r;
+    }
+    ADM_info("libva reports %d image formats as supported.\n", nbImage);
+    VAImageFormat *list=new VAImageFormat[nbImage];
+    int nb;
+
+    CHECK_ERROR(vaQueryImageFormats(ADM_coreLibVA::display, list, &nb));
+
+    if(xError)
+    {
+        ADM_warning("Cannot query VA-API image formats.\n");
+    }else
+    {
+        for(int i=0;i<nb;i++)
         {
-            r=false;
-        }else
-        {
-            r=false;
-            for(int i=0;i<nb;i++)
+            aprintf("----------");
+            aprintf("bpp : %d\n",list[i].bits_per_pixel);
+            uint32_t fcc=list[i].fourcc;
+            aprintf("fcc : 0x%x:%s\n",fcc,fourCC_tostring(fcc));
+            switch(fcc)
             {
-                aprintf("----------");
-                aprintf("bpp : %d\n",list[i].bits_per_pixel);
-                uint32_t fcc=list[i].fourcc;
-                aprintf("fcc : 0x%x:%s\n",fcc,fourCC_tostring(fcc));
-                switch(fcc)
-                {
                 case VA_FOURCC_NV12:
                     ADM_coreLibVA::imageFormatNV12=list[i];
                     ADM_info("NV12 is supported\n");
+                    r=true;
                     break;
                 case VA_FOURCC_YV12:
                     ADM_coreLibVA::imageFormatYV12=list[i];
@@ -459,16 +459,15 @@ bool admLibVA::setupImageFormat()
                     r=true;
                     break;
                 default:break;
-                }
             }
-
         }
-        if(r==false)
-        {
-            ADM_warning("Cannot find supported image format : YV12\n");
-        }
-        delete [] list;
-        return r;
+    }
+    if(r==false)
+    {
+        ADM_warning("Neither YV12 nor NV12 is supported.\n");
+    }
+    delete [] list;
+    return r;
 }
 
 /**
@@ -496,6 +495,7 @@ bool admLibVA::init(GUI_WindowInfo *x)
     INVALIDATE(configH26510Bits)
     INVALIDATE(configVP9)
     INVALIDATE(configVC1)
+    INVALIDATE(configAV1)
 #undef INVALIDATE
     myWindowInfo=*x;
     VAStatus xError;
@@ -570,6 +570,9 @@ bool admLibVA::supported(VAProfile profile, int width, int height)
 #ifdef LIBVA_VP9_DEC
         SUPSUP(VAProfileVP9Profile0,configVP9)
 #endif
+#ifdef LIBVA_AV1_DEC
+        SUPSUP(VAProfileAV1Profile0,configAV1)
+#endif
         default:
             ADM_info("Unknown libva profile ID %d\n", profile);
             break;
@@ -614,6 +617,9 @@ VAContextID        admLibVA::createDecoder(VAProfile profile,int width, int heig
 #endif
 #ifdef LIBVA_VP9_DEC
        case VAProfileVP9Profile0: cfg = &ADM_coreLibVA::configVP9;break;
+#endif
+#ifdef LIBVA_AV1_DEC
+       case VAProfileAV1Profile0: cfg = &ADM_coreLibVA::configAV1;break;
 #endif
        default:
                 ADM_assert(0);

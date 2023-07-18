@@ -40,6 +40,8 @@ MACRO(checkLibVA)
                                                         vaCheck(libva_hevcdec.cpp  LIBVA_HEVC_DEC "HEVC decoder")
                                                         # VP8
                                                         vaCheck(libva_vp9dec.cpp  LIBVA_VP9_DEC "VP9 decoder")
+                                                        # AV1
+                                                        vaCheck(libva_av1dec.cpp LIBVA_AV1_DEC "AV1 decoder")
                                                         # Failsafe
                                                         vaCheck(libva_dummy.cpp  LIBVA_DUMMY_DEC "DUMMY decoder")
                                                 ELSE( LIBVA_COMPILED)

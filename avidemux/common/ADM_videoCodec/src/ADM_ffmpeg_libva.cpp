@@ -357,6 +357,7 @@ static enum AVPixelFormat ADM_LIBVA_getFormat(struct AVCodecContext *avctx,  con
             FMT_V_CHECK(WMV3,WMV3)
             FMT_V_CHECK(VC1,VC1)
             FMT_V_CHECK(VP9,VP9)
+            FMT_V_CHECK(AV1,AV1)
             default: 
                 ADM_info("No hw support for format %d\n",avctx->codec_id);
                 continue;
@@ -395,6 +396,9 @@ static enum AVPixelFormat ADM_LIBVA_getFormat(struct AVCodecContext *avctx,  con
         case AV_CODEC_ID_VC1: profile = VAProfileVC1Advanced; break;
 #ifdef LIBVA_VP9_DEC
         case AV_CODEC_ID_VP9: profile = VAProfileVP9Profile0; break;
+#endif
+#ifdef LIBVA_AV1_DEC
+        case AV_CODEC_ID_AV1: profile = VAProfileAV1Profile0; break;
 #endif
         default:
             ADM_info("Unknown codec (libVA)\n");
