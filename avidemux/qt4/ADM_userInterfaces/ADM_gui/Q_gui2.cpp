@@ -859,6 +859,7 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     blockResizing = false;
     blockZoomChanges = true;
     dragWhilePlay = false;
+    statusBarInfo_Zoom = 100;
 
     QuiTaskBarProgress=createADMTaskBarProgress();
 }
