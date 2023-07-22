@@ -121,6 +121,8 @@ class ADM_vaSurface
 public:
     VASurfaceID         surface;
     int                 refCount;
+    int                 refCountInternal; // held by lavcodec
+    int                 refCountExternal; // held by decoder and users
     VAImage             *image;
     int                 w,h;
     ADMColorScalerSimple *fromNv12ToYv12;

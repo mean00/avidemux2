@@ -34,8 +34,9 @@
 #define aprintf(...) {}
 #endif
 
-
-
+#if 0
+#define SURFACE_VERBOSE_ALLOC
+#endif
 
 /**
  *
@@ -96,7 +97,7 @@ namespace ADM_coreLibVAEnc
                 vaEncoder()
                 {
                     enabled=false;
-                    configId=-1;
+                    configId=VA_INVALID;
                     hasCBR=false;
                     hasVBR=false;
                 }
@@ -259,7 +260,7 @@ bool admLibVA::setupEncodingConfig(void)
                               &attrib[0], 2,&(ADM_coreLibVAEnc::encoders::vaH264.configId)));
     if(xError)
     {
-        ADM_coreLibVAEnc::encoders::vaH264.configId=-1;
+        ADM_coreLibVAEnc::encoders::vaH264.configId = VA_INVALID;
         return false;
 
     }else
@@ -866,6 +867,9 @@ VASurfaceID        admLibVA::allocateSurface(int w, int h, int fmt)
             ADM_assert(0);
         }
         listOfAllocatedSurface[s]=true;
+#ifdef SURFACE_VERBOSE_ALLOC
+        printf("[admLibVA::allocateSurface] Surface 0x%08x created, total %d\n", s, listOfAllocatedSurface.size());
+#endif
         return s;
     }
     aprintf("Error creating surface\n");
@@ -889,9 +893,15 @@ void        admLibVA::destroySurface( VASurfaceID surface)
           ADM_assert(0);
       }
       listOfAllocatedSurface.erase(surface);
+#ifdef SURFACE_VERBOSE_ALLOC
+      VASurfaceID copy = surface;
+#endif
       CHECK_ERROR(vaDestroySurfaces(ADM_coreLibVA::display,&surface,1));
         if(!xError)
         {
+#ifdef SURFACE_VERBOSE_ALLOC
+            ADM_info("VASurfaceID 0x%08x destroyed, %d remaining.\n", copy, listOfAllocatedSurface.size());
+#endif
             return;
         }
         aprintf("Error destroying surface\n");
@@ -960,7 +970,7 @@ bool        admLibVA::surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src)
     CHECK_ERROR(vaDeriveImage (ADM_coreLibVA::display, src->surface,&vaImage));
     if(xError)
     {
-        ADM_warning("Va GetImage failed\n");
+        ADM_warning("Cannot derive VAImage from hw surface.\n");
         return false;
     }
     switch(vaImage.format.fourcc)
@@ -1373,12 +1383,27 @@ static bool ADM_vaImage_cleanupCheck(void)
  */
 bool admLibVA::cleanup()
 {
+    VAStatus xError;
     ADM_info("VA cleanup begin\n");
     ADM_vaSurface_cleanupCheck();
     ADM_vaImage_cleanupCheck();
+    ADM_coreLibVA::decoderConfig *c;
+#define DX(x) { c=&ADM_coreLibVA::x; if(c->cid!=VA_INVALID) { CHECK_ERROR(vaDestroyConfig(ADM_coreLibVA::display, c->cid)); c->cid=VA_INVALID; }}
+    DX(configH264)
+    DX(configMpeg2)
+    DX(configH265)
+    DX(configH26510Bits)
+    DX(configVP9)
+    DX(configVC1)
+    DX(configAV1)
+#undef DX
+    ADM_coreLibVAEnc::vaEncoder *e;
+#define DX(x) { e=&ADM_coreLibVAEnc::encoders::x; if(e->configId!=VA_INVALID) { CHECK_ERROR(vaDestroyConfig(ADM_coreLibVA::display, e->configId)); e->configId=VA_INVALID; }}
+    DX(vaH264)
+    DX(vaH265)
+#undef DX
     if(coreLibVAWorking)
     {
-        VAStatus xError;
         ADM_info("[LIBVA] De-Initializing LibVA library...\n");
         CHECK_ERROR(vaTerminate(ADM_coreLibVA::display))
     }
@@ -1396,6 +1421,7 @@ bool admLibVA::cleanup()
 {
     surface=VA_INVALID;
     refCount=0;
+    refCountInternal = refCountExternal = 0;
     this->w=w;
     this->h=h;
     image=admLibVA::allocateImage(w,h);
