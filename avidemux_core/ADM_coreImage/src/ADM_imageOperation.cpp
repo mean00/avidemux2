@@ -24,59 +24,89 @@ static void fillLookupTables(uint8_t *luma, uint8_t *chroma, bool expand);
 */
 bool ADMImage::duplicateMacro(ADMImage *src,bool swap)
 {
-        // Sanity check
-        ADM_assert(src->_width==_width);
-        ADM_assert(src->_height==_height);
-        ADM_assert(isWrittable()==true); // could not duplicate to a linked data image
-        uint32_t sourceStride,destStride;
-        uint8_t  *source,*dest;
+    // Sanity check
+    ADM_assert(src->_width==_width);
+    ADM_assert(src->_height==_height);
+    ADM_assert(isWrittable()); // could not duplicate to a linked data image
+    uint32_t sourceStride,destStride;
+    uint8_t  *source,*dest;
 
+    if(src->refType==ADM_HW_NONE)
+    {
         hwDecRefCount(); // free hw ref image if any..
-        if(src->refType==ADM_HW_NONE)
+        refType = ADM_HW_NONE;
+
+        for(int plane=PLANAR_Y;plane<PLANAR_LAST;plane++)
         {
-            for(int plane=PLANAR_Y;plane<PLANAR_LAST;plane++)
+            source=src->GetReadPtr((ADM_PLANE)plane);
+            dest=this->GetWritePtr((ADM_PLANE)plane);
+            sourceStride=src->GetPitch((ADM_PLANE)plane);
+            destStride=this->GetPitch((ADM_PLANE)plane);
+            uint32_t opHeight=_height;
+            uint32_t opWidth=_width;
+            if(plane!=PLANAR_Y)
             {
-                source=src->GetReadPtr((ADM_PLANE)plane);
-                dest=this->GetWritePtr((ADM_PLANE)plane);
-                sourceStride=src->GetPitch((ADM_PLANE)plane);
-                destStride=this->GetPitch((ADM_PLANE)plane);
-                uint32_t opHeight=_height;
-                uint32_t opWidth=_width;
-                if(plane!=PLANAR_Y)
+                opHeight>>=1;
+                opWidth>>=1;
+                if(swap)
                 {
-                    opHeight>>=1;
-                    opWidth>>=1;
-                    if(swap)
+                    if(plane==PLANAR_U)
                     {
-                        if(plane==PLANAR_U)
-                        {
-                            dest=this->GetWritePtr(PLANAR_V);
-                            destStride=this->GetPitch(PLANAR_V);
-                        }
-                        if(plane==PLANAR_V)
-                        {
-                            dest=this->GetWritePtr(PLANAR_U);
-                            destStride=this->GetPitch(PLANAR_U);
-                        }
+                        dest=this->GetWritePtr(PLANAR_V);
+                        destStride=this->GetPitch(PLANAR_V);
+                    }
+                    if(plane==PLANAR_V)
+                    {
+                        dest=this->GetWritePtr(PLANAR_U);
+                        destStride=this->GetPitch(PLANAR_U);
                     }
                 }
-                if (destStride == sourceStride)
-                    memcpy(dest, source, destStride*opHeight);  // copying in one run is faster then line-by-line
-                else
-                    BitBlit(dest, destStride,source,sourceStride,opWidth, opHeight);
+            }
+            if (destStride == sourceStride)
+                memcpy(dest, source, destStride*opHeight);  // copying in one run is faster then line-by-line
+            else
+                BitBlit(dest, destStride,source,sourceStride,opWidth, opHeight);
+        }
+    } else // it is a hw surface
+    {
+        hwRefDescriptor old;
+        ADM_HW_IMAGE oldRefType = refType;
+        if(refType != ADM_HW_NONE)
+            memcpy(&old, &refDescriptor, sizeof(refDescriptor));
+
+        refType                     = src->refType;
+        refDescriptor.refCodec      = src->refDescriptor.refCodec;
+        refDescriptor.refHwImage    = src->refDescriptor.refHwImage;
+        refDescriptor.refMarkUsed   = src->refDescriptor.refMarkUsed;
+        refDescriptor.refDownload   = src->refDescriptor.refDownload;
+
+        hwIncRefCount();
+
+        // free previously referenced hw image if applicable
+        if(oldRefType != ADM_HW_NONE)
+        {
+            if (old.refHwImage == src->refDescriptor.refHwImage &&
+                oldRefType == src->refType &&
+                old.refCodec == src->refDescriptor.refCodec)
+            { // same hw image means we may not decrement ref count
+                //ADM_warning("Duplicating to ADMImage referencing the same hw image.\n");
+            } else
+            {
+                refDescriptor.refCodec      = old.refCodec;
+                refDescriptor.refHwImage    = old.refHwImage;
+                refDescriptor.refMarkUnused = old.refMarkUnused;
+
+                hwDecRefCount();
+
+                // restore pointers
+                refType                     = src->refType;
+                refDescriptor.refCodec      = src->refDescriptor.refCodec;
+                refDescriptor.refHwImage    = src->refDescriptor.refHwImage;
             }
         }
-         else // it is a hw surface
-        {
-            refType                    =src->refType;
-            refDescriptor.refHwImage   =src->refDescriptor.refHwImage;
-            refDescriptor.refCodec     =src->refDescriptor.refCodec;
-            refDescriptor.refMarkUsed  =src->refDescriptor.refMarkUsed;
-            refDescriptor.refMarkUnused=src->refDescriptor.refMarkUnused;
-            refDescriptor.refDownload  =src->refDescriptor.refDownload;
-            hwIncRefCount();
-        }
-        return true;
+        refDescriptor.refMarkUnused = src->refDescriptor.refMarkUnused;
+    }
+    return true;
 }
 /**
     \fn duplicate
