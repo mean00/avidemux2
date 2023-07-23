@@ -65,8 +65,7 @@ static  bool libvaMarkSurfaceUsed(void *instance,void *cookie)
 {
     decoderFFLIBVA *inst=(decoderFFLIBVA *)instance;
     ADM_vaSurface *s=(ADM_vaSurface *)cookie ;
-    inst->markSurfaceUsed(s);
-    return true;
+    return inst->markSurfaceUsed(s);
 }
 /**
  * 
@@ -78,8 +77,7 @@ static  bool libvaMarkSurfaceUnused(void *instance,void *cookie)
 {
     decoderFFLIBVA *inst=(decoderFFLIBVA *)instance ;
     ADM_vaSurface *s=(ADM_vaSurface *)cookie ;
-    inst->markSurfaceUnused(s);
-    return true;
+    return inst->markSurfaceUnused(s);
 }
 
 /**
@@ -90,9 +88,9 @@ static bool libvaRefDownload(ADMImage *image, void *instance, void *cookie)
 {
     decoderFFLIBVA *inst=(decoderFFLIBVA *)instance ;
     ADM_vaSurface *s=(ADM_vaSurface *) cookie;
+    //printf("[libvaRefDownload] Downloading from surface 0x%08x\n", s->surface);
     bool r=s->toAdmImage(image);
-    image->refType=ADM_HW_NONE;
-    libvaMarkSurfaceUnused(instance,cookie);
+    //printf("[libvaRefDownload] Download %s\n", r? "completed" : "failed");
     return r;
 }
 
@@ -183,10 +181,14 @@ bool libvaProbe(void)
     \fn markSurfaceUsed
     \brief mark the surfave as used. Can be called multiple time.
 */
-bool decoderFFLIBVA::markSurfaceUsed(ADM_vaSurface *s)
+bool decoderFFLIBVA::markSurfaceUsed(ADM_vaSurface *s, bool internal)
 {
     imageMutex.lock();
-    s->refCount++;
+    if(internal)
+        s->refCountInternal++;
+    else
+        s->refCountExternal++;
+    //printf("[decoderFFLIBVA::markSurfaceUsed] Ref count for surface 0x%08x incremented to %d / %d\n", s->surface, s->refCountInternal, s->refCountExternal);
     imageMutex.unlock();
     return true;
     
@@ -196,24 +198,46 @@ bool        decoderFFLIBVA::markSurfaceUnused(VASurfaceID id)
     aprintf("Freeing surface %x\n",(int)id);
     ADM_vaSurface *s=lookupBySurfaceId(id);
     ADM_assert(s);
-    return markSurfaceUnused(s);
+    return markSurfaceUnused(s, true);
 }
 /**
     \fn markSurfaceUnused
     \brief mark the surfave as unused by the caller. Can be called multiple time.
 */
-bool decoderFFLIBVA::markSurfaceUnused(ADM_vaSurface *img)
+bool decoderFFLIBVA::markSurfaceUnused(ADM_vaSurface *img, bool internal)
 {
-        
-   imageMutex.lock();
-   img->refCount--;
-   aprintf("Surface %x, Ref count is now %d\n",img->surface,img->refCount);
-   if(!img->refCount)
-   {
+    bool r = false;
+    imageMutex.lock();
+    if(internal)
+        img->refCountInternal--;
+    else
+        img->refCountExternal--;
+
+    if(img->refCountInternal < 0) img->refCountInternal = 0;
+    if(img->refCountExternal < 0) img->refCountExternal = 0;
+
+    //printf("[decoderFFLIBVA::markSurfaceUnused] New refcount for surface 0x%08x: %d / %d\n", img->surface, img->refCountInternal, img->refCountExternal);
+
+    if(!img->refCountExternal)
+        r = true;
+
+    if(!img->refCountInternal && !img->refCountExternal)
+    {
+        int n=vaPool.freeSurfaceQueue.size();
+        for(int i=0;i<n;i++)
+        {
+            if(vaPool.freeSurfaceQueue[i]->surface == img->surface)
+            {
+                //ADM_warning("VASurfaceID 0x%08x already in the free queue!\n", img->surface);
+                goto end;
+            }
+        }
+        //printf("[decoderFFLIBVA::markSurfaceUnused] Returning surface 0x%08x into pool.\n", img->surface);
         vaPool.freeSurfaceQueue.append(img);
-   }
-   imageMutex.unlock();
-   return true;
+    }
+end:
+    imageMutex.unlock();
+    return r;
 }
  
 /**
@@ -238,6 +262,7 @@ void ADM_LIBVAreleaseBuffer(void *opaque, uint8_t *data)
    decoderFFLIBVA *dec=(decoderFFLIBVA *)opaque;
    ADM_assert(dec);
    VASurfaceID   surface=*(VASurfaceID *)(data);
+   //printf("[ADM_LIBVAreleaseBuffer] Releasing surface id 0x%08x\n", surface);
    dec->markSurfaceUnused(surface);
 }
 
@@ -251,6 +276,7 @@ int decoderFFLIBVA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
 {
         
     imageMutex.lock();
+again:
     if(vaPool.freeSurfaceQueue.empty())
     {
         aprintf("Allocating new vaSurface\n");
@@ -263,23 +289,31 @@ int decoderFFLIBVA::getBuffer(AVCodecContext *avctx, AVFrame *pic)
         }
         vaPool.freeSurfaceQueue.append(img);
         vaPool.allSurfaceQueue.append(img);
-    }else
+        /* printf("[decoderFFLIBVA::getBuffer] Allocated a new vaSurface 0x%08x, total %d free %d\n",
+            img->surface, vaPool.allSurfaceQueue.size(), vaPool.freeSurfaceQueue.size()); */
+    } else
     {
-        aprintf("Reusing vaSurface from pool\n");
+        //printf("[decoderFFLIBVA::getBuffer] Reusing vaSurface from pool, total %d free %d\n", vaPool.allSurfaceQueue.size(), vaPool.freeSurfaceQueue.size());
     }
     ADM_vaSurface *s= vaPool.freeSurfaceQueue[0];
     vaPool.freeSurfaceQueue.popFront();
+
+    if(s->refCountInternal > 0 || s->refCountExternal > 0)
+    {
+        ADM_warning("Referenced (%d / %d) surface id 0x%08x in the free queue, skipping.\n", s->refCountInternal, s->refCountExternal, s->surface);
+        goto again;
+    }
+
     imageMutex.unlock();
-    s->refCount=0;
-    markSurfaceUsed(s); // 1 ref taken by lavcodec
-    
+    markSurfaceUsed(s, true); // 1 ref taken by lavcodec
+
     pic->buf[0]=av_buffer_create((uint8_t *)&(s->surface),  // Maybe a memleak here...
                                      sizeof(s->surface),
                                      ADM_LIBVAreleaseBuffer, 
                                      (void *)this,
                                      AV_BUFFER_FLAG_READONLY);
     
-    aprintf("Alloc Buffer : 0x%llx, surfaceid=%x\n",s,(int)s->surface);
+    //printf("[decoderFFLIBVA::getBuffer] Alloc Buffer in ADM_vaSurface at %p, VASurfaceID 0x%08x\n",s,(int)s->surface);
     pic->data[0]=(uint8_t *)s;
     pic->data[3]=(uint8_t *)(uintptr_t)s->surface;
     pic->reordered_opaque= avctx->reordered_opaque;    
@@ -479,23 +513,6 @@ decoderFFLIBVA::decoderFFLIBVA(AVCodecContext *avctx,decoderFF *parent)
     }
 
     _context->slice_flags     = SLICE_FLAG_CODED_ORDER|SLICE_FLAG_ALLOW_FIELD;
-
-    for(int i=0;i<ADM_DEFAULT_SURFACE;i++)
-        initSurfaceID[i]=VA_INVALID;
-
-    for(int i=0;i<ADM_DEFAULT_SURFACE;i++)
-    {
-        ADM_vaSurface *admSurface=allocateADMVaSurface(avctx);
-        if(!admSurface)
-        {
-            ADM_warning("Cannot allocate dummy surface\n");
-            return;
-        }
-        aprintf("Created initial pool, %d : %x\n",i,admSurface->surface);
-        initSurfaceID[i]=admSurface->surface;
-        vaPool.allSurfaceQueue.append(admSurface);
-        vaPool.freeSurfaceQueue.append(admSurface);
-    }
     alive=true;
     _context->get_buffer2     = ADM_LIBVAgetBuffer;
     _context->draw_horiz_band = NULL;
@@ -508,17 +525,28 @@ decoderFFLIBVA::decoderFFLIBVA(AVCodecContext *avctx,decoderFF *parent)
 decoderFFLIBVA::~decoderFFLIBVA()
 {
     imageMutex.lock();
-    int m=vaPool.allSurfaceQueue.size();
-    int n=vaPool.freeSurfaceQueue.size();
-    if(n!=m)
+    int total = vaPool.allSurfaceQueue.size();
+    int free = vaPool.freeSurfaceQueue.size();
+    if(free != total)
     {
-        ADM_warning("Some surfaces are not reclaimed! (%d/%d)\n",n,m);
+        ADM_warning("Some surfaces (%d / %d) are not reclaimed!\n", total-free, total);
     }
-    for(int i=0;i<n;i++)
+    int refs = 0;
+    for(int i=0; i < total; i++)
     {
-        delete vaPool.freeSurfaceQueue[i];
+        ADM_vaSurface *s = vaPool.allSurfaceQueue[i];
+        if(s->refCountExternal > 0)
+        {
+            ADM_warning("Surface %d id 0x%08x is still externally referenced.\n", i, s->surface);
+            refs++;
+            //continue;
+        }
+        delete s;
     }
+    if(refs)
+        ADM_warning("Destroying decoder with some surfaces still externally referenced (%d / %d)\n", refs, total);
     vaPool.freeSurfaceQueue.clear();
+    vaPool.allSurfaceQueue.clear();
     imageMutex.unlock();
 }
 /**
@@ -530,20 +558,12 @@ decoderFFLIBVA::~decoderFFLIBVA()
  */
 bool decoderFFLIBVA::uncompress (ADMCompressedImage * in, ADMImage * out)
 {
-      
     aprintf("==> uncompress %s\n",_context->codec->long_name);
-    if(out->refType==ADM_HW_LIBVA)
-    {
-            ADM_vaSurface *img=(ADM_vaSurface *)out->refDescriptor.refHwImage;
-            markSurfaceUnused(img);
-            out->refType=ADM_HW_NONE;
-    }
-
+    out->hwDecRefCount();
     if(!_parent->getDrainingState() && !in->dataLength) // Null frame, silently skipped
     {
         out->_noPicture = 1;
         out->Pts=ADM_COMPRESSED_NO_PTS;
-        out->refType=ADM_HW_NONE;
         ADM_info("[LibVa] Nothing to decode -> no Picture\n");
         return false;
     }

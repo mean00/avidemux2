@@ -12,15 +12,12 @@
 /**
  * \class decoderFFLIBVA
  */
-#define ADM_MAX_SURFACE 16+6+1
-
 typedef struct 
 {
         BVector <ADM_vaSurface *>freeSurfaceQueue;
         BVector <ADM_vaSurface *>allSurfaceQueue;
 }libvaContext;
 
-#define ADM_DEFAULT_SURFACE 8
 class decoderFFLIBVA:public ADM_acceleratedDecoderFF
 {
 friend class ADM_vaSurface;
@@ -28,13 +25,12 @@ protected:
 protected:
                     bool          alive;
                     libvaContext  vaPool;
-                    VASurfaceID   initSurfaceID[ADM_DEFAULT_SURFACE];
 
 protected:
                     bool        initVAContext();
 public:                    
-                    bool        markSurfaceUsed(ADM_vaSurface *s);
-                    bool        markSurfaceUnused(ADM_vaSurface *s);
+                    bool        markSurfaceUsed(ADM_vaSurface *s, bool internal = false);
+                    bool        markSurfaceUnused(ADM_vaSurface *s, bool internal = false);
                     bool        markSurfaceUnused(VASurfaceID id);
 public:     // Callbacks
                     int         getBuffer(AVCodecContext *avctx, AVFrame *pic);
