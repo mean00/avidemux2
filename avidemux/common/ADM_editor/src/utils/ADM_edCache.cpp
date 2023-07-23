@@ -115,7 +115,6 @@ ADMImage *EditorCache::getFreeImage(int vid)
     // Mark it as used
     if(found==-1) ADM_assert(0);
     _elem[found].pts=ADM_NO_PTS;
-    _elem[found].image->hwDecRefCount(); // ??
     writeIndex++;
     aprintf("Using free image at index %d\n",found);
     _elem[found].ref = vid;
@@ -134,7 +133,6 @@ ADMImage *EditorCache::getFreeImage(int vid)
     {
         _elem[i].pts=ADM_NO_PTS;
         _elem[i].ref = -1;
-        _elem[i].image->hwDecRefCount();
     }
     writeIndex=readIndex=0;
 }
