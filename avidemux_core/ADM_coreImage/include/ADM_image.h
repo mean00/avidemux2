@@ -99,7 +99,7 @@ typedef struct
         void            *refCodec;  ///
         void            *refHwImage;  /// Ref to a hw image
         refFunction     *refMarkUsed;   ///
-        refFunction     *refMarkUnused; ///
+        refFunction     *refMarkUnused; /// Should return true when hw image is freed, else false.
         refDownloadFunction     *refDownload;
 }hwRefDescriptor;
 

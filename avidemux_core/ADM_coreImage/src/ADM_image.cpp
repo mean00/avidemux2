@@ -120,10 +120,12 @@ ADMImage::~ADMImage()
 {
         if(refType==ADM_HW_NONE) return true;
         ADM_assert(refDescriptor.refMarkUnused);
-        bool r=refDescriptor.refMarkUnused(refDescriptor.refCodec,refDescriptor.refHwImage); 
-        refType=ADM_HW_NONE;
-        return r;
-        
+        if(refDescriptor.refMarkUnused(refDescriptor.refCodec, refDescriptor.refHwImage))
+        {
+            refType = ADM_HW_NONE;
+            return true;
+        }
+        return false;
 }
 /**
     \fn    hwDownloadFromRef
