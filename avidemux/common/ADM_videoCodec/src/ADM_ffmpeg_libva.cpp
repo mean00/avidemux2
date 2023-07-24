@@ -114,15 +114,15 @@ static ADM_vaSurface *allocateADMVaSurface(AVCodecContext *ctx)
     int widthToUse = (ctx->coded_width+ 1)  & ~1;
     int heightToUse= (ctx->coded_height+3)  & ~3;
     int fmt=VA_RT_FORMAT_YUV420;
-    if(ctx->pix_fmt==AV_PIX_FMT_YUV420P10LE)
-        fmt=VA_RT_FORMAT_YUV420_10BPP;
+    if(ctx->sw_pix_fmt == AV_PIX_FMT_YUV420P10LE)
+        fmt=VA_RT_FORMAT_YUV420_10;
     VASurfaceID surface=admLibVA::allocateSurface(widthToUse,heightToUse,fmt);
     if(surface==VA_INVALID)
     {
             ADM_warning("Cannot allocate surface (%d x %d)\n",(int)widthToUse,(int)heightToUse);
             return NULL;
     }
-    ADM_vaSurface *img=new ADM_vaSurface(widthToUse,heightToUse);
+    ADM_vaSurface *img=new ADM_vaSurface(widthToUse, heightToUse, (fmt == VA_RT_FORMAT_YUV420_10)? 10 : 8);
     img->surface=surface;
     return img;
 }

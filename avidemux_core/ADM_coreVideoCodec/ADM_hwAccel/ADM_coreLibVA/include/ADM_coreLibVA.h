@@ -73,9 +73,9 @@ static  void        destroySurface(  VASurfaceID surface);
 
 static  VAImage    *allocateNV12Image( int w, int h);
 static  VAImage    *allocateYV12Image( int w, int h);
+static  VAImage    *allocateP010Image( int w, int h);
 static  void       destroyImage(  VAImage *image);
-static  VAImage    *allocateImage( int w, int h);
-
+static  VAImage    *allocateImage(int w, int h, int bpp);
 
 static bool        transfer(VAContextID session, int w, int h,VASurfaceID surface, ADMImage *img,VAImage *tmp,uint8_t *yv12);
 
@@ -127,7 +127,7 @@ public:
     int                 w,h;
     ADMColorScalerSimple *fromNv12ToYv12;
     ADMColorScalerSimple *color10bits;
-    ADM_vaSurface(int w, int h);    
+    ADM_vaSurface(int w, int h, int bpp = 8);
     ~ADM_vaSurface();
 
     bool hasValidSurface() {return !(surface==VA_INVALID);}

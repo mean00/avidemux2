@@ -74,6 +74,7 @@ typedef struct {
  decoderConfig          configAV1;
  VAImageFormat          imageFormatNV12;
  VAImageFormat          imageFormatYV12;
+ VAImageFormat          imageFormatP010;
  bool                   directOperation;
  bool                   indirectOperationYV12;
  bool                   indirectOperationNV12;
@@ -468,6 +469,9 @@ bool admLibVA::setupImageFormat()
                     ADM_info("YV12 is supported\n");
                     r=true;
                     break;
+                case VA_FOURCC_P010:
+                    ADM_coreLibVA::imageFormatP010=list[i];
+                    ADM_info("P010 is supported\n");
                 default:break;
             }
         }
@@ -689,21 +693,31 @@ VAContextID        admLibVA::createDecoder(VAProfile profile,int width, int heig
  * @param h
  * @return
  */
- VAImage    *admLibVA::allocateImage( int w, int h)
- {
+VAImage *admLibVA::allocateImage(int w, int h, int bpp)
+{
     switch(ADM_coreLibVA::transferMode)
     {
-    case   admLibVA::ADM_LIBVA_NONE: ADM_warning("No transfer supported\n");
-    case   admLibVA::ADM_LIBVA_DIRECT:
-                return NULL;break;
-    case   admLibVA::ADM_LIBVA_INDIRECT_NV12:
-                return admLibVA::allocateNV12Image(w,h);break;
-    case   admLibVA::ADM_LIBVA_INDIRECT_YV12:
-                return admLibVA::allocateYV12Image(w,h);break;
-    default:ADM_assert(0);
+        case admLibVA::ADM_LIBVA_NONE:
+            ADM_warning("No transfer supported\n");
+        case admLibVA::ADM_LIBVA_DIRECT:
+            return NULL;
+        case admLibVA::ADM_LIBVA_INDIRECT_NV12:
+            if(bpp == 8)
+                return admLibVA::allocateNV12Image(w,h);
+            break;
+        case admLibVA::ADM_LIBVA_INDIRECT_YV12:
+            if(bpp == 8)
+                return admLibVA::allocateYV12Image(w,h);
+            break;
+        default:
+            ADM_assert(0);
+            break;
     }
+    if(bpp == 10)
+        return admLibVA::allocateP010Image(w,h);
+    ADM_error("Unsupported bit depth %d, cannot allocate VAImage.\n", bpp);
     return NULL;
- }
+}
 
 /**
  *
@@ -747,6 +761,28 @@ VAImage   *admLibVA::allocateYV12Image( int w, int h)
     if(xError)
     {
         ADM_warning("Cannot allocate yv12 image\n");
+        delete image;
+        return NULL;
+    }
+    listOfAllocatedVAImage[image->image_id]=true;
+    return image;
+}
+/**
+ * \fn allocateP010Image
+ * @param w
+ * @param h
+ * @return
+ */
+VAImage *admLibVA::allocateP010Image(int w, int h)
+{
+    int xError=1;
+    CHECK_WORKING(NULL);
+    VAImage *image=new VAImage;
+    memset(image,0,sizeof(*image));
+    CHECK_ERROR(vaCreateImage(ADM_coreLibVA::display, &ADM_coreLibVA::imageFormatP010, w, h, image))
+    if(xError)
+    {
+        ADM_warning("Cannot allocate P010 image\n");
         delete image;
         return NULL;
     }
@@ -830,7 +866,7 @@ VASurfaceID        admLibVA::allocateSurface(int w, int h, int fmt)
         switch(fmt)
         {
             case VA_RT_FORMAT_YUV420:    fcc = VA_FOURCC_NV12; break;
-            case VA_RT_FORMAT_YUV420_10: fcc = VA_FOURCC_I010; break; // UV swapped?
+            case VA_RT_FORMAT_YUV420_10: fcc = VA_FOURCC_P010; break;
             case VA_RT_FORMAT_YUV422:    fcc = VA_FOURCC_422H; break;
             case VA_RT_FORMAT_YUV444:    fcc = VA_FOURCC_444P; break;
             case VA_RT_FORMAT_RGB32:     fcc = VA_FOURCC_BGRX; break;
@@ -1340,7 +1376,10 @@ bool ADM_vaSurface::fromAdmImage (ADMImage *dest)
  */
 ADM_vaSurface *ADM_vaSurface::allocateWithSurface(int w,int h,int fmt)
 {
-    ADM_vaSurface *s=new ADM_vaSurface(w,h);
+    int bpp = 8;
+    if(fmt == VA_RT_FORMAT_YUV420_10)
+        bpp = 10;
+    ADM_vaSurface *s=new ADM_vaSurface(w,h,bpp);
     s->surface=admLibVA::allocateSurface(w,h,fmt);
     if(!s->hasValidSurface())
     {
@@ -1417,14 +1456,14 @@ bool admLibVA::cleanup()
  * @param w
  * @param h
  */
- ADM_vaSurface::ADM_vaSurface(int w, int h)
+ ADM_vaSurface::ADM_vaSurface(int w, int h, int bpp)
 {
     surface=VA_INVALID;
     refCount=0;
     refCountInternal = refCountExternal = 0;
     this->w=w;
     this->h=h;
-    image=admLibVA::allocateImage(w,h);
+    image=admLibVA::allocateImage(w,h,bpp);
     fromNv12ToYv12=NULL;
     color10bits=NULL;
 }
