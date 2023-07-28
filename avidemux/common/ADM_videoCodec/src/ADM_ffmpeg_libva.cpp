@@ -635,7 +635,8 @@ bool decoderFFLIBVA::uncompress (ADMCompressedImage * in, ADMImage * out)
 bool     decoderFFLIBVA::readBackBuffer(AVFrame *decodedFrame, ADMCompressedImage * in, ADMImage * out)
 {
     uint64_t pts_opaque=(uint64_t)(decodedFrame->reordered_opaque);
-    out->Pts= (uint64_t)(pts_opaque);        
+    if(_context->codec_id != AV_CODEC_ID_AV1)
+        out->Pts = pts_opaque; // not usable with AV1 where decoder may output multiple pictures per packet (or none)
     out->flags=admFrameTypeFromLav(decodedFrame);
     out->_range=(decodedFrame->color_range==AVCOL_RANGE_JPEG)? ADM_COL_RANGE_JPEG : ADM_COL_RANGE_MPEG;
     out->refType=ADM_HW_LIBVA;
