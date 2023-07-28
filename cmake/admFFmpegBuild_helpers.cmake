@@ -19,7 +19,7 @@ set(FFMPEG_BASE_DIR "${FFMPEG_EXTRACT_DIR}/ffmpeg")
 set(FFMPEG_SOURCE_DIR "${FFMPEG_BASE_DIR}/source")
 set(FFMPEG_BINARY_DIR "${FFMPEG_BASE_DIR}/build")
 
-set(FFMPEG_DECODERS     aac  ac3  adpcm_ima_amv  amv  cinepak  cscd  cyuv
+set(FFMPEG_DECODERS     aac  ac3  av1  adpcm_ima_amv  amv  cinepak  cscd  cyuv
                         dca  dnxhd  dvvideo  eac3  ffv1  ffvhuff  fic
                         flac  flv  fraps  h263  h264  hevc  huffyuv  lagarith
                         mjpeg  mjpegb  mp2  mp3  mpeg2video  mpeg4  msmpeg4v2  msmpeg4v3
