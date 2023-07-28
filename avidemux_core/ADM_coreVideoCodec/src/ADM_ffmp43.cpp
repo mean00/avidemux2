@@ -786,6 +786,9 @@ bool decoderFF::decodeErrorHandler(int code)
 */
 bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
 {
+    if(!_initCompleted)
+        return false;
+
   int ret = 0;
   out->_noPicture = 0;
   out->_Qp = ADM_IMAGE_UNKNOWN_QP;
@@ -837,6 +840,18 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
             _packet->flags = 0;
 
         ret = avcodec_send_packet(_context, _packet);
+
+        // Special case AV1: there is no native sw decoder in libavcodec
+        // and getting ENOSYS now means hw decoder is not available and
+        // there is no internal fallback. Allow client catching this by
+        // calling initializedOk() after having sent the first (key)frame.
+        if(_context->codec_id == AV_CODEC_ID_AV1 && ret == AVERROR(ENOSYS))
+        {
+            ADM_warning("No working hw decoder for AV1 available, giving up.\n");
+            av_packet_unref(_packet);
+            _initCompleted = false;
+            return false;
+        }
 
         if(ret)
         {
