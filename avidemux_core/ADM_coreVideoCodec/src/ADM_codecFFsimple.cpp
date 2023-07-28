@@ -76,6 +76,12 @@ void decoderFFSimple::applyQuirks(void)
                 ADM_warning("Multi-threading requested, but slice-based multi-threading unavailable.\n");
             }
             break;
+        case AV_CODEC_ID_AV1:
+            if(_usingMT || _context->thread_count > 1)
+                ADM_info("Overriding requested multi-threading for AV1.\n");
+            _context->thread_count = 1;
+            _usingMT = 1;
+            break;
         default:break;
     }
 }
