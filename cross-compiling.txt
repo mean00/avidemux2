@@ -5,11 +5,16 @@
 ******************************************************************************
 
 
-1. Install MXE (M cross environment) dependencies as described in
+1. Install MXE (M cross environment) build dependencies as described in
 
     http://mxe.cc/#requirements
 
-for your respective Linux distribution, then run the script mxe-setup.sh from
+for your respective Linux distribution. For Fedora, at the time of writing,
+this list doesn't mention the developer package for pcre (pcre-devel), needed
+for a successful build of glib in MXE, see https://github.com/mxe/mxe/issues/2875
+for the same omission fixed for Debian and its derivatives.
+
+Once dependencies have been installed, run the script mxe-setup.sh from
 a directory *outside of Avidemux top source directory*. This script will
 
   a) clone MXE git repository;
@@ -58,6 +63,10 @@ partition, extract it on Windows and run 'avidemux.exe' from there.
 
 3. Issues:
 
+At the time of writing, build of fluxSmooth and ivtcDupeRemover video filters
+in Avidemux fails with the current gcc version in MXE. For now, please disable
+it by commenting out the corresponding lines of avidemux_plugins/ADM_videoFilters6/CMakeLists.txt
+
 Build of the mesa package in MXE fails with python3 >= 3.8. If the Linux
 distribution used to host MXE ships with Python at version 3.8 or later,
 make sure that python2 is installed and unversioned python command points
@@ -65,4 +74,4 @@ to python2. See https://bugs.python.org/issue40350
 
 As of this writing, twolame, aften, vapoursynth and avsproxy are not available.
 
-2022-01-17
+2023-07-29
