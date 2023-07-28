@@ -14,6 +14,7 @@
  ***************************************************************************/
 
 #include "ADM_default.h"
+#include "prefs.h"
 #include "ADM_aomDec.h"
 #include "aom/aom_decoder.h"
 #include "aom/aomdx.h"
@@ -32,32 +33,57 @@ decoderAom::decoderAom(uint32_t w, uint32_t h, uint32_t fcc, uint32_t extraDataL
     drain=false;
     alive=false;
     cookie=NULL;
-    aom_codec_dec_cfg_t cfg;
-    aom_codec_flags_t flags=0;
-    aom_codec_ctx_t *instance=new aom_codec_ctx_t;
+    coreDecoder=NULL;
+
     if(fcc!=MKFCC('a','v','0','1'))
     {
         ADM_warning("Unsupported FCC\n");
-        delete instance;
         return;
     }
 
+    aom_codec_dec_cfg_t cfg;
+    aom_codec_ctx_t *instance=new aom_codec_ctx_t;
+
     memset(instance,0,sizeof(*instance));
     memset(&cfg,0,sizeof(cfg));
+
     cfg.threads=ADM_cpu_num_processors();
     cfg.w=w;
     cfg.h=h;
     cfg.allow_lowbitdepth=1;
+
+    aom_codec_flags_t flags=0;
+
     aom_codec_err_t err=aom_codec_dec_init(instance, &aom_codec_av1_dx_algo, &cfg, flags);
+
     if(err!=AOM_CODEC_OK)
     {
         delete instance;
         ADM_warning("libaom decoder init failed with error %d: %s.\n",(int)err,aom_codec_err_to_string(err));
-    }else
+        return;
+    }
+    alive=true;
+    cookie=(void *)instance;
+    ADM_info("libaom decoder init succeeded, threads: %d\n",cfg.threads);
+
+    bool tryLibva = false;
+#ifdef USE_LIBVA
+    if(false == prefs->get(FEATURES_LIBVA,&tryLibva))
+        tryLibva = false;
+#endif
+    if(!tryLibva)
+        return;
+
+    ADM_info("Can we actually use a hw decoder instead of libaom?\n");
+    coreDecoder = ADM_coreCodecGetDecoder(fcc,w,h,extraDataLen,extraData,bpp);
+    if(coreDecoder)
     {
-        alive=true;
-        cookie=(void *)instance;
-        ADM_info("libaom decoder init succeeded, threads: %d\n",cfg.threads);
+        if(!coreDecoder->initializedOk())
+        {
+            ADM_info("Nope, we cannot.\n");
+            delete coreDecoder;
+            coreDecoder = NULL;
+        }
     }
 }
 /**
@@ -66,6 +92,12 @@ decoderAom::decoderAom(uint32_t w, uint32_t h, uint32_t fcc, uint32_t extraDataL
 decoderAom::~decoderAom()
 {
     ADM_info("Destroying libaom decoder.\n");
+    if(coreDecoder)
+    {
+        ADM_info("Destroying core decoder first.\n");
+        delete coreDecoder;
+        coreDecoder = NULL;
+    }
     if(cookie)
     {
         aom_codec_ctx_t *a=AX;
@@ -75,11 +107,31 @@ decoderAom::~decoderAom()
     }
 }
 /**
+    \fn setDrainingState
+*/
+void decoderAom::setDrainingState(bool yesno)
+{
+    drain = yesno;
+    if(drain && coreDecoder)
+        coreDecoder->setDrainingState(true);
+}
+/**
+    \fn getDrainingState
+*/
+bool decoderAom::getDrainingState(void)
+{
+    if(coreDecoder)
+        drain = coreDecoder->getDrainingState();
+    return drain;
+}
+/**
     \fn flush
 */
 bool decoderAom::flush(void)
 {
     drain=false;
+    if(coreDecoder)
+        coreDecoder->flush(); // this resets draining state too
     return true;
 }
 /**
@@ -87,6 +139,17 @@ bool decoderAom::flush(void)
 */
 bool decoderAom::uncompress(ADMCompressedImage *in, ADMImage *out)
 {
+    if(coreDecoder)
+    {
+        bool result = coreDecoder->uncompress(in, out);
+        if(!result && !coreDecoder->initializedOk()) // No hw decoder capable to decode AV1 found, switch to sw path.
+        {
+            ADM_warning("Core AV1 decoder doesn't work, destroying it.\n");
+            delete coreDecoder;
+            coreDecoder = NULL;
+        }
+    }
+
     aom_codec_err_t err;
     if(drain)
         err=aom_codec_decode(AX, NULL, 0, NULL);
