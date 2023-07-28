@@ -93,7 +93,7 @@ decoders *ADM_coreCodecGetDecoder (uint32_t fcc, uint32_t w, uint32_t h, uint32_
     bool ffailed=false;
     if(ffdec)
     {
-        if(ffdec->initialized())
+        if(ffdec->initializedOk())
             return (decoders *)ffdec;
         delete ffdec;
         ffdec=NULL;

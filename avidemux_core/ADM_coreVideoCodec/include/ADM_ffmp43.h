@@ -96,7 +96,7 @@ protected:
 public:
                         decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData,uint32_t bpp);
         virtual         ~ decoderFF ();
-        virtual bool    initialized(void) { return _initCompleted; }
+        virtual bool    initializedOk(void) { return _initCompleted; }
             bool        setHwDecoder(ADM_acceleratedDecoderFF *h)
                         {
                             if(h)

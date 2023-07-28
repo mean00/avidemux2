@@ -73,7 +73,7 @@ void decoderFFSimple::applyQuirks(void)
                     ADM_info("Enabling slice-based multi-threading.\n");
                     break;
                 }
-                ADM_warning("Multi-threadig requested, but slice-based multi-threading unavailable.\n");
+                ADM_warning("Multi-threading requested, but slice-based multi-threading unavailable.\n");
             }
             break;
         default:break;
@@ -89,7 +89,7 @@ decoders *admCreateFFSimple(uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraD
     AVCodecID id=c->codecId;
     if(id==AV_CODEC_ID_NONE) return NULL;
     decoderFFSimple *ffdec=new decoderFFSimple(w,h,fcc,extraDataLen,extraData,bpp);
-    if(ffdec->initialized())
+    if(ffdec->initializedOk())
         return (decoders *)ffdec;
     delete ffdec;
     ffdec=NULL;
