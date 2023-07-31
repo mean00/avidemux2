@@ -44,8 +44,10 @@ protected:
 public:
     typedef enum {
         ADM_LIBVA_DRIVER_QUIRK_NONE = 0,
-        ADM_LIBVA_DRIVER_QUIRK_ATTRIB_MEMTYPE = 1,
-        ADM_LIBVA_DRIVER_QUIRK_SURFACE_ATTRIBUTES = 2
+        ADM_LIBVA_DRIVER_QUIRK_USER_SET = (1 << 0),
+        ADM_LIBVA_DRIVER_QUIRK_RENDER_PARAM_BUFFERS = (1 << 1),
+        ADM_LIBVA_DRIVER_QUIRK_ATTRIB_MEMTYPE = (1 << 2),
+        ADM_LIBVA_DRIVER_QUIRK_SURFACE_ATTRIBUTES = (1 << 3)
     } LIBVA_DRIVER_QUIRK; // see libavutil/hwcontext_vaapi.h
     typedef enum 
     {
