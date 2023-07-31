@@ -80,7 +80,7 @@ void decoderFFSimple::applyQuirks(void)
             if(_usingMT || _context->thread_count > 1)
                 ADM_info("Overriding requested multi-threading for AV1.\n");
             _context->thread_count = 1;
-            _usingMT = 1;
+            _usingMT = 0;
             break;
         default:break;
     }
