@@ -144,11 +144,25 @@ static bool checkSupportedFunctionsAndImageFormat(void)
     // Check direct upload/Download works
     ADM_info("--Trying direct operations --\n");
     ADM_coreLibVA::directOperation      =tryDirect("direct",admSurface, image1,  image2);
+
+    if(ADM_coreLibVA::driverQuirks == admLibVA::ADM_LIBVA_DRIVER_QUIRK_USER_SET)
+    {
+        ADM_warning("Driver blacklisted for indirect transfer, skipping further probing.\n");
+        if(NULL != getenv("ADM_LIBVA_DEBUG_NO_INDIRECT_YV12"))
+        {
+            ADM_warning("Overriding blacklist, trying indirect NV12 only.\n");
+            goto yv12_skipped;
+        }
+        goto summary;
+    }
+
     ADM_info("-- Trying indirect (YV12) --\n");
     ADM_coreLibVA::indirectOperationYV12=tryIndirect(0,admSurface, image1 ,image2);
+yv12_skipped:
     ADM_info("-- Trying indirect (NV12) --\n");
     ADM_coreLibVA::indirectOperationNV12=tryIndirect(1,admSurface, image1, image2 );
 
+summary:
     ADM_info("Direct           : %d\n",ADM_coreLibVA::directOperation);
     ADM_info("Indirect NV12    : %d\n",ADM_coreLibVA::indirectOperationNV12);
     ADM_info("Indirect YV12    : %d\n",ADM_coreLibVA::indirectOperationYV12);
@@ -533,6 +547,10 @@ bool admLibVA::init(GUI_WindowInfo *x)
         {
             ADM_coreLibVA::driverQuirks = ADM_LIBVA_DRIVER_QUIRK_SURFACE_ATTRIBUTES;
             ADM_info("Not setting any surface attributes with this driver.\n");
+        }else if(strstr(vendorString, "Intel iHD"))
+        {
+            ADM_coreLibVA::driverQuirks = ADM_LIBVA_DRIVER_QUIRK_USER_SET;
+            ADM_info("The driver has been reported to crash in vaPutImage.\n");
         }else
         {
             ADM_info("Using standard behavior with this driver.\n");
@@ -944,6 +962,39 @@ void        admLibVA::destroySurface( VASurfaceID surface)
         return;
 }
 
+static bool waitForSurface(VASurfaceID vas)
+{
+    VASurfaceStatus status;
+    int xError, countDown = 50; // in milliseconds
+    while(true)
+    {
+        CHECK_ERROR(vaQuerySurfaceStatus(ADM_coreLibVA::display, vas, &status))
+        if(xError)
+        {
+            ADM_warning("Cannot query surface status.\n");
+            return false;
+        }
+        aprintf("surface status = %d\n",status);
+        switch(status)
+        {
+        case VASurfaceReady:
+            return true;
+        case VASurfaceSkipped:
+            return false;
+        default:
+            countDown--;
+            if(countDown < 0)
+            {
+                ADM_warning("Timeout waiting for surface, status = %d\n", (int)status);
+                return false;
+            }
+            ADM_usleep(1000);
+            break;
+        }
+    }
+    return false;
+}
+
 /**
  * \fn surfaceToImage
  * @param id
@@ -954,50 +1005,15 @@ bool        admLibVA::surfaceToAdmImage(ADMImage *dest,ADM_vaSurface *src)
 {
     int xError;
     bool r=false;
-    VASurfaceStatus status;
     CHECK_WORKING(false);
     uint8_t *ptr=NULL;
     //--------------------------
     // Wait for surface to be ready...
     //--------------------------
-    int countDown=50;
-    bool end=false;
-    while(!end)
+    if(!waitForSurface(src->surface))
     {
-     CHECK_ERROR(vaQuerySurfaceStatus ( ADM_coreLibVA::display, src->surface,&status));
-     if(xError)
-     {
-         ADM_warning("QuerySurfacStatus failed\n");
-         return false;
-     }
-     aprintf("surface status = %d\n",status);
-     switch(status)
-     {
-        case VASurfaceReady:
-                end=true;
-                continue;
-                break;
-        case VASurfaceSkipped:
-                end=true;
-                continue;
-                break;
-      default:
-          countDown--;
-          if(!countDown)
-          {
-              ADM_warning("Timeout waiting for surface\n");
-              end=true;
-              continue;
-          }
-          ADM_usleep(1000);
-          break;
-    }
-   }
-    if(status!=VASurfaceReady)
-    {
-      ADM_warning("Error getting surface within timeout = %d\n",(int)status);
-      dest->_noPicture=true;
-      return true;
+        dest->_noPicture=true;
+        return true; // ??
     }
     //--------------------------
     // Derive Image
@@ -1122,6 +1138,11 @@ bool   admLibVA::imageToSurface(VAImage *src, ADM_vaSurface *dst)
 
     int xError;
     CHECK_WORKING(false);
+    if(!waitForSurface(dst->surface))
+    {
+        ADM_warning("[admLibVA] Target surface busy.\n");
+        return false;
+    }
     CHECK_ERROR(vaPutImage(ADM_coreLibVA::display,
                            dst->surface,
                            src->image_id,
