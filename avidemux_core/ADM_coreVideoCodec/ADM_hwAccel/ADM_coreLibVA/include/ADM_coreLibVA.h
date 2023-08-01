@@ -30,9 +30,6 @@ extern "C" {
 #define VA_INVALID VA_INVALID_ID
 class ADM_vaSurface;
 
-
-#define VA_10BITS_IS_ACTUALL_8BITS 1 // ???
-
 /**
     \class admLibVA
 */
