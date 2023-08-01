@@ -147,22 +147,15 @@ static bool checkSupportedFunctionsAndImageFormat(void)
 
     if(ADM_coreLibVA::driverQuirks == admLibVA::ADM_LIBVA_DRIVER_QUIRK_USER_SET)
     {
-        ADM_warning("Driver blacklisted for indirect transfer, skipping further probing.\n");
-        if(NULL != getenv("ADM_LIBVA_DEBUG_NO_INDIRECT_YV12"))
-        {
-            ADM_warning("Overriding blacklist, trying indirect NV12 only.\n");
-            goto yv12_skipped;
-        }
-        goto summary;
+        ADM_warning("Driver can crash on upload from YV12 VAImage to hw surface, skipping YV12 indirect transfer check.\n");
+        goto yv12_skipped;
     }
-
     ADM_info("-- Trying indirect (YV12) --\n");
     ADM_coreLibVA::indirectOperationYV12=tryIndirect(0,admSurface, image1 ,image2);
 yv12_skipped:
     ADM_info("-- Trying indirect (NV12) --\n");
     ADM_coreLibVA::indirectOperationNV12=tryIndirect(1,admSurface, image1, image2 );
 
-summary:
     ADM_info("Direct           : %d\n",ADM_coreLibVA::directOperation);
     ADM_info("Indirect NV12    : %d\n",ADM_coreLibVA::indirectOperationNV12);
     ADM_info("Indirect YV12    : %d\n",ADM_coreLibVA::indirectOperationYV12);
