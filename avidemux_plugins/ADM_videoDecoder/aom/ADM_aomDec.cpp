@@ -142,12 +142,12 @@ bool decoderAom::uncompress(ADMCompressedImage *in, ADMImage *out)
     if(coreDecoder)
     {
         bool result = coreDecoder->uncompress(in, out);
-        if(!result && !coreDecoder->initializedOk()) // No hw decoder capable to decode AV1 found, switch to sw path.
-        {
-            ADM_warning("Core AV1 decoder doesn't work, destroying it.\n");
-            delete coreDecoder;
-            coreDecoder = NULL;
-        }
+        if(coreDecoder->initializedOk())
+            return result;
+        // No hw decoder capable to decode AV1 found, switch to sw path.
+        ADM_warning("Core AV1 decoder doesn't work, destroying it.\n");
+        delete coreDecoder;
+        coreDecoder = NULL;
     }
 
     aom_codec_err_t err;
