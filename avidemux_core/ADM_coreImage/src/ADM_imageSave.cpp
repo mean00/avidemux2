@@ -8,6 +8,7 @@
 #include "ADM_bitmap.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_colorspace.h"
+#include "ADM_coreUtils.h"
 
 extern "C" {
 #include "libavcodec/avcodec.h"
