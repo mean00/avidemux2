@@ -53,7 +53,7 @@ ADM_CORE6_EXPORT void     *ADM_realloc(void *in,size_t size);
 ADM_CORE6_EXPORT void     ADM_dezalloc(void *ptr);
 ADM_CORE6_EXPORT char     *ADM_strdup( const char *in);
 /* Endianness stuff */
-uint64_t 	ADM_swap64(uint64_t in);
+ADM_CORE6_EXPORT uint64_t 	ADM_swap64(uint64_t in);
 ADM_CORE6_EXPORT uint32_t 	ADM_swap32(uint32_t in);
 ADM_CORE6_EXPORT uint16_t 	ADM_swap16(uint16_t in);
 //static inline uint32_t dontswap(uint32_t in) {return in;};
