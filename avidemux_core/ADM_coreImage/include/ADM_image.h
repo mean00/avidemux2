@@ -66,6 +66,7 @@ typedef enum
         ADM_HW_VDPAU,
         ADM_HW_LIBVA,
         ADM_HW_DXVA,
+        ADM_HW_NVDEC,
         ADM_HW_ANY=0xff
 }ADM_HW_IMAGE;
 
