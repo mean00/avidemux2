@@ -323,6 +323,7 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
     avcodec_close(_context);
     av_free(_context);
     _context=NULL;
+    av_packet_free(&_pkt);
     av_frame_free(&_frame);
     if(_paddedExtraData)
     {
