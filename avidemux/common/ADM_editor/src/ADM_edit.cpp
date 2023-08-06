@@ -802,7 +802,11 @@ uint8_t ADM_Composer::addFile (const char *name)
             if(!seg->_refStartTimeUs && video.firstFramePts)
                 start += video.firstFramePts;
             if(goToTimeVideo(start))
-                getVideoPixelAndColorInfo(&(video.srcPixFrmt),NULL,NULL,NULL,&(video.srcColSpace));
+            {
+                _VIDEOS *vid = _segments.getRefVideo(seg->_reference);
+                ADM_assert(vid);
+                getVideoPixelAndColorInfo(&vid->srcPixFrmt, NULL, NULL, NULL, &vid->srcColSpace);
+            }
         }
         // now we should be able to query whether HDR tone mapping may be needed
     }
