@@ -149,6 +149,7 @@ public:
         ADM_colorTrC    admColTrcFromLav(AVColorTransferCharacteristic color_trc);
         ADM_colorSpace  admColSpcFromLav(AVColorSpace colorspace);
         uint8_t         clonePic(AVFrame *src, ADMImage *out, bool swap);
+        uint8_t         cloneColorInfo(const AVFrame *src, ADMImage *out);
         bool            hwDecoderIsBlacklisted(void) { return _blacklistHwDecoder; }
 };
 

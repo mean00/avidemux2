@@ -95,7 +95,13 @@ uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out, bool swap)
     //printf("[LAVC] Old pts :%"PRId64" new pts :%"PRId64"\n",out->Pts, pts_opaque);
     //printf("[LAVC] pts: %"PRIu64"\n",src->pts);
     out->Pts= (uint64_t)(pts_opaque);
-    out->_range=(src->color_range==AVCOL_RANGE_JPEG)? ADM_COL_RANGE_JPEG : ADM_COL_RANGE_MPEG;
+
+    return cloneColorInfo(src, out);
+}
+
+uint8_t decoderFF::cloneColorInfo(const AVFrame *src, ADMImage *out)
+{
+    out->_range = (src->color_range == AVCOL_RANGE_JPEG)? ADM_COL_RANGE_JPEG : ADM_COL_RANGE_MPEG;
     {
     ADM_colorPrimaries cp = admColPriFromLav(src->color_primaries);
     if (cp != ADM_COL_PRI_UNSPECIFIED)
