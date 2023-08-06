@@ -319,7 +319,9 @@ bool decoderFFnvDec::readBackBuffer(AVFrame *decodedFrame, ADMCompressedImage *i
     else
         out->Pts = (uint64_t)(decodedFrame->reordered_opaque);
     out->flags = admFrameTypeFromLav(decodedFrame);
-    out->_range = (decodedFrame->color_range==AVCOL_RANGE_JPEG)? ADM_COL_RANGE_JPEG : ADM_COL_RANGE_MPEG;
+    _parent->cloneColorInfo(decodedFrame, out);
+    bool swap = false;
+    out->_pixfrmt = _parent->admPixFrmtFromLav(_context->sw_pix_fmt, &swap);
     return true;
 }
 
@@ -410,7 +412,7 @@ bool decoderFFnvDec::downloadFromRef(ADM_nvDecRef *render, ADMImage *image)
     uint64_t restorePts = image->Pts;
 
     ADMImageRef ref(tmp->width, tmp->height);
-    ref._pixfrmt = from;
+    ref._pixfrmt = _parent->admPixFrmtFromLav(_context->sw_pix_fmt, &swap);
     _parent->clonePic(tmp, &ref, swap);
 
     if(!converter)
