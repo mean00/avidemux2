@@ -346,6 +346,11 @@ int startAvidemux(int argc, char *argv[])
     PROBE_HW_ACCEL(videotoolboxProbe,VideoToolbox,initVideoToolboxDecoder,admVideoToolbox_exitCleanup)
 #endif
 
+#if defined (USE_NVENC)
+    extern bool admNvDec_exitCleanup(void);
+    PROBE_HW_ACCEL(nvDecProbe, NVDEC, initNvDecDecoder, admNvDec_exitCleanup)
+#endif
+
 #endif // !CLI
 
 #ifdef USE_SDL

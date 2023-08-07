@@ -17,6 +17,7 @@ extern const ADM_paramList my_prefs_struct_param[]={
  {"features.vdpau",offsetof(my_prefs_struct,features.vdpau),"bool",ADM_param_bool},
  {"features.xvba",offsetof(my_prefs_struct,features.xvba),"bool",ADM_param_bool},
  {"features.libva",offsetof(my_prefs_struct,features.libva),"bool",ADM_param_bool},
+ {"features.nvdec",offsetof(my_prefs_struct,features.nvdec),"bool",ADM_param_bool},
  {"features.videotoolbox",offsetof(my_prefs_struct,features.videotoolbox),"bool",ADM_param_bool},
  {"features.enable_opengl",offsetof(my_prefs_struct,features.enable_opengl),"bool",ADM_param_bool},
  {"features.filter_preview_canvas_opengl",offsetof(my_prefs_struct,features.filter_preview_canvas_opengl),"bool",ADM_param_bool},

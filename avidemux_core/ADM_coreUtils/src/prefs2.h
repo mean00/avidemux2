@@ -22,6 +22,7 @@ struct  {
 	bool vdpau;
 	bool xvba;
 	bool libva;
+	bool nvdec;
 	bool videotoolbox;
 	bool enable_opengl;
 	bool filter_preview_canvas_opengl;

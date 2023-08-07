@@ -477,15 +477,13 @@ ADM_hwAccelEntryNvDec::ADM_hwAccelEntryNvDec()
  */
 bool ADM_hwAccelEntryNvDec::canSupportThis( struct AVCodecContext *avctx, const enum AVPixelFormat *fmt, enum AVPixelFormat &outputFormat )
 {
-#if 0
     bool enabled=true;
-    prefs->get(FEATURES_VDPAU,&enabled);
+    prefs->get(FEATURES_NVDEC, &enabled);
     if(!enabled)
     {
         ADM_info("NVDEC not enabled\n");
         return false;
     }
-#endif
     enum AVPixelFormat ofmt=ADM_nvDecGetFormat(avctx,fmt);
     if(ofmt==AV_PIX_FMT_NONE)
         return false;

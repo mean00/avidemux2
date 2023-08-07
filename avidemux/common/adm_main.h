@@ -79,6 +79,10 @@ extern bool initDXVA2Decoder(void);
 #ifdef USE_VIDEOTOOLBOX
 extern bool initVideoToolboxDecoder(void);
 #endif
+#ifdef USE_NVENC
+extern bool nvDecProbe(void);
+extern bool initNvDecDecoder(void);
+#endif
 
 #define PROBE_HW_ACCEL(probe,name,initFunc,cleanupFunc) {   \
     printf("Probing for "#name"...\n"); \

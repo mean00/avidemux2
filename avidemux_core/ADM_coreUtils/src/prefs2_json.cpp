@@ -25,6 +25,7 @@ json.addBool("dxva2_override_blacklist_profile",key->features.dxva2_override_bla
 json.addBool("vdpau",key->features.vdpau);
 json.addBool("xvba",key->features.xvba);
 json.addBool("libva",key->features.libva);
+json.addBool("nvdec",key->features.nvdec);
 json.addBool("videotoolbox",key->features.videotoolbox);
 json.addBool("enable_opengl",key->features.enable_opengl);
 json.addBool("filter_preview_canvas_opengl",key->features.filter_preview_canvas_opengl);

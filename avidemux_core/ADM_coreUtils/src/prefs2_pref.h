@@ -28,6 +28,7 @@ static optionDesc myOptions[]={
 { FEATURES_VDPAU,"features.vdpau"                                     ,ADM_param_bool    	,"0",	0,	1},
 { FEATURES_XVBA,"features.xvba"                                       ,ADM_param_bool    	,"0",	0,	1},
 { FEATURES_LIBVA,"features.libva"                                     ,ADM_param_bool    	,"0",	0,	1},
+{ FEATURES_NVDEC,"features.nvdec"                                     ,ADM_param_bool    	,"0",	0,	1},
 { FEATURES_VIDEOTOOLBOX,"features.videotoolbox"                       ,ADM_param_bool    	,"0",	0,	1},
 { FEATURES_ENABLE_OPENGL,"features.enable_opengl"                     ,ADM_param_bool    	,"0",	0,	1},
 { FEATURES_FILTER_PREVIEW_CANVAS_OPENGL,"features.filter_preview_canvas_opengl",ADM_param_bool    	,"1",	0,	1},
