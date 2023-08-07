@@ -542,7 +542,7 @@ static bool checkNvDec(void)
         printNvDecProbeResults();
         return (nvDecCodecSupportFlags & H264_IS_SUPPORTED);
     }
-    nvDecCodecSupportFlags & ~NOT_PROBED;
+    nvDecCodecSupportFlags &= ~NOT_PROBED;
 
     cudaFunc = NULL;
 
