@@ -31,7 +31,7 @@
 bool vdpauUsable(void)
 {
     bool v=false;
-    if(!vdpauWorking) return false;
+    if(vdpauWorking < 1) return false;
     if(!prefs->get(FEATURES_VDPAU,&v)) v=false;
     return v;
 }
@@ -41,6 +41,13 @@ bool vdpauUsable(void)
 */
 bool vdpauProbe(void)
 {
+    if(vdpauWorking >= 0)
+    {
+        bool available = vdpauWorking > 0;
+        ADM_info("VDPAU already probed, the result was: %s.\n", available ? "available" : "not available");
+        return available;
+    }
+    vdpauWorking = 0;
     GUI_WindowInfo xinfo;
     void *draw;
     draw=UI_getDrawWidget();
@@ -49,11 +56,10 @@ bool vdpauProbe(void)
     if( admCoreCodecSupports(ADM_CORE_CODEC_FEATURE_VDPAU)==false)
     {
         GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Error"),QT_TRANSLATE_NOOP("adm","Core has been compiled without VDPAU support, but the application has been compiled with it.\nInstallation mismatch"));
-        vdpauWorking=false;
     }
 #endif
     if(false==admVdpau::init(&xinfo)) return false;
-    vdpauWorking=true;
+    vdpauWorking = 1;
     return true;
 }
 /**

@@ -46,7 +46,7 @@ extern "C" {
 #include <alloca.h>
 #endif /* : defined(__sun__) */
 
-static bool         vdpauWorking=false;
+static int          vdpauWorking = -1;
 static admMutex     surfaceMutex;
 
 #if 0
