@@ -25,6 +25,8 @@ protected:
             bool alive;
             void *cookie;
             decoders *coreDecoder;
+
+            bool initAom(void);
 public:
             decoderAom (uint32_t w, uint32_t h, uint32_t fcc, uint32_t extraDataLen, uint8_t *extraData, uint32_t bpp);
             ~decoderAom();
