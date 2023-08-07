@@ -18,6 +18,7 @@ extern "C" {
 #include "libavcodec/avcodec.h"
 #include "libavutil/pixdesc.h"
 #include "libavutil/hwcontext.h"
+#include "dynlink_loader.h"
 }
 
 #include "ADM_codec.h"
@@ -27,6 +28,17 @@ extern "C" {
 #include "prefs.h"
 
 #include "../private_inc/ADM_ffmpeg_nvdec_internal.h"
+
+#define H264_IS_SUPPORTED           (1 << 0)
+#define HEVC_IS_SUPPORTED           (1 << 1)
+#define HEVC_10BITS_IS_SUPPORTED    (1 << 2)
+#define VP9_IS_SUPPORTED            (1 << 3)
+#define VP9_10BITS_IS_SUPPORTED     (1 << 4)
+#define AV1_IS_SUPPORTED            (1 << 5)
+#define AV1_10BITS_IS_SUPPORTED     (1 << 6)
+#define NOT_PROBED 0xFFFFFF80
+
+static uint32_t nvDecCodecSupportFlags = NOT_PROBED;
 
 /**
     \fn nvDecMarkSurfaceUsed
@@ -490,9 +502,173 @@ ADM_acceleratedDecoderFF *ADM_hwAccelEntryNvDec::spawn( struct AVCodecContext *a
     return (ADM_acceleratedDecoderFF *)dec;
 }
 
+static void printNvDecProbeResults(void)
+{
+#define SAY(feature) ((nvDecCodecSupportFlags & feature)? "supported" : "not supported")
+    printf("\tH.264: %s\n\t"
+        "HEVC: %s\n\t"
+        "HEVC 10 bits: %s\n\t"
+        "VP9: %s\n\t"
+        "VP9 10 bits: %s\n\t"
+        "AV1: %s\n\t"
+        "AV1 10 bits: %s\n",
+        SAY(H264_IS_SUPPORTED),
+        SAY(HEVC_IS_SUPPORTED),
+        SAY(HEVC_10BITS_IS_SUPPORTED),
+        SAY(VP9_IS_SUPPORTED),
+        SAY(VP9_10BITS_IS_SUPPORTED),
+        SAY(AV1_IS_SUPPORTED),
+        SAY(AV1_10BITS_IS_SUPPORTED));
+#undef SAY
+}
+
+/**
+ * \fn checkNvDec
+ */
+extern "C" {
+static bool checkNvDec(void)
+{
+    // Code compiled from libavutil/hwcontext_cuda.c and libavcodec/nvdec.c
+    int r;
+    bool fatal;
+    CudaFunctions *cudaFunc;
+    CuvidFunctions *cuvidFunc;
+    CUVIDDECODECAPS caps;
+    CUdevice dev;
+    CUcontext ctx;
+    CUcontext dummy;
+
+    if(!(nvDecCodecSupportFlags & NOT_PROBED))
+    {
+        ADM_info("Already probed, the results were:\n");
+        printNvDecProbeResults();
+        return (nvDecCodecSupportFlags & H264_IS_SUPPORTED);
+    }
+    nvDecCodecSupportFlags & ~NOT_PROBED;
+
+    cudaFunc = NULL;
+
+    r = cuda_load_functions(&cudaFunc, NULL);
+
+    if(r < 0 || !cudaFunc)
+    {
+        ADM_info("Cannot load CUDA functions, NVDEC is not available.\n");
+        return false;
+    }
+
+    if(!cudaFunc->cuInit || !cudaFunc->cuDeviceGet ||
+       !cudaFunc->cuCtxCreate || !cudaFunc->cuCtxDestroy ||
+       !cudaFunc->cuCtxPushCurrent || !cudaFunc->cuCtxPopCurrent)
+    {
+        ADM_warning("Necessary CUDA functions not found, bailing out.\n");
+        goto fail2;
+    }
+
+    r = cudaFunc->cuInit(0);
+
+    if(r < 0)
+    {
+        ADM_warning("Cannot init CUDA, NVDEC is not available.\n");
+        goto fail2;
+    }
+
+    r = cudaFunc->cuDeviceGet(&dev, 0);
+
+    if(r < 0)
+    {
+        ADM_warning("Cannot get CUDA device, NVDEC is not available.\n");
+        goto fail2;
+    }
+
+    r = cudaFunc->cuCtxCreate(&ctx, CU_CTX_SCHED_BLOCKING_SYNC, dev);
+
+    if(r < 0)
+    {
+        ADM_warning("Cannot create CUDA context, NVDEC is not available.\n");
+        goto fail2;
+    }
+
+    cuvidFunc = NULL;
+
+    r = cuvid_load_functions(&cuvidFunc, NULL);
+
+    if(r < 0)
+    {
+        ADM_info("Cannot load CUVID functions, NVDEC is not available.\n");
+        cudaFunc->cuCtxDestroy(ctx);
+        goto fail2;
+    }
+    if(!cuvidFunc->cuvidGetDecoderCaps)
+    {
+        ADM_warning("Driver does not support quering decoder capabilities.\n");
+        cuvid_free_functions(&cuvidFunc);
+        cudaFunc->cuCtxDestroy(ctx);
+        goto fail2;
+    }
+
+    r = cudaFunc->cuCtxPushCurrent(ctx);
+
+    if(r < 0)
+    {
+        ADM_warning("Cannot push CUDA context, bailing out.\n");
+        cuvid_free_functions(&cuvidFunc);
+        cudaFunc->cuCtxDestroy(ctx);
+        cuda_free_functions(&cudaFunc);
+        return false;
+    }
+
+    memset(&caps, 0, sizeof(caps));
+
+#define CHECK_CAPS(codec, chroma, bit_depth, flag, fatal) \
+    caps.eCodecType      = cudaVideoCodec_##codec; \
+    caps.eChromaFormat   = cudaVideoChromaFormat_##chroma; \
+    caps.nBitDepthMinus8 = bit_depth - 8; \
+    ADM_info("Checking " #codec " (%d bits)\n", bit_depth); \
+    r = cuvidFunc->cuvidGetDecoderCaps(&caps); \
+    if(r < 0) \
+    { \
+        ADM_warning("Quering decoder capabilities for " #codec " has failed.\n"); \
+        if(fatal) \
+        { \
+            goto fail; \
+        } \
+    } else { \
+        if(caps.bIsSupported) \
+        { \
+            nvDecCodecSupportFlags |= flag; \
+        } else if(fatal) { \
+            ADM_warning("Check for " #codec " has failed, skipping further checks.\n"); \
+            goto fail; \
+        } \
+    }
+
+    CHECK_CAPS(H264, 420,  8, H264_IS_SUPPORTED, 1)
+    CHECK_CAPS(HEVC, 420,  8, HEVC_IS_SUPPORTED, 0)
+    CHECK_CAPS(HEVC, 420, 10, HEVC_10BITS_IS_SUPPORTED, 0)
+    CHECK_CAPS(VP9,  420,  8, VP9_IS_SUPPORTED, 0)
+    CHECK_CAPS(VP9,  420, 10, VP9_10BITS_IS_SUPPORTED, 0)
+    CHECK_CAPS(AV1,  420,  8, AV1_IS_SUPPORTED, 0)
+    CHECK_CAPS(AV1,  420, 10, AV1_10BITS_IS_SUPPORTED, 0)
+
+    ADM_info("NVDEC decoder probed, the results are:\n");
+    printNvDecProbeResults();
+
+fail:
+    cuvid_free_functions(&cuvidFunc);
+    cudaFunc->cuCtxPopCurrent(&dummy);
+    cudaFunc->cuCtxDestroy(ctx);
+fail2:
+    cuda_free_functions(&cudaFunc);
+    return (nvDecCodecSupportFlags & H264_IS_SUPPORTED);
+}
+}
+/**
+ * \fn nvDecProbe
+ * \brief Try to load CUDA libs, return true if decoder supports at least H.264.
+ */
 bool nvDecProbe(void)
 {
-    return true; // FIXME
+    return checkNvDec();
 }
 
 bool admNvDec_exitCleanup(void)
