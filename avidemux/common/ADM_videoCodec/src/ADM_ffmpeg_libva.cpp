@@ -40,7 +40,7 @@ extern "C" {
 #include "prefs.h"
 
 
-static bool         libvaWorking=true;
+static int          libvaWorking = -1;
 static bool         libvaEncoderWorking=false;
 static bool         libvaDri3Disabled=false;
 static admMutex     imageMutex;
@@ -101,7 +101,7 @@ static bool libvaRefDownload(ADMImage *image, void *instance, void *cookie)
 bool libvaUsable(void)
 {    
     bool v=true;
-    if(!libvaWorking) return false;
+    if(libvaWorking < 1) return false;
     if(!prefs->get(FEATURES_LIBVA,&v)) 
     {
         v=false;
@@ -133,7 +133,14 @@ static ADM_vaSurface *allocateADMVaSurface(AVCodecContext *ctx)
 extern bool ADM_initLibVAEncoder(void);
 bool libvaProbe(void)
 {
+    if(libvaWorking >= 0)
+    {
+        bool available = libvaWorking > 0;
+        ADM_info("LibVA hwaccel already probed, the result was: %s.\n", available ? "available" : "not available");
+        return available;
+    }
     ADM_info("Probing for libVA support...\n");
+    libvaWorking = 0;
     GUI_WindowInfo xinfo;
     void *draw;
     draw=UI_getDrawWidget();
@@ -141,7 +148,6 @@ bool libvaProbe(void)
     if( admCoreCodecSupports(ADM_CORE_CODEC_FEATURE_LIBVA)==false)
     {
         GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Error"),QT_TRANSLATE_NOOP("adm","Core has been compiled without LIBVA support, but the application has been compiled with it.\nInstallation mismatch"));
-        libvaWorking=false;
         return false;
     }
 
@@ -165,7 +171,7 @@ bool libvaProbe(void)
         libvaDri3Disabled = false;
         return false;
     }
-    libvaWorking=true;
+    libvaWorking = 1;
     { // Only check encoder if decoder is working
        libvaEncoderWorking = ADM_initLibVAEncoder();
         
