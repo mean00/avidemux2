@@ -28,8 +28,17 @@
 #include "ADM_render/GUI_sdlRender.h"
 #endif
 
-extern void 		AVDM_audioPref( void );
 extern const char* getNativeRendererDesc(int type);
+
+#ifdef USE_VDPAU
+extern bool vdpauProbe(void);
+#endif
+#ifdef USE_LIBVA
+extern bool libvaProbe(void);
+#endif
+#ifdef USE_NVENC
+extern bool nvDecProbe(void);
+#endif
 
 #if (defined(USE_DXVA2) || defined(USE_VDPAU) || defined(USE_LIBVA) || defined(USE_NVENC) || defined(USE_VIDEOTOOLBOX))
     #define HW_ACCELERATED_DECODING
@@ -86,12 +95,15 @@ bool     bdxva2_override_profile=false;
 #endif
 #ifdef USE_VDPAU
 bool     bvdpau=false;
+bool     vdpauAvailable = vdpauProbe();
 #endif
 #ifdef USE_LIBVA
 bool     blibva=false;
+bool     libvaAvailable = libvaProbe();
 #endif
 #ifdef USE_NVENC
 bool     bnvdec=false;
+bool     nvdecAvailable = nvDecProbe();
 #endif
 #ifdef USE_VIDEOTOOLBOX
 bool     bvideotoolbox=false;
@@ -208,15 +220,18 @@ std::string currentSdlDriver=getSdlDriverName();
 #endif
 #ifdef USE_VDPAU
         // vdpau
-        prefs->get(FEATURES_VDPAU,&bvdpau);
+        if(vdpauAvailable) // make sure the disabled checkbox is unchecked if hwaccel is not available
+            prefs->get(FEATURES_VDPAU,&bvdpau);
 #endif
 #ifdef USE_LIBVA
         // libva
-        prefs->get(FEATURES_LIBVA,&blibva);
+        if(libvaAvailable)
+            prefs->get(FEATURES_LIBVA,&blibva);
 #endif
 #ifdef USE_NVENC
         // nvdec
-        prefs->get(FEATURES_NVDEC,&bnvdec);
+        if(nvdecAvailable)
+            prefs->get(FEATURES_NVDEC,&bnvdec);
 #endif
 #ifdef USE_VIDEOTOOLBOX
         // VideoToolbox
@@ -733,15 +748,14 @@ std::string currentSdlDriver=getSdlDriverName();
         void *factoryCookiez=diaFactoryRunTabsPrepare(QT_TRANSLATE_NOOP("adm","Preferences"),NB_ELEM(tabs),tabs);
 // Now we can disable stuff if needed
 #if defined(HW_ACCELERATED_DECODING) && !defined(USE_VIDEOTOOLBOX) && !defined(USE_DXVA2)
-// TODO Enabled / disabled state should convey the result of probing at runtime.
     #ifdef USE_VDPAU
-        useVdpau.enable(true);
+        useVdpau.enable(vdpauAvailable);
     #endif
     #ifdef USE_LIBVA
-        useLibVA.enable(true);
+        useLibVA.enable(libvaAvailable);
     #endif
     #ifdef USE_NVENC
-        useNvDec.enable(true);
+        useNvDec.enable(nvdecAvailable);
     #endif
 #endif
 
