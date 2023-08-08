@@ -29,16 +29,22 @@ extern "C" {
 
 #include "../private_inc/ADM_ffmpeg_nvdec_internal.h"
 
-#define H264_IS_SUPPORTED           (1 << 0)
-#define HEVC_IS_SUPPORTED           (1 << 1)
-#define HEVC_10BITS_IS_SUPPORTED    (1 << 2)
-#define VP9_IS_SUPPORTED            (1 << 3)
-#define VP9_10BITS_IS_SUPPORTED     (1 << 4)
-#define AV1_IS_SUPPORTED            (1 << 5)
-#define AV1_10BITS_IS_SUPPORTED     (1 << 6)
-#define NOT_PROBED 0xFFFFFF80
+typedef struct {
+    cudaVideoCodec cid;
+    cudaVideoChromaFormat cfm;
+    uint32_t bitDepth;
+    uint32_t minWidth;
+    uint32_t minHeight;
+    uint32_t maxWidth;
+    uint32_t maxHeight;
+    uint32_t maxMbCount;
+} admNvDecProfile;
 
+
+#define H264_IS_SUPPORTED 1
+#define NOT_PROBED 0xFFFF0000
 static uint32_t nvDecCodecSupportFlags = NOT_PROBED;
+static std::vector <admNvDecProfile *> listOfNvDecProfiles;
 
 /**
     \fn nvDecMarkSurfaceUsed
@@ -71,6 +77,74 @@ static bool nvDecRefDownload(ADMImage *image, void *v, void *cookie)
     return inst->downloadFromRef(render, image);
 }
 
+static AVCodecID cuToLavCid(cudaVideoCodec codec)
+{
+    switch(codec)
+    {
+#define MATCH(x,y) case cudaVideoCodec_##x: return AV_CODEC_ID_##y;
+        MATCH(MPEG1,MPEG1VIDEO)
+        MATCH(MPEG2,MPEG2VIDEO)
+        MATCH(MPEG4,MPEG4)
+        MATCH(VC1,VC1)
+        MATCH(H264,H264)
+        MATCH(HEVC,HEVC)
+        MATCH(VP8,VP8)
+        MATCH(VP9,VP9)
+        MATCH(AV1,AV1)
+#undef MATCH
+        default: break;
+    }
+    return AV_CODEC_ID_NONE;
+}
+
+static bool isSupported(AVCodecContext *avctx)
+{
+    int w = avctx->coded_width;
+    int h = avctx->coded_height;
+
+    if(w <= 0 || h <= 0)
+        return false;
+
+    int bits = 8;
+
+    switch(avctx->sw_pix_fmt)
+    {
+        case AV_PIX_FMT_YUV420P:
+        case AV_PIX_FMT_YUVJ420P:
+        case AV_PIX_FMT_NV12:
+            break;
+        case AV_PIX_FMT_YUV420P10LE:
+        case AV_PIX_FMT_P010:
+            bits = 10;
+            break;
+        default:
+            ADM_warning("[NVDEC] Unsupported sw pixel format %d (%s)\n", avctx->sw_pix_fmt, av_get_pix_fmt_name(avctx->sw_pix_fmt));
+            return false;
+    }
+
+    for(int i = 0; i < listOfNvDecProfiles.size(); i++)
+    {
+        admNvDecProfile *p = listOfNvDecProfiles[i];
+        if(cuToLavCid(p->cid) != avctx->codec_id)
+            continue;
+        if(p->cfm != cudaVideoChromaFormat_420)
+        {
+            ADM_info("[NVDEC] Only YUV 4:2:0 chroma is supported for now.\n");
+            continue;
+        }
+        if(p->bitDepth != bits)
+            continue;
+        if(w < p->minWidth || h < p->minHeight)
+            break;
+        if(w > p->maxWidth || h > p->maxHeight)
+            break;
+        if(w * h / 256 > p->maxMbCount)
+            break;
+        return true;
+    }
+    return false;
+}
+
 extern "C"
 {
 static enum AVPixelFormat ADM_nvDecGetFormat(struct AVCodecContext *avctx, const enum AVPixelFormat *fmt)
@@ -82,19 +156,6 @@ static enum AVPixelFormat ADM_nvDecGetFormat(struct AVCodecContext *avctx, const
     AVPixelFormat outPix;
     AVBufferRef *hwDevRef;
 
-    switch(avctx->sw_pix_fmt)
-    {
-        case AV_PIX_FMT_YUV420P:
-        case AV_PIX_FMT_YUVJ420P:
-        case AV_PIX_FMT_YUV420P10LE:
-        case AV_PIX_FMT_NV12:
-        case AV_PIX_FMT_P010:
-            break;
-        default:
-            ADM_warning("[NVDEC] Unsupported sw pixel format %d (%s)\n", avctx->sw_pix_fmt, av_get_pix_fmt_name(avctx->sw_pix_fmt));
-            return AV_PIX_FMT_NONE;
-    }
-
     for(i=0;fmt[i]!=AV_PIX_FMT_NONE;i++)
     {
         c=fmt[i];
@@ -104,17 +165,18 @@ static enum AVPixelFormat ADM_nvDecGetFormat(struct AVCodecContext *avctx, const
         snprintf(name,300,"%s",avcodec_get_name(avctx->codec_id));
         ADM_info("\t  Evaluating codec %d, %s\n",avctx->codec_id,name);
         if(c!=AV_PIX_FMT_CUDA) continue;
-#define FMT_V_CHECK(x,y) case AV_CODEC_ID_##x: outPix=AV_PIX_FMT_CUDA; id=avctx->codec_id; break;
+#define FMT_V_CHECK(x) case AV_CODEC_ID_##x: outPix=AV_PIX_FMT_CUDA; id=avctx->codec_id; break;
 
         switch(avctx->codec_id)
         {
-            FMT_V_CHECK(H264,H264)
-            FMT_V_CHECK(H265,H265)
-            FMT_V_CHECK(MPEG1VIDEO,MPEG1)
-            FMT_V_CHECK(MPEG2VIDEO,MPEG2)
-            FMT_V_CHECK(VC1,VC1)
-            FMT_V_CHECK(VP9,VP9)
-            FMT_V_CHECK(AV1,AV1)
+            FMT_V_CHECK(H264)
+            FMT_V_CHECK(H265)
+            FMT_V_CHECK(MPEG1VIDEO)
+            FMT_V_CHECK(MPEG2VIDEO)
+            FMT_V_CHECK(VC1)
+            FMT_V_CHECK(VP9)
+            FMT_V_CHECK(AV1)
+#undef FMT_V_CHECK
             default:
                 ADM_info("No hw support for %s\n",name);
                 continue;
@@ -122,7 +184,7 @@ static enum AVPixelFormat ADM_nvDecGetFormat(struct AVCodecContext *avctx, const
         }
         break;
     }
-    if(id==AV_CODEC_ID_NONE)
+    if(id == AV_CODEC_ID_NONE || !isSupported(avctx))
     {
         return AV_PIX_FMT_NONE;
     }
@@ -500,24 +562,54 @@ ADM_acceleratedDecoderFF *ADM_hwAccelEntryNvDec::spawn( struct AVCodecContext *a
     return (ADM_acceleratedDecoderFF *)dec;
 }
 
+static const char *codecDesc(cudaVideoCodec cid)
+{
+    switch(cid)
+    {
+#define SAY(x,y) case cudaVideoCodec_##x: return y;
+        SAY(MPEG1, "MPEG-1")
+        SAY(MPEG2, "MPEG-2")
+        SAY(MPEG4, "MPEG-4")
+        SAY(VC1, "VC1")
+        SAY(H264, "H.264")
+        SAY(HEVC, "HEVC")
+        SAY(VP8, "VP8")
+        SAY(VP9, "VP9")
+        SAY(AV1, "AV1")
+#undef SAY
+        default: break;
+    }
+    return "Unknown";
+}
+
+static const char *chromaFormatDesc(cudaVideoChromaFormat chroma)
+{
+    switch(chroma)
+    {
+        case cudaVideoChromaFormat_Monochrome: return "Mono";
+        case cudaVideoChromaFormat_420: return "YUV 4:2:0";
+        case cudaVideoChromaFormat_422: return "YUV 4:2:2";
+        case cudaVideoChromaFormat_444: return "YUV 4:4:4";
+        default: break;
+    }
+    return "Unknown";
+}
+
 static void printNvDecProbeResults(void)
 {
-#define SAY(feature) ((nvDecCodecSupportFlags & feature)? "supported" : "not supported")
-    printf("\tH.264: %s\n\t"
-        "HEVC: %s\n\t"
-        "HEVC 10 bits: %s\n\t"
-        "VP9: %s\n\t"
-        "VP9 10 bits: %s\n\t"
-        "AV1: %s\n\t"
-        "AV1 10 bits: %s\n",
-        SAY(H264_IS_SUPPORTED),
-        SAY(HEVC_IS_SUPPORTED),
-        SAY(HEVC_10BITS_IS_SUPPORTED),
-        SAY(VP9_IS_SUPPORTED),
-        SAY(VP9_10BITS_IS_SUPPORTED),
-        SAY(AV1_IS_SUPPORTED),
-        SAY(AV1_10BITS_IS_SUPPORTED));
-#undef SAY
+    if(listOfNvDecProfiles.empty())
+    {
+        printf("NVDEC decoder is not usable.\n");
+        return;
+    }
+    printf("Supported formats:\n\n");
+    for(int i=0; i < listOfNvDecProfiles.size(); i++)
+    {
+        admNvDecProfile *p = listOfNvDecProfiles[i];
+        ADM_assert(p);
+        printf("\t%s\t%d bits\t%s\n", codecDesc(p->cid), p->bitDepth, chromaFormatDesc(p->cfm));
+    }
+    printf("\n");
 }
 
 /**
@@ -617,11 +709,11 @@ static bool checkNvDec(void)
 
     memset(&caps, 0, sizeof(caps));
 
-#define CHECK_CAPS(codec, chroma, bit_depth, flag, fatal) \
+#define CHECK_CAPS(codec, chroma, bit_depth, fatal) \
     caps.eCodecType      = cudaVideoCodec_##codec; \
     caps.eChromaFormat   = cudaVideoChromaFormat_##chroma; \
     caps.nBitDepthMinus8 = bit_depth - 8; \
-    ADM_info("Checking " #codec " (%d bits)\n", bit_depth); \
+    ADM_info("Checking " #codec " %d bits %s\n", bit_depth, chromaFormatDesc(caps.eChromaFormat)); \
     r = cuvidFunc->cuvidGetDecoderCaps(&caps); \
     if(r < 0) \
     { \
@@ -633,21 +725,59 @@ static bool checkNvDec(void)
     } else { \
         if(caps.bIsSupported) \
         { \
-            nvDecCodecSupportFlags |= flag; \
-        } else if(fatal) { \
-            ADM_warning("Check for " #codec " has failed, skipping further checks.\n"); \
-            goto fail; \
+            printf("\tSupported.\n"); \
+            admNvDecProfile *p = new admNvDecProfile; \
+            p->cid = caps.eCodecType; \
+            p->cfm = caps.eChromaFormat; \
+            p->bitDepth = bit_depth; \
+            p->minWidth = caps.nMinWidth; \
+            p->minHeight = caps.nMinHeight; \
+            p->maxWidth = caps.nMaxWidth; \
+            p->maxHeight = caps.nMaxHeight; \
+            p->maxMbCount = caps.nMaxMBCount; \
+            listOfNvDecProfiles.push_back(p); \
+            if(fatal) \
+                nvDecCodecSupportFlags |= H264_IS_SUPPORTED; \
+        } else \
+        { \
+            if(fatal) \
+            { \
+                ADM_warning("Check for " #codec " has failed, skipping further checks.\n"); \
+                goto fail; \
+            } \
+            printf("\tNot supported.\n"); \
         } \
     }
 
-    CHECK_CAPS(H264, 420,  8, H264_IS_SUPPORTED, 1)
-    CHECK_CAPS(HEVC, 420,  8, HEVC_IS_SUPPORTED, 0)
-    CHECK_CAPS(HEVC, 420, 10, HEVC_10BITS_IS_SUPPORTED, 0)
-    CHECK_CAPS(VP9,  420,  8, VP9_IS_SUPPORTED, 0)
-    CHECK_CAPS(VP9,  420, 10, VP9_10BITS_IS_SUPPORTED, 0)
-    CHECK_CAPS(AV1,  420,  8, AV1_IS_SUPPORTED, 0)
-    CHECK_CAPS(AV1,  420, 10, AV1_10BITS_IS_SUPPORTED, 0)
-
+    CHECK_CAPS(MPEG1,   420,  8, 0)
+    CHECK_CAPS(MPEG2,   420,  8, 0)
+    CHECK_CAPS(MPEG2,   422,  8, 0)
+    CHECK_CAPS(VC1,     420,  8, 0)
+    CHECK_CAPS(H264,    420,  8, 1)
+    CHECK_CAPS(H264,    422,  8, 0)
+    CHECK_CAPS(H264,    444,  8, 0)
+    CHECK_CAPS(HEVC,    420,  8, 0)
+    CHECK_CAPS(HEVC,    420, 10, 0)
+    CHECK_CAPS(HEVC,    420, 12, 0)
+    CHECK_CAPS(HEVC,    422,  8, 0)
+    CHECK_CAPS(HEVC,    422, 10, 0)
+    CHECK_CAPS(HEVC,    422, 12, 0)
+    CHECK_CAPS(HEVC,    444,  8, 0)
+    CHECK_CAPS(HEVC,    444, 10, 0)
+    CHECK_CAPS(HEVC,    444, 12, 0)
+    CHECK_CAPS(VP9,     420,  8, 0)
+    CHECK_CAPS(VP9,     420, 10, 0)
+    CHECK_CAPS(VP9,     420, 12, 0)
+    CHECK_CAPS(AV1,     420,  8, 0)
+    CHECK_CAPS(AV1,     422,  8, 0)
+    CHECK_CAPS(AV1,     444,  8, 0)
+    CHECK_CAPS(AV1,     420, 10, 0)
+    CHECK_CAPS(AV1,     422, 10, 0)
+    CHECK_CAPS(AV1,     444, 10, 0)
+    CHECK_CAPS(AV1,     420, 12, 0)
+    CHECK_CAPS(AV1,     422, 12, 0)
+    CHECK_CAPS(AV1,     444, 12, 0)
+#undef CHECK_CAPS
     ADM_info("NVDEC decoder probed, the results are:\n");
     printNvDecProbeResults();
 
@@ -671,7 +801,14 @@ bool nvDecProbe(void)
 
 bool admNvDec_exitCleanup(void)
 {
-    return true; // FIXME
+    for(int i = 0; i < listOfNvDecProfiles.size(); i++)
+    {
+        admNvDecProfile *p = listOfNvDecProfiles[i];
+        if(!p) continue;
+        delete p;
+        p = NULL;
+    }
+    return true;
 }
 
 static ADM_hwAccelEntryNvDec nvDecEntry;
