@@ -1131,11 +1131,6 @@ bool   admLibVA::imageToSurface(VAImage *src, ADM_vaSurface *dst)
 
     int xError;
     CHECK_WORKING(false);
-    if(!waitForSurface(dst->surface))
-    {
-        ADM_warning("[admLibVA] Target surface busy.\n");
-        return false;
-    }
     CHECK_ERROR(vaPutImage(ADM_coreLibVA::display,
                            dst->surface,
                            src->image_id,
@@ -1374,7 +1369,7 @@ bool ADM_vaSurface::fromAdmImage (ADMImage *dest)
     case   admLibVA::ADM_LIBVA_INDIRECT_YV12:
                 ADM_assert(this->image);
                 //printf("InDirect\n");
-                if(  admLibVA::uploadToImage(dest,this->image))
+                if(admLibVA::uploadToImage(dest,this->image) && waitForSurface(surface))
                     return  admLibVA::imageToSurface(this->image,this);
                 return false;
                 break;
