@@ -12,9 +12,6 @@ extern "C" {
 #endif
 extern uint8_t GUI_close(void);
 static bool setPrefsDefault(void);
-extern bool  libvaProbe(void);
-extern bool  dxva2Probe(void);
-extern bool videotoolboxProbe(void);
 
 extern void registerVideoFilters( void );
 extern void filterCleanUp( void );
@@ -36,9 +33,6 @@ extern bool ADM_ae_cleanup(void);
 extern bool ADM_vf_cleanup(void);
 extern void ADM_ve6_cleanup(void);
 extern void ADM_vd6_cleanup(void);
-
-extern bool vdpauProbe(void);
-extern bool vdpauCleanup(void);
 
 extern bool xvbaProbe(void);
 extern bool xvbaCleanup(void);
@@ -65,24 +59,6 @@ extern const char* new_progname;
 
 void ADM_ExitCleanup(void);
 int startAvidemux(int argc, char *argv[]);
-
-
-#ifdef USE_VDPAU
-extern bool initVDPAUDecoder(void);
-#endif
-#ifdef USE_LIBVA
-extern bool initLIBVADecoder(void);
-#endif
-#ifdef USE_DXVA2
-extern bool initDXVA2Decoder(void);
-#endif
-#ifdef USE_VIDEOTOOLBOX
-extern bool initVideoToolboxDecoder(void);
-#endif
-#ifdef USE_NVENC
-extern bool nvDecProbe(void);
-extern bool initNvDecDecoder(void);
-#endif
 
 #define PROBE_HW_ACCEL(probe,name,initFunc,cleanupFunc) {   \
     printf("Probing for "#name"...\n"); \

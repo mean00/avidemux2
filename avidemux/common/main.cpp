@@ -35,6 +35,52 @@
 #include "adm_main.h"
 #include "ADM_render/GUI_render.h"
 
+#ifdef USE_VDPAU
+  #if ADM_UI_TYPE_BUILD == ADM_UI_CLI
+bool vdpauProbe(void) { return false; }
+  #else
+extern bool vdpauProbe(void);
+  #endif
+extern bool initVDPAUDecoder(void);
+extern bool admVdpau_exitCleanup();
+#endif
+
+#ifdef USE_LIBVA
+  #if ADM_UI_TYPE_BUILD == ADM_UI_CLI
+bool libvaProbe(void) { return false; }
+  #else
+extern bool libvaProbe(void);
+  #endif
+extern bool initLIBVADecoder(void);
+extern bool admLibVa_exitCleanup();
+#endif
+
+#ifdef USE_DXVA2
+extern bool dxva2Probe(void);
+extern bool initDXVA2Decoder(void);
+extern bool
+  #ifdef _MSC_VER
+     __declspec(dllimport)
+  #endif
+    admDxva2_exitCleanup(void);
+#endif
+
+#ifdef USE_VIDEOTOOLBOX
+extern bool videotoolboxProbe(void);
+extern bool initVideoToolboxDecoder(void);
+extern bool admVideoToolbox_exitCleanup(void);
+#endif
+
+#ifdef USE_NVENC
+  #if ADM_UI_TYPE_BUILD == ADM_UI_CLI
+bool nvDecProbe(void) { return false; }
+  #else
+extern bool nvDecProbe(void);
+  #endif
+extern bool initNvDecDecoder(void);
+extern bool admNvDec_exitCleanup(void);
+#endif
+
 void abortExitHandler(void);
 
 typedef struct
@@ -323,31 +369,22 @@ int startAvidemux(int argc, char *argv[])
 
 #if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
 #if defined( USE_VDPAU)
-    extern bool admVdpau_exitCleanup();
     PROBE_HW_ACCEL(vdpauProbe,VDPAU,initVDPAUDecoder, admVdpau_exitCleanup)
 #endif
 
 #if defined( USE_DXVA2)
-    extern bool
-#ifdef _MSC_VER
-     __declspec(dllimport)
-#endif
-	admDxva2_exitCleanup();
     PROBE_HW_ACCEL(dxva2Probe,DXVA2,initDXVA2Decoder,admDxva2_exitCleanup)
 #endif
 
 #if defined( USE_LIBVA)
-    extern bool admLibVa_exitCleanup();
     PROBE_HW_ACCEL(libvaProbe,LIBVA,initLIBVADecoder,admLibVa_exitCleanup)
 #endif
 
 #if defined (USE_VIDEOTOOLBOX)
-    extern bool admVideoToolbox_exitCleanup(void);
     PROBE_HW_ACCEL(videotoolboxProbe,VideoToolbox,initVideoToolboxDecoder,admVideoToolbox_exitCleanup)
 #endif
 
 #if defined (USE_NVENC)
-    extern bool admNvDec_exitCleanup(void);
     PROBE_HW_ACCEL(nvDecProbe, NVDEC, initNvDecDecoder, admNvDec_exitCleanup)
 #endif
 
