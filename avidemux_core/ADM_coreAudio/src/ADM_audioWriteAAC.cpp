@@ -22,11 +22,28 @@
  */
 static 	int aacSampleRate[16]=
 {
-	96000, 88200, 64000, 48000,
-	44100, 32000, 24000, 22050,
-	16000, 12000, 11025,  8000,
-	0,     0,     0,     0 
+    96000,  88200,  64000,  48000,
+    44100,  32000,  24000,  22050,
+    16000,  12000,  11025,  8000,
+    7350,   0,      0,      0
 };
+
+static const char *audioObjectTypeNames[45]=
+{
+    "AAC Main",         "AAC LC",           "AAC SSR",          "AAC LTP",
+    "AAC SBR",          "AAC Scalable",     "TwinVQ",           "CELP",
+    "HXVC",             "Reserved",         "Reserved",         "TTSI",
+    "Main Synthesis",   "Wavetable Synthesis", "General MIDI",  "Algorithmic Synthesis and Audio Effects",
+    "ER AAC LC",        "Reserved",         "ER AAC LTP",       "ER AAC Scalable",
+    "ER TwinVQ",        "ER BSAC",          "ER AAC LD",        "ER CELP",
+    "ER HVXC",          "ER HILN",          "ER Parametric",    "SSC",
+    "AAC PS",           "MPEG Surround",    "(Escape value)",   "Layer-1",
+    "Layer-2",          "Layer-3",          "DST",              "ALS",
+    "SLS",              "SLS non-core",     "ER AAC ELD",       "SMR Simple",
+    "SMR Main",         "USAC (no SBR)",    "SAOC",             "LD MPEG Surround",
+    "USAC"
+};
+
 /**
  * \fn frequency2index
  * @param frequency
@@ -92,31 +109,60 @@ bool ADM_audioWriteAAC::init(ADM_audioStream *stream, const char *fileName)
     }
     uint32_t l;
     uint8_t *d;
-    int profileMinus1=0;
+    int profileMinus1 = 1; // AAC Low Complexity - 1
     if(stream->getExtraData(&l,&d))
     {
-        if(l>0)
+        int fqIdxFromConfig = samplingFrequencyIndex;
+        if(l < 2)
         {
-            profileMinus1=d[0]>>3;
-            if(profileMinus1)
-                profileMinus1--;
-            ADM_info("AAC profile minus 1= %d\n",profileMinus1);
-            int fqIdxFromConfig=((d[0]&7)<<1)+(d[1]>>7);
-            if(fqIdxFromConfig<13 && samplingFrequencyIndex!=fqIdxFromConfig) // explicit frequency not handled
+            ADM_warning("Invalid AAC extradata.\n");
+            goto noextra;
+        }
+        profileMinus1 = d[0]>>3;
+        if(profileMinus1 == 31)
+        {
+            if(l < 3)
             {
-                ADM_warning("Using frequency index from extradata = %d (header says %d).\n",fqIdxFromConfig,samplingFrequencyIndex);
-                samplingFrequencyIndex=fqIdxFromConfig;
+                ADM_warning("Invalid AAC extradata.\n");
+                goto noextra;
             }
+            profileMinus1 += (d[1]>>2) & 0x3F;
+            fqIdxFromConfig = ((d[1]&3)<<2)+(d[2]>>6);
         }else
-            ADM_warning("No valid AAC extra data\n");
+        {
+            fqIdxFromConfig = ((d[0]&7)<<1)+(d[1]>>7);
+        }
+        if(profileMinus1 > 45)
+        {
+            ADM_warning("Invalid AAC audio object type code.\n");
+            goto noextra;
+        }
+        if(profileMinus1)
+            profileMinus1--;
+        if(profileMinus1 > 3)
+        {
+            ADM_warning("Audio object type %s not representable in ADTS, faking AAC LC.\n", audioObjectTypeNames[profileMinus1]);
+            profileMinus1 = 1;
+        }
+        if(fqIdxFromConfig == 15)
+        {
+            ADM_warning("Explicitly specified sampling frequency is not handled.\n");
+        }else if(fqIdxFromConfig < 13 && samplingFrequencyIndex!=fqIdxFromConfig)
+        {
+            ADM_warning("Using frequency index from extradata %d = %d Hz (audio track says %d = %d Hz)\n",
+                fqIdxFromConfig, aacSampleRate[fqIdxFromConfig],
+                samplingFrequencyIndex, aacSampleRate[samplingFrequencyIndex]);
+            samplingFrequencyIndex = fqIdxFromConfig;
+        }
     }else
     {
-        ADM_warning("Cannot get profile!\n");
+        ADM_warning("Cannot get AAC extradata to extract profile!\n");
     }
-    
-    
+noextra:
     int channel=hdr->channels;
-    
+
+    ADM_info("Using AAC audio object type minus one = %d: %s\n", profileMinus1, audioObjectTypeNames[profileMinus1]);
+
     aacHeader[0]=0xff;
     aacHeader[1]=0xf1;
     aacHeader[2]=(profileMinus1<<6);
