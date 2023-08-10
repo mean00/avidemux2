@@ -315,10 +315,7 @@ bool ivtcDupeRemover::postProcess(ADMImage *in,ADMImage *out,uint64_t newPts)
                 postProcess(i,image,newPts); \
                 state=nextState; \
                 vidCache->unlockAll(); \
-                if(i) \
-                    return true; \
-                return false;
-
+                return (i != NULL);
 
 bool ivtcDupeRemover::getNextFrame(uint32_t *fn,ADMImage *image)
 {
@@ -345,17 +342,14 @@ bool ivtcDupeRemover::getNextFrame(uint32_t *fn,ADMImage *image)
               }
               uint64_t newPts=phaseStartPts+count*41666;
               END_PROCESS(i,image,newPts,nextState);
-              break;
             }
-            break;
         case dupePassThrough:
             {
               ADMImage *i=vidCache->getImage(incomingNum);
               incomingNum++;
               if((incomingNum-phaseStart)>(PERIOD))
-                      state=dupeSyncing;
-             END_PROCESS(i,image,ADM_NO_PTS,dupePassThrough);
-             break;
+                  state=dupeSyncing;
+              END_PROCESS(i,image,ADM_NO_PTS,dupePassThrough);
             }
         case dupeSyncing:
             {
@@ -367,14 +361,12 @@ bool ivtcDupeRemover::getNextFrame(uint32_t *fn,ADMImage *image)
                     aprintf(">>PTS=%s\n",ADM_us2plain(i->Pts));
                 incomingNum++;
                 END_PROCESS(i,image,ADM_NO_PTS,nextState);
-                break;
             }
         default:
+            {
               ADM_assert(0);
-
-              break;
-
-      }
+            }
+    }
 }
 /**
     \fn getCoupledConf
