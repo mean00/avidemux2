@@ -40,7 +40,7 @@ extern "C" {
     \fn ffmpuxerSetExtradata
     \brief dupe the extradata if needed
 */
-bool ffmpuxerSetExtradata(AVCodecParameters *params, int size, const uint8_t *data)
+static bool ffmpuxerSetExtradata(AVCodecParameters *params, int size, const uint8_t *data)
 {
     if(!size || !data)
     {
@@ -48,10 +48,12 @@ bool ffmpuxerSetExtradata(AVCodecParameters *params, int size, const uint8_t *da
         params->extradata_size=0;
         return true;
     }
-    uint8_t *copy=(uint8_t *)av_malloc( (1+(size>>4))<<4);;
+    uint8_t *copy=(uint8_t *)av_malloc(size + AV_INPUT_BUFFER_PADDING_SIZE);
     memcpy(copy,data,size);
     params->extradata=copy;
     params->extradata_size=size;
+    copy += size;
+    memset(copy, 0, AV_INPUT_BUFFER_PADDING_SIZE);
     return true;
 }
 
