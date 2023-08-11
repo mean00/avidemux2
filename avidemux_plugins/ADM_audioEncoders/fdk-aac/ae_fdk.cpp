@@ -76,6 +76,7 @@ AUDMEncoder_Fdkaac::AUDMEncoder_Fdkaac(AUDMAudioFilter * instream,bool globalHea
 {
   uint32_t channels;
   _inited=false;
+  ordered=NULL;
   channels=instream->getInfo()->channels;
   _globalHeader=globalHeader;
   switch(channels)
@@ -212,6 +213,7 @@ int channels=wavheader.channels;
         ADM_warning("Cannot open fdk AAC for channels=%d\n",channels);
         return 0;
     }
+    _inited = true;
     //
     
     // Mandatory settings
