@@ -237,6 +237,46 @@ bool muxerFFmpeg::initVideo(ADM_videoStream *stream)
 
     return true;
 }
+/*+
+    \fn setChannelLayout
+    \brief Set channel layout to default value based on number of channels
+*/
+static bool setChannelLayout(AVCodecParameters *par, uint16_t nb_channels)
+{
+    par->ch_layout.order = AV_CHANNEL_ORDER_UNSPEC;
+
+    av_channel_layout_default(&par->ch_layout, nb_channels);
+
+    bool got_layout = par->ch_layout.order != AV_CHANNEL_ORDER_UNSPEC;
+    char *desc;
+#define INITIAL_SIZE 16
+    int len, bufSize = INITIAL_SIZE;
+retry:
+    desc = new char[bufSize];
+    memset(desc, 0, bufSize);
+    len = av_channel_layout_describe(&par->ch_layout, desc, bufSize);
+    if(len < 1)
+        goto cleanup;
+    if(len + 1 > bufSize)
+    {
+        if(bufSize > INITIAL_SIZE)
+            goto cleanup;
+#undef INITIAL_SIZE
+        delete [] desc;
+        desc = NULL;
+        bufSize = len + 1;
+        goto retry;
+    }
+    desc[len] = 0;
+    if(got_layout)
+        ADM_info("Using default channel layout \"%s\" for %u channels.\n", desc, nb_channels);
+cleanup:
+    delete [] desc;
+    desc = NULL;
+    if(!got_layout)
+        ADM_warning("Cannot find a channel layout for %u channels.\n", nb_channels);
+    return got_layout;
+}
 /**
     \fn initAudio
     \brief setup the audio parts if present
@@ -267,8 +307,7 @@ bool muxerFFmpeg::initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio)
         par->frame_size = 1024; //For AAC mainly, sample per frame
         ADM_info("Track %d bitrate: %u kbps\n", i, (audioheader->byterate*8)/1000);
         par->sample_rate = audioheader->frequency;
-        par->channel_layout = av_get_default_channel_layout(audioheader->channels);
-        ADM_info("Using default channel layout 0x%lx for %u channels\n",par->channel_layout,audioheader->channels);
+        setChannelLayout(par, audioheader->channels);
         switch(audioheader->encoding)
         {
             case WAV_OGG_VORBIS:
@@ -352,7 +391,6 @@ bool muxerFFmpeg::initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio)
         } // switch(audioheader->encoding)
         par->codec_type = AVMEDIA_TYPE_AUDIO;
         par->bit_rate = audioheader->byterate*8;
-        par->channels = audioheader->channels;
         if(useGlobalHeader())
         {
             if(audioextraSize)
