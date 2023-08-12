@@ -26,7 +26,10 @@ external_liba52=1
 external_libmad=0
 external_libmp4v2=1
 
-export SDKROOT=$(xcrun --sdk macosx --show-sdk-path)
+# Build with SDK 13.3 fails, use hardcoded path to an earlier version known to work.
+# SDK 12.3 must be installed at the given location.
+#export SDKROOT=$(xcrun --sdk macosx --show-sdk-path)
+export SDKROOT=/Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk
 export MACOSX_DEPLOYMENT_TARGET=$(xcrun --sdk macosx --show-sdk-version)
 
 test -f $HOME/myCC  && export COMPILER="-DCMAKE_C_COMPILER=$HOME/myCC -DCMAKE_CXX_COMPILER=$HOME/myC++"
