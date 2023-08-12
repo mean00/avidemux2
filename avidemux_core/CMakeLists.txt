@@ -76,6 +76,12 @@ ELSE(WIN32)
     ENDIF(UNIX AND NOT APPLE)
 ENDIF(WIN32)# AND NOT MSVC)
 
+IF(APPLE)
+    # Silence missing nullability specifier warnings on macOS
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-nullability-completeness")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-nullability-completeness")
+ENDIF(APPLE)
+
 ########################################
 # Generate config.h
 ########################################

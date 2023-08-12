@@ -141,7 +141,10 @@ ENDIF (MINGW)
 
 # Needed by RubberBand
 if (APPLE)
-	target_link_libraries(avidemux3_cli "-framework Accelerate")
+	#target_link_libraries(avidemux3_cli "-framework Accelerate")
+# Silence missing nullability specifier warnings on macOS
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-nullability-completeness")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-nullability-completeness")
 endif (APPLE)
 
 ###########################################
