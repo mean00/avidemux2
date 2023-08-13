@@ -30,7 +30,12 @@
 
 
 
-#define FDKAAC_DEFAULT_CONF {128,true,AOT_AAC_LC,false}
+#define FDKAAC_DEFAULT_CONF { \
+    128, /* bitrate */ \
+    0,   /* constant bitrate mode */ \
+    AOT_AAC_LC, /* low complexity AAC profile */ \
+    true /* afterburner enabled */ \
+}
 
 static fdk_encoder defaultConfig = FDKAAC_DEFAULT_CONF;
 
@@ -238,14 +243,11 @@ int channels=wavheader.channels;
     }
     SET_PARAM(AACENC_AOT, _config.profile) // Mpeg4 LC
     SET_PARAM(AACENC_TRANSMUX,TT_MP4_RAW) // Raw binary         
-    SET_PARAM(AACENC_BITRATEMODE,0) // CBR
+    SET_PARAM(AACENC_BITRATEMODE, _config.bitrate_mode) // CBR or VBR 1 to 5
     SET_PARAM(AACENC_BITRATE,_config.bitrate*1000)
     SET_PARAM(AACENC_SAMPLERATE,(wavheader.frequency))    
     SET_PARAM(AACENC_AFTERBURNER,_config.afterburner);
     SET_PARAM(AACENC_CHANNELMODE,mode)
-#ifdef LOW_DELAY_EXPLICIT_SBR
-    SET_PARAM(AACENC_SBR_MODE,_config.sbr)            
-#endif
     //
     // make a dry run of the encoder so that we have extradata
     //
@@ -398,8 +400,6 @@ _again:
         
         return 1;
 }
-#define SZT(x) sizeof(x)/sizeof(diaMenuEntry )
-#define BITRATE(x) {x,QT_TRANSLATE_NOOP("FDK-AAC",#x),NULL}
 
 /**
     \fn configure
@@ -412,42 +412,51 @@ bool configure (CONFcouple **setup)
     {
         ADM_paramLoad(*setup,fdk_encoder_param,&config);
     }
-    diaMenuEntry bitrateM[]={
-                              BITRATE(56),
-                              BITRATE(64),
-                              BITRATE(80),
-                              BITRATE(96),
-                              BITRATE(112),
-                              BITRATE(128),
-                              BITRATE(160),
-                              BITRATE(192),
-                              BITRATE(224),
-                              BITRATE(384),
-                              BITRATE(448),
-                              BITRATE(576),
-                              BITRATE(640)
-                          };
-    
-#define PROFILE(x,y) {y,QT_TRANSLATE_NOOP("FDK-AAC",x),NULL}
-     diaMenuEntry profileM[]={
-         PROFILE("LC",AOT_AAC_LC),
-         PROFILE("HE-AAC",AOT_SBR),
-         PROFILE("HE-AACv2",AOT_PS)
-     };
-
-    diaElemMenu profile(&(config.profile), QT_TRANSLATE_NOOP("FDK-AAC","_Profile:"), SZT(profileM),profileM);
-    diaElemMenu bitrate(&(config.bitrate), QT_TRANSLATE_NOOP("FDK-AAC","_Bitrate:"), SZT(bitrateM),bitrateM);
-#ifdef LOW_DELAY_EXPLICIT_SBR
-    diaElemToggle sbr(&(config.sbr),QT_TRANSLATE_NOOP("FDK-AAC","SBR enabled"));
-#endif
+#define BITRATE(x) {x,QT_TRANSLATE_NOOP("FDK-AAC",#x),NULL}
+    diaMenuEntry menuBitrate[]={
+        BITRATE(56),
+        BITRATE(64),
+        BITRATE(80),
+        BITRATE(96),
+        BITRATE(112),
+        BITRATE(128),
+        BITRATE(160),
+        BITRATE(192),
+        BITRATE(224),
+        BITRATE(384),
+        BITRATE(448),
+        BITRATE(576),
+        BITRATE(640)
+    };
+#undef BITRATE
+#define BR_MODE(x,y) {y,QT_TRANSLATE_NOOP("FDK-AAC",x),NULL}
+    diaMenuEntry menuBitrateMode[]={
+        BR_MODE("CBR", 0),
+        BR_MODE("Very Low Bitrate", 1),
+        BR_MODE("Low Bitrate", 2),
+        BR_MODE("Medium Bitrate", 3),
+        BR_MODE("High Bitrate", 4),
+        BR_MODE("Very High Bitrate", 5)
+    };
+#define PROFILE BR_MODE
+    diaMenuEntry menuProfile[]={
+        PROFILE("LC", AOT_AAC_LC),
+        PROFILE("HE-AAC", AOT_SBR),
+        PROFILE("HE-AACv2", AOT_PS)
+    };
+#undef PROFILE
+#undef BR_MODE
+#define SZT(x) sizeof(x)/sizeof(diaMenuEntry)
+    diaElemMenu profile(&(config.profile), QT_TRANSLATE_NOOP("FDK-AAC","_Profile:"), SZT(menuProfile), menuProfile);
+    diaElemMenu brmode(&(config.bitrate_mode), QT_TRANSLATE_NOOP("FDK-AAC","Bitrate _Mode:"), SZT(menuBitrateMode), menuBitrateMode);
+    diaElemMenu bitrate(&(config.bitrate), QT_TRANSLATE_NOOP("FDK-AAC","_Bitrate:"), SZT(menuBitrate), menuBitrate);
     diaElemToggle afterburner(&(config.afterburner),QT_TRANSLATE_NOOP("FDK-AAC","Afterburner"));
-#ifdef LOW_DELAY_EXPLICIT_SBR
-    diaElem *elems[]={&profile,&bitrate,&sbr,&afterburner};
-    if(diaFactoryRun(QT_TRANSLATE_NOOP("FDK-AAC","FDK-AAC Configuration"),4,elems))
-#else
-    diaElem *elems[]={&profile,&bitrate,&afterburner};
-    if(diaFactoryRun(QT_TRANSLATE_NOOP("FDK-AAC","FDK-AAC Configuration"),3,elems))
-#endif
+#undef SZT
+    brmode.link(menuBitrateMode, 1, &bitrate); // disable bitrate menu for all VBR modes
+
+    diaElem *elems[] = { &profile, &brmode, &bitrate, &afterburner };
+#define SZT(x) sizeof(x)/sizeof(diaElem *)
+    if(diaFactoryRun(QT_TRANSLATE_NOOP("FDK-AAC","FDK-AAC Configuration"), SZT(elems), elems))
     {
         if(*setup) delete *setup;
         *setup=NULL;

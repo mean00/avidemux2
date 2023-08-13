@@ -3,7 +3,7 @@
 #pragma once
 typedef struct {
 uint32_t bitrate;
-bool afterburner;
+uint32_t bitrate_mode;
 uint32_t profile;
-bool sbr;
+bool afterburner;
 }fdk_encoder;
