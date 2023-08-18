@@ -628,11 +628,12 @@ bool GUI_SeekByTime(int64_t time)
         admPreview::samePicture();
         GUI_setCurrentFrameAndTime();
         return true;
-    }else
-    {
-        pts += time;
     }
+    pts += time;
     ADM_info("Seek to:%s ms \n",ADM_us2plain(pts));
+    pts++; // we want to get the picture at pts if possible, not before
+    if (pts >= video_body->getVideoDuration())
+        return false;
     return GUI_lastFrameBeforePts(pts);
 }
 
