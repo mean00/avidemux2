@@ -1339,7 +1339,6 @@ tp_obj tp_print(TP) {
         tp_echo(tp,e);
         n += 1;
     TP_END;
-    printf("\n");
     return tp_None;
 }
 
