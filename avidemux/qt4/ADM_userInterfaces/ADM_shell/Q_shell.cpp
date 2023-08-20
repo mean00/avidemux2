@@ -195,7 +195,10 @@ bool qShell::print(IScriptEngine::EventType type,const char *s)
         case IScriptEngine::Error: ui.textBrowser->setTextColor(Qt::red); break;
         default: break;
     }
-    ui.textBrowser->insertPlainText(QString::fromUtf8(s));
+    QString text = QString::fromUtf8(s);
+    if(!text.isEmpty() && !text.endsWith("\n"))
+        text += "\n";
+    ui.textBrowser->insertPlainText(text);
     ui.textBrowser->setTextColor(old);
     return true;
 }
