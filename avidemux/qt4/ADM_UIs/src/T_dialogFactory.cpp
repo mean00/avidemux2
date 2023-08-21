@@ -218,8 +218,6 @@ const char *shortkey(const char *in)
 void  *qt4DiaFactoryTabsPrepare(const char *title,uint32_t nb,diaElemTabs **tabs)
 {
     factoryCookie *cookie=new factoryCookie(title);
-
-    cookie->layout  = new QGridLayout();
     cookie->tabWidget = new QTabWidget();
 
     for(int i=0;i<nb;i++)
