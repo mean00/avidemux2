@@ -236,6 +236,9 @@ create_release_package()
     libgobject-*.dll \
     libharfbuzz-*.dll \
     libiconv-*.dll \
+    icudt66.dll \
+    icuin66.dll \
+    icuuc66.dll \
     libintl-*.dll \
     libmp3lame-*.dll \
     libogg-*.dll \
