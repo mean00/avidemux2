@@ -62,11 +62,18 @@ patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < x264_gen.patch \
    patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < "${where}/x265.patch" \
 && patch -d "${MXE_ROOT_DIR}" -p1 < "${where}/x265.patch" || fail "Failed at x265 patch"
 
-echo "MXE_TARGETS :=  i686-w64-mingw32.shared x86_64-w64-mingw32.shared" > "${MXE_ROOT_DIR}/settings.mk"
+# zlib 1.2.13 source archive has been removed by upstream, see https://github.com/mxe/mxe/issues/3006
+# continue on failure, the issue may have been already sorted out
+   patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < "${where}/zlib-download-from-mirror.patch" \
+&& patch -d "${MXE_ROOT_DIR}" -p1 < "${where}/zlib-download-from-mirror.patch"
+
+#echo "MXE_TARGETS :=  i686-w64-mingw32.shared x86_64-w64-mingw32.shared" > "${MXE_ROOT_DIR}/settings.mk"
+echo "MXE_TARGETS :=  x86_64-w64-mingw32.shared" > "${MXE_ROOT_DIR}/settings.mk"
 
 # now build MXE
 cd "${MXE_ROOT_DIR}" && MXE_SILENT_NO_NETWORK= \
 make \
+MXE_PLUGIN_DIRS="${MXE_ROOT_DIR}/plugins/gcc13" \
 faad2 \
 fdk-aac \
 fribidi \
@@ -99,6 +106,7 @@ fi
 
 git clone https://github.com/FFmpeg/nv-codec-headers.git || fail "Cannot clone nv-codec-headers repository"
 cd nv-codec-headers \
+&& git checkout sdk/11.1 \
 && sed -i '/PREFIX\ =\ \/usr\/local/d' Makefile \
 && PREFIX="${MXE_ROOT_DIR}/usr/x86_64-w64-mingw32.shared" make install || fail "Cannot install nv-codec-headers"
 
