@@ -22,7 +22,7 @@
 #include "ivtcDupeRemover.h"
 #include "ivtcDupeRemover_desc.cpp"
 
-#if defined( ADM_CPU_X86) && !defined(_MSC_VER)
+#if defined( ADM_CPU_X86) && !defined(_MSC_VER) && !(defined(_WIN32) && (__GNUC__ > 5))
         #define CAN_DO_INLINE_X86_ASM
 #endif
 
@@ -374,7 +374,8 @@ bool ivtcDupeRemover::getNextFrame(uint32_t *fn,ADMImage *image)
 
               break;
 
-      }
+    }
+    return false;
 }
 /**
     \fn getCoupledConf
