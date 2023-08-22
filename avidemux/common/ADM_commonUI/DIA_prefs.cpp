@@ -686,9 +686,9 @@ std::string currentSdlDriver=getSdlDriverName();
         #if defined(USE_LIBVA)
         diaElemToggle useLibVA(&blibva,QT_TRANSLATE_NOOP("adm","Decode video using LIBVA (INTEL)"));
         #endif
-        #if defined(USE_NVENC)
+    #endif
+    #if defined(USE_NVENC)
         diaElemToggle useNvDec(&bnvdec,QT_TRANSLATE_NOOP("adm","Decode video using NVDEC (NVIDIA)"));
-        #endif
     #endif
     #if (defined(USE_DXVA2) || defined(USE_VDPAU) || defined(USE_LIBVA))
         diaElemReadOnlyText hwAccelText(NULL,QT_TRANSLATE_NOOP("adm","If you use Hw decoding, it is better to use the matching display driver"),NULL);
@@ -709,9 +709,9 @@ std::string currentSdlDriver=getSdlDriverName();
         #if defined(USE_LIBVA)
             &useLibVA,
         #endif
-        #if defined(USE_NVENC)
+    #endif
+    #if defined(USE_NVENC)
             &useNvDec,
-        #endif
     #endif
             &hwAccelMultiThreadText
     #if (defined(USE_DXVA2) || defined(USE_VDPAU) || defined(USE_LIBVA))
@@ -747,12 +747,14 @@ std::string currentSdlDriver=getSdlDriverName();
 #define NB_ELEM(x) sizeof(x)/sizeof(diaElemTabs *)
         void *factoryCookiez=diaFactoryRunTabsPrepare(QT_TRANSLATE_NOOP("adm","Preferences"),NB_ELEM(tabs),tabs);
 // Now we can disable stuff if needed
-#if defined(HW_ACCELERATED_DECODING) && !defined(USE_VIDEOTOOLBOX) && !defined(USE_DXVA2)
-    #ifdef USE_VDPAU
+#if defined(HW_ACCELERATED_DECODING) && !defined(USE_VIDEOTOOLBOX)
+    #if !defined(USE_DXVA2)
+        #ifdef USE_VDPAU
         useVdpau.enable(vdpauAvailable);
-    #endif
-    #ifdef USE_LIBVA
+        #endif
+        #ifdef USE_LIBVA
         useLibVA.enable(libvaAvailable);
+        #endif
     #endif
     #ifdef USE_NVENC
         useNvDec.enable(nvdecAvailable);
