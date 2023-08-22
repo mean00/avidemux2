@@ -39,7 +39,7 @@ void initScaleTab( void )
 		scaletab[1] = 32767;
 		for(int i = 2; i < 16; ++i)
 				scaletab[i] = (int)(32768.0 / i + 0.5);
-		for(uint32_t  i = 0; i < 65536; ++i)
+		for(uint32_t  i = 0; i < 65535; ++i)
 		{
 			scaletab_MMX[i] = ( (uint64_t)scaletab[ i        & 15]       ) |
 							  (((uint64_t)scaletab[(i >>  4) & 15]) << 16) |
@@ -178,7 +178,7 @@ void attribute_used ADMVideoFlux::DoFilter_C(
 	ADM_assert(ycnt == 0);
 
 }
-#ifdef ADM_CPU_X86
+#if defined(ADM_CPU_X86) && !(defined(_WIN32) && (__GNUC__ > 5))
 /*
 	__asm movq mm2, mm0 \
 	__asm movq mm3, mm1 \
