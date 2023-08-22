@@ -34,14 +34,14 @@ process()
         -DENABLE_EXAMPLES=0 \
         -DENABLE_TOOLS=0 \
         -DBUILD_SHARED_LIBS=1 \
-        -DCONFIG_AV1_ENCODER=0 \
         -DCONFIG_ANALYZER=0 \
         -DFORCE_HIGHBITDEPTH_DECODING=0 \
         -DCMAKE_INSTALL_PREFIX=${MXE_ROOT}/usr/${CROSS_PREFIX} || failMsg "Failed at cmake"
     make -j $(nproc) || failMsg "Failed at make"
     make install || failMsg "Failed at make install"
-    DLL="${MXE_ROOT}/usr/${CROSS_PREFIX}/lib/libaom.dll"
-    mv -v "${DLL}" "${MXE_ROOT}/usr/${CROSS_PREFIX}/bin/" || failMsg "Failed moving ${DLL} to ${MXE_ROOT}/usr/${CROSS_PREFIX}/bin/"
+# At least v3.6.1 installs the shared library already to the right location.
+#   DLL="${MXE_ROOT}/usr/${CROSS_PREFIX}/lib/libaom.dll"
+#   mv -v "${DLL}" "${MXE_ROOT}/usr/${CROSS_PREFIX}/bin/" || failMsg "Failed moving ${DLL} to ${MXE_ROOT}/usr/${CROSS_PREFIX}/bin/"
 }
 
 #AOM_HOME=/home/eumagga/adm
@@ -97,7 +97,7 @@ fi
 cd "${AOM_HOME}/aom"
 
 if [ "x${AOM_TAG}" = "x" ]; then
-    AOM_TAG="v2.0.2"
+    AOM_TAG="v3.6.1"
 fi
 
 if [ "x${FRESH}" = "x0" ]; then
