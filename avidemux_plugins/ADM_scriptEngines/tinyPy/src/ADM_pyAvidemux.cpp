@@ -558,6 +558,13 @@ void pyQtGuiSetDarkTheme(IEditor *editor)
 {
     GUI_Tweaks("SET_DARK_THEME", NULL, 0);
 }
+/**
+    \fn pyQtGuiTextToClipboard
+*/
+void pyQtGuiTextToClipboard(IEditor *editor, const char *msg)
+{
+    GUI_Tweaks("TEXT_TO_CLIPBOARD", msg, 0);
+}
 
 /**
  * \fn pyGetEnv

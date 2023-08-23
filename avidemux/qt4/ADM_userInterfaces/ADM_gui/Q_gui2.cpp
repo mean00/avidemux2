@@ -3750,7 +3750,13 @@ void UI_tweaks(const char * op, const char * paramS, int paramN)
     {
         ((MainWindow *)QuiMainWindows)->setDarkTheme();
     } else
-
+    if (strcmp("TEXT_TO_CLIPBOARD", op) == 0)
+    {
+        QClipboard *clipboard = QApplication::clipboard();
+        clipboard->clear();
+        clipboard->setText(paramS);
+    } else
+    
     {
         // NOP
     }

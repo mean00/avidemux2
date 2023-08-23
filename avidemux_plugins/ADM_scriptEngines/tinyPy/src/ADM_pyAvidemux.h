@@ -107,6 +107,7 @@ void pyQtGuiExit(IEditor *editor);
 void pyQtGuiSetPlayFiltered(IEditor *editor, int enable);
 void pyQtGuiSetLighTheme(IEditor *editor);
 void pyQtGuiSetDarkTheme(IEditor *editor);
+void pyQtGuiTextToClipboard(IEditor *editor, const char *msg);
 
 /* Misc */
 int pyTestCrash(void);

@@ -111,6 +111,20 @@ static tp_obj zzpy_QtGuiStatusbarWarning(TP)
   pyQtGuiStatusbarWarning(p0, p1, p2);
   return tp_None;
 }
+// QtGuiTextToClipboard -> void pyQtGuiTextToClipboard(IEditor str)
+static tp_obj zzpy_QtGuiTextToClipboard(TP)
+{
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->editor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_GUI);
+
+  IEditor *p0 = editor;
+  const char *p1 = pm.asString();
+  pyQtGuiTextToClipboard(p0, p1);
+  return tp_None;
+}
 // QtGuiWindowMinimize -> void pyQtGuiWindowMinimize(IEditor)
 static tp_obj zzpy_QtGuiWindowMinimize(TP)
 {
@@ -313,6 +327,10 @@ tp_obj zzpy__pyGui_get(tp_vm *vm)
   {
     return tp_method(vm, self, zzpy_QtGuiStatusbarWarning);
   }
+  if (!strcmp(key, "QtGuiTextToClipboard"))
+  {
+    return tp_method(vm, self, zzpy_QtGuiTextToClipboard);
+  }
   if (!strcmp(key, "QtGuiWindowMinimize"))
   {
     return tp_method(vm, self, zzpy_QtGuiWindowMinimize);
@@ -395,6 +413,7 @@ static tp_obj zzpy__pyGui_help(TP)
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "void\t QtGuiStatusbarError(str msg, int timeoutMs)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "void\t QtGuiStatusbarInfo(str msg, int timeoutMs)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "void\t QtGuiStatusbarWarning(str msg, int timeoutMs)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "void\t QtGuiTextToClipboard(str msg)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "void\t QtGuiWindowMinimize()\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "void\t QtGuiWindowRestore()\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "void\t QtGuiWindowSetTitle(str title)\n");

@@ -19,3 +19,4 @@
 /* METHOD */ void pyQtGuiSetPlayFiltered:QtGuiSetPlayFiltered(int enable)
 /* METHOD */ void pyQtGuiSetLighTheme:QtGuiSetLighTheme(void)
 /* METHOD */ void pyQtGuiSetDarkTheme:QtGuiSetDarkTheme(void)
+/* METHOD */ void pyQtGuiTextToClipboard:QtGuiTextToClipboard(str msg)
