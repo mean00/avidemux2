@@ -212,7 +212,7 @@ bool av1AomEncoder::setup(void)
         return false;
     }
 
-    ret = aom_codec_enc_config_default(iface, &param, AOM_USAGE_GOOD_QUALITY);
+    ret = aom_codec_enc_config_default(iface, &param, 0 /* AOM_USAGE_GOOD_QUALITY */);
 
     if(ret != AOM_CODEC_OK)
     {
