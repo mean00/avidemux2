@@ -54,7 +54,7 @@ protected:
                 vpx_codec_enc_cfg_t param;
                 vpx_codec_iface_t   *iface;
                 vpx_image_t         *pic;
-                std::vector <const vpx_codec_cx_pkt *> packetQueue;
+                std::vector <ADMBitstream *> outQueue;
 
                 int                 plane;
                 uint32_t            scaledFrameDuration;

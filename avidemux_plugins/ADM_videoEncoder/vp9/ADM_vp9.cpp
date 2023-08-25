@@ -134,7 +134,7 @@ bool vp9Encoder::setup(void)
 
     lastScaledPts = ADM_NO_PTS;
     flush = false;
-    packetQueue.clear();
+    outQueue.clear();
 
     image=new ADMImageDefault(getWidth(),getHeight());
     if(!image)
@@ -205,11 +205,7 @@ bool vp9Encoder::setup(void)
                 return false;
             }
             ADM_info("[vp9Encoder] Starting pass %d\n",passNumber);
-            if(passNumber==1)
-            {
-                param.g_lag_in_frames=0;
-                speed=1;
-            }else
+            if(passNumber!=1)
             {
                 int64_t sz=ADM_fileSize(logFile.c_str());
                 if(sz<=0)
@@ -238,7 +234,7 @@ bool vp9Encoder::setup(void)
                 }
                 fclose(statFd);
                 statFd=NULL;
-                param.rc_twopass_stats_in.buf=statBuf; // should be freed by vpx_codec_destroy()
+                param.rc_twopass_stats_in.buf=statBuf;
                 param.rc_twopass_stats_in.sz=sz;
             }
             {
@@ -291,6 +287,8 @@ bool vp9Encoder::setup(void)
         ADM_error("[vp9Encoder] Cannot allocate VPX image.\n");
         return false;
     }
+    pic->bit_depth = 8;
+    pic->range = vp9Settings.fullrange ? VPX_CR_FULL_RANGE : VPX_CR_STUDIO_RANGE;
 
     dline=VPX_DL_GOOD_QUALITY;
     switch(vp9Settings.deadline)
@@ -331,6 +329,14 @@ bool vp9Encoder::setup(void)
 vp9Encoder::~vp9Encoder()
 {
     ADM_info("[vp9] Destroying.\n");
+    for(int i=0; i < outQueue.size(); i++)
+    {
+        ADMBitstream *s = outQueue[i];
+        if(!s) continue;
+        ADM_dealloc(s->data);
+        delete s;
+        s = NULL;
+    }
     if(pic)
     {
         vpx_img_free(pic);
@@ -340,6 +346,8 @@ vp9Encoder::~vp9Encoder()
         fclose(statFd);
     statFd=NULL;
     vpx_codec_destroy(&context);
+    ADM_dealloc(statBuf);
+    statBuf=NULL;
 }
 
 /**
@@ -348,7 +356,7 @@ vp9Encoder::~vp9Encoder()
 bool vp9Encoder::setPassAndLogFile(int pass, const char *name)
 {
     ADM_info("Initializing pass %d, log file: %s\n",pass,name);
-    logFile=std::string(name);
+    logFile = name;
     passNumber=pass;
     return true;
 }
@@ -358,7 +366,6 @@ bool vp9Encoder::setPassAndLogFile(int pass, const char *name)
 */
 bool vp9Encoder::encode(ADMBitstream *out)
 {
-    // 1 fetch a frame...
     uint32_t nb;
     uint64_t pts;
     vpx_codec_err_t er;
@@ -366,9 +373,7 @@ bool vp9Encoder::encode(ADMBitstream *out)
     // update
 again:
     out->flags = 0;
-    if(packetQueue.size())
-        return postAmble(out);
-
+    // fetch a frame...
     if(!flush && source->getNextFrame(&nb,image)==false)
     {
         ADM_warning("[vp9] Cannot get next image\n");
@@ -382,22 +387,12 @@ again:
         er=vpx_codec_encode(&context,NULL,pts,scaledFrameDuration,0,dline);
     }else
     {
-        if(image->_range == ADM_COL_RANGE_JPEG)
-        {
-            if(!vp9Settings.fullrange)
-                image->shrinkColorRange();
-        }else
-        {
-            if(vp9Settings.fullrange)
-                image->expandColorRange();
-        }
         pic->planes[VPX_PLANE_Y] = YPLANE(image);
         pic->planes[VPX_PLANE_U] = UPLANE(image);
         pic->planes[VPX_PLANE_V] = VPLANE(image);
         pic->stride[VPX_PLANE_Y] = image->GetPitch(PLANAR_Y);
         pic->stride[VPX_PLANE_U] = image->GetPitch(PLANAR_U);
         pic->stride[VPX_PLANE_V] = image->GetPitch(PLANAR_V);
-        pic->bit_depth = 8;
 
         pts=image->Pts;
         queueOfDts.push_back(pts);
@@ -418,6 +413,7 @@ again:
         ADM_error("Encoding error %d: %s\n",(int)er,vpx_codec_err_to_string(er));
         return false;
     }
+    // collect encoder output
     if(!postAmble(out))
     {
         if(flush) return false;
@@ -441,76 +437,101 @@ bool vp9Encoder::isDualPass(void)
 
 /**
     \fn postAmble
-    \brief update after a frame has been succesfully encoded
+    \brief Collect compressed frames
 */
 bool vp9Encoder::postAmble(ADMBitstream *out)
 {
-    const vpx_codec_cx_pkt *pkt;
-    const void *iter=NULL;
+    const vpx_codec_cx_pkt_t *pkt = NULL;
+    vpx_codec_iter_t iter = NULL;
+    ADMBitstream *stream = NULL;
 
-    if(packetQueue.empty())
+    while((pkt = vpx_codec_get_cx_data(&context, &iter)))
     {
-        while((pkt=vpx_codec_get_cx_data(&context,&iter)))
+        if((passNumber == 1 && pkt->kind != VPX_CODEC_STATS_PKT) ||
+            passNumber != 1 && pkt->kind != VPX_CODEC_CX_FRAME_PKT)
         {
-            if(passNumber != 1 && pkt->kind != VPX_CODEC_CX_FRAME_PKT)
-            {
-                const char *msg=packetTypeToString(pkt->kind);
-                ADM_info("Got packet of type: %s\n",msg);
-                ADM_dealloc(msg);
-                msg=NULL;
-                continue;
-            }
-            if(passNumber == 1 && pkt->kind != VPX_CODEC_STATS_PKT)
-            {
-                const char *msg=packetTypeToString(pkt->kind);
-                ADM_warning("Unexpected packet type %s during the first pass.\n",msg);
-                ADM_dealloc(msg);
-                msg=NULL;
-                continue;
-            }
-            packetQueue.push_back(pkt);
+            const char *msg = packetTypeToString(pkt->kind);
+            ADM_warning("Skipping packet of unexpected type \"%s\".\n", msg);
+            ADM_dealloc(msg);
+            msg = NULL;
+            continue;
         }
-    }
-
-    if(packetQueue.size())
-    {
-        pkt=packetQueue.front();
-        packetQueue.erase(packetQueue.begin());
-        memcpy(out->data,pkt->data.frame.buf,pkt->data.frame.sz);
-        out->len=pkt->data.frame.sz;
-        if(passNumber!=1)
+        if(passNumber != 1 && pkt->kind == VPX_CODEC_CX_FRAME_PKT)
         {
-            int quantizer=0;
-            if(VPX_CODEC_OK==vpx_codec_control(&context,VP8E_GET_LAST_QUANTIZER_64,&quantizer))
-            { // The value filled by codec control does not apply to this particular frame, but oh well...
-                if(quantizer<=0) quantizer=vp9Settings.ratectl.qz;
-                out->out_quantizer=quantizer;
+            stream = new ADMBitstream(pkt->data.frame.sz);
+            if(pkt->data.frame.sz) // can this be taken for granted and check skipped?
+            {
+                stream->data = (uint8_t *)ADM_alloc(stream->bufferSize);
+                stream->len = stream->bufferSize;
+                memcpy(stream->data, pkt->data.frame.buf, stream->len);
             }
-            getRealPtsFromInternal(pkt->data.frame.pts,&out->dts,&out->pts);
-        }else
+            getRealPtsFromInternal(pkt->data.frame.pts, &stream->dts, &stream->pts);
+
+            if(pkt->data.frame.flags & VPX_FRAME_IS_KEY)
+                stream->flags = AVI_KEY_FRAME; // else P
+
+            int quantizer = 0;
+            if(VPX_CODEC_OK == vpx_codec_control(&context, VP8E_GET_LAST_QUANTIZER_64, &quantizer))
+            {
+                if(quantizer <= 0)
+                    quantizer = vp9Settings.ratectl.qz;
+                stream->out_quantizer = quantizer;
+            }
+            outQueue.push_back(stream);
+            continue;
+        }
+        if(passNumber == 1 && pkt->kind == VPX_CODEC_STATS_PKT)
         {
+            stream = new ADMBitstream();
             if(queueOfDts.size())
             {
-                lastDts=out->dts=out->pts=queueOfDts.front();
+                lastDts = stream->dts = stream->pts = queueOfDts.front();
                 queueOfDts.erase(queueOfDts.begin());
             }else
             {
-                lastDts+=getFrameIncrement();
-                out->dts=out->pts=lastDts;
+                lastDts += getFrameIncrement();
+                stream->dts = stream->pts = lastDts;
             }
+
+            outQueue.push_back(stream); // during the first pass, we need only dts and pts
+
+            if(!pkt->data.twopass_stats.sz) continue;
+
             if(!statFd)
             {
-                statFd=ADM_fopen(logFile.c_str(),"wb");
+                statFd = ADM_fopen(logFile.c_str(), "wb");
                 if(!statFd)
                 {
-                    ADM_error("Cannot open log file %s for writing.\n",logFile.c_str());
+                    ADM_error("Cannot open log file %s for writing.\n", logFile.c_str());
                     return false;
                 }
             }
-            ADM_fwrite(out->data,out->len,1,statFd);
+            ADM_fwrite(pkt->data.twopass_stats.buf, pkt->data.twopass_stats.sz, 1, statFd);
         }
-        if(pkt->data.frame.flags & VPX_FRAME_IS_KEY)
-            out->flags=AVI_KEY_FRAME;
+    }
+
+    if(outQueue.size())
+    {
+        stream = outQueue.front();
+        ADM_assert(stream);
+        outQueue.erase(outQueue.begin());
+        out->pts = stream->pts;
+        out->dts = stream->dts;
+        if(passNumber == 1)
+        {
+            delete stream;
+            stream = NULL;
+            return true;
+        }
+        ADM_assert(stream->len <= out->bufferSize);
+        memcpy(out->data, stream->data, stream->len);
+        out->len = stream->len;
+        out->flags = stream->flags;
+        out->out_quantizer = stream->out_quantizer;
+        // clean up
+        ADM_dealloc(stream->data);
+        delete stream;
+        stream = NULL;
         return true;
     }
 
