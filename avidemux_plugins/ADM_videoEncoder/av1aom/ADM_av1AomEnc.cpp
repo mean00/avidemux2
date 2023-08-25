@@ -333,6 +333,9 @@ bool av1AomEncoder::setup(void)
         default:
             break;
     }
+#ifndef AOM_RC_SECOND_PASS
+    #define AOM_RC_SECOND_PASS AOM_RC_LAST_PASS
+#endif
     param.g_pass = (!passNumber) ? AOM_RC_ONE_PASS : (passNumber == 1)? AOM_RC_FIRST_PASS : AOM_RC_SECOND_PASS;
     param.kf_max_dist = encoderSettings.keyint;
 
