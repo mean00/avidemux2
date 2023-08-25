@@ -113,7 +113,7 @@ static void dumpParams(aom_codec_enc_cfg_t *cfg)
     LOOPI(tile_heights, tile_height, tile_height_count, MAX_TILE_HEIGHTS)
 #undef LOOPI
     printf("\n");
-
+#if AOM_ENCODER_ABI_VERSION >= (10 + AOM_CODEC_ABI_VERSION + /*AOM_EXT_PART_ABI_VERSION=*/3)
     PI(use_fixed_qp_offsets)
     // skipping deprecated and ignored fixed_qp_offsets array
 #undef PI
@@ -156,6 +156,7 @@ static void dumpParams(aom_codec_enc_cfg_t *cfg)
     PI(disable_ref_frame_mv)
     PI(reduced_reference_set)
     PI(reduced_tx_type_set)
+#endif
 #undef PI
     printf("\n");
 }
