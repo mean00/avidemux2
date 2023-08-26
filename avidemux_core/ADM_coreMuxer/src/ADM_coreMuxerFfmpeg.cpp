@@ -646,7 +646,7 @@ bool muxerFFmpeg::saveLoop(const char *title)
             {
                 char er[AV_ERROR_MAX_STRING_SIZE]={0};
                 av_make_error_string(er, AV_ERROR_MAX_STRING_SIZE, lavfError);
-                printf("[muxerFFmpeg::saveLoop] Error %d (%s) writing audio packet\n",lavfError,er);
+                printf("[muxerFFmpeg::saveLoop] Error %d (%s) writing video packet\n",lavfError,er);
             }
             break;
         }
