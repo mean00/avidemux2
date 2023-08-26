@@ -27,7 +27,7 @@
 #include "ADM_vidFlux.h"
 
 static int16_t attribute_used  FUNNY_MANGLE_ARRAY(scaletab, 16);
-static uint64_t attribute_used FUNNY_MANGLE_ARRAY(scaletab_MMX, 65535);
+static uint64_t attribute_used FUNNY_MANGLE_ARRAY(scaletab_MMX, 65536);
 static bool tableInited=false;
 /**
     \fn initScaleTab
@@ -39,7 +39,7 @@ void initScaleTab( void )
 		scaletab[1] = 32767;
 		for(int i = 2; i < 16; ++i)
 				scaletab[i] = (int)(32768.0 / i + 0.5);
-		for(uint32_t  i = 0; i < 65535; ++i)
+		for(uint32_t  i = 0; i < 65536; ++i)
 		{
 			scaletab_MMX[i] = ( (uint64_t)scaletab[ i        & 15]       ) |
 							  (((uint64_t)scaletab[(i >>  4) & 15]) << 16) |
@@ -178,7 +178,7 @@ void attribute_used ADMVideoFlux::DoFilter_C(
 	ADM_assert(ycnt == 0);
 
 }
-#if defined(ADM_CPU_X86) && !(defined(_WIN32) && (__GNUC__ > 5))
+#if defined(ADM_CPU_X86) && !(defined(_WIN32) && defined(__GNUC__) && (__GNUC__ > 5))
 /*
 	__asm movq mm2, mm0 \
 	__asm movq mm3, mm1 \
