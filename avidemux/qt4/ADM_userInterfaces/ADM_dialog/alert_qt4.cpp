@@ -165,7 +165,7 @@ int GUI_Confirmation_HIG(const char *button_confirm, const char *primary, const 
     if(secondary_format)
         printf("Confirmation \"%s\" \"%s\" : %s\n", primary, secondary_format, reply ? "Yes" : "No");
     else
-        printf("Confirmation \"%s\" : %s\n", primary, secondary_format, reply ? "Yes" : "No");
+        printf("Confirmation \"%s\" : %s\n", primary, reply ? "Yes" : "No");
 
     return reply ? ADM_OK : ADM_ERR;
 }
