@@ -39,7 +39,7 @@ static void alertCommon(enum QMessageBox::Icon icon, const char *title, const ch
     if(desc)
         alertString = "<b>" + alertString + "</b>";
 
-#ifdef _WIN32
+#ifndef __APPLE__
     alertString += "<br><br>";
     if(desc)
         alertString += QString::fromUtf8(desc);
@@ -67,7 +67,7 @@ static bool questionCommon(const char *title, const char *question, const char *
     if(desc)
         alertString = "<b>" + alertString + "</b>";
 
-#ifdef _WIN32
+#ifndef __APPLE__
     alertString += "<br><br>";
     if(desc)
         alertString += QString::fromUtf8(desc);
@@ -103,9 +103,9 @@ void GUI_Info_HIG(const ADM_LOG_LEVEL level,const char *primary, const char *sec
     prefs->get(MESSAGE_LEVEL,&msglvl);
 
     if(secondary_format)
-        printf("Error message: \"%s\" \"%s\"\n", primary, secondary_format);
+        printf("Info message: \"%s\" \"%s\"\n", primary, secondary_format);
     else
-        printf("Error message: \"%s\"\n", primary);
+        printf("Info message: \"%s\"\n", primary);
 
     if(msglvl<level)
     {
