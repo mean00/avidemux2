@@ -14,7 +14,6 @@ libasound2-dev \
 libpulse-dev \
 qtbase5-dev \
 qttools5-dev-tools \
-libaom-dev \
 libx264-dev \
 libx265-dev \
 libxvidcore-dev \
@@ -43,7 +42,7 @@ usage()
 #
 fail()
 {
-    echo "FAIL $@"
+    echo "$@"
     exit 1
 }
 #
@@ -59,10 +58,52 @@ check_nvenc()
     git clone https://github.com/FFmpeg/nv-codec-headers.git || return 1
     cd nv-codec-headers || return 1
     # Get the most recent version still compatible with NVIDIA drivers
-    # from the non-free repo on Buster.
-    git checkout sdk/9.0 || return 1
+    # from the non-free buster-backports repo.
+    git checkout sdk/11.1 || return 1
     make || return 1
     sudo make install || return 1
+}
+#
+check_aom()
+{
+    if (pkg-config --exists aom)
+    then
+        echo "aom is present, checking version..."
+        AOM_VERSION=$(pkg-config --modversion aom)
+        if [ $(echo "${AOM_VERSION}" | cut -d \. -f 1 - ) -ge "3" ]; then
+            echo "aom version ${AOM_VERSION} is sufficient."
+            return 0
+        fi
+    fi
+    echo "Minimum required version of aom is missing, will try to install."
+    CUR=$(pwd)
+    if ! [ -d "${CUR}/aom" ]
+    then
+        echo "Will clone aom source to current directory"
+        git clone https://aomedia.googlesource.com/aom || return 1
+    else
+        echo "Trying to re-use existing aom source directory"
+        git fetch || fail "Cannot fetch changes"
+    fi
+    cd "${CUR}/aom" && git checkout tags/v3.6.1 || return 1
+    cd ..
+    if [ -d "build-aom" ]
+    then
+        rm -rf "build-aom" || return 1
+    fi
+    mkdir "build-aom" || return 1
+    cd build-aom || return 1
+    cmake ../aom/ \
+    -DENABLE_DOCS=0 \
+    -DENABLE_EXAMPLES=0 \
+    -DENABLE_TOOLS=0 \
+    -DBUILD_SHARED_LIBS=1 \
+    -DCONFIG_ANALYZER=0 \
+    -DFORCE_HIGHBITDEPTH_DECODING=0 \
+    -DCMAKE_INSTALL_PREFIX="/usr/local" || return 1
+    make -j $(nproc) || return 1
+    sudo make install || return 1
+    return 0
 }
 #
 check_deps()
@@ -100,7 +141,12 @@ setup()
     if (check_nvenc); then
         echo "NVENC headers found."
     else
-        echo "Cannot install NVENC headers."
+        fail "Cannot install NVENC headers."
+    fi
+    if (check_aom); then
+        echo "libaom >= 3.0.0 found"
+    else
+        fail "Cannot install AOM."
     fi
 }
 #
