@@ -22,8 +22,12 @@ fail()
 }
 cpyX86()
 {
-        cp -t ../lib  /usr/lib/x86_64-linux-gnu/$1 || fail copy_x86lib $1
-
+        for prefix in "/usr/local/lib" "/usr/lib/x86_64-linux-gnu"; do
+                if [ -e "${prefix}/$1" ]; then
+                        cp -t ../lib "${prefix}/$1" && break || fail copy_x86lib $1
+                        break
+        fi
+        done
 }
 cpyX86Optional()
 {
@@ -116,7 +120,7 @@ libogg.so.0"
 VIDEO_PLUGINS="libx264.so.155 \
 libx265.so.165 \
 libvpx.so.5 \
-libaom.so.0"
+libaom.so.3"
 
 for i in ${DISPLAY_LIBS} ${AUDIO_PLUGINS} ${VIDEO_PLUGINS}
 do
