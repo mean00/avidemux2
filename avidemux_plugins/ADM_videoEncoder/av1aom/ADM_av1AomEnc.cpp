@@ -212,7 +212,8 @@ bool av1AomEncoder::setup(void)
         return false;
     }
 
-    ret = aom_codec_enc_config_default(iface, &param, 0 /* AOM_USAGE_GOOD_QUALITY */);
+    int usage = (encoderSettings.usage > AOM_USAGE_REALTIME) ? AOM_USAGE_GOOD_QUALITY : encoderSettings.usage;
+    ret = aom_codec_enc_config_default(iface, &param, usage);
 
     if(ret != AOM_CODEC_OK)
     {
@@ -246,7 +247,19 @@ bool av1AomEncoder::setup(void)
         scaledFrameDuration = 1;
     }
 
-    int speed = (encoderSettings.speed > 6)? 6 : encoderSettings.speed;
+    int speed = encoderSettings.speed;
+    if (speed > 9)
+    {
+        if (usage != AOM_USAGE_REALTIME)
+        {
+            speed = 9;
+        }
+        if ((aom_codec_version_major() == 3) && (aom_codec_version_minor() < 2))
+        {
+            // 10 && AOM_USAGE_REALTIME available since 3.2.0
+            speed = 9;
+        }
+    }
 
     switch(encoderSettings.ratectl.mode)
     {
@@ -374,7 +387,15 @@ bool av1AomEncoder::setup(void)
     {
         ADM_warning("[av1aom] Cannot set AV1E_SET_COLOR_RANGE codec control to %d\n", encoderSettings.fullrange);
     }
-
+    if(AOM_CODEC_OK != aom_codec_control(&context, AV1E_SET_TILE_COLUMNS, (encoderSettings.tiling & 3)))
+    {
+        ADM_warning("[av1aom] Cannot set AV1E_SET_TILE_COLUMNS codec control to %u\n", (encoderSettings.tiling & 3));
+    }
+    if(AOM_CODEC_OK != aom_codec_control(&context, AV1E_SET_TILE_ROWS, ((encoderSettings.tiling >> 2) & 3)))
+    {
+        ADM_warning("[av1aom] Cannot set AV1E_SET_TILE_ROWS codec control to %u\n", ((encoderSettings.tiling >> 2) & 3));
+    }
+    
     if(globalStreamHeader)
     {
         aom_fixed_buf_t *hdr = aom_codec_get_global_headers(&context);
