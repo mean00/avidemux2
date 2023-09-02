@@ -29,7 +29,9 @@
     }, \
      2, /* nbThreads */ \
      1, /* autoThreads */ \
+     0, /* usage */ \
      4, /* speed */ \
+     0, /* tiling */ \
    128, /* keyint */ \
      0  /* fullrange */ \
 }
