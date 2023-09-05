@@ -50,6 +50,7 @@ SET(${ADM_LIB}_SRCS
     FAC_integer.cpp
     FAC_matrix.cpp
     FAC_readOnlyText.cpp
+    FAC_tiling.cpp
     toolkit.cpp
     ${${ADM_LIB}_source}
     ${${ADM_LIB}_T}

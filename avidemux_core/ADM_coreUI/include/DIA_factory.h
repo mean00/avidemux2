@@ -48,9 +48,10 @@ typedef enum
   ELEM_SLIDER,
   ELEM_THREAD_COUNT,
   ELEM_MATRIX,
-  ELEM_COUNT,
   ELEM_ASPECT_RATIO,
   ELEM_TIMESTAMP,
+  ELEM_TILING,
+  ELEM_COUNT,
   ELEM_MAX=ELEM_COUNT-1
 }elemEnum;
 typedef void ADM_FAC_CALLBACK(void *cookie);
@@ -666,6 +667,19 @@ public:
 	void enable(uint32_t onoff);
 	int getRequiredLayout(void);
         void finalize(void);
+};
+/**********************************************/
+typedef diaElem *(CREATE_TILING_T)(uint32_t *tiling, uint32_t *maxlog2, const char *title, const char *tip);
+class ADM_COREUI6_EXPORT diaElemTiling : public diaElem
+{
+public:
+	diaElemTiling(uint32_t *tiling, uint32_t *maxlog2, const char *title, const char *tip = NULL);
+	virtual ~diaElemTiling();
+	void setMe(void *dialog, void *opaque, uint32_t line);
+	void getMe(void);
+	void enable(uint32_t onoff);
+	int getRequiredLayout(void);
+	void finalize(void);
 };
 
 /*********************************************/

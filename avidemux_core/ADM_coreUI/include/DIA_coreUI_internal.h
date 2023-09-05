@@ -139,7 +139,9 @@ typedef struct
 // Aspect Ratio 
     CREATE_ASPECTRATIO_T *CreateAspectRatio;
     DELETE_DIA_ELEM_T    *DestroyAspectRatio;
-
+// Tiling
+    CREATE_TILING_T      *CreateTiling;
+    DELETE_DIA_ELEM_T    *DestroyTiling;
 }FactoryDescriptor;
 //
 ADM_COREUI6_EXPORT uint8_t DIA_factoryInit(FactoryDescriptor *d);

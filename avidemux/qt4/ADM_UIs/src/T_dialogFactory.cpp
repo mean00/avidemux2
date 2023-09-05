@@ -427,6 +427,10 @@ extern CREATE_TOGGLE_T      qt4CreateToggle;
 extern DELETE_DIA_ELEM_T    qt4DestroyToggle;
 extern CREATE_TIMESTAMP_T   qt4CreateTimeStamp;
 extern DELETE_DIA_ELEM_T    qt4DestroyTimeStamp;
+extern CREATE_ASPECTRATIO_T qt4CreateAspectRatio;
+extern DELETE_DIA_ELEM_T    qt4DestroyAspectRatio;
+extern CREATE_TILING_T      qt4CreateTiling;
+extern DELETE_DIA_ELEM_T    qt4DestroyTiling;
 
 //************
 static FactoryDescriptor Qt4FactoryDescriptor=
@@ -507,7 +511,13 @@ static FactoryDescriptor Qt4FactoryDescriptor=
         &qt4DestroySlider,
         // Timestamp
         &qt4CreateTimeStamp,
-        &qt4DestroyTimeStamp
+        &qt4DestroyTimeStamp,
+        // Aspect Ratio
+        &qt4CreateAspectRatio,
+        &qt4DestroyAspectRatio,
+        // Tiling
+        &qt4CreateTiling,
+        &qt4DestroyTiling
 };
 
 /**
