@@ -24,10 +24,18 @@ bool av1AomEncoderConfigure(void)
     av1aom_encoder *cfg = &encoderSettings;
 #define PX(x) &(cfg->x)
     diaElemBitrate bitrate(PX(ratectl), NULL);
+    bitrate.setMaxQz(63);
+    diaMenuEntry usagetype[]={
+        {AOM_USAGE_GOOD_QUALITY,QT_TRANSLATE_NOOP("aomencoder","Good quality"),NULL},
+        {AOM_USAGE_REALTIME,QT_TRANSLATE_NOOP("aomencoder","Realtime"),NULL}
+    };
+    diaElemMenu usagemenu(PX(usage),QT_TRANSLATE_NOOP("aomencoder","Usage"),2,usagetype);
     diaElemUInteger speedu(PX(speed),
         QT_TRANSLATE_NOOP("aomencoder","Speed"),
-        0, 6,
+        0, 10,
         QT_TRANSLATE_NOOP("aomencoder", "Lower values favor quality over speed."));
+    uint32_t maxlog2 = 4;
+    diaElemTiling tilingmenu(PX(tiling), &maxlog2, QT_TRANSLATE_NOOP("aomencoder","Tiling"), QT_TRANSLATE_NOOP("aomencoder","Tiling makes parallel encoding and decoding easier."));
     diaElemUInteger concu(PX(nbThreads),
         QT_TRANSLATE_NOOP("aomencoder","Threads"),
         1, AV1_ENC_MAX_THREADS,
@@ -47,7 +55,9 @@ bool av1AomEncoderConfigure(void)
     frameEncMode.swallow(&bitrate);
 
     diaElemFrame frameEncSpeed(QT_TRANSLATE_NOOP("aomencoder", "Speed vs Quality"));
+    frameEncSpeed.swallow(&usagemenu);
     frameEncSpeed.swallow(&speedu);
+    frameEncSpeed.swallow(&tilingmenu);
     frameEncSpeed.swallow(&concu);
     frameEncSpeed.swallow(&thrmatic);
 

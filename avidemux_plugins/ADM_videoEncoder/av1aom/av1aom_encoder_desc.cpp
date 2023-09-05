@@ -3,7 +3,9 @@ extern const ADM_paramList av1aom_encoder_param[]={
  {"ratectl",offsetof(av1aom_encoder,ratectl),"COMPRES_PARAMS",ADM_param_video_encode},
  {"nbThreads",offsetof(av1aom_encoder,nbThreads),"uint32_t",ADM_param_uint32_t},
  {"autoThreads",offsetof(av1aom_encoder,autoThreads),"bool",ADM_param_bool},
+ {"usage",offsetof(av1aom_encoder,usage),"uint32_t",ADM_param_uint32_t},
  {"speed",offsetof(av1aom_encoder,speed),"uint32_t",ADM_param_uint32_t},
+ {"tiling",offsetof(av1aom_encoder,tiling),"uint32_t",ADM_param_uint32_t},
  {"keyint",offsetof(av1aom_encoder,keyint),"uint32_t",ADM_param_uint32_t},
  {"fullrange",offsetof(av1aom_encoder,fullrange),"bool",ADM_param_bool},
 {NULL,0,NULL}

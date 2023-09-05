@@ -5,7 +5,9 @@ typedef struct {
 COMPRES_PARAMS ratectl;
 uint32_t nbThreads;
 bool autoThreads;
+uint32_t usage;
 uint32_t speed;
+uint32_t tiling;
 uint32_t keyint;
 bool fullrange;
 }av1aom_encoder;
