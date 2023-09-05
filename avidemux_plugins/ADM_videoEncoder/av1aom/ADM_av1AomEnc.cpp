@@ -387,13 +387,15 @@ bool av1AomEncoder::setup(void)
     {
         ADM_warning("[av1aom] Cannot set AV1E_SET_COLOR_RANGE codec control to %d\n", encoderSettings.fullrange);
     }
-    if(AOM_CODEC_OK != aom_codec_control(&context, AV1E_SET_TILE_COLUMNS, (encoderSettings.tiling & 3)))
+    unsigned int colCount = ((encoderSettings.tiling >> 0) && 0xFFFF);
+    if(AOM_CODEC_OK != aom_codec_control(&context, AV1E_SET_TILE_COLUMNS, colCount))
     {
-        ADM_warning("[av1aom] Cannot set AV1E_SET_TILE_COLUMNS codec control to %u\n", (encoderSettings.tiling & 3));
+        ADM_warning("[av1aom] Cannot set AV1E_SET_TILE_COLUMNS codec control to %u\n", colCount);
     }
-    if(AOM_CODEC_OK != aom_codec_control(&context, AV1E_SET_TILE_ROWS, ((encoderSettings.tiling >> 2) & 3)))
+    unsigned int rowCount = ((encoderSettings.tiling >> 16) && 0xFFFF);
+    if(AOM_CODEC_OK != aom_codec_control(&context, AV1E_SET_TILE_ROWS, rowCount))
     {
-        ADM_warning("[av1aom] Cannot set AV1E_SET_TILE_ROWS codec control to %u\n", ((encoderSettings.tiling >> 2) & 3));
+        ADM_warning("[av1aom] Cannot set AV1E_SET_TILE_ROWS codec control to %u\n", rowCount);
     }
     
     if(globalStreamHeader)
