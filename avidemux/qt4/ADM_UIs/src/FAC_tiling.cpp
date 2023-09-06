@@ -68,7 +68,7 @@ void diaElemTiling::setMe(void *dialog, void *opaque, uint32_t line)
     colBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("tiling", "Columns: 1")));
     rowBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("tiling", "Rows: 1")));
 
-    for(int i = 1; i < maxLog2Tiles; i++)
+    for(int i = 1; i <= maxLog2Tiles; i++)
     {
         QString s = QString("%1").arg(1 << i);
         colBox->addItem(s);
@@ -85,6 +85,9 @@ void diaElemTiling::setMe(void *dialog, void *opaque, uint32_t line)
     hboxLayout->addWidget(label);
     hboxLayout->addWidget(rowBox);
     hboxLayout->addItem(spacer);
+
+    colBox->setToolTip(QString::fromUtf8(tip));
+    rowBox->setToolTip(QString::fromUtf8(tip));
 
     layout->addWidget(text,line,0);
     layout->addLayout(hboxLayout,line,1);
