@@ -29,13 +29,16 @@ bool av1AomEncoderConfigure(void)
         {AOM_USAGE_GOOD_QUALITY,QT_TRANSLATE_NOOP("aomencoder","Good quality"),NULL},
         {AOM_USAGE_REALTIME,QT_TRANSLATE_NOOP("aomencoder","Realtime"),NULL}
     };
-    diaElemMenu usagemenu(PX(usage),QT_TRANSLATE_NOOP("aomencoder","Usage"),2,usagetype);
+#define NB_ELEM(x) sizeof(x)/sizeof(diaMenuEntry)
+    diaElemMenu usagemenu(PX(usage), QT_TRANSLATE_NOOP("aomencoder","Usage"), NB_ELEM(usagetype), usagetype);
     diaElemUInteger speedu(PX(speed),
         QT_TRANSLATE_NOOP("aomencoder","Speed"),
         0, 10,
         QT_TRANSLATE_NOOP("aomencoder", "Lower values favor quality over speed."));
-    uint32_t maxlog2 = 4;
-    diaElemTiling tilingmenu(PX(tiling), &maxlog2, QT_TRANSLATE_NOOP("aomencoder","Tiling"), QT_TRANSLATE_NOOP("aomencoder","Tiling makes parallel encoding and decoding easier."));
+    uint32_t maxlog2 = 3;
+    diaElemTiling tilingmenu(PX(tiling), &maxlog2,
+        QT_TRANSLATE_NOOP("aomencoder","Tiling"),
+        QT_TRANSLATE_NOOP("aomencoder","Tiling benefits multi-threading of encoding and decoding."));
     diaElemUInteger concu(PX(nbThreads),
         QT_TRANSLATE_NOOP("aomencoder","Threads"),
         1, AV1_ENC_MAX_THREADS,
@@ -68,6 +71,7 @@ bool av1AomEncoderConfigure(void)
     frameMisc.swallow(&range);
 
     diaElem *dialog[] = { &frameEncMode, &frameEncSpeed, &frameIdr, &frameMisc };
+#undef NB_ELEM
 #define NB_ELEM(x) sizeof(x)/sizeof(diaElem *)
     if(diaFactoryRun(QT_TRANSLATE_NOOP("aomencoder","libaom AV1 Encoder Configuration"), NB_ELEM(dialog), dialog))
         return true;
