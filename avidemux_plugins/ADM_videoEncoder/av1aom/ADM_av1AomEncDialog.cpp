@@ -31,9 +31,12 @@ bool av1AomEncoderConfigure(void)
     };
 #define NB_ELEM(x) sizeof(x)/sizeof(diaMenuEntry)
     diaElemMenu usagemenu(PX(usage), QT_TRANSLATE_NOOP("aomencoder","Usage"), NB_ELEM(usagetype), usagetype);
+    uint32_t maxspeed = 10;
+    if(aom_codec_version_major() > 3 || (aom_codec_version_major() == 3 && aom_codec_version_minor() >= 7))
+        maxspeed = 11;
     diaElemUInteger speedu(PX(speed),
         QT_TRANSLATE_NOOP("aomencoder","Speed"),
-        0, 10,
+        0, maxspeed,
         QT_TRANSLATE_NOOP("aomencoder", "Lower values favor quality over speed."));
     uint32_t maxlog2 = 3;
     diaElemTiling tilingmenu(PX(tiling), &maxlog2,

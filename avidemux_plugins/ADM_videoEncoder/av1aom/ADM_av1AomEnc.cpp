@@ -248,16 +248,21 @@ bool av1AomEncoder::setup(void)
     }
 
     int speed = encoderSettings.speed;
+    if (speed > 11) speed = 11;
     if (speed > 9)
     {
         if (usage != AOM_USAGE_REALTIME)
         {
             speed = 9;
-        }
-        if ((aom_codec_version_major() == 3) && (aom_codec_version_minor() < 2))
+        } else if (aom_codec_version_major() == 3)
         {
-            // 10 && AOM_USAGE_REALTIME available since 3.2.0
-            speed = 9;
+#if 0 /* we now require v3.2.0 via cmake */
+            if (aom_codec_version_minor() < 2) // 10 && AOM_USAGE_REALTIME available since 3.2.0
+                speed = 9;
+            else
+#endif
+            if (aom_codec_version_minor() < 7)
+                speed = 10;
         }
     }
 
