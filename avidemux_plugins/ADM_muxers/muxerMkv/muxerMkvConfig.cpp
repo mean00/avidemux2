@@ -116,12 +116,15 @@ bool mkvConfigure(void)
     tColInfo.link(1,&menuColTransfer);
     tColInfo.link(1,&menuColPrimaries);
 
+#undef MZ
+#define MZ(x) sizeof(x)/sizeof(diaElem *)
     diaElem *basics[]={&alternate,&menuAspect,&dWidth};
-    diaElemTabs tabBasic(QT_TRANSLATE_NOOP("mkvmuxer","Basic Settings"),3,basics);
+    diaElemTabs tabBasic(QT_TRANSLATE_NOOP("mkvmuxer","Basic Settings"),MZ(basics),basics);
 
     diaElem *advanced[]={&tColInfo,&menuColMatrix,&menuColRange,&menuColTransfer,&menuColPrimaries};
-    diaElemTabs tabAdvanced(QT_TRANSLATE_NOOP("mkvmuxer","Advanced Settings"),5,advanced);
-
+    diaElemTabs tabAdvanced(QT_TRANSLATE_NOOP("mkvmuxer","Advanced Settings"),MZ(advanced),advanced);
+#undef MZ
+#define MZ(x) sizeof(x)/sizeof(diaElemTabs *)
     diaElemTabs *tabs[]={&tabBasic,&tabAdvanced};
     if(diaFactoryRunTabs(
 #ifdef MUXER_IS_WEBM
@@ -129,7 +132,7 @@ bool mkvConfigure(void)
 #else
             QT_TRANSLATE_NOOP("mkvmuxer","MKV Muxer"),
 #endif
-            2,tabs))
+            MZ(tabs), tabs))
         return true;
     return false;
 
