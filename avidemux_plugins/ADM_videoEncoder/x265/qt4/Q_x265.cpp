@@ -557,6 +557,7 @@ bool x265Dialog::upload(void)
     MK_COMBOBOX_DATA(colourPrimariesComboBox,vui.color_primaries)
     MK_COMBOBOX_DATA(transferCharacteristicsComboBox,vui.transfer_characteristics)
     MK_COMBOBOX_DATA(colourMatrixComboBox,vui.matrix_coeffs)
+    MK_CHECKBOX(fullRangeSamplesCheckBox, vui.fullrange)
     DISABLE(tabOutput) /* These aren't implemented */
     DISABLE(videoFormatComboBox)
     DISABLE(sarAsInputRadioButton)
@@ -701,6 +702,7 @@ bool x265Dialog::download(void)
     MK_COMBOBOX_DATA(colourPrimariesComboBox, vui.color_primaries)
     MK_COMBOBOX_DATA(transferCharacteristicsComboBox, vui.transfer_characteristics)
     MK_COMBOBOX_DATA(colourMatrixComboBox, vui.matrix_coeffs)
+    MK_CHECKBOX(fullRangeSamplesCheckBox, vui.fullrange)
 
     return true;
 }

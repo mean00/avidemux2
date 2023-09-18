@@ -15,8 +15,9 @@ struct  {
 int32_t level;
 struct  {
 	uint32_t sar_idc;
-	uint32_t sar_height;
 	uint32_t sar_width;
+	uint32_t sar_height;
+	bool fullrange;
 	uint32_t color_primaries;
 	uint32_t transfer_characteristics;
 	uint32_t matrix_coeffs;

@@ -2538,7 +2538,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tabDispaly">
+     <widget class="QWidget" name="tabDisplay">
       <attribute name="title">
        <string>Display</string>
       </attribute>
@@ -2549,10 +2549,44 @@
           <string>Color Description</string>
          </property>
          <layout class="QGridLayout">
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_50">
+          <item row="2" column="1">
+           <layout class="QHBoxLayout" name="_5">
+            <item>
+             <widget class="QComboBox" name="transferCharacteristicsComboBox"/>
+            </item>
+            <item>
+             <spacer name="spacer_67">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_48">
             <property name="text">
-             <string>Video Format:</string>
+             <string>Transfer Characteristics:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_19">
+            <property name="text">
+             <string>Colour Primaries:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_47">
+            <property name="text">
+             <string>Colour Matrix:</string>
             </property>
            </widget>
           </item>
@@ -2610,18 +2644,37 @@
             </item>
            </layout>
           </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_19">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_50">
             <property name="text">
-             <string>Colour Primaries:</string>
+             <string>Video Format:</string>
             </property>
            </widget>
+          </item>
+          <item row="3" column="1">
+           <layout class="QHBoxLayout" name="_7">
+            <item>
+             <widget class="QComboBox" name="colourMatrixComboBox"/>
+            </item>
+            <item>
+             <spacer name="spacer_71">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
           </item>
           <item row="1" column="1">
            <layout class="QHBoxLayout" name="_9">
             <item>
-             <widget class="QComboBox" name="colourPrimariesComboBox">
-             </widget>
+             <widget class="QComboBox" name="colourPrimariesComboBox"/>
             </item>
             <item>
              <spacer name="spacer_69">
@@ -2638,61 +2691,12 @@
             </item>
            </layout>
           </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_48">
+          <item row="4" column="0">
+           <widget class="QCheckBox" name="fullRangeSamplesCheckBox">
             <property name="text">
-             <string>Transfer Characteristics:</string>
+             <string>Full Range Samples</string>
             </property>
            </widget>
-          </item>
-          <item row="2" column="1">
-           <layout class="QHBoxLayout" name="_5">
-            <item>
-             <widget class="QComboBox" name="transferCharacteristicsComboBox">
-             </widget>
-            </item>
-            <item>
-             <spacer name="spacer_67">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>0</width>
-                <height>0</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="label_47">
-            <property name="text">
-             <string>Colour Matrix:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <layout class="QHBoxLayout" name="_7">
-            <item>
-             <widget class="QComboBox" name="colourMatrixComboBox">
-             </widget>
-            </item>
-            <item>
-             <spacer name="spacer_71">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>0</width>
-                <height>0</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
           </item>
          </layout>
         </widget>
@@ -2829,6 +2833,12 @@
         <spacer>
          <property name="orientation">
           <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
          </property>
         </spacer>
        </item>
@@ -3298,7 +3308,7 @@
       </attribute>
       <layout class="QVBoxLayout">
        <item>
-        <widget class="QGroupBox" name="groupBox_16">
+        <widget class="QGroupBox" name="groupBoxAuds">
          <property name="title">
           <string>Output</string>
          </property>
@@ -3314,7 +3324,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_5">
+        <widget class="QGroupBox" name="groupBoxVui">
          <property name="title">
           <string>Video Usability Information</string>
          </property>
@@ -3346,7 +3356,7 @@
            </spacer>
           </item>
           <item>
-           <layout class="QGridLayout" name="gridLayout">
+           <layout class="QGridLayout" name="gridLayoutVui">
             <item row="0" column="0">
              <widget class="QLabel" name="label_51">
               <property name="text">
@@ -3465,13 +3475,6 @@
              </layout>
             </item>
            </layout>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="fullRangeSamplesCheckBox">
-            <property name="text">
-             <string>Full Range Samples</string>
-            </property>
-           </widget>
           </item>
          </layout>
         </widget>
@@ -3593,7 +3596,6 @@
   <tabstop>overscanComboBox</tabstop>
   <tabstop>hrdComboBox</tabstop>
   <tabstop>chromaSampleSpinBox</tabstop>
-  <tabstop>fullRangeSamplesCheckBox</tabstop>
   <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources/>

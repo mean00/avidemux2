@@ -162,13 +162,22 @@ bool x265Encoder::setup(void)
     MKPARAM(sarWidth,sar_width);
     MKPARAM(sarHeight,sar_height);
 
+    if(x265Settings.vui.fullrange) // must precede color info
+    {
+        param.vui.bEnableVideoSignalTypePresentFlag = true;
+        param.vui.bEnableColorDescriptionPresentFlag = false;
+        param.vui.videoFormat = 5; // unspecified
+        MKPARAMB(bEnableVideoFullRangeFlag, fullrange)
+    }
+
     if(x265Settings.vui.color_primaries != 2 || x265Settings.vui.matrix_coeffs != 2 || x265Settings.vui.transfer_characteristics != 2)
     {
-	param.vui.bEnableVideoSignalTypePresentFlag = true;
-	param.vui.bEnableColorDescriptionPresentFlag = true;
-	MKPARAM(colorPrimaries,color_primaries);
-	MKPARAM(matrixCoeffs,matrix_coeffs);
-	MKPARAM(transferCharacteristics,transfer_characteristics);
+        param.vui.bEnableVideoSignalTypePresentFlag = true;
+        param.vui.bEnableColorDescriptionPresentFlag = true;
+        param.vui.bEnableVideoFullRangeFlag = !!x265Settings.vui.fullrange;
+        MKPARAM(colorPrimaries,color_primaries)
+        MKPARAM(matrixCoeffs,matrix_coeffs)
+        MKPARAM(transferCharacteristics,transfer_characteristics)
     }
 
   // -------------- rate control------------

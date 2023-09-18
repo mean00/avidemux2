@@ -54,6 +54,7 @@ extern "C"
     { /* VUI */ \
         0, /* SAR ID code */ \
         1,1, /* Sar width/height */ \
+        false, /* bool fullrange */ \
         2, /* uint32_t color_primaries */ \
         2, /* uint32_t transfer_characteristics */ \
         2, /* uint32_t matrix_coeffs */ \
