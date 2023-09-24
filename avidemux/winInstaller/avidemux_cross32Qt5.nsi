@@ -20,7 +20,7 @@ Section "Avidemux Core" SecCore
     ${File} ${BINARY_FOLDER}/libpcre2-16-0.dll
 
     ${File} ${BINARY_FOLDER}/libexpat-1.dll
-    ${File} ${BINARY_FOLDER}/libffi-6.dll
+    ${File} ${BINARY_FOLDER}/libffi-*.dll
     ${File} ${BINARY_FOLDER}/libglib-2.0-0.dll
     ${File} ${BINARY_FOLDER}/libgobject-2.0-0.dll
     ${File} ${BINARY_FOLDER}/libharfbuzz-0.dll
