@@ -14,6 +14,13 @@
 #include "ADM_default.h"
 
 #ifdef USE_NVENC
+
+#ifdef _MSC_VER // hack / workaround for visual studio build. there must be a
+                // better way.
+#define UINT64_C uint64_t
+#endif
+
+
 extern "C" {
 #include "libavcodec/avcodec.h"
 #include "libavutil/pixdesc.h"
