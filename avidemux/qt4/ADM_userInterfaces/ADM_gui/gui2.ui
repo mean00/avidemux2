@@ -99,7 +99,7 @@
      <x>0</x>
      <y>0</y>
      <width>867</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <property name="contextMenuPolicy">
@@ -1742,7 +1742,8 @@
    </property>
    <property name="icon">
     <iconset resource="avidemux.qrc">
-     <normaloff>:/new/prefix1/pics/play_filtered.png</normaloff>:/new/prefix1/pics/play_filtered.png</iconset>
+     <normaloff>:/new/prefix1/pics/play_filtered_off.png</normaloff>
+     <normalon>:/new/prefix1/pics/play_filtered_on.png</normalon>:/new/prefix1/pics/play_filtered_off.png</iconset>
    </property>
    <property name="text">
     <string>Play filtered</string>
