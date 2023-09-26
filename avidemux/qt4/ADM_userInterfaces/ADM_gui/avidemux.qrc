@@ -26,6 +26,8 @@
         <file>pics/player_start.png</file>
         <file>pics/player_stop.png</file>
         <file>pics/play_filtered.png</file>
+        <file>pics/play_filtered_off.png</file>
+        <file>pics/play_filtered_on.png</file>
         <file>pics/prev_black.png</file>
         <file>pics/prev_cut.png</file>
         <file>pics/preview_input.png</file>
@@ -56,6 +58,8 @@
         <file>pics/player_start@2x.png</file>
         <file>pics/player_stop@2x.png</file>
         <file>pics/play_filtered@2x.png</file>
+        <file>pics/play_filtered_off@2x.png</file>
+        <file>pics/play_filtered_on@2x.png</file>
         <file>pics/prev_black@2x.png</file>
         <file>pics/prev_cut@2x.png</file>
         <file>pics/volume@2x.png</file>
