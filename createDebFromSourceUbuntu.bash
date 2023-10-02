@@ -27,7 +27,7 @@ install_deps()
     qttools5-dev-tools qtbase5-dev \
     libx264-dev libxvidcore-dev \
     libmp3lame-dev libtwolame-dev libopus-dev libvorbis-dev libogg-dev \
-    libpng-dev libfontconfig1-dev libfribidi-dev \
+    libpng-dev libass-dev \
     || { echo "The installation at least of some of the build dependencies failed. Aborting." && exit 2; }
     # we don't fail if the following packages cannot be installed
     sudo apt-get install libaften-dev \
@@ -125,7 +125,7 @@ install_deps
 #
 echo "Compiling avidemux, it will take 20 minutes or so"
 logfile="/tmp/log-bootstrap-$(date +%F_%T).log"
-bash bootStrap.bash --deb --prefix=$install_prefix $rebuild 2>&1 | tee ${logfile}
+bash bootStrap.bash --with-system-libass --deb --prefix=$install_prefix $rebuild 2>&1 | tee ${logfile}
 if [ ${PIPESTATUS[0]} -ne 0 ]; then
     echo "Build failed, please inspect ${logfile} and /tmp/logbuild* files."
     if [ $install_packages -eq 1 ]; then

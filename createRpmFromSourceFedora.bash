@@ -28,9 +28,7 @@ libvorbis-devel \
 libogg-devel \
 alsa-lib-devel \
 pulseaudio-libs-devel \
-fribidi-devel \
-fontconfig-devel \
-freetype-devel \
+libass-devel \
 opus-devel \
 lame-devel \
 libvpx-devel \
@@ -189,7 +187,7 @@ install_deps
 echo "Building..."
 umask 0022
 logfile="/tmp/log-bootstrap-$(date +%F_%T).log"
-bash bootStrap.bash ${rebuild} --rpm 2>&1 | tee ${logfile}
+bash bootStrap.bash ${rebuild} --with-system-libass --rpm 2>&1 | tee ${logfile}
 if [ ${PIPESTATUS[0]} -ne 0 ]; then
     fail "Build failed, please inspect ${logfile} and /tmp/logbuild* files."
 fi
