@@ -12,7 +12,6 @@
 #include "vpx/vp8cx.h"
 #include "vp9_encoder.h"
 
-#define VP9_MAX_QUANTIZER 63
 #define MMSET(x) memset(&(x),0,sizeof(x))
 
 vp9_encoder vp9Settings = VP9_DEFAULT_CONF;

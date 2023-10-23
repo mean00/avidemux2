@@ -23,6 +23,7 @@ enum vp9DeadlinePreset
     BEST_QUALITY=2
 };
 
+#define VP9_MAX_QUANTIZER 63
 #define VP9_ENC_MAX_THREADS 16
 
 #define VP9_DEFAULT_CONF \

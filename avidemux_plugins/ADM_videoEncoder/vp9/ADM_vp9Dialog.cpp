@@ -31,6 +31,7 @@ bool vp9EncoderConfigure(void)
     };
 #define PX(x) &(cfg->x)
     diaElemBitrate bitrate(PX(ratectl),NULL);
+    bitrate.setMaxQz(VP9_MAX_QUANTIZER);
     diaElemReadOnlyText advice(QT_TRANSLATE_NOOP("vp9encoder","For optimal quality, select 2-pass average bitrate mode and set target bitrate to zero"),NULL);
 
     diaElemMenu menudl(PX(deadline),QT_TRANSLATE_NOOP("vp9encoder","Deadline"),3,dltype);
