@@ -76,7 +76,7 @@ ADM_audioAccessFilePCM::ADM_audioAccessFilePCM(const char *fileName, int offset,
     ADM_assert(info->frequency >= MIN_SAMPLING_RATE && info->frequency <= MAX_SAMPLING_RATE);
     switch(info->bitspersample)
     {
-        case 8: case 16: case 24:
+        case 8: case 16: case 24: case 32: case 64:
             break;
         default:
             ADM_error("Unsupported bit depth %u\n",info->bitspersample);
