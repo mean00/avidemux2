@@ -1620,6 +1620,7 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                                 case MKFCCR('m','s',0,0x11): // why 11 ???
                                 case MKFCCR('m','p','4','a'):
                                 case MKFCCR('i','n','2','4'):
+                                case MKFCCR('i','n','3','2'):
                                 {
                                     if(entryName == MKFCCR('i','n','2','4'))
                                     {
@@ -1627,6 +1628,13 @@ uint8_t MP4Header::parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale)
                                         ADIO.byterate=ADIO.frequency*ADIO.bitspersample*ADIO.channels/8;
                                         info.bytePerPacket=3;
                                         info.bytePerFrame=3*ADIO.channels;
+                                        audioCodec(LPCM)
+                                    }else if(entryName == MKFCCR('i','n','3','2'))
+                                    {
+                                        ADIO.bitspersample=32;
+                                        ADIO.byterate=ADIO.frequency*ADIO.bitspersample*ADIO.channels/8;
+                                        info.bytePerPacket=4;
+                                        info.bytePerFrame=4*ADIO.channels;
                                         audioCodec(LPCM)
                                     }else if(entryName == MKFCCR('m','s',0,0x11))
                                         audioCodec(MSADPCM)
