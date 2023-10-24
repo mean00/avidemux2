@@ -65,6 +65,8 @@ uint64_t thisDts=0;
         case 8: sampleSize=1;break;
         case 16: sampleSize=2;break;
         case 24: sampleSize=3;break;
+        case 32: sampleSize=4;break;
+        case 64: sampleSize=8;break;
         default: return 0;
     }
     ADM_assert(sampleSize);

@@ -50,6 +50,8 @@ uint8_t ADM_AudiocodecWav::run(uint8_t * inptr, uint32_t nbIn, float * outptr, u
     {
         case 16: sampleSize=2;break;
         case 24: sampleSize=3;break;
+        case 32: sampleSize=4;break;
+        case 64: sampleSize=8;break;
         default: break;
     }
     ADM_assert(sampleSize);
@@ -65,10 +67,10 @@ uint8_t ADM_AudiocodecWav::run(uint8_t * inptr, uint32_t nbIn, float * outptr, u
     *nbOut = nbIn / sampleSize;
     for (i = 0; i < *nbOut; i++)
     {
-        uint32_t sample = 0;
+        uint64_t sample = 0;
         for (j = 0; j < sampleSize; j++)
-            sample |= inptr[j] << (32 - wavHeader.bitspersample + 8 * j);
-        *(outptr++) = (float)(int32_t)sample / (1 << 31);
+            sample |= ((uint64_t)inptr[j]) << (64 - wavHeader.bitspersample + 8 * j);
+        *(outptr++) = (float)(int64_t)sample / (1LL << 63);
         inptr += sampleSize;
     }
 
