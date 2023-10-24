@@ -371,6 +371,8 @@ bool muxerFFmpeg::initAudio(uint32_t nbAudioTrack,ADM_audioStream **audio)
                     {
                         case 16: par->codec_id = bigEndian? AV_CODEC_ID_PCM_S16BE : AV_CODEC_ID_PCM_S16LE; break;
                         case 24: par->codec_id = bigEndian? AV_CODEC_ID_PCM_S24BE : AV_CODEC_ID_PCM_S24LE; break;
+                        case 32: par->codec_id = bigEndian? AV_CODEC_ID_PCM_S32BE : AV_CODEC_ID_PCM_S32LE; break;
+                        case 64: par->codec_id = bigEndian? AV_CODEC_ID_PCM_S64BE : AV_CODEC_ID_PCM_S64LE; break;
                         default: ADM_error("Track %d / %u: unsupported bits per sample value %u for PCM\n", i, nbAudioTrack, audioheader->bitspersample); return false;
                     }
                 }
