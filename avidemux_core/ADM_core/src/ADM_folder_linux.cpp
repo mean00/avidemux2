@@ -155,17 +155,28 @@ const char *ADM_getBaseDir(void)
 
 void ADM_initBaseDir(int argc, char *argv[])
 {
-	const char* homeEnv = getenv("HOME");
+    char* homeEnv = getenv("XDG_DATA_HOME");
 
-	if (!homeEnv)
-	{
+    if (homeEnv)
+    {
+        strcpy(ADM_basedir, homeEnv);
+    } else {
+        homeEnv = getenv("HOME");
+        if (homeEnv)
+        {
+            strcpy(ADM_basedir, homeEnv);
+            strcat(ADM_basedir, "/.local/share");
+        }
+    }
+
+    if (!homeEnv)
+    {
         ADM_warning("Cannot locate HOME...\n");
         return;
     }
-    strcpy(ADM_basedir, homeEnv);
     AddSeparator(ADM_basedir);
 
-    const char *ADM_DIR_NAME = ".avidemux6";
+    const char *ADM_DIR_NAME = "avidemux6";
 
     strcat(ADM_basedir, ADM_DIR_NAME);
     strcat(ADM_basedir, ADM_SEPARATOR);
@@ -176,7 +187,7 @@ void ADM_initBaseDir(int argc, char *argv[])
     }
     else
     {
-        ADM_error("Oops: cannot create the .avidemux directoryi (%s)\n", ADM_basedir);
+        ADM_error("Oops: cannot create the avidemux directoryi (%s)\n", ADM_basedir);
     }	
     
     if(isPortableMode(argc,argv))
