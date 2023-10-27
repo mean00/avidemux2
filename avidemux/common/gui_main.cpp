@@ -108,6 +108,10 @@ void HandleAction_Staged(Action action);
 
 extern void call_scriptEngine(const char *scriptFile);
 
+static std::string getDefaultSettingsFilePath(void);
+static std::string getLastSessionFilePath(void);
+static std::string getCrashRecoveryFilePath(void);
+
 static bool parseScript(IScriptEngine *engine, const char *name, IScriptEngine::RunMode mode);
 
 // Hacky functions because we currently don't have versatile
@@ -263,12 +267,10 @@ void HandleAction (Action action)
                     prefs->save();
                     UI_updateRecentProjectMenu();
                     UI_updateRecentMenu(); // the order matters here
-#define LAST_SESSION_FILE ADM_getBaseDir()+std::string("lastEdit.py")
-                    std::string f=LAST_SESSION_FILE;
-                    if(ADM_fileExist(f.c_str()))
+                    if(ADM_fileExist(getLastSessionFilePath().c_str()))
                     {
-                        if(!ADM_eraseFile(f.c_str()))
-                            ADM_warning("Could not delete last editing state %s\n",f.c_str());
+                        if(!ADM_eraseFile(getLastSessionFilePath().c_str()))
+                            ADM_warning("Could not delete last editing state %s\n", getLastSessionFilePath().c_str());
                     }
                 }
                 return;
@@ -1226,8 +1228,6 @@ void cleanUp (void)
  * @param mode
  * @return 
  */
-#define DEFAULT_SETTINGS_FILE ADM_getBaseDir()+std::string("defaultSettings.py")
-#define CRASH_RECOVERY_FILE ADM_getBaseDir()+std::string("crash.py")
 bool parseScript(IScriptEngine *engine, const char *name, IScriptEngine::RunMode mode)
 {
     bool ret;
@@ -1238,16 +1238,16 @@ bool parseScript(IScriptEngine *engine, const char *name, IScriptEngine::RunMode
         return false;
     }
 
-    ret = engine->runScriptFile(std::string(longname), IScriptEngine::Normal);        
+    ret = engine->runScriptFile(longname, IScriptEngine::Normal);
 
     if (ret)
     {
         video_body->setProjectName(longname);
     }
 
-    if (std::string(longname) != DEFAULT_SETTINGS_FILE &&
-        std::string(longname) != LAST_SESSION_FILE &&
-        std::string(longname) != CRASH_RECOVERY_FILE)
+    if (strcmp(longname, getDefaultSettingsFilePath().c_str()) &&
+        strcmp(longname, getLastSessionFilePath().c_str()) &&
+        strcmp(longname, getCrashRecoveryFilePath().c_str()))
     {
         prefs->set_lastprojectfile(longname);
         UI_updateRecentProjectMenu();
@@ -1320,9 +1320,7 @@ void A_saveDefaultSettings()
       GUI_Info_HIG(ADM_LOG_IMPORTANT,"Qt",QT_TRANSLATE_NOOP("adm","The tinypy plugin is missing.\nExpect problems."));
       return;
     }
- 
-    std::string fileName=DEFAULT_SETTINGS_FILE;
-    
+
     IScriptWriter *writer = engine->createScriptWriter();
     ADM_ScriptGenerator generator(video_body, writer);
     std::stringstream stream(std::stringstream::in | std::stringstream::out);
@@ -1335,7 +1333,7 @@ void A_saveDefaultSettings()
     ADM_info("Generated settings:\n");
     printf("%s\n",script.c_str());
 
-    FILE *file = ADM_fopen(fileName.c_str(), "wt");
+    FILE *file = ADM_fopen(getDefaultSettingsFilePath().c_str(), "wt");
     ADM_fwrite(script.c_str(), script.length(), 1, file);
     ADM_fclose(file);
 }
@@ -1345,11 +1343,10 @@ void A_saveDefaultSettings()
  */
 bool A_loadDefaultSettings(void)
 {
-  
-    std::string defaultSettings=DEFAULT_SETTINGS_FILE;
-    if(ADM_fileExist(defaultSettings.c_str()) && ADM_fileSize(defaultSettings.c_str())>5)
+    if(ADM_fileExist(getDefaultSettingsFilePath().c_str()) &&
+       ADM_fileSize(getDefaultSettingsFilePath().c_str()) > 5)
     {
-        return A_runPythonScript( defaultSettings);
+        return A_runPythonScript(getDefaultSettingsFilePath());
     }else
     { // default to MKV as output container instead of AVI if no user defined default settings exist
         return video_body->setContainer("MKV",NULL);
@@ -1361,25 +1358,32 @@ bool A_loadDefaultSettings(void)
  */
 bool A_saveSession(void)
 {
+    static std::string tmp;
     IScriptEngine *engine=getPythonScriptEngine();
     if(!engine)
         return false;
     ADM_info("Saving the current state of editing\n");
-    std::string where=LAST_SESSION_FILE;
-    if(ADM_fileExist(where.c_str()))
+    if(ADM_fileExist(getLastSessionFilePath().c_str()))
     {
-        std::string tmp=ADM_getBaseDir()+std::string("lastEdit.tmp");
-        A_saveScript(engine, tmp.c_str());
-        if(!ADM_eraseFile(where.c_str()))
+        if(!tmp.size())
         {
-            ADM_warning("Could not delete the old saved session (%s)\n",where.c_str());
+            tmp = getLastSessionFilePath();
+            size_t pos = tmp.find_last_of(".");
+            if (pos != std::string::npos)
+                tmp = tmp.substr(0, pos);
+            tmp += ".tmp";
+        }
+        A_saveScript(engine, tmp.c_str());
+        if(!ADM_eraseFile(getLastSessionFilePath().c_str()))
+        {
+            ADM_warning("Could not delete the old saved session (%s)\n", getLastSessionFilePath().c_str());
             if(!ADM_eraseFile(tmp.c_str()))
                 ADM_warning("Could not delete temporary file (%s)\n",tmp.c_str());
             return false;
         }
-        return !!rename(tmp.c_str(), where.c_str());
+        return !!rename(tmp.c_str(), getLastSessionFilePath().c_str());
     }
-    A_saveScript(engine, where.c_str());
+    A_saveScript(engine, getLastSessionFilePath().c_str());
     return true;
 }
 /**
@@ -1387,22 +1391,21 @@ bool A_saveSession(void)
  */
 bool A_checkSavedSession(bool load)
 {
-    std::string where=LAST_SESSION_FILE;
-    if(false == ADM_fileExist(where.c_str()))
+    if(false == ADM_fileExist(getLastSessionFilePath().c_str()))
         return false;
     if(!load)
         return true;
     IScriptEngine *engine=getPythonScriptEngine();
     if(!engine)
         return false;
-    ADM_info("Restoring the last editing state from %s\n",where.c_str());
-    if(false == A_parseScript(engine,where.c_str()))
+    ADM_info("Restoring the last editing state from %s\n",getLastSessionFilePath().c_str());
+    if(false == A_parseScript(engine, getLastSessionFilePath().c_str()))
         return false;
     video_body->rewind();
     admPreview::samePicture();
     A_Resync();
-    if(false == ADM_eraseFile(where.c_str()))
-        ADM_warning("Could not delete %s\n",where.c_str());
+    if(false == ADM_eraseFile(getLastSessionFilePath().c_str()))
+        ADM_warning("Could not delete %s\n", getLastSessionFilePath().c_str());
     return true;
 }
 /**
@@ -2077,5 +2080,38 @@ void A_RunScript(const char *a)
     call_scriptEngine(a);            
     A_Resync();
 }
-//
+/**
+ * \fn getDefaultSettingsFilePath
+ */
+std::string getDefaultSettingsFilePath(void)
+{
+    static std::string s;
+    if (s.size()) return s;
+    s = ADM_getConfigBaseDir();
+    s += "defaultSettings.py";
+    return s;
+}
+/**
+ * \fn getLastSessionFilePath
+ */
+std::string getLastSessionFilePath(void)
+{
+    static std::string s;
+    if (s.size()) return s;
+    s = ADM_getBaseDir();
+    s += "lastEdit.py";
+    return s;
+}
+/**
+ * \fn getCrashRecoveryFilePath
+ */
+std::string getCrashRecoveryFilePath(void)
+{
+    static std::string s;
+    if (s.size()) return s;
+    s = ADM_getBaseDir();
+    s += "crash.py";
+    return s;
+}
+
 // EOF
