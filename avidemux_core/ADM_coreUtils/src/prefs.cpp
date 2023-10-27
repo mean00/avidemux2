@@ -172,14 +172,11 @@ preferences::~preferences()
 */
 bool preferences::load()
 {
-   const char *dir_adm;
-   std::string path;
-
-    dir_adm=ADM_getBaseDir();
+    const char *dir_adm = ADM_getConfigBaseDir();
     if(!dir_adm) return false;
 
-    path=string(dir_adm);
-    path=path+std::string(CONFIG);
+    std::string path = dir_adm;
+    path += CONFIG;
     ADM_info("Loading prefs from %s\n",path.c_str());
 
     // exist ?
@@ -202,17 +199,13 @@ bool preferences::load()
 */
 bool preferences::save()
 {
-   const char *dir_adm;
-   std::string path;
-
-
-    dir_adm=ADM_getBaseDir();
+    const char *dir_adm = ADM_getConfigBaseDir();
     if(!dir_adm) return RC_FAILED;
 
-    path=string(dir_adm);
-    path=path+std::string(CONFIG);
-    string tmp=path;
-    tmp=tmp+string(".tmp");
+    std::string path = dir_adm;
+    path += CONFIG;
+    std::string tmp = path;
+    tmp += ".tmp";
     ADM_info("Saving prefs to %s\n",tmp.c_str());
 
    if(true==my_prefs_struct_jserialize(tmp.c_str(),&myPrefs))

@@ -46,7 +46,7 @@ const std::string ADM_getAutoDir(void)
 
     const char *startDir="../lib";
     const char *s = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "autoScripts");
-    ADM_autodir = std::string(s);
+    ADM_autodir = s;
     delete [] s;
     s=NULL;
     return ADM_autodir;
@@ -62,7 +62,7 @@ const std::string ADM_getSystemPluginSettingsDir(void)
 
     const char *startDir="../lib";
     const char *s = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR, "pluginSettings");
-    ADM_systemPluginSettings = std::string(s);
+    ADM_systemPluginSettings = s;
     delete [] s;
     s=NULL;
     return ADM_systemPluginSettings;
@@ -112,19 +112,26 @@ const char *ADM_getBaseDir(void)
 {
     return ADM_basedir;
 }
+
+/**
+ * \fn ADM_getConfigBaseDir
+ * \brief Get the root directory for avidemux configuration
+ */
+const char *ADM_getConfigBaseDir(void)
+{
+    return ADM_basedir;
+}
 /**
  */
 void ADM_initBaseDir(int argc, char *argv[])
 {
-    char *home = NULL;
-
     // Get the base directory
 
     const char* homeEnv = getenv("HOME");
 
     if (!homeEnv)
     {
-        printf("Oops: can't determine $HOME.");
+        ADM_warning("Oops: can't determine $HOME.");
         return;
     }
     // Try to open the .avidemux directory
@@ -139,26 +146,26 @@ void ADM_initBaseDir(int argc, char *argv[])
 
     if (ADM_mkdir(ADM_basedir))
     {
-        printf("Using %s as base directory for prefs, jobs, etc.\n", ADM_basedir);
+        ADM_info("Using \"%s\" as base directory for prefs, jobs, etc.\n", ADM_basedir);
     }
     else
     {
-        ADM_error("Oops: cannot create the .avidemux directoryi (%s)\n", ADM_basedir);
+        ADM_error("Oops: cannot create the .avidemux directory (\"%s\")\n", ADM_basedir);
     }
 }
 /**
  * \fn ADM_getI8NDir
  */
 const std::string ADM_getI8NDir(const std::string &flavor)
-{    
-    
-    std::string partialPath=flavor+std::string("/i18n");
+{
+    std::string partialPath = flavor;
+    partialPath += "/i18n";
 #ifdef CREATE_BUNDLE
     char *ppath=ADM_getInstallRelativePath("../Resources/share","avidemux6",partialPath.c_str());
 #else
     char *ppath=ADM_getInstallRelativePath("../share","avidemux6",partialPath.c_str());
 #endif
-    std::string r=std::string(ppath);
+    std::string r = ppath;
     delete [] ppath;
     ppath=NULL;
     return  r;

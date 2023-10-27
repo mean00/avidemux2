@@ -22,11 +22,13 @@
 #include "ADM_default.h"
 
 static bool isPortable=false;
-extern std::string pluginDir;
 
+extern void ADM_setPluginDir(std::string path);
 extern char *ADM_getRelativePath(const char *base0, const char *base1, const char *base2, const char *base3);
 
-static char ADM_basedir[1024] = {0};
+#define PATH_BUF_LEN 1024
+static char ADM_basedir[PATH_BUF_LEN] = {0};
+static char ADM_configdir[PATH_BUF_LEN] = {0};
 
 static std::string ADM_autodir;
 static std::string ADM_systemPluginSettings;
@@ -72,11 +74,12 @@ const std::string ADM_getAutoDir(void)
     const char *name="autoScripts";
     if(isPortable)
     {
-        ADM_autodir=pluginDir+std::string(name);
+        ADM_autodir = ADM_getPluginDir();
+        ADM_autodir += name;
     }else
     {
         const char *s = ADM_getInstallRelativePath(ADM_RELATIVE_LIB_DIR, ADM_PLUGIN_DIR, name);
-        ADM_autodir=std::string(s);
+        ADM_autodir = s;
         delete [] s;
         s=NULL;
     }
@@ -94,11 +97,12 @@ const std::string ADM_getSystemPluginSettingsDir(void)
     const char *name="pluginSettings";
     if(isPortable)
     {
-        ADM_systemPluginSettings=pluginDir+std::string(name);
+        ADM_systemPluginSettings = ADM_getPluginDir();
+        ADM_systemPluginSettings += name;
     }else
     {
         const char *s = ADM_getInstallRelativePath(ADM_RELATIVE_LIB_DIR, ADM_PLUGIN_DIR, name);
-        ADM_systemPluginSettings=std::string(s);
+        ADM_systemPluginSettings = s;
         delete [] s;
         s=NULL;
     }
@@ -121,20 +125,22 @@ const std::string ADM_getI8NDir(const std::string &flavor)
 {
     if(ADM_i18nDir.size())
         return ADM_i18nDir;
-    //
-    // 181n
+
     if(isPortable)
     {
-        std::string i18n=pluginDir;
-        i18n+=std::string("/../../share/avidemux6/")+flavor+std::string("/i18n");
+        std::string i18n = ADM_getPluginDir();
+        i18n += "/../../share/avidemux6/";
+        i18n += flavor;
+        i18n += "/i18n";
         ADM_i18nDir=canonize(i18n);
         ADM_info("Relative to install i18n mode : <%s>\n",ADM_i18nDir.c_str());
         // 181n
     }else
-    {        
-        std::string partialPath=flavor+std::string("/i18n");
+    {
+        std::string partialPath = flavor;
+        partialPath += "/i18n";
         char *ppath=ADM_getInstallRelativePath("share","avidemux6",partialPath.c_str());
-        ADM_i18nDir=std::string(ppath);
+        ADM_i18nDir = ppath;
         delete [] ppath;
         ppath=NULL;
     }
@@ -148,6 +154,14 @@ const char *ADM_getBaseDir(void)
 	return ADM_basedir;
 }
 /**
+ * \fn ADM_getConfigBaseDir
+ * \brief Get the root directory for avidemux configuration
+ */
+const char *ADM_getConfigBaseDir(void)
+{
+    return ADM_configdir;
+}
+/**
  * 
  * @param argc
  * @param argv
@@ -155,41 +169,89 @@ const char *ADM_getBaseDir(void)
 
 void ADM_initBaseDir(int argc, char *argv[])
 {
-    char* homeEnv = getenv("XDG_DATA_HOME");
+    const char *admDirName = "avidemux6";
+    char* homeEnv = NULL;
+
+    homeEnv = getenv("XDG_DATA_HOME");
 
     if (homeEnv)
     {
-        strcpy(ADM_basedir, homeEnv);
-    } else {
-        homeEnv = getenv("HOME");
-        if (homeEnv)
+        if (strlen(homeEnv) + strlen(admDirName) >= PATH_BUF_LEN)
         {
-            strcpy(ADM_basedir, homeEnv);
-            strcat(ADM_basedir, "/.local/share");
+            ADM_warning("Path to XDG_DATA_HOME too long\n");
+            return;
         }
-    }
-
-    if (!homeEnv)
+        strcpy(ADM_basedir, homeEnv);
+    } else
     {
-        ADM_warning("Cannot locate HOME...\n");
-        return;
+        homeEnv = getenv("HOME");
+        if (!homeEnv)
+        {
+            ADM_warning("Cannot locate HOME\n");
+            return;
+        }
+        const char *suffix = "/.local/share";
+
+        if (strlen(homeEnv) + strlen(suffix) + (strlen(ADM_SEPARATOR) * 2) + strlen(admDirName) >= PATH_BUF_LEN)
+        {
+            ADM_warning("Path to HOME too long\n");
+            return;
+        }
+        strcpy(ADM_basedir, homeEnv);
+        strcat(ADM_basedir, suffix);
     }
+
+    homeEnv = getenv("XDG_CONFIG_HOME");
+
+    if (homeEnv)
+    {
+        if (strlen(homeEnv) + strlen(admDirName) >= PATH_BUF_LEN)
+        {
+            ADM_warning("Path to XDG_CONFIG_HOME too long\n");
+            return;
+        }
+        strcpy(ADM_configdir, homeEnv);
+    } else
+    {
+        homeEnv = getenv("HOME");
+        if (!homeEnv)
+        {
+            ADM_warning("Cannot locate HOME\n");
+            return;
+        }
+        const char *suffix = "/.config";
+
+        if (strlen(homeEnv) + strlen(suffix) + (strlen(ADM_SEPARATOR) * 2) + strlen(admDirName) >= PATH_BUF_LEN)
+        {
+            ADM_warning("Path to HOME too long\n");
+            return;
+        }
+        strcpy(ADM_configdir, homeEnv);
+        strcat(ADM_configdir, suffix);
+    }
+
     AddSeparator(ADM_basedir);
+    AddSeparator(ADM_configdir);
 
-    const char *ADM_DIR_NAME = "avidemux6";
-
-    strcat(ADM_basedir, ADM_DIR_NAME);
+    strcat(ADM_basedir, admDirName);
+    strcat(ADM_configdir, admDirName);
     strcat(ADM_basedir, ADM_SEPARATOR);
+    strcat(ADM_configdir, ADM_SEPARATOR);
 
     if (ADM_mkdir(ADM_basedir))
     {
-        printf("Using %s as base directory for prefs, jobs, etc.\n", ADM_basedir);
-    }
-    else
+        ADM_info("Using \"%s\" as base directory for settings, jobs etc.\n", ADM_basedir);
+    } else
     {
-        ADM_error("Oops: cannot create the avidemux directoryi (%s)\n", ADM_basedir);
-    }	
-    
+        ADM_error("Cannot create avidemux data directory (\"%s\")\n", ADM_basedir);
+    }
+    if (ADM_mkdir(ADM_configdir))
+    {
+        ADM_info("Using \"%s\" as base directory for prefs.\n", ADM_configdir);
+    } else
+    {
+        ADM_error("Cannot create avidemux prefs directory (\"%s\")\n", ADM_configdir);
+    }
     if(isPortableMode(argc,argv))
     {
         ADM_info("Portable mode\n");
@@ -198,11 +260,12 @@ void ADM_initBaseDir(int argc, char *argv[])
         std::string p=ADM_extractPath(copy);
         delete [] copy;copy=NULL;
         std::string plugins=p;
-        plugins+=std::string("/../lib/")+std::string(ADM_PLUGIN_DIR);
-        pluginDir=canonize(plugins);
-        ADM_info("Relative to install plugin mode : <%s>\n",pluginDir.c_str());
+        plugins += "/../lib/";
+        plugins += ADM_PLUGIN_DIR;
+        plugins = canonize(plugins);
+        ADM_setPluginDir(plugins);
+        ADM_info("Relative to install plugin mode : <%s>\n",plugins.c_str());
     }
-    
 }
 #include "ADM_folder_unix.cpp"
 // EOF

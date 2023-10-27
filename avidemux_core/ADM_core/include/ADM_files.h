@@ -21,8 +21,10 @@
 #ifdef __cplusplus
 ADM_CORE6_EXPORT void ADM_initBaseDir(int argc, char *argv[]);
 #endif
-// Returns dir to ~/.avidemux, no need to free it
+// Returns path to Avidemux user data directory, terminated with directory separator. No need to free it.
 ADM_CORE6_EXPORT const char *ADM_getBaseDir(void);
+// Returns path to Avidemux configuration directory, terminated with directory separator. No need to free it.
+ADM_CORE6_EXPORT const char *ADM_getConfigBaseDir(void);
 #ifdef _WIN32
 ADM_CORE6_EXPORT const char *ADM_getLogDir(void);
 #endif
@@ -58,7 +60,7 @@ ADM_CORE6_EXPORT uint8_t buildDirectoryContent(const char *base, std::vector<std
 #endif
 
 #ifdef __cplusplus
-    ADM_CORE6_EXPORT std::string ADM_getPluginDir(const char *subfolder);
+    ADM_CORE6_EXPORT std::string ADM_getPluginDir(const char *subfolder = NULL);
     ADM_CORE6_EXPORT bool        isPortableMode(int argc, char *argv[]);
 #endif
 

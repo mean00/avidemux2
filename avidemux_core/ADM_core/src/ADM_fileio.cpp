@@ -208,9 +208,9 @@ const std::string ADM_getCustomDir(void)
     const char *s = ADM_getHomeRelativePath("custom");
 
     if (ADM_mkdir(s))
-        ADM_customdir = std::string(s);
+        ADM_customdir = s;
     else
-        printf("can't create custom directory (%s).\n",s);
+        ADM_warning("Cannot create custom directory (\"%s\").\n", s);
 
     delete [] s;
     s=NULL;
@@ -232,9 +232,9 @@ const std::string ADM_getJobDir(void)
     const char *s = ADM_getHomeRelativePath("jobs");
 
     if (ADM_mkdir(s))
-        ADM_jobdir = std::string(s);
+        ADM_jobdir = s;
     else
-        printf("can't create custom directory (%s).\n",s);
+        ADM_warning("Cannot create jobs directory (\"%s\").\n", s);
 
     delete [] s;
     s=NULL;
@@ -253,7 +253,11 @@ const std::string ADM_getUserPluginSettingsDir(void)
         return ADM_userPluginSettings;
 
     const char *s = ADM_getHomeRelativePath("pluginSettings");
-    ADM_userPluginSettings = std::string(s);
+    if (ADM_mkdir(s))
+        ADM_userPluginSettings = s;
+    else
+        ADM_warning("Cannot create pluginSettings directory (\"%s\").\n", s);
+
     delete [] s;
     s=NULL;
 
@@ -288,25 +292,37 @@ bool isPortableMode(int argc, char *argv[])
 
     return portableMode;
 }
+
+static std::string pluginDir;
+
 /**
+ * \fn ADM_setPluginDir
  */
-std::string pluginDir;
+void ADM_setPluginDir(std::string path)
+{
+    pluginDir = path;
+}
+/**
+ * \fn ADM_getPluginDir
+ */
 std::string ADM_getPluginDir(const char *subfolder)
 {
-    std::string out;
-    if(!pluginDir.size())      
+    if(!pluginDir.size())
     {
-            #ifdef __APPLE__
-                const char *startDir="../lib";
-            #else
-                const char *startDir=ADM_RELATIVE_LIB_DIR;
-            #endif
-        
-            char *p=ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR,"");
-            pluginDir = std::string(p);
-            delete [] p;p=NULL;
+        const char *startDir =
+#ifdef __APPLE__
+        "../lib";
+#else
+        ADM_RELATIVE_LIB_DIR;
+#endif
+        char *p = ADM_getInstallRelativePath(startDir, ADM_PLUGIN_DIR);
+        pluginDir = p;
+        delete [] p;
+        p = NULL;
     }
-    return pluginDir+std::string(subfolder);
-}            
+    if(subfolder)
+        return pluginDir + subfolder;
+    return pluginDir;
+}
 
 // EOF

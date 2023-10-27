@@ -90,6 +90,14 @@ const char *ADM_getBaseDir(void)
 	return ADM_basedir;
 }
 
+/**
+ * \fn ADM_getConfigBaseDir
+ * \brief Get the root directory for avidemux configuration
+ */
+const char *ADM_getConfigBaseDir(void)
+{
+    return ADM_basedir;
+}
 /*
       Get the root directory for .avidemux stuff
 ******************************************************/
@@ -216,7 +224,7 @@ const std::string ADM_getI8NDir(const std::string &flavor)
 {
     //
     char *home = ADM_getInstallRelativePath(flavor.c_str(), "i18n", NULL);
-    std::string r=std::string(home);
+    std::string r = home;
     delete [] home;
     return r;
 }
