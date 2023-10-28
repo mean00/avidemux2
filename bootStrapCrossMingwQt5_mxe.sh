@@ -221,9 +221,10 @@ create_release_package()
     fi
     cp -v \
     libaom.dll \
+    libbrotlicommon.dll \
+    libbrotlidec.dll \
     libbz2.dll \
     libcrypto-*.dll \
-    libeay32.dll \
     libexpat-*.dll \
     libfaad-*.dll \
     libfdk-aac-*.dll \
@@ -259,7 +260,6 @@ create_release_package()
     libx265.dll \
     libzstd.dll \
     SDL2.dll \
-    ssleay32.dll \
     xvidcore.dll \
     zlib1.dll \
     $TARGETDIR;
