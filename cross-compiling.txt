@@ -22,10 +22,10 @@ a directory *outside of Avidemux top source directory*. This script will
   b) create a source tarball of the latest x264 off the stable branch from
   the videolan.org x264 git mirror, generate and apply a patch for MXE;
 
-  c) create a source tarball for v3.4 of x265 from the videolan.org x265
-  mercurial mirror and patch MXE to use it;
+  c) patch MXE to use v3.5 of x265 instead of v2.4 and v1.13.1 of libvpx
+  instead of v1.8.2;
 
-  d) build both 32-bit and 64-bit MXE targets;
+  d) build the 64-bit MXE target (the 32-bit target is currently untested);
 
   e) clone libaom git repository from googlesource.com, build and install
   the library in both MXE targets;
@@ -44,13 +44,14 @@ An example for the case that Avidemux source was cloned as ~/avidemux2:
 
 2. Enter the Avidemux top source directory and run
 
+    bash bootStrapCrossMingwQt5_mxe.sh --mxe-root=${MXE_ROOT}
+
+to cross-compile a 64-bit Avidemux version. If 32-bit MXE target has been
+built, run
+
     bash bootStrapCrossMingwQt5_mxe.sh --mxe-root=${MXE_ROOT} --32
 
-to cross-compile a 32 bit Avidemux version or
-
-    bash bootStrapCrossMingwQt5_mxe.sh --mxe-root=${MXE_ROOT} --64
-
-to cross-compile a 64 bit version. Run
+to cross-compile a 32-bit version. Run
 
     bash bootStrapCrossMingwQt5_mxe.sh -h
 
@@ -70,4 +71,4 @@ to python2. See https://bugs.python.org/issue40350
 
 As of this writing, twolame, aften, vapoursynth and avsproxy are not available.
 
-2023-08-22
+2023-10-28
