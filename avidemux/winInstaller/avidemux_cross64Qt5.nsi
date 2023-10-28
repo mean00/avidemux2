@@ -29,8 +29,7 @@ Section "Avidemux Core" SecCore
     ${File} ${BINARY_FOLDER}/libsqlite3-0.dll
     ${File} ${BINARY_FOLDER}/libstdc++-6.dll
     ${File} ${BINARY_FOLDER}/libwinpthread-1.dll
-    #${File} ${BINARY_FOLDER}/libz-1.dll
-    ${File} ${BINARY_FOLDER}/libfreetype-6.dll
+    ${File} ${BINARY_FOLDER}/zlib1.dll
     ${File} ${BINARY_FOLDER}/libgcc_s_seh-1.dll
     ${File} ${BINARY_FOLDER}/libintl-8.dll
     ${File} ${BINARY_FOLDER}/SDL2.dll
@@ -44,13 +43,9 @@ Section "Avidemux Core" SecCore
     SetOutPath $INSTDIR\styles
     ${File} ${BINARY_FOLDER}/styles/qwindowsvistastyle.dll
     SetOutPath $INSTDIR
-#${File} ${BINARY_FOLDER}/libicudt51.dll 
-    #${File} ${BINARY_FOLDER}/libicuin51.dll  
-    #${File} ${BINARY_FOLDER}/libicuio51.dll  
-    #${File} ${BINARY_FOLDER}/libicule51.dll  
-    #${File} ${BINARY_FOLDER}/libiculx51.dll  
-    #${File} ${BINARY_FOLDER}/libicutu51.dll  
-    #${File} ${BINARY_FOLDER}/libicuuc51.dll
+    ${File} ${BINARY_FOLDER}/icudt66.dll
+    ${File} ${BINARY_FOLDER}/icuin66.dll
+    ${File} ${BINARY_FOLDER}/icuuc66.dll
     SetOutPath $INSTDIR\platforms
     ${File} ${BINARY_FOLDER}/platforms/qminimal.dll  
     ${File} ${BINARY_FOLDER}/platforms/qwindows.dll
@@ -90,7 +85,8 @@ Section "Avidemux Core" SecCore
     ${File} ${BINARY_FOLDER}/libfontconfig*.dll
     ${File} ${BINARY_FOLDER}/libfreetype*.dll
     ${File} ${BINARY_FOLDER}/libharfbuzz*.dll
-
+    ${File} ${BINARY_FOLDER}/libbrotlicommon.dll
+    ${File} ${BINARY_FOLDER}/libbrotlidec.dll
 
 	WriteRegStr HKLM "${REGKEY}" CreateDesktopIcon $CreateDesktopIcon
 	WriteRegStr HKLM "${REGKEY}" CreateStartMenuGroup $CreateStartMenuGroup
