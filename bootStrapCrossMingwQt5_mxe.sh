@@ -2,7 +2,7 @@
 
 # Default config
 
-bits=32
+bits=64
 default_mxerootdir="/opt/mxe"
 mxerootdir="$default_mxerootdir"
 rebuild=0
