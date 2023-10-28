@@ -62,10 +62,9 @@ patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < x264_gen.patch \
    patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < "${where}/x265.patch" \
 && patch -d "${MXE_ROOT_DIR}" -p1 < "${where}/x265.patch" || fail "Failed at x265 patch"
 
-# zlib 1.2.13 source archive has been removed by upstream, see https://github.com/mxe/mxe/issues/3006
-# continue on failure, the issue may have been already sorted out
-   patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < "${where}/zlib-download-from-mirror.patch" \
-&& patch -d "${MXE_ROOT_DIR}" -p1 < "${where}/zlib-download-from-mirror.patch"
+# patch MXE to download and build libvpx 1.13.1 instead of 1.8.2
+patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < "${where}/libvpx.patch" \
+&& patch -d "${MXE_ROOT_DIR}" -p1 < "${where}/libvpx.patch" || fail "Failed at libvpx patch"
 
 #echo "MXE_TARGETS :=  i686-w64-mingw32.shared x86_64-w64-mingw32.shared" > "${MXE_ROOT_DIR}/settings.mk"
 echo "MXE_TARGETS :=  x86_64-w64-mingw32.shared" > "${MXE_ROOT_DIR}/settings.mk"

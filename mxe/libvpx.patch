@@ -1,0 +1,15 @@
+diff --git a/src/libvpx.mk b/src/libvpx.mk
+index a5d54b46..ba71a0d0 100644
+--- a/src/libvpx.mk
++++ b/src/libvpx.mk
+@@ -4,8 +4,8 @@ PKG             := libvpx
+ $(PKG)_WEBSITE  := https://www.webmproject.org/code/
+ $(PKG)_DESCR    := vpx
+ $(PKG)_IGNORE   :=
+-$(PKG)_VERSION  := 1.8.2
+-$(PKG)_CHECKSUM := 8735d9fcd1a781ae6917f28f239a8aa358ce4864ba113ea18af4bb2dc8b474ac
++$(PKG)_VERSION  := 1.13.1
++$(PKG)_CHECKSUM := 00dae80465567272abd077f59355f95ac91d7809a2d3006f9ace2637dd429d14
+ $(PKG)_GH_CONF  := webmproject/libvpx/tags,v
+ $(PKG)_DEPS     := cc pthreads yasm
+ 
