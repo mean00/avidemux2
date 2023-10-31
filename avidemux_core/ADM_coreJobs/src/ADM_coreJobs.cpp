@@ -177,10 +177,11 @@ bool    ADMJob::jobInit(void)
 */
 bool    ADMJob::jobShutDown(void)
 {
-	if (dbFile)
-	{
-		delete [] dbFile;
-	}
+    if (dbFile)
+    {
+        delete [] dbFile;
+        dbFile = NULL;
+    }
 
     dbCleanup();
     ADM_info("Shutting down jobs database\n");
