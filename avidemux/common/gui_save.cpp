@@ -135,8 +135,8 @@ void HandleAction_Save(Action action)
                         A_queueJob(oText,oFile.c_str());
                     }
                     ADM_dealloc(oText);
-                    ADMJob::jobShutDown();
                 }
+                ADMJob::jobShutDown();
             }
             break;
 #if 0
