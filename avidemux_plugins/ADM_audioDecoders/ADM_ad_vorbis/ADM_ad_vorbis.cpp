@@ -123,7 +123,6 @@ VERR(OV_ENOSEEK    )
      : ADM_Audiocodec(fcc,*info)
  {
  ogg_packet packet;
- vorbis_comment comment;
  oggVorbis *vrbis;
  uint8_t *hdr,*cmt,*code;
  uint32_t size_hdr,size_cmt, size_code;
@@ -154,7 +153,7 @@ VERR(OV_ENOSEEK    )
     packet.packet=packets[0];
     packet.b_o_s=1; // yes, it is a new stream
     printPacket("1st packet",&packet);
-    error=vorbis_synthesis_headerin(&(_context.vinfo),&comment,&packet);
+    error=vorbis_synthesis_headerin(&(_context.vinfo), &(_context.vcomment), &packet);
     MANAGE_ERROR("1st packet",error);
     // update some info in header this is the only place to get them
     // especially frequency.
@@ -175,7 +174,7 @@ VERR(OV_ENOSEEK    )
     packet.b_o_s=0; // Not new
     printPacket("2nd packet",&packet);
 
-    error=vorbis_synthesis_headerin(&(_context.vinfo),&comment,&packet);        
+    error=vorbis_synthesis_headerin(&(_context.vinfo), &(_context.vcomment), &packet);
     MANAGE_ERROR("2nd packet",error);
 
     // and codebook
@@ -184,10 +183,10 @@ VERR(OV_ENOSEEK    )
     packet.b_o_s=0; // Not new
     printPacket("3rd packet",&packet);
         
-    error=vorbis_synthesis_headerin(&(_context.vinfo),&comment,&packet);
+    error=vorbis_synthesis_headerin(&(_context.vinfo), &(_context.vcomment), &packet);
     MANAGE_ERROR("3rd packet",error);
         
-    vorbis_comment_clear(&comment);
+    vorbis_comment_clear(&(_context.vcomment));
     vorbis_synthesis_init(&(_context.vdsp),&(_context.vinfo));
     vorbis_block_init(&(_context.vdsp),&(_context.vblock));
     ADM_info("Vorbis init successfull\n");
