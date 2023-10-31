@@ -123,14 +123,21 @@ static bool ADM_jobCheckVersion(void)
 */
 bool    ADMJob::jobInit(void)
 {
-    dbFile=new char[1024];
+#define DBFILE_BUFLEN 1024
+    const char *fname = "jobs_sql.db";
+    dbFile = new char[DBFILE_BUFLEN];
+    if (!ADM_getBaseDir() || strlen(ADM_getBaseDir()) + strlen(fname) >= DBFILE_BUFLEN)
+    {
+        ADM_warning("Path to Avidemux profile directory invalid or too long, cannot init jobs.\n");
+        return false;
+    }
     strcpy(dbFile,ADM_getBaseDir());
-    strcat(dbFile,"jobs.sql");
+    strcat(dbFile,fname);
 
     ADM_info("Initializing database (%s)\n",dbFile);
     if(!ADM_fileExist(dbFile))
     {
-        ADM_warning("[Jobs] jobs.sql does not exist, creating from default...\n");
+        ADM_warning("[Jobs] %s does not exist, creating from default...\n", fname);
         if(!ADM_jobInitializeDb())
         {
             ADM_warning("[Jobs] Db Init failed\n");
