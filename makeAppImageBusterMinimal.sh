@@ -1,4 +1,7 @@
 #!/bin/bash
+nodeps=""
+nofail=""
+nobuild=""
 rebuild=""
 missing_pkgs=()
 # build dependencies
@@ -37,6 +40,8 @@ usage()
     echo "***********************"
     echo "  --help or -h      : Print usage"
     echo "  --setup-only      : Install build dependencies and exit"
+    echo "  --no-install-deps : Do not install missing dependencies, fail instead"
+    echo "  --no-fail-missing : Try to continue even if dependencies are missing"
     echo "  --rebuild         : Preserve existing build directories"
 }
 #
@@ -50,6 +55,9 @@ check_nvenc()
 {
     if (pkg-config --exists ffnvcodec); then
         return 0
+    elif [ "x${nodeps}" = "x1" ]; then
+        echo "NVENC headers not found and installation disabled on command line."
+        return 1
     fi
     echo "nv-codec-headers are missinng, will try to install."
     rm -rf /tmp/nvenc > /dev/null 2>&1
@@ -66,14 +74,19 @@ check_nvenc()
 #
 check_aom()
 {
-    if (pkg-config --exists aom)
-    then
+    if (pkg-config --exists aom); then
         echo "aom is present, checking version..."
         AOM_VERSION=$(pkg-config --modversion aom)
         if [ $(echo "${AOM_VERSION}" | cut -d \. -f 1 - ) -ge "3" ]; then
             echo "aom version ${AOM_VERSION} is sufficient."
             return 0
+        elif [ "x${nodeps}" = "x1" ]; then
+            echo "aom version is too old and installation disabled on command line."
+            return 1
         fi
+    elif [ "x${nodeps}" = "x1" ]; then
+        echo "aom not found and installation disabled on command line."
+        return 1
     fi
     echo "Minimum required version of aom is missing, will try to install."
     CUR=$(pwd)
@@ -131,22 +144,34 @@ setup()
     if [ ${#missing_nonfree[@]} -gt 0 ]; then
         echo "Missing non-free development packages:"
         echo ${missing_nonfree[*]}
-        echo "Warning, non-free repositories must be already enabled on this system to install them."
+        if [ "x${nodeps}" != "x1" ]; then
+            echo "Warning, non-free repositories must be already enabled on this system to install them."
+        fi
     fi
     nb_missing=$(( ${#missing_required[@]} + ${#missing_nonfree[@]} ))
     if [ ${nb_missing} -gt 0 ]; then
-        sudo /usr/bin/apt-get update || fail "Cannot sync repo metadata"
-        sudo /usr/bin/apt-get install ${missing_required[*]} ${missing_nonfree[*]} || fail "Failed to install all build dependencies, aborting."
+        if [ "x${nodeps}" = "x1" ]; then
+            fail "Installation of build dependencies disabled on command line, aborting."
+        elif [ "x${nofail}" = "x1" ]; then
+            echo "Trying to continue nevertheless"
+        else
+            sudo /usr/bin/apt-get update || fail "Cannot sync repo metadata"
+            sudo /usr/bin/apt-get install ${missing_required[*]} ${missing_nonfree[*]} || fail "Failed to install all build dependencies, aborting."
+        fi
     fi
     if (check_nvenc); then
         echo "NVENC headers found."
+    elif [ "x${nofail}" = "x1" ]; then
+        echo "Cannot install NVENC headers, trying to continue nevertheless."
     else
         fail "Cannot install NVENC headers."
     fi
     if (check_aom); then
         echo "libaom >= 3.0.0 found"
+    elif [ "x${nofail}" = "x1" ]; then
+        echo "Cannot install required version of libaom, trying to continue nevertheless."
     else
-        fail "Cannot install AOM."
+        fail "Cannot install required version of libaom."
     fi
 }
 #
@@ -164,8 +189,13 @@ while [ $# != 0 ]; do
             exit 0
             ;;
         --setup-only)
-            setup
-            exit 0
+            nobuild="1"
+            ;;
+        --no-install-deps)
+            nodeps="1"
+            ;;
+        --no-fail-missing)
+            nofail="1"
             ;;
         --rebuild)
             rebuild="${config_option}"
@@ -180,6 +210,10 @@ while [ $# != 0 ]; do
 done
 
 setup
+
+if [ "x${nobuild}" = "x1" ]; then
+    exit $?
+fi
 
 ORG=$PWD
 RUNTIME="runtime-x86_64"
