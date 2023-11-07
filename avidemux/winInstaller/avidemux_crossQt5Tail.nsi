@@ -97,26 +97,12 @@ SectionEnd
 ##########################
 # Installer functions
 ##########################
+
+!define MULTIUSER_EXECUTIONLEVEL Highest
+!include MultiUser.nsh
+
 Function .onInit
-UAC_Elevate:
-	!insertmacro UAC_RunElevated
-	StrCmp 1223 $0 UAC_ElevationAborted
-	StrCmp 0 $0 0 UAC_Err
-	StrCmp 1 $1 0 UAC_Success
-	Quit
-
-UAC_Err:
-	MessageBox MB_ICONSTOP "Unable to elevate, error $0"
-	Abort
-
-UAC_ElevationAborted:
-	Abort
-
-UAC_Success:
-	StrCmp 1 $3 +4
-	StrCmp 3 $1 0 UAC_ElevationAborted
-	MessageBox MB_ICONSTOP "This installer requires admin access."
-	Goto UAC_Elevate
+	!insertmacro MULTIUSER_INIT
 
 	Call LoadPreviousSettings
 	ReadRegStr $PreviousVersion HKLM "${REGKEY}" Version
@@ -325,7 +311,7 @@ Function RunAvidemux
     SectionGetFlags ${SecDesktopQt} $0
     IntOp $0 $0 & ${SF_SELECTED}
 
-	!insertmacro UAC_AsUser_ExecShell "" "$INSTDIR\avidemux.exe" "" "" ""
+    ShellExecAsUser::ShellExecAsUser "" "$INSTDIR\avidemux.exe" "" "" ""
 
     Goto end
 
@@ -423,26 +409,7 @@ FunctionEnd
 ##########################
 Function un.onInit
 	SetShellVarContext all
-
-UAC_Elevate:
-	!insertmacro UAC_RunElevated
-	StrCmp 1223 $0 UAC_ElevationAborted
-	StrCmp 0 $0 0 UAC_Err
-	StrCmp 1 $1 0 UAC_Success
-	Quit
-
-UAC_Err:
-	MessageBox MB_ICONSTOP "Unable to elevate, error $0"
-	Abort
-
-UAC_ElevationAborted:
-	Abort
-
-UAC_Success:
-	StrCmp 1 $3 +4
-	StrCmp 3 $1 0 UAC_ElevationAborted
-	MessageBox MB_ICONSTOP "This installer requires admin access."
-	Goto UAC_Elevate
+	!insertmacro MULTIUSER_UNINIT
 FunctionEnd
 
 ; TrimNewlines (copied from NSIS documentation)

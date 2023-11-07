@@ -2,14 +2,17 @@
 # Included files
 ##########################
 !addincludedir ${NSIDIR}
-!addplugindir ${NSIDIR}/plugin
+!if ${BUILD_BITS} == 64
+    !addplugindir ${NSIDIR}/plugin/amd64-unicode
+!else
+    !addplugindir ${NSIDIR}/plugin/x86-unicode
+!endif
 
 !include Sections.nsh
 !include MUI2.nsh
 !include nsDialogs.nsh
 !include Memento.nsh
 !include FileFunc.nsh
-!include UAC.nsh
 !include WinVer.nsh
 !include WordFunc.nsh
 !include AvidemuxVersion.nsh
