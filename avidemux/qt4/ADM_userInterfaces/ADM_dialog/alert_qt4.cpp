@@ -27,6 +27,14 @@
 
 static int beQuiet=0;
 
+static QString convertAccels(const char *in)
+{
+    QString out = QString::fromUtf8(in);
+    out.replace("&", "&&");
+    out.replace("_", "&");
+    return out;
+}
+
 static void alertCommon(enum QMessageBox::Icon icon, const char *title, const char *alert, const char *desc)
 {
     QMessageBox box(qtLastRegisteredDialog());
@@ -80,7 +88,7 @@ static bool questionCommon(const char *title, const char *question, const char *
 #endif
 
     QPushButton *yesButton = confirm ?
-        box.addButton(QString::fromUtf8(confirm), QMessageBox::YesRole) :
+        box.addButton(convertAccels(confirm), QMessageBox::YesRole) :
         box.addButton(QMessageBox::Yes);
     box.addButton(alternative);
     box.setDefaultButton(yesButton);
@@ -239,8 +247,8 @@ int GUI_Alternate(const char *title,const char *choice1,const char *choice2)
     QMessageBox box(qtLastRegisteredDialog());
 
     box.setWindowTitle(QString::fromUtf8(QT_TRANSLATE_NOOP("qtalert","Question?")));
-    QPushButton *first = box.addButton(QString::fromUtf8(choice1),QMessageBox::YesRole);
-    QPushButton *second = box.addButton(QString::fromUtf8(choice2),QMessageBox::NoRole);
+    QPushButton *first = box.addButton(convertAccels(choice1), QMessageBox::YesRole);
+    QPushButton *second = box.addButton(convertAccels(choice2), QMessageBox::NoRole);
     box.setDefaultButton(first);
 
     if (title)
