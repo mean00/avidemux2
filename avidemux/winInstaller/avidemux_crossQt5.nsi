@@ -18,7 +18,7 @@
 !include AvidemuxVersion.nsh
 SetCompressor /SOLID lzma
 SetCompressorDictSize 96
-RequestExecutionLevel user
+RequestExecutionLevel admin
 
 ##########################
 # Defines

@@ -98,7 +98,7 @@ SectionEnd
 # Installer functions
 ##########################
 
-!define MULTIUSER_EXECUTIONLEVEL Highest
+!define MULTIUSER_EXECUTIONLEVEL Admin
 !include MultiUser.nsh
 
 Function .onInit
