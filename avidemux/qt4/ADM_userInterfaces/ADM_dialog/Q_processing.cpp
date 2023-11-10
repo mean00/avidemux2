@@ -162,12 +162,12 @@ DIA_processingBase *createProcessing(const char *title,uint64_t totalToProcess)
 void DIA_processingQt4::reject(void)
 {
     ADM_info("Stop Request\n");
-     if (GUI_Confirmation_HIG(QT_TRANSLATE_NOOP("qprocessing", "_Resume"), 
-                                 QT_TRANSLATE_NOOP("qprocessing", "The processing is paused."), 
-                                 QT_TRANSLATE_NOOP("qprocessing", "Cancel it ?")))
-        {
-                _stopRequest=true;
-        }
+    if (ADM_ERR != GUI_Confirmation_HIG(QT_TRANSLATE_NOOP("qprocessing", "_Cancel Processing"),
+            QT_TRANSLATE_NOOP("qprocessing", "The processing is paused."),
+            QT_TRANSLATE_NOOP("qprocessing", "Cancel it ?")))
+    {
+        _stopRequest=true;
+    }
 
 }
 
