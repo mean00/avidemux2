@@ -34,6 +34,71 @@ static QWidget *fileSelGetParent(void)
     return parent;
 }
 
+#ifdef __APPLE__
+    #define MACOS_MENU_BAR_STEALS_KEYBOARD_SHORTCUTS
+    #include "Q_gui2.h"
+#endif
+
+static uint32_t disableMenus(void)
+{
+    uint32_t menuState = 0;
+#ifdef MACOS_MENU_BAR_STEALS_KEYBOARD_SHORTCUTS
+    MainWindow *mw = (MainWindow *)QuiMainWindows;
+    uint8_t shift = 0;
+#define DOIT(x) if (mw->ui.menu##x->isEnabled()) { menuState |= 1 << shift++; }
+    DOIT(File)
+    DOIT(Recent)
+    DOIT(Edit)
+    DOIT(View)
+    DOIT(Video)
+    DOIT(Audio)
+    DOIT(Auto)
+    DOIT(Tools)
+    DOIT(Go)
+    DOIT(Custom)
+    DOIT(Help)
+#undef DOIT
+    shift = 0;
+#define DOIT(x) if (menuState & (1 << shift++)) { mw->ui.menu##x->setEnabled(false); }
+    DOIT(File)
+    DOIT(Recent)
+    DOIT(Edit)
+    DOIT(View)
+    DOIT(Video)
+    DOIT(Audio)
+    DOIT(Auto)
+    DOIT(Tools)
+    DOIT(Go)
+    DOIT(Custom)
+    DOIT(Help)
+#undef DOIT
+#endif
+    return menuState;
+}
+
+static void enableMenus(uint32_t menuState)
+{
+#ifdef MACOS_MENU_BAR_STEALS_KEYBOARD_SHORTCUTS
+    MainWindow *mw = (MainWindow *)QuiMainWindows;
+    uint8_t shift = 0;
+#define DOIT(x) if (menuState & (1 << shift++)) { mw->ui.menu##x->setEnabled(true); }
+    DOIT(File)
+    DOIT(Recent)
+    DOIT(Edit)
+    DOIT(View)
+    DOIT(Video)
+    DOIT(Audio)
+    DOIT(Auto)
+    DOIT(Tools)
+    DOIT(Go)
+    DOIT(Custom)
+    DOIT(Help)
+#undef DOIT
+#else
+    UNUSED_ARG(menuState);
+#endif
+}
+
 /**
  * \fn fileSelWriteInternal
  */
@@ -136,12 +201,16 @@ static int fileSelWriteInternal(const char *label, char *target, uint32_t max, c
     opts = QFileDialog::DontConfirmOverwrite; // doesn't work on macOS, wtf?
 #endif
 
+    uint32_t menuState = disableMenus();
+
     fileName = QFileDialog::getSaveFileName(fileSelGetParent(),
                     QString::fromUtf8(label),  // caption
                     str,    // folder
                     filterFile,   // filter
                     NULL, // selected filter
                     opts);
+
+    enableMenus(menuState);
 
     int len = strlen(fileName.toUtf8().constData());
     if(!len || len >= max) return 0;
@@ -247,12 +316,17 @@ static int fileSelReadInternal(const char *label, char *target, uint32_t max, co
     {
         filterFile=QString(ext)+QString::fromUtf8(QT_TRANSLATE_NOOP("qfile"," files (*."))+QString(ext)+QString(");;")+filterFile;
     }
+
+    uint32_t menuState = disableMenus();
+
     fileName = QFileDialog::getOpenFileName(fileSelGetParent(),
                                 QString::fromUtf8(label),  // caption
                                 str,    // folder
                                 filterFile,   // filter
                                 NULL,   // selected filter
                                 opts);
+
+    enableMenus(menuState);
 
     int len = strlen(fileName.toUtf8().constData());
     if(!len || len >= max) return 0;
