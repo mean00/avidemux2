@@ -24,7 +24,6 @@
 #include <cmath>
 #include "Q_flat360.h"
 #include "ADM_toolkitQt.h"
-#include "ADM_vidFlat360.h"
 
 //
 //	Video is in YV12 Colorspace
@@ -42,7 +41,7 @@ Ui_flat360Window::Ui_flat360Window(QWidget *parent, flat360 *param,ADM_coreVideo
         canvas=new ADM_QCanvas(ui.graphicsView,width,height);
         
         myFly=new flyFlat360( this,width, height,in,canvas,ui.horizontalSlider);
-        ADMVideoFlat360::Flat360CreateBuffers(width,height, &(myFly->buffers));
+        
         memcpy(&(myFly->param),param,sizeof(flat360));
         myFly->_cookie=&ui;
         myFly->addControl(ui.toolboxLayout, ControlOption::PeekOriginalBtn);
@@ -82,7 +81,6 @@ void Ui_flat360Window::gather(flat360 *param)
 Ui_flat360Window::~Ui_flat360Window()
 {
     if(myFly) {
-        ADMVideoFlat360::Flat360DestroyBuffers(&(myFly->buffers));
         delete myFly;
     }
     myFly=NULL; 

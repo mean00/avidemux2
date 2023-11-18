@@ -29,14 +29,15 @@
  */
 flyFlat360::flyFlat360 (QDialog *parent,uint32_t width,uint32_t height,ADM_coreVideoFilter *in,
                                     ADM_QCanvas *canvas, ADM_flyNavSlider *slider) : ADM_flyDialogYuv(parent, width, height, in, canvas, slider, RESIZE_AUTO)
-  {
-  }
+{
+    ADMVideoFlat360::Flat360CreateBuffers(width,height, &buffers);
+}
 /**
  * 
  */
 flyFlat360::~flyFlat360()
 {
-
+    ADMVideoFlat360::Flat360DestroyBuffers(&buffers);
 }
 
 uint8_t  flyFlat360::update(void)

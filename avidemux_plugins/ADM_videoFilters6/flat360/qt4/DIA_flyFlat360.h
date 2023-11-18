@@ -22,10 +22,10 @@
 */
 class flyFlat360 : public ADM_flyDialogYuv
 {
-  friend class Ui_flat360Window;
+  private:
+    ADMVideoFlat360::flat360_buffers_t  buffers;
   public:
     flat360            param;
-    ADMVideoFlat360::flat360_buffers_t  buffers;
   public:
     uint8_t    processYuv(ADMImage* in, ADMImage *out);
     uint8_t    download(void);
