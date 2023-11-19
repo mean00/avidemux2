@@ -25,7 +25,11 @@ makeLink("MacOS" "lib" "@BUNDLE@/Contents/")
 # would result in each minor VapourSynth upgrade breaking the demuxer.
 FILE(GLOB dmvs "@BUNDLE@/Contents/MacOS/ADM_plugins6/demuxers/libADM_dm_vapoursynth.dylib")
 IF(dmvs)
-    SET(HOMEBREW_PREFIX "/usr/local")
+    IF(ADM_CPU_ARM64)
+        SET(HOMEBREW_PREFIX "/opt/homebrew")
+    ELSE(ADM_CPU_ARM64)
+        SET(HOMEBREW_PREFIX "/usr/local")
+    ENDIF(ADM_CPU_ARM64)
     MESSAGE(STATUS "Relinking ${dmvs}")
     EXECUTE_PROCESS(COMMAND install_name_tool -change "@executable_path/../${LIBS_LOCATION}/libvapoursynth.dylib"
         "${HOMEBREW_PREFIX}/lib/libvapoursynth.dylib" "${dmvs}")
