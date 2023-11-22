@@ -3692,6 +3692,14 @@ void UI_notifyError(const char *message, int timeoutMs)
 {
     ((MainWindow *)QuiMainWindows)->notifyStatusBar(2, QT_TRANSLATE_NOOP("qgui2","ERROR: %1"), message, timeoutMs);
 }
+
+/**
+    \fn UI_needsAttention
+*/
+void UI_needsAttention(void)
+{
+    QApplication::alert(NULL);
+}
 /**
  * \fn dtor
  */

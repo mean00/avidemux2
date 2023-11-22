@@ -62,6 +62,8 @@ void UI_notifyInfo(const char *message, int timeoutMs);
 void UI_notifyWarning(const char *message, int timeoutMs);
 void UI_notifyError(const char *message, int timeoutMs);
 
+void UI_needsAttention(void);
+
 /* We need to know whether auto-repeat is firing */
 bool UI_navigationButtonsPressed(void);
 

@@ -213,4 +213,7 @@ void UI_notifyWarning(const char *message, int timeoutMs)
 {}
 void UI_notifyError(const char *message, int timeoutMs)
 {}
+
+void UI_needsAttention(void)
+{}
 // EOF
