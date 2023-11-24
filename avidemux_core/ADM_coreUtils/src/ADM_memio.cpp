@@ -30,7 +30,7 @@ ADMMemio::~ADMMemio()
 */
 void            ADMMemio::write(int len, const uint8_t *data)
 {
-    ADM_assert(buffer+len<=tail)
+    ADM_assert(buffer+len<=tail);
     memcpy(cur,data,len);
     cur+=len;
 }
@@ -50,7 +50,7 @@ void            ADMMemio::write16(uint16_t w)
 }
 void            ADMMemio::write8(uint8_t w)
 {
-    ADM_assert(buffer<tail)
+    ADM_assert(buffer<tail);
     *cur++=w;
 }
 #else
@@ -70,7 +70,7 @@ void            ADMMemio::write16(uint16_t w)
 }
 void            ADMMemio::write8(uint8_t w)
 {
-    ADM_assert(buffer<tail)
+    ADM_assert(buffer<tail);
     *cur++=w;
 }
 

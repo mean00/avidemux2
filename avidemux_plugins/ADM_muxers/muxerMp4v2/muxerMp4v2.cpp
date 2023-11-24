@@ -234,8 +234,8 @@ bool muxerMp4v2::save(void)
         int other=!nextWrite;
         if(in[other].flags & AVI_KEY_FRAME) kf=true;
 
-        ADM_assert(in[nextWrite].dts!=ADM_NO_PTS)
-        ADM_assert(in[nextWrite].dts!=ADM_NO_PTS)
+        ADM_assert(in[nextWrite].dts!=ADM_NO_PTS);
+        ADM_assert(in[nextWrite].dts!=ADM_NO_PTS);
         if(in[other].pts==ADM_NO_PTS || in[other].pts==ADM_NO_PTS)
         {
             GUI_Error_HIG(QT_TRANSLATE_NOOP("mp4v2muxer","Video"),QT_TRANSLATE_NOOP("mp4v2muxer","Video does not have enough timing information. Are you copying from AVI?"));
