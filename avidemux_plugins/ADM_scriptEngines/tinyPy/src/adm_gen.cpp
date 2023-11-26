@@ -694,6 +694,19 @@ static tp_obj zzpy_savePng(TP)
   int r = editor->saveImagePng(p0);
   return tp_number(r);
 }
+// seekBlackFrame -> void editor->seekBlackFrame(int)
+static tp_obj zzpy_seekBlackFrame(TP)
+{
+  tp_obj self = tp_getraw(tp);
+  IScriptEngine *engine = (IScriptEngine*)tp_get(tp, tp->builtins, tp_string("userdata")).data.val;
+  IEditor *editor = engine->editor();
+  TinyParams pm(tp);
+  void *me = (void *)pm.asThis(&self, ADM_PYID_AVIDEMUX);
+
+  int p0 = pm.asInt();
+  editor->seekBlackFrame(p0);
+  return tp_None;
+}
 // seekFrame -> int editor->seekFrame(int)
 static tp_obj zzpy_seekFrame(TP)
 {
@@ -1042,6 +1055,10 @@ tp_obj zzpy__pyAvidemux_get(tp_vm *vm)
   {
     return tp_method(vm, self, zzpy_savePng);
   }
+  if (!strcmp(key, "seekBlackFrame"))
+  {
+    return tp_method(vm, self, zzpy_seekBlackFrame);
+  }
   if (!strcmp(key, "seekFrame"))
   {
     return tp_method(vm, self, zzpy_seekFrame);
@@ -1175,6 +1192,7 @@ static tp_obj zzpy__pyAvidemux_help(TP)
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t saveBmp(str fileName)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t saveJpeg(str fileName)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t savePng(str fileName)\n");
+  engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "void\t seekBlackFrame(int count)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t seekFrame(int count)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t seekKeyFrame(int count)\n");
   engine->callEventHandlers(IScriptEngine::Information, NULL, -1, "int\t setContainer(str container, couples)\n");

@@ -76,6 +76,7 @@
 /* METHOD */ int editor->seekKeyFrame:seekKeyFrame(int count)
 /* METHOD */ int editor->seekFrame:seekFrame(int count)
 /* METHOD */ int editor->setCurrentFramePts:setCurrentPts(double pts)
+/* METHOD */ void editor->seekBlackFrame:seekBlackFrame(int count)
 #
 #       Variables
 #
