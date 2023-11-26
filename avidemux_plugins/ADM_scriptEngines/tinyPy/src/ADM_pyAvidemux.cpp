@@ -482,6 +482,91 @@ void pyDisplayInfo(IEditor *editor, const char *one, const char *two)
 }
 
 /**
+    \fn pyQtGuiStatusbarInfo
+*/
+void pyQtGuiStatusbarInfo(IEditor *editor, const char *msg, int timeout)
+{
+    GUI_Tweaks("STATUSBAR_SHOW_INFO", msg, timeout);
+}
+/**
+    \fn pyQtGuiStatusbarWarning
+*/
+void pyQtGuiStatusbarWarning(IEditor *editor, const char *msg, int timeout)
+{
+    GUI_Tweaks("STATUSBAR_SHOW_WARNING", msg, timeout);
+}
+/**
+    \fn pyQtGuiStatusbarError
+*/
+void pyQtGuiStatusbarError(IEditor *editor, const char *msg, int timeout)
+{
+    GUI_Tweaks("STATUSBAR_SHOW_ERROR", msg, timeout);
+}
+/**
+    \fn pyQtGuiSetBusyCursor
+*/
+void pyQtGuiSetBusyCursor(IEditor *editor, int busy)
+{
+    GUI_Tweaks("CURSOR_SET_BUSY", NULL, busy);
+}
+/**
+    \fn pyQtGuiWindowMinimize
+*/
+void pyQtGuiWindowMinimize(IEditor *editor)
+{
+    GUI_Tweaks("WINDOW_MINIMIZE", NULL, 0);
+}
+/**
+    \fn pyQtGuiWindowRestore
+*/
+void pyQtGuiWindowRestore(IEditor *editor)
+{
+    GUI_Tweaks("WINDOW_RESTORE", NULL, 0);
+}
+/**
+    \fn pyQtGuiWindowSetTitle
+*/
+void pyQtGuiWindowSetTitle(IEditor *editor, const char *title)
+{
+    GUI_Tweaks("WINDOW_SET_TITLE", title, 0);
+}
+/**
+    \fn pyQtGuiExit
+*/
+void pyQtGuiExit(IEditor *editor)
+{
+    GUI_Tweaks("GUI_EXIT", NULL, 0);
+}
+/**
+    \fn pyQtGuiSetPlayFiltered
+*/
+void pyQtGuiSetPlayFiltered(IEditor *editor, int enable)
+{
+    GUI_Tweaks("SET_PLAY_FILTERED", NULL, enable);
+}
+/**
+    \fn pyQtGuiSetLighTheme
+*/
+void pyQtGuiSetLighTheme(IEditor *editor)
+{
+    GUI_Tweaks("SET_LIGT_THEME", NULL, 0);
+}
+/**
+    \fn pyQtGuiSetDarkTheme
+*/
+void pyQtGuiSetDarkTheme(IEditor *editor)
+{
+    GUI_Tweaks("SET_DARK_THEME", NULL, 0);
+}
+/**
+    \fn pyQtGuiTextToClipboard
+*/
+void pyQtGuiTextToClipboard(IEditor *editor, const char *msg)
+{
+    GUI_Tweaks("TEXT_TO_CLIPBOARD", msg, 0);
+}
+
+/**
  * \fn pyGetEnv
  * @param editor
  * @param 

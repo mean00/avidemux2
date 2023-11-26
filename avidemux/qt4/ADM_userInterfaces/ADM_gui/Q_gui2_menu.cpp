@@ -21,6 +21,7 @@
 
 #include "config.h"
 #include "Q_gui2.h"
+#include "ADM_QSettings.h"
 #include "FileAction.h"
 #include "A_functions.h"
 
@@ -99,6 +100,10 @@ void MainWindow::addScriptShellsToToolsMenu(vector<MenuEntry>& toolMenu)
 
         it = toolMenu.insert(it, entry) + 1;
     }
+    
+    // sneak in here for now:
+    MenuEntry entry = {MENU_ACTION, QT_TRANSLATE_NOOP("qgui2menu","Script Shortcuts"), NULL, (Action)(ACT_ScriptShortcutConfig), NULL, NULL, true};
+    toolMenu.insert(it, entry);
 }
 
 void MainWindow::addScriptReferencesToHelpMenu()
@@ -149,11 +154,20 @@ void MainWindow::scriptReferenceActionHandler()
     QDesktopServices::openUrl(QUrl("file:///" + referenceFile, QUrl::TolerantMode));
 }
 
-void MainWindow::addScriptDirToMenu(QMenu* scriptMenu, const QString& dir, const QStringList& fileExts)
+void MainWindow::addScriptDirToMenu(QMenu* scriptMenu, const QString& dir, const QStringList& fileExts, bool addShortcuts)
 {
     QFileInfoList scriptFileList = QDir(dir).entryInfoList(
                                        fileExts, QDir::AllDirs | QDir::Files | QDir::NoDotAndDotDot | QDir::Readable, QDir::DirsFirst | QDir::Name);
 
+    QSettings *qset = NULL;
+    if (addShortcuts)
+    {
+        qset = qtSettingsCreate();
+        if (qset)
+        {
+            qset->beginGroup("GuiScriptShortcuts");
+        }
+    }
     for (int index = 0; index < scriptFileList.size(); index++)
     {
 		QFileInfo fileInfo = scriptFileList.at(index);
@@ -165,16 +179,47 @@ void MainWindow::addScriptDirToMenu(QMenu* scriptMenu, const QString& dir, const
                 QMenu *dirMenu = new QMenu(fileInfo.completeBaseName(), scriptMenu);
 
                 scriptMenu->addMenu(dirMenu);
-                this->addScriptDirToMenu(dirMenu, fileInfo.absoluteFilePath(), fileExts);
+                this->addScriptDirToMenu(dirMenu, fileInfo.absoluteFilePath(), fileExts, false);
             }
         }
         else
         {
             FileAction *action = new FileAction(fileInfo.baseName(), fileInfo.absoluteFilePath(), scriptMenu);
             action->setObjectName(fileInfo.baseName());
+            if (addShortcuts && qset)
+            {
+                if (fileInfo.fileName().length() > 0)
+                {
+                    if (qset->value("altHome").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_Home);          else
+                    if (qset->value("altEnd").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_End);            else
+                    if (qset->value("altLeft").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_Left);          else
+                    if (qset->value("altUp").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_Up);              else
+                    if (qset->value("altRight").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_Right);        else
+                    if (qset->value("altDown").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_Down);          else
+                    if (qset->value("altPageUp").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_PageUp);      else
+                    if (qset->value("altPageDown").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_PageDown);  else
+                    if (qset->value("alt0").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_0);                else
+                    if (qset->value("alt1").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_1);                else
+                    if (qset->value("alt2").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_2);                else
+                    if (qset->value("alt3").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_3);                else
+                    if (qset->value("alt4").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_4);                else
+                    if (qset->value("alt5").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_5);                else
+                    if (qset->value("alt6").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_6);                else
+                    if (qset->value("alt7").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_7);                else
+                    if (qset->value("alt8").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_8);                else
+                    if (qset->value("alt9").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_9);                else
+                    {}
+                }
+            }
             scriptMenu->addAction(action);
             connect(action, SIGNAL(triggered()), this, SLOT(scriptFileActionHandler()));
         }
+    }
+    if (qset)
+    {
+        qset->endGroup();
+        delete qset;
+        qset = NULL;
     }
 }
 
@@ -182,6 +227,10 @@ void MainWindow::scriptFileActionHandler()
 {
     QString filePath = ((FileAction*)sender())->filePath();
     QString fileExt = QFileInfo(filePath).suffix();
+    static int block = 0;
+    
+    if (block) return;
+    block++;
 
     for (int engineIndex = 0; engineIndex < this->_scriptEngines.size(); engineIndex++)
     {
@@ -193,6 +242,7 @@ void MainWindow::scriptFileActionHandler()
             A_Resync();
         }
     }
+    block--;
 }
 
 /**
@@ -210,8 +260,8 @@ void MainWindow::buildCustomMenu(void)
     ui.menuCustom->clear();
     ui.menuAuto->clear();
 
-    this->addScriptDirToMenu(ui.menuCustom, ADM_getCustomDir().c_str(), fileExts);
-    this->addScriptDirToMenu(ui.menuAuto, ADM_getAutoDir().c_str(), fileExts);
+    this->addScriptDirToMenu(ui.menuCustom, ADM_getCustomDir().c_str(), fileExts, true);
+    this->addScriptDirToMenu(ui.menuAuto, ADM_getAutoDir().c_str(), fileExts, false);
     buildActionLists(); // since we change the menu, the list of stuff needs to be refreshed else it points to deleted items
 
 }

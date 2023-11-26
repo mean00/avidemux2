@@ -219,6 +219,10 @@ void UI_purge( void )
 {
 }
 
+void GUI_tweaks(const char * op, const char * paramS, int paramN)
+{
+}
+
 class cliProcessing: public DIA_processingBase
 {
 public:
@@ -258,7 +262,8 @@ static CoreToolkitDescriptor CliCoreToolkitDescriptor=
 
     &ADM_CliCoreUIToolkit::createAudioTrack,
     &ADM_CliCoreUIToolkit::UI_purge,
-    &ADM_CliCoreUIToolkit::createProcessing
+    &ADM_CliCoreUIToolkit::createProcessing,
+    &ADM_CliCoreUIToolkit::GUI_tweaks
 };
 
 void InitCoreToolkit(void)

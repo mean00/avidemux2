@@ -282,4 +282,13 @@ void UI_purge(void)
 {
     if(Toolkit->uiPurge) Toolkit->uiPurge();
 }
+
+/**
+    \fn GUI_Tweaks
+*/
+void GUI_Tweaks(const char * op, const char * paramS, int paramN)
+{
+    if(Toolkit->guiTweaks) Toolkit->guiTweaks(op, paramS, paramN);
+}
+
 // EOF

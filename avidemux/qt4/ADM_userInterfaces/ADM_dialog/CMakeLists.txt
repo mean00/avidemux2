@@ -12,7 +12,8 @@ SET(
 #vobsub.ui
         audioTracks.ui
         processing.ui
-        working.ui)
+        working.ui
+        scriptShortcutConfig.ui)
 
 SET(headers
         Q_about.h
@@ -26,6 +27,7 @@ SET(headers
 #Q_vobsub.h
         Q_working.h
         Q_processing.h
+        Q_scriptShortcutConfig.h
 #T_index_pg.h
 )
 
@@ -41,6 +43,7 @@ SET(${ADM_LIB}_SRCS ${${ADM_LIB}_SRCS}
         Q_props.cpp
         Q_working.cpp
         Q_processing.cpp
+        Q_scriptShortcutConfig.cpp
 #T_index_pg.cpp
         alert_qt4.cpp
 #DIA_busy.cpp

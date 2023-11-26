@@ -24,6 +24,7 @@
 #include "ADM_default.h"
 #include "prefs.h"
 #include "ADM_toolkitQt.h"
+#include "GUI_ui.h"
 
 static int beQuiet=0;
 
@@ -306,6 +307,11 @@ void UI_purge( void )
     QCoreApplication::processEvents ();
 }
 
+void GUI_tweaks(const char * op, const char * paramS, int paramN)
+{
+    UI_tweaks(op, paramS, paramN);
+}
+
 } // namespace
 
 static CoreToolkitDescriptor Qt4CoreToolkitDescriptor=
@@ -328,6 +334,7 @@ static CoreToolkitDescriptor Qt4CoreToolkitDescriptor=
     &ADM_Qt4CoreUIToolkit::createAudioTrack,
     &ADM_Qt4CoreUIToolkit::UI_purge,
     &ADM_Qt4CoreUIToolkit::createProcessing,
+    &ADM_Qt4CoreUIToolkit::GUI_tweaks
 };
 
 void InitCoreToolkit(void )

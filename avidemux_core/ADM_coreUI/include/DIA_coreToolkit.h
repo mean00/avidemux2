@@ -55,5 +55,7 @@ ADM_COREUI6_EXPORT uint8_t         GUI_isQuiet(void);
 //
 ADM_COREUI6_EXPORT void            UI_purge(void);
 //
+ADM_COREUI6_EXPORT void            GUI_Tweaks(const char * op, const char * paramS, int paramN);
+//
 
 #endif

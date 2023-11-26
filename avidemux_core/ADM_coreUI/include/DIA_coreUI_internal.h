@@ -162,6 +162,7 @@ typedef DIA_processingBase *CREATE_GUI_PROCESSING(const char *title,uint64_t tot
 typedef DIA_encodingBase   *CREATE_GUI_ENCODING(uint64_t duration);
 typedef DIA_audioTrackBase *CREATE_GUI_AUDIOTRACKBASE(PoolOfAudioTracks * pool,ActiveAudioTracks *active);
 typedef void             UI_PURGE(void);
+typedef void             GUI_TWEAKS(const char * op, const char * paramS, int paramN);
 
 typedef struct
 {
@@ -180,6 +181,7 @@ typedef struct
     CREATE_GUI_AUDIOTRACKBASE   *createAudioTrack;
     UI_PURGE                    *uiPurge;
     CREATE_GUI_PROCESSING       *createProcessing;
+    GUI_TWEAKS                  *guiTweaks;
     
 }CoreToolkitDescriptor;
 //

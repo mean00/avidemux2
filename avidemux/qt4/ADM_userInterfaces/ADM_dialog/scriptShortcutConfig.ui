@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ScriptShortcutConfigDialog</class>
+ <widget class="QDialog" name="ScriptShortcutConfigDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>436</width>
+    <height>660</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>User Script Shortcut Configuration</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="4" column="2">
+      <widget class="QComboBox" name="comboBoxAltPageDown"/>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="labelAltRight">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="17" column="2">
+      <widget class="QComboBox" name="comboBoxAlt8"/>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLineEdit" name="lineEditAltPageDown"/>
+     </item>
+     <item row="15" column="2">
+      <widget class="QComboBox" name="comboBoxAlt6"/>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLineEdit" name="lineEditAltPageUp"/>
+     </item>
+     <item row="12" column="1">
+      <widget class="QLineEdit" name="lineEditAlt3"/>
+     </item>
+     <item row="14" column="2">
+      <widget class="QComboBox" name="comboBoxAlt5"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="labelAltHome">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="15" column="0">
+      <widget class="QLabel" name="labelAlt6">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="1">
+      <widget class="QLineEdit" name="lineEditAltDown"/>
+     </item>
+     <item row="5" column="2">
+      <widget class="QComboBox" name="comboBoxAltLeft"/>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="labelAltPageUp">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="lineEditAltHome">
+       <property name="minimumSize">
+        <size>
+         <width>320</width>
+         <height>0</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item row="16" column="2">
+      <widget class="QComboBox" name="comboBoxAlt7"/>
+     </item>
+     <item row="13" column="2">
+      <widget class="QComboBox" name="comboBoxAlt4"/>
+     </item>
+     <item row="16" column="1">
+      <widget class="QLineEdit" name="lineEditAlt7"/>
+     </item>
+     <item row="10" column="1">
+      <widget class="QLineEdit" name="lineEditAlt1"/>
+     </item>
+     <item row="3" column="2">
+      <widget class="QComboBox" name="comboBoxAltPageUp"/>
+     </item>
+     <item row="7" column="0">
+      <widget class="QLabel" name="labelAltUp">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="1">
+      <widget class="QLineEdit" name="lineEditAlt0"/>
+     </item>
+     <item row="18" column="0">
+      <widget class="QLabel" name="labelAlt9">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="labelAltLeft">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QLineEdit" name="lineEditAltRight"/>
+     </item>
+     <item row="9" column="2">
+      <widget class="QComboBox" name="comboBoxAlt0"/>
+     </item>
+     <item row="7" column="2">
+      <widget class="QComboBox" name="comboBoxAltUp"/>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="lineEditAltEnd"/>
+     </item>
+     <item row="2" column="2">
+      <widget class="QComboBox" name="comboBoxAltEnd"/>
+     </item>
+     <item row="8" column="2">
+      <widget class="QComboBox" name="comboBoxAltDown"/>
+     </item>
+     <item row="9" column="0">
+      <widget class="QLabel" name="labelAlt0">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="labelAltEnd">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QLineEdit" name="lineEditAltLeft"/>
+     </item>
+     <item row="8" column="0">
+      <widget class="QLabel" name="labelAltDown">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
+      <widget class="QLineEdit" name="lineEditAltUp"/>
+     </item>
+     <item row="17" column="0">
+      <widget class="QLabel" name="labelAlt8">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="0">
+      <widget class="QLabel" name="labelAlt1">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="16" column="0">
+      <widget class="QLabel" name="labelAlt7">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="15" column="1">
+      <widget class="QLineEdit" name="lineEditAlt6"/>
+     </item>
+     <item row="17" column="1">
+      <widget class="QLineEdit" name="lineEditAlt8"/>
+     </item>
+     <item row="14" column="1">
+      <widget class="QLineEdit" name="lineEditAlt5"/>
+     </item>
+     <item row="12" column="2">
+      <widget class="QComboBox" name="comboBoxAlt3"/>
+     </item>
+     <item row="10" column="2">
+      <widget class="QComboBox" name="comboBoxAlt1"/>
+     </item>
+     <item row="1" column="2">
+      <widget class="QComboBox" name="comboBoxAltHome"/>
+     </item>
+     <item row="12" column="0">
+      <widget class="QLabel" name="labelAlt3">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="2">
+      <widget class="QComboBox" name="comboBoxAlt2"/>
+     </item>
+     <item row="14" column="0">
+      <widget class="QLabel" name="labelAlt5">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="0">
+      <widget class="QLabel" name="labelAlt2">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="1">
+      <widget class="QLineEdit" name="lineEditAlt2"/>
+     </item>
+     <item row="18" column="2">
+      <widget class="QComboBox" name="comboBoxAlt9"/>
+     </item>
+     <item row="18" column="1">
+      <widget class="QLineEdit" name="lineEditAlt9"/>
+     </item>
+     <item row="13" column="0">
+      <widget class="QLabel" name="labelAlt4">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="2">
+      <widget class="QComboBox" name="comboBoxAltRight"/>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="labelAltPageDown">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="13" column="1">
+      <widget class="QLineEdit" name="lineEditAlt4"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>ScriptShortcutConfigDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>ScriptShortcutConfigDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

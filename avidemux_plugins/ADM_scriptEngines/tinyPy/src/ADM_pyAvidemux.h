@@ -95,6 +95,20 @@ char *pyDirSelect(IEditor *editor, const char *title);
 void pyDisplayError(IEditor *editor, const char *one, const char *two);
 void pyDisplayInfo(IEditor *editor, const char *one, const char *two);
 
+/* Qt Gui*/
+void pyQtGuiStatusbarInfo(IEditor *editor, const char *msg, int timeout);
+void pyQtGuiStatusbarWarning(IEditor *editor, const char *msg, int timeout);
+void pyQtGuiStatusbarError(IEditor *editor, const char *msg, int timeout);
+void pyQtGuiSetBusyCursor(IEditor *editor, int busy);
+void pyQtGuiWindowMinimize(IEditor *editor);
+void pyQtGuiWindowRestore(IEditor *editor);
+void pyQtGuiWindowSetTitle(IEditor *editor, const char *title);
+void pyQtGuiExit(IEditor *editor);
+void pyQtGuiSetPlayFiltered(IEditor *editor, int enable);
+void pyQtGuiSetLighTheme(IEditor *editor);
+void pyQtGuiSetDarkTheme(IEditor *editor);
+void pyQtGuiTextToClipboard(IEditor *editor, const char *msg);
+
 /* Misc */
 int pyTestCrash(void);
 int pyTestAssert(void);

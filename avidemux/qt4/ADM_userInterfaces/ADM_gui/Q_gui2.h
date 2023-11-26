@@ -184,7 +184,7 @@ protected:
     QTimer navigateWhilePlayingTimer;
     const  std::vector<IScriptEngine*>& _scriptEngines;
 
-    void addScriptDirToMenu(QMenu* scriptMenu, const QString& dir, const QStringList& fileExts);
+    void addScriptDirToMenu(QMenu* scriptMenu, const QString& dir, const QStringList& fileExts, bool addShortcuts);
     void addScriptEnginesToFileMenu(std::vector<MenuEntry>& fileMenu);
     void addScriptShellsToToolsMenu(vector<MenuEntry>& toolMenu);
     void addScriptReferencesToHelpMenu();

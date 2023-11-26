@@ -1,0 +1,17 @@
+#           name    cookie id
+/* CLASS */ pyTools : void : ADM_PYID_TOOLS
+#              cname:pyname
+# Miscellaneous helpers
+
+/* METHOD */ double pyTool_time:time            (void)
+/* METHOD */ str pyTool_date:date               (void)
+/* METHOD */ int pyTool_randint:randint         (int start, int stop)
+/* METHOD */ int pyTool_isalnum:isalnum         (str)
+/* METHOD */ int pyTool_isalpha:isalpha         (str)
+/* METHOD */ int pyTool_isdigit:isdigit         (str)
+/* METHOD */ int pyTool_islower:islower         (str)
+/* METHOD */ int pyTool_isspace:isspace         (str)
+/* METHOD */ int pyTool_isupper:isupper         (str)
+/* METHOD */ str pyTool_upper:upper            (str)
+/* METHOD */ str pyTool_lower:lower            (str)
+

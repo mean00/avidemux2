@@ -3693,6 +3693,79 @@ void UI_notifyError(const char *message, int timeoutMs)
     ((MainWindow *)QuiMainWindows)->notifyStatusBar(2, QT_TRANSLATE_NOOP("qgui2","ERROR: %1"), message, timeoutMs);
 }
 /**
+    \fn UI_tweaks
+*/
+void UI_tweaks(const char * op, const char * paramS, int paramN)
+{
+    if (strcmp("STATUSBAR_SHOW_INFO", op) == 0)
+    {
+        UI_notifyInfo(paramS, paramN);
+    } else
+    if (strcmp("STATUSBAR_SHOW_WARNING", op) == 0)
+    {
+        UI_notifyWarning(paramS, paramN);
+    } else
+    if (strcmp("STATUSBAR_SHOW_ERROR", op) == 0)
+    {
+        UI_notifyError(paramS, paramN);
+    } else
+    if (strcmp("CURSOR_SET_BUSY", op) == 0)
+    {
+        if (paramN) QApplication::setOverrideCursor(Qt::WaitCursor);
+        else QApplication::restoreOverrideCursor();
+    } else
+    if (strcmp("WINDOW_MINIMIZE", op) == 0)
+    {
+        //UI_iconify(); <-- taskbar icon disappears
+        uiIsMaximized=QuiMainWindows->isMaximized();
+        QuiMainWindows->setWindowState(Qt::WindowMinimized);
+    } else
+    if (strcmp("WINDOW_RESTORE", op) == 0)
+    {
+        UI_deiconify();
+    } else
+    if (strcmp("WINDOW_SET_TITLE", op) == 0)
+    {
+        UI_setTitle(paramS);
+    } else
+    if (strcmp("GUI_EXIT", op) == 0)
+    {
+        if (qtLastRegisteredDialog() == QuiMainWindows)
+        {
+            UI_closeGui();
+        }
+        else
+        {
+            ADM_error("Exit is only possible, when there are no dialogs open");
+        }
+    } else
+    if (strcmp("SET_PLAY_FILTERED", op) == 0)
+    {
+        UI_setCurrentPreview(paramN);
+    } else
+    if (strcmp("SET_LIGT_THEME", op) == 0)
+    {
+        ((MainWindow *)QuiMainWindows)->setLightTheme();
+    } else
+    if (strcmp("SET_DARK_THEME", op) == 0)
+    {
+        ((MainWindow *)QuiMainWindows)->setDarkTheme();
+    } else
+    if (strcmp("TEXT_TO_CLIPBOARD", op) == 0)
+    {
+        QClipboard *clipboard = QApplication::clipboard();
+        clipboard->clear();
+        clipboard->setText(paramS);
+    } else
+    
+    {
+        // NOP
+    }
+    QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+}
+
+
+/**
  * \fn dtor
  */
 myQApplication::~myQApplication()
@@ -3720,5 +3793,6 @@ myQApplication::~myQApplication()
 #endif    
     ADM_warning("Exiting app\n");
 }
+
 //********************************************
 //EOF
