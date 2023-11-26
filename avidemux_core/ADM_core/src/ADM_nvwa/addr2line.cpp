@@ -100,6 +100,8 @@ slurp_symtab(bfd *abfd)
 	{
 		return 1;
 	}
+        
+        return 0;
 }
 
 /* These global variables are used to pass information between

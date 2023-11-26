@@ -59,7 +59,7 @@ uint8_t ADMImageResizer::resize(ADMImage *source, ADMImage *dest)
     ADM_assert(source->_height == orgHeight);
     ADM_assert(dest->_width == destWidth);
     ADM_assert(dest->_height == destHeight);
-    ADM_assert(dest->isWrittable()==true)
+    ADM_assert(dest->isWrittable()==true);
     int srcStride[3];
     int dstStride[3];
     uint8_t  *srcPtr[3];
@@ -96,7 +96,7 @@ uint8_t ADMImageResizer::resize(uint8_t *source, ADMImage *dest)
 {
     ADM_assert(dest->_width == destWidth);
     ADM_assert(dest->_height == destHeight);
-    ADM_assert(dest->isWrittable()==true)
+    ADM_assert(dest->isWrittable()==true);
     int srcStride[3];
     int dstStride[3];
     uint8_t  *srcPtr[3];

@@ -123,7 +123,7 @@ bool         ADM_nvEncEncoder::encode (ADMBitstream * out)
  */
 bool        ADM_nvEncEncoder::getExtraData(uint32_t *l,uint8_t **d)
 {
-
+    return false;
 }
 /**
     \fn jpegConfigure

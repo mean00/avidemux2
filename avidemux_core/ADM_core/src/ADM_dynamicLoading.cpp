@@ -162,6 +162,7 @@ bool ADM_LibWrapper::getSymbols(int symCount, ...)
         {
             procFunction = NULL;
             printf("[DynaLoader] Cannot find function %s\n",funcName);
+            va_end(va);
             return false;
         }
 

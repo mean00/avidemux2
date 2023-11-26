@@ -27,7 +27,7 @@
 #include "ADM_inttype.h"
 #include "ADM_crashdump.h"
 
-#define ADM_assert(x) { if(!(x)) {ADM_backTrack("Assert failed :"#x,__LINE__,__FILE__);  }}
+#define ADM_assert(x)   do { if(!(x)) {ADM_backTrack("Assert failed :"#x,__LINE__,__FILE__); } } while(0)
 
 /* Functions we want to override to have better os support / debug / error control */
 

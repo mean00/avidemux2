@@ -163,7 +163,7 @@ bool        ADM_EditorSegment::addReferenceVideo(_VIDEOS *ref)
     {
         ref->_videoCache = new EditorCache(info.width,info.height);
     }
-    ADM_assert(ref->_videoCache)
+    ADM_assert(ref->_videoCache);
     ref->_videoCache->createBuffers(cacheSize);
 
     // discard implausibly high fps, hardcode the value to 25 fps

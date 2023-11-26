@@ -1220,7 +1220,7 @@ uint8_t                 mkvHeader::getNbAudioStreams(void)
 WAVHeader              *mkvHeader::getAudioInfo(uint32_t i )
 {
     if(!_nbAudioTrack) return NULL;
-    ADM_assert(i<_nbAudioTrack)
+    ADM_assert(i<_nbAudioTrack);
     return &(_tracks[1+i].wavHeader);
 }
 /**
@@ -1230,7 +1230,7 @@ uint8_t                 mkvHeader::getAudioStream(uint32_t i,ADM_audioStream  **
 {
  if(_nbAudioTrack)
   {
-      ADM_assert(i<_nbAudioTrack)
+      ADM_assert(i<_nbAudioTrack);
       *audio=_audioStreams[i];
       return 1;
   }

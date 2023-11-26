@@ -508,7 +508,7 @@ void Telecide::CalculateMetrics(int frame, ADMImage *fcurrent, ADMImage *fprevio
         /* Find the best field match. Subsample the frames for speed. */
         uint32_t cpitch=fcurrent->GetPitch(PLANAR_Y);        
         uint32_t ppitch=fprevious->GetPitch(PLANAR_Y);
-        ADM_assert(cpitch==ppitch)
+        ADM_assert(cpitch==ppitch);
 
         
         uint32_t cpitchu=fcurrent->GetPitch(PLANAR_U);
