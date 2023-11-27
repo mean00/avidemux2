@@ -1254,7 +1254,8 @@ bool parseScript(IScriptEngine *engine, const char *name, IScriptEngine::RunMode
 
     if (strcmp(longname, getDefaultSettingsFilePath().c_str()) &&
         strcmp(longname, getLastSessionFilePath().c_str()) &&
-        strcmp(longname, getCrashRecoveryFilePath().c_str()))
+        strcmp(longname, getCrashRecoveryFilePath().c_str()) &&
+        strstr(longname, ADM_getCustomDir().c_str()) != longname)
     {
         prefs->set_lastprojectfile(longname);
         UI_updateRecentProjectMenu();
