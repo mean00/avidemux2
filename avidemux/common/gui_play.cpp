@@ -312,6 +312,7 @@ bool GUIPlayback::run(void)
             if(systemTime >movieTime+20)
             {
                 refreshCounter++;
+                UI_notifyPlaybackLag(systemTime - movieTime);
             }
             if(refreshCounter>15)
             {

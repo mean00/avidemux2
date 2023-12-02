@@ -2641,7 +2641,7 @@ void MainWindow::updateStatusBarZoomInfo(int zoom)
 /**
     \fn notifyStatusBar
 */
-void MainWindow::notifyStatusBar(int level, const char * lead, const char * msg, int timeout)
+void MainWindow::notifyStatusBar(int level, const char * lead, const char * msg, int timeout, bool flash)
 {
     if (timeout <= 0)   // prevent permament message
         timeout = 2500;
@@ -2671,7 +2671,7 @@ void MainWindow::notifyStatusBar(int level, const char * lead, const char * msg,
     {
         statusBarTimer.start(timeout);
         
-        if (statusBarFlashTimer.remainingTime() <= 0)
+        if (flash && (statusBarFlashTimer.remainingTime() <= 0))
         {
             statusBarFlashTimer.start(200);
             statusBarWidget->showMessage(" ", 100);
@@ -3691,6 +3691,15 @@ void UI_notifyWarning(const char *message, int timeoutMs)
 void UI_notifyError(const char *message, int timeoutMs)
 {
     ((MainWindow *)QuiMainWindows)->notifyStatusBar(2, QT_TRANSLATE_NOOP("qgui2","ERROR: %1"), message, timeoutMs);
+}
+/**
+    \fn UI_notifyPlaybackLag
+*/
+void UI_notifyPlaybackLag(uint32_t lag)
+{
+    char value[128];
+    sprintf(value, "%u", lag);
+    ((MainWindow *)QuiMainWindows)->notifyStatusBar(1, QT_TRANSLATE_NOOP("qgui2","WARNING: Video is late %1 ms"), value, 500, false);
 }
 /**
     \fn UI_tweaks

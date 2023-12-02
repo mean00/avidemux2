@@ -61,6 +61,7 @@ void UI_setAudioTrackCount( int nb );
 void UI_notifyInfo(const char *message, int timeoutMs);
 void UI_notifyWarning(const char *message, int timeoutMs);
 void UI_notifyError(const char *message, int timeoutMs);
+void UI_notifyPlaybackLag(uint32_t lag);
 
 /* We need to know whether auto-repeat is firing */
 bool UI_navigationButtonsPressed(void);
