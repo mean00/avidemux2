@@ -3,6 +3,7 @@ This is a proposal to improve the Avidemux organization.
 # Problems
 Avidemux is scattered around a bunch of websites:
 - main: https://avidemux.sourceforge.net/ + https://sourceforge.net/projects/avidemux/
+- download: https://github.com/mean00/avidemux2/releases + https://sourceforge.net/projects/avidemux/files/latest/download
 - code: https://github.com/mean00/avidemux2 + https://github.com/flathub/org.avidemux.Avidemux + https://sourceforge.net/projects/avidemux/files/
 - wiki: https://www.avidemux.org/admWiki/doku.php + https://sourceforge.net/p/avidemux/wiki/Home/
 - forum: https://www.avidemux.org/admForum/
@@ -27,6 +28,7 @@ In total: Avidemux is a worse product/experience than it could be.
 Move to GitHub.
 - The code is already here.
 - Many people own a GitHub account.
+- Less maintenance effort.
 
 Steps:
 - Create an avidemux organization. A project like this should really not be tied to a user account.
