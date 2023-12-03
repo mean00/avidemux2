@@ -3695,11 +3695,13 @@ void UI_notifyError(const char *message, int timeoutMs)
 /**
     \fn UI_notifyPlaybackLag
 */
-void UI_notifyPlaybackLag(uint32_t lag)
+void UI_notifyPlaybackLag(uint32_t lag, int updateTimeMs)
 {
     char value[128];
     sprintf(value, "%u", lag);
-    ((MainWindow *)QuiMainWindows)->notifyStatusBar(1, QT_TRANSLATE_NOOP("qgui2","WARNING: Video is late %1 ms"), value, 500, false);
+    if (updateTimeMs < 500)
+        updateTimeMs = 500;
+    ((MainWindow *)QuiMainWindows)->notifyStatusBar(1, QT_TRANSLATE_NOOP("qgui2","WARNING: Video is late %1 ms"), value, updateTimeMs, false);
 }
 /**
     \fn UI_tweaks
