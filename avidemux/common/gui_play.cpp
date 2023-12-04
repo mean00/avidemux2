@@ -59,6 +59,7 @@ private:
         uint64_t        firstPts,lastPts;
         uint64_t        vuMeterPts;
         uint64_t        audioLatency;
+        uint64_t        videoLagTimer;
         ADM_coreVideoFilter  *videoFilter;
         ADM_videoFilterChain *videoChain;
 
@@ -69,6 +70,7 @@ private :
         bool audioPump(bool wait);
         bool cleanupAudio(void);
         bool updateVu(void);
+        void updateVideoLag(uint32_t lag);
 public:
         bool run(void);
         bool initialize(void);
@@ -92,6 +94,7 @@ GUIPlayback::GUIPlayback(void)
     initialized=false;
     vuMeterPts=0;
     audioLatency=0;
+    videoLagTimer=0;
 }
 /**
     \fn ~GUIPlayback
@@ -269,6 +272,7 @@ bool GUIPlayback::run(void)
     ticktock.reset();
     tocktick.reset();
     vuMeterPts=0;
+    videoLagTimer=0;
     ADMImage *previewBuffer=admPreview::getBuffer();
     ADM_HW_IMAGE hwImageFormat=admPreview::getPreferedHwImageFormat();
 
@@ -312,6 +316,7 @@ bool GUIPlayback::run(void)
             if(systemTime >movieTime+20)
             {
                 refreshCounter++;
+                updateVideoLag(systemTime - movieTime);
             }
             if(refreshCounter>15)
             {
@@ -516,5 +521,21 @@ bool GUIPlayback::updateVu(void)
         vuMeterPts=time;
     }
     return true;
+}
+/**
+    \fn updateVideoLag
+*/
+void GUIPlayback::updateVideoLag(uint32_t lag)
+{
+    uint64_t time=ticktock.getElapsedMS();
+    // Refresh at most every 50 ms
+    uint64_t wait=50;
+    if(refreshCapEnabled && refreshCapValue > wait)
+        wait=refreshCapValue;
+    if(time>(videoLagTimer+wait))
+    {
+        UI_notifyPlaybackLag(lag, wait);
+        videoLagTimer=time;
+    }
 }
 // EOF
