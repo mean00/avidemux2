@@ -3701,7 +3701,7 @@ void UI_notifyPlaybackLag(uint32_t lag, int updateTimeMs)
     sprintf(value, "%u", lag);
     if (updateTimeMs < 500)
         updateTimeMs = 500;
-    ((MainWindow *)QuiMainWindows)->notifyStatusBar(1, QT_TRANSLATE_NOOP("qgui2","WARNING: Video is late %1 ms"), value, updateTimeMs, false);
+    ((MainWindow *)QuiMainWindows)->notifyStatusBar(1, QT_TRANSLATE_NOOP("qgui2","WARNING: Video is late by %1 ms"), value, updateTimeMs, false);
 }
 /**
     \fn UI_tweaks
