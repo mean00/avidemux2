@@ -789,7 +789,6 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 
     connect(ui.menuToolbars->actions().last(),SIGNAL(triggered(bool)),this,SLOT(restoreDefaultWidgetState(bool)));
 
-    defaultThemeAction = NULL;
     QStyle *currentStyle = QApplication::style();
     defaultStyle = currentStyle->objectName();
 #if QT_VERSION >= QT_VERSION_CHECK(5,0,0)
@@ -797,19 +796,15 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
 #else
     #define BASIC_QT_STYLE "cleanlooks"
 #endif
-    if (defaultStyle.size() && defaultStyle != BASIC_QT_STYLE)
-    {
-        defaultThemeAction = new QAction(QT_TRANSLATE_NOOP("qgui2","Default theme"),this);
-        defaultThemeAction->setCheckable(true);
-        ui.menuThemes->addAction(defaultThemeAction);
-        defaultThemeAction->setChecked(true);
-        connect(defaultThemeAction,SIGNAL(triggered(bool)),this,SLOT(setDefaultThemeSlot(bool)));
-    }
+    defaultThemeAction = new QAction(QT_TRANSLATE_NOOP("qgui2","Default theme"),this);
+    defaultThemeAction->setCheckable(true);
+    ui.menuThemes->addAction(defaultThemeAction);
+    defaultThemeAction->setChecked(true);
+    connect(defaultThemeAction,SIGNAL(triggered(bool)),this,SLOT(setDefaultThemeSlot(bool)));
 
     lightThemeAction = new QAction(QT_TRANSLATE_NOOP("qgui2","Light theme"),this);
     lightThemeAction->setCheckable(true);
     ui.menuThemes->addAction(lightThemeAction);
-    lightThemeAction->setChecked(defaultStyle == BASIC_QT_STYLE);
     connect(lightThemeAction,SIGNAL(triggered(bool)),this,SLOT(setLightThemeSlot(bool)));
 
     darkThemeAction = new QAction(QT_TRANSLATE_NOOP("qgui2","Dark theme"),this);
@@ -1810,8 +1805,6 @@ void MainWindow::restoreDefaultWidgetState(bool b)
 void MainWindow::setDefaultThemeSlot(bool b)
 {
     UNUSED_ARG(b);
-    if(!defaultThemeAction)
-        return;
 
     QApplication::setStyle(defaultStyle);
     ui.currentTime->setTextMargins(0,0,0,0);
@@ -1872,13 +1865,33 @@ void MainWindow::setDefaultThemeSlot(bool b)
 void MainWindow::setLightTheme(void)
 {
     QApplication::setStyle(BASIC_QT_STYLE);
-    QPalette pal = style()->standardPalette();
-    qApp->setPalette(pal);
+    QPalette lightPalette;
+    lightPalette.setColor(QPalette::Window, QColor(239,239,239));
+    lightPalette.setColor(QPalette::WindowText, QColor(0,0,0));
+    lightPalette.setColor(QPalette::Base, QColor(255,255,255));
+    lightPalette.setColor(QPalette::AlternateBase, QColor(247,247,247));
+    lightPalette.setColor(QPalette::ToolTipBase, QColor(255, 255, 220));
+    lightPalette.setColor(QPalette::ToolTipText, QColor(0,0,0));
+    lightPalette.setColor(QPalette::Text, QColor(0,0,0));
+    lightPalette.setColor(QPalette::Button, QColor(239,239,239));
+    lightPalette.setColor(QPalette::ButtonText, QColor(0,0,0));
+    lightPalette.setColor(QPalette::BrightText, Qt::white);
+    lightPalette.setColor(QPalette::Link, QColor(48, 140, 198));
+
+    lightPalette.setColor(QPalette::Highlight, QColor(48, 140, 198));
+    lightPalette.setColor(QPalette::HighlightedText, Qt::white);
+
+    lightPalette.setColor(QPalette::Active, QPalette::Button, QColor(239, 239, 239));
+    lightPalette.setColor(QPalette::Disabled, QPalette::ButtonText, QColor(190, 190, 190));
+    lightPalette.setColor(QPalette::Disabled, QPalette::WindowText, QColor(190, 190, 190));
+    lightPalette.setColor(QPalette::Disabled, QPalette::Text, QColor(190, 190, 190));
+    lightPalette.setColor(QPalette::Disabled, QPalette::Light, QColor(255,255,255));
+
+    qApp->setPalette(lightPalette);
 #ifdef BROKEN_PALETTE_PROPAGATION
-    PROPAGATE_PALETTE(pal)
+    PROPAGATE_PALETTE(lightPalette)
 #endif
-    if(defaultThemeAction)
-        defaultThemeAction->setChecked(false);
+    defaultThemeAction->setChecked(false);
     lightThemeAction->setChecked(true);
     darkThemeAction->setChecked(false);
 }
@@ -1937,8 +1950,7 @@ void MainWindow::setDarkTheme(void)
 #ifdef BROKEN_PALETTE_PROPAGATION
     PROPAGATE_PALETTE(darkPalette)
 #endif
-    if(defaultThemeAction)
-        defaultThemeAction->setChecked(false);
+    defaultThemeAction->setChecked(false);
     lightThemeAction->setChecked(false);
     darkThemeAction->setChecked(true);
 }
