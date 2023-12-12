@@ -1,6 +1,6 @@
 # Avidemux
 
-Avidemux is a simple cross-platform video editor for Linux, Windows and MacOsX.
+Avidemux is a simple cross-platform video editor for Linux, Windows and macOS.
 
 # Download executables
 
@@ -10,7 +10,8 @@ Avidemux is a simple cross-platform video editor for Linux, Windows and MacOsX.
 
 # Build from source
 
-Get the main repository and the translations:
+To get Avidemux source code from the main repository and the translations,
+run the following commands in a directory located on a case-sensitive file system:
 ```
 git clone https://github.com/mean00/avidemux2.git
 cd avidemux2
