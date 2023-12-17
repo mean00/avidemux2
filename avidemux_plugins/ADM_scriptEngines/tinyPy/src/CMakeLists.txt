@@ -1,7 +1,7 @@
-IF(WIN32)
-     SET(PYTOOLS ADM_pyTools.cpp)
-ELSE()
+IF(MSVC)
      SET(PYTOOLS ADM_pyTools_win32.cpp)
+ELSE()
+     SET(PYTOOLS ADM_pyTools.cpp)
 ENDIF()             
 SET(admScriptPython_SRCS
 	tinypy/tinypy.cpp
