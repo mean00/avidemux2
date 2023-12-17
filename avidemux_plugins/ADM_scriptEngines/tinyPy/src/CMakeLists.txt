@@ -1,3 +1,8 @@
+IF(WIN32)
+     SET(PYTOOLS ADM_pyTools.cpp)
+ELSE()
+     SET(PYTOOLS ADM_pyTools_win32.cpp)
+ENDIF()             
 SET(admScriptPython_SRCS
 	tinypy/tinypy.cpp
 	ADM_pyAvidemux.cpp
@@ -6,9 +11,9 @@ SET(admScriptPython_SRCS
 	PythonScriptWriter.cpp
 	TinyParams.cpp
 	ADM_script_tinyPy.v
-        ADM_pyTests.cpp
-        ADM_pyTools.cpp
-        modules/re/init.cpp
+    ADM_pyTests.cpp
+    ${PYTOOLS}
+    modules/re/init.cpp
 )
 
 ADD_SCRIPT_ENGINE(ADM_script_tinyPy ${admScriptPython_SRCS})
