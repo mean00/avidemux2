@@ -296,12 +296,12 @@ void * ADMToneMapper::toneMap_fastYUV_worker(void *argptr)
 
     for (int y=arg->ystart; y<(arg->dstHeight/2); y+=arg->yincr)
     {
-        ptr = arg->dstData[0] + y*2*ystride;
-        ptrNext = ptr + ystride;
+        ptr = arg->dstData[0] + y*2*arg->dstStride[0];
+        ptrNext = ptr + arg->dstStride[0];
         hptr = (uint16_t *)(arg->gbrData[0]) + y*2*ystride;
         hptrNext = hptr+ystride;
-        ptrU = arg->dstData[1] + y*uvstride;
-        ptrV = arg->dstData[2] + y*uvstride;
+        ptrU = arg->dstData[1] + y*arg->dstStride[1];
+        ptrV = arg->dstData[2] + y*arg->dstStride[2];
         hptrU = (uint16_t *)(arg->gbrData[1]) + y*uvstride;
         hptrV = (uint16_t *)(arg->gbrData[2]) + y*uvstride;
         for (int x=0; x<(arg->dstWidth/2); x++)
@@ -608,6 +608,7 @@ bool ADMToneMapper::toneMap_fastYUV(ADMImage *sourceImage, ADMImage *destImage, 
             fastYUV_worker_thread_args[tr].gbrData[i] = gbrData[i];
             fastYUV_worker_thread_args[tr].dstData[i] = dstData[i];
         }
+        fastYUV_worker_thread_args[tr].dstStride = dstStride;
         fastYUV_worker_thread_args[tr].p3_primaries = p3_primaries;
         fastYUV_worker_thread_args[tr].hdrLumaLUT = hdrLumaLUT;
         for (int i=0; i<256; i++)
@@ -1147,7 +1148,7 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
     for (int p=0; p<3; p++)
     {
         gbrData[p] = (uint8_t*)hdrYCbCr[p];   // convert to YUV420
-        gbrStride[p] = ADM_IMAGE_ALIGN(srcWidth)*((p==0)?2:1);
+        gbrStride[p] = ADM_IMAGE_ALIGN(srcWidth/((p==0)?1:2))*2;
     }
     sws_scale(CONTEXTRGB1,srcData,srcStride,0,srcHeight,gbrData,gbrStride);
     
@@ -1418,12 +1419,18 @@ bool ADMToneMapper::toneMap_RGB(ADMImage *sourceImage, ADMImage *destImage, unsi
     }
     else
     {
+        int w = srcWidth;
         int h = srcHeight;
         for (int p=0; p<3; p++)
         {
             if (p==1)
+                w /= 2;
+            if (p==1)
                 h /= 2;
-            memcpy(dstData[p], gbrData[p], gbrStride[p]*h);
+            for (int y=0; y<h; y++)
+            {
+                memcpy(dstData[p]+dstStride[p]*y, gbrData[p]+gbrStride[p]*y, w);
+            }
         }
     }
 
