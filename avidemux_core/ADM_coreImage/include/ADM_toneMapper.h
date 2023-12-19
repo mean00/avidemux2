@@ -79,6 +79,7 @@ class ADM_COREIMAGE6_EXPORT ADMToneMapper
         uint32_t        ystart, yincr;
         uint8_t         *gbrData[3];
         uint8_t         *dstData[3];
+        int             *dstStride;
         bool            p3_primaries;
         uint8_t         *hdrLumaLUT;
         uint8_t         *hdrChromaBLUT[256];
