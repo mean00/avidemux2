@@ -54,7 +54,7 @@ char * pyTool_date(IEditor *editor)
 
 #define TM_BUFLEN 64
     char tmbuf[TM_BUFLEN];
-    snprintf(tmbuf, TM_BUFLEN, "%04d-%02d-%02d %02d:%02d:%02d", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);
+    snprintf(tmbuf, TM_BUFLEN, "%04d-%02d-%02d %02dh%02dm%02ds", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);
     return ADM_strdup(tmbuf);
 }
 

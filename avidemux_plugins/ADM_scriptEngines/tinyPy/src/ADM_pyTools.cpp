@@ -37,7 +37,13 @@ char * pyTool_date(IEditor *editor)
     time(&timez);
     t=localtime(&timez);
     char tmbuf[64];
-    strftime(tmbuf, 63, "%Y-%m-%d %H:%M:%S", t);
+    const char *formatString =
+#ifdef _WIN32
+    "%Y-%m-%d %Hh%Mm%Ss";
+#else
+    "%Y-%m-%d %H:%M:%S";
+#endif
+    strftime(tmbuf, 63, formatString, t);
     return ADM_strdup(tmbuf);
 }
 
@@ -50,6 +56,11 @@ int pyTool_randint(IEditor *editor, int start, int stop)
         struct timeval pz;
         TIMZ tz;
         gettimeofday(&pz, &tz);
+        if (!pz.tv_usec)
+        {
+            ADM_usleep(1);
+            continue;
+        }
         rng_state = pz.tv_usec;
     }
     if (start == stop) return start;
