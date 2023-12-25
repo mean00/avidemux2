@@ -61,6 +61,8 @@
 	<string>Avidemux @B_VERSION@</string>
 	<key>CFBundleSignature</key>
 	<string>Avid</string>
+	<key>CFBundleVersion</key>
+	<string>@B_VERSION@</string>
 	<key>LSEnvironment</key>
 	<dict/>
 	<key>LSHasLocalizedDisplayName</key>
