@@ -402,6 +402,7 @@ ADM_TS_TRACK_TYPE EsType(uint32_t type,const char **str)
                 case 0x82:     *str= "DTS (BluRay)";return ADM_TS_DTS;break;
                 case 0x83:     *str= "TrueHD AC3  (BluRay)";return ADM_TS_AC3;break;
                 case 0x84:     *str= "E-AC3 (Not sure)";return ADM_TS_EAC3;break;
+                case 0x85:     *str= "DTS XBR (BluRay)";return ADM_TS_DTS;break;
                 case 0x86:     *str= "DTS XLL (BluRay)";return ADM_TS_DTS;break;
                 case 0x87:     *str= "E-AC3 (Not sure)";return ADM_TS_EAC3;break;
                 case 0xea:     *str= "VC1 (Not sure)";return ADM_TS_VC1;break;
