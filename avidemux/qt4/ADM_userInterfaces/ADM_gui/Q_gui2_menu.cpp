@@ -240,6 +240,7 @@ void MainWindow::scriptFileActionHandler()
 
             A_parseScript(this->_scriptEngines[engineIndex], filePath.toUtf8().constData());
             A_Resync();
+            setMenuItemsEnabledState();
         }
     }
     block--;
