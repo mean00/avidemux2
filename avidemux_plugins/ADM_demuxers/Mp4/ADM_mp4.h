@@ -203,20 +203,21 @@ protected:
           bool                          indexAudioFragments(int trackNo);
           /*****************************/
           uint64_t                      delayRelativeToVideo;
-          uint8_t                       lookupMainAtoms(void *tom);
-          void                          parseMvhd(void *tom);
-          uint8_t                       parseTrex(void *ztom);
-          uint8_t                       parseTrack(void *ztom);
-          uint8_t                       parseElst(void *tom,int64_t *delay,int64_t *skip);
+          uint8_t                       lookupMainAtoms(adm_atom *tom);
+          void                          parseMvhd(adm_atom *tom);
+          uint8_t                       parseTrex(adm_atom *tom);
+          uint8_t                       parseTrack(adm_atom *tom);
+          uint8_t                       parseElst(adm_atom *tom, int64_t *delay, int64_t *skip);
           bool                          parseMoof(adm_atom &son);
           bool                          parseTraf(adm_atom &son,uint64_t moofStart);
           int                           lookupIndex(int desc)          ;
           bool                          parseTrun(int trackNo,adm_atom &son,const mp4TrafInfo &info);
-          uint8_t                       decodeVideoAtom(void *ztom);
-          uint8_t                       parseMdia(void *ztom,uint32_t *trackType,uint32_t *trackId);
-          uint8_t                       parseEdts(void *ztom,uint32_t trackType);
-          uint8_t                       parseStbl(void *ztom,uint32_t trackType,uint32_t trackScale);
-          uint8_t                       decodeEsds(void *ztom,uint32_t trackType);
+          uint8_t                       parseHdlr(adm_atom *tom, uint32_t *trackType, uint32_t *trackId, uint32_t trackScale, uint32_t trackDuration, std::string *language);
+          uint8_t                       parseMdia(adm_atom *tom, uint32_t *trackType, uint32_t *trackId);
+          uint8_t                       parseEdts(adm_atom *tom, uint32_t trackType);
+          uint8_t                       parseStbl(adm_atom *tom, uint32_t trackType, uint32_t trackScale);
+          uint8_t                       parseStsd(adm_atom *tom, MPsampleinfo *info, uint32_t trackType, uint32_t trackScale);
+          uint8_t                       decodeEsds(adm_atom *tom, uint32_t trackType);
           uint8_t                       updateCtts(MPsampleinfo *info );
 #ifdef DERIVE_TB_FROM_MINIMUM_DELTA
           bool                          refineFps(void);

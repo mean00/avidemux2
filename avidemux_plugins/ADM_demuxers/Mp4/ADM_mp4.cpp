@@ -421,7 +421,7 @@ uint8_t    MP4Header::open(const char *name)
         }
         //**************
 
-        if(!lookupMainAtoms((void*) atom))
+        if(!lookupMainAtoms(atom))
         {
           printf("Cannot find needed atom\n");   
           if(!_tracks[0].fragments.size() || !indexVideoFragments(0))

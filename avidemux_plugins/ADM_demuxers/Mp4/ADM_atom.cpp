@@ -52,8 +52,16 @@ adm_atom::adm_atom(adm_atom *atom)
 		_atomFCC=read32();
 	}
 
-	if (fourCC::check(_atomFCC, (uint8_t *)"tadm") && _atomSize == 1)	// mdat
+	if ( /* fourCC::check(_atomFCC, (uint8_t *)"tadm") && */ _atomSize == 1) // extended size
+	{
 		_atomSize=read64();
+		printf("Atom \"%s\" using extended size: %" PRIu64"\n", fourCC::tostringBE(_atomFCC), _atomSize);
+		ADM_assert(_atomSize >= 16);
+	} else if (_atomSize < 8)
+	{
+		printf("Atom \"%s\" too short: %" PRIu64", crashing.\n", fourCC::tostringBE(_atomFCC), _atomSize);
+		ADM_assert(0);
+	}
 
 #ifdef ATOM_DEBUG
 	dumpAtom();
@@ -113,7 +121,12 @@ int64_t pos;
 
 	fseeko(_fd,nb,SEEK_CUR);
 	pos=ftello(_fd);
-	if(pos>_atomStart+_atomSize+1) ADM_assert(0);
+	if(pos>_atomStart+_atomSize+1)
+	{
+		printf("Atom: invalid attempt to skip %" PRIu32" bytes starting at offset %" PRIu64", atom \"%s\" at %" PRIu64" of size %" PRIu64"\n",
+			nb, pos, fourCC::tostringBE(_atomFCC), _atomStart, _atomSize);
+		ADM_assert(0);
+	}
 	return 1;
 }
 
@@ -203,9 +216,9 @@ bool adm_atom::skipAtom( void )
 {
 	fseeko(_fd,_atomStart+_atomSize,SEEK_SET);
 #ifdef _3G_LOGO
-        printf("skipping to %x ending atom ",_atomStart+_atomSize);
+        printf("skipping to the end of atom ");
         fourCC::printBE(_atomFCC);
-        printf("\n");
+        printf(" at %" PRIu64"\n",_atomStart+_atomSize);
 #endif
 	return 1;
 
