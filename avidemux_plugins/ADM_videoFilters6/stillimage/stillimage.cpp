@@ -317,19 +317,11 @@ bool stillimage::getNextFrame(uint32_t *fn, ADMImage *image)
 
 /**
     \fn updateTimingInfo
-    \brief perform a sanity check and update info with the new totalDuration
+    \brief Update total duration and markers.
 */
 bool stillimage::updateTimingInfo(void)
 {
     uint64_t old=previousFilter->getInfo()->totalDuration;
-    if(1000LL*params.start + timeIncrement > old)
-    {
-        if(old > timeIncrement)
-            params.start=(uint32_t)((old-timeIncrement)/1000);
-        else
-            params.start=0;
-    }
-
     begin=1000LL*params.start;
     end=begin+1000LL*params.duration;
     if(from < begin)
@@ -347,12 +339,12 @@ bool stillimage::updateTimingInfo(void)
     freezeDuration = end - begin;
     aprintf("[stillimage::updateTimingInfo] Freeze duration set to %s\n", ADM_us2plain(freezeDuration));
 
-    info.totalDuration=old+end-begin;
+    info.totalDuration = old + freezeDuration;
     info.markerA = previousFilter->getInfo()->markerA;
     info.markerB = previousFilter->getInfo()->markerB;
-    if (info.markerA > begin)
+    if (info.markerA > from + begin)
         info.markerA += freezeDuration;
-    if (info.markerB > begin)
+    if (info.markerB > from + begin)
         info.markerB += freezeDuration;
 
     return true;
