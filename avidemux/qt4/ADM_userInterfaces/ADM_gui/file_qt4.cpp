@@ -210,6 +210,10 @@ static int fileSelWriteInternal(const char *label, char *target, uint32_t max, c
                     NULL, // selected filter
                     opts);
 
+#ifdef _WIN32
+    fileName = QDir::toNativeSeparators(fileName);
+#endif
+
     enableMenus(menuState);
 
     int len = strlen(fileName.toUtf8().constData());
@@ -325,6 +329,10 @@ static int fileSelReadInternal(const char *label, char *target, uint32_t max, co
                                 filterFile,   // filter
                                 NULL,   // selected filter
                                 opts);
+
+#ifdef _WIN32
+    fileName = QDir::toNativeSeparators(fileName);
+#endif
 
     enableMenus(menuState);
 
