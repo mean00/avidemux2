@@ -294,11 +294,13 @@ const char * ADMVideoCubicLUT::FileToLUT(const char *filename, bool hald, uint8_
             ptr += strlen(line)+1;  // skip single \r or \n
             if (ptr >= fileSize)
                 break;
-            if (text[ptr] == 0)     // double eol (\r\n)
+            while (text[ptr] == 0)  // skip \r\n or empty lines
+            {
                 ptr++;
+                if (ptr >= fileSize)
+                    break;
+            }
             if (ptr >= fileSize)
-                break;
-            if (text[ptr] == 0)
                 break;
         }
         
