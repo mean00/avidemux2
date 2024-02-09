@@ -276,8 +276,8 @@ std::string Database::safestr(const std::string& str)
 		switch (str[i])
 		{
 		case '\'':
-		case '\\':
-		case 34:
+		//case '\\':
+		//case 34:
 			str2 += '\'';
 		default:
 			str2 += str[i];
