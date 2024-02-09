@@ -241,7 +241,7 @@ bool    ADMJob::jobGet(vector <ADMJob> &jobs)
 	q.get_result("select * from jobs");
 	while (q.fetch_row())
 	{
-        printf("*\n");
+        printf("*****************\n");
 		db::Jobs oneJob(mydb,&q); // spawns an object from Query object
         ADMJob newJob;
         newJob.id=oneJob.GetId();
@@ -251,6 +251,7 @@ bool    ADMJob::jobGet(vector <ADMJob> &jobs)
         newJob.startTime=oneJob.GetStarttime();
         newJob.endTime=oneJob.GetEndtime();
         newJob.status=(ADM_JOB_STATUS)oneJob.GetStatus();
+        jobDump(newJob);
         jobs.push_back(newJob);
 	}
 	q.free_result();
