@@ -11,13 +11,15 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+
+#include <QCoreApplication>
+#include <QDir>
+
 #ifdef _WIN32
 #define UNICODE
 #include "ADM_cpp.h"
-
-#define UNICODE
 #include <windows.h>
-
+#include "ADM_win32.h"
 #endif
 
 #include "T_jobs.h"
@@ -27,10 +29,8 @@
 #include "pthread.h"
 
 #ifdef _WIN32
-    int utf8StringToWideChar(const char *utf8String, int utf8StringLength, wchar_t *wideCharString);
     #define MKCLI() "avidemux_cli.exe"
     #define MKQT()  "avidemux.exe"
-    const string slash=string("\\");
 #else
     #ifdef __APPLE__
         #define STR(x) #x
@@ -47,20 +47,29 @@
             #define MKQT() admExecutable("avidemux3_qt4")
         #endif
     #endif
-    const string slash=string("/");
 #endif
 /**
  * 
  * @param exeName
  * @return 
  */
-const char *admExecutable(const char *exeName)    
+const char *admExecutable(const char *exeName)
 {
-   static char fullName[2048]; // only use once per job, so "safe" to use static
-   sprintf(fullName,"%s%s%s",QCoreApplication::applicationDirPath().toStdString().c_str(),slash.c_str(),exeName);
-   return fullName;
+    static const char *separator =
+#ifdef _WIN32
+    "\\";
+#else
+    "/";
+#endif
+#define FULLNAME_ARRAY_SIZE 2048
+    static char fullName[FULLNAME_ARRAY_SIZE]; // only use once per job, so "safe" to use static
+    snprintf(fullName, FULLNAME_ARRAY_SIZE, "%s%s%s",
+        QDir::toNativeSeparators(QCoreApplication::applicationDirPath()).toUtf8().constData(),
+        separator, exeName);
+#undef FULLNAME_ARRAY_SIZE
+    return fullName;
 }
-    
+
 /**
     \fn spawnerBoomerang
     \brief Allow to do class -> plain C -> class 
@@ -75,11 +84,12 @@ static void *spawnerBoomerang(void *arg)
 static bool spawnProcess(const char *processName, const vector <string> args)
 {
     ADM_info("Starting <%s>\n",processName);
-    string command=string(processName);
+    string command = processName;
     for(int i=0;i<args.size();i++)
     {
         ADM_info("%d : %s\n",i,args.at(i).c_str());
-        command+=string(" ")+args.at(i);
+        command += " ";
+        command += args.at(i);
     }
     ADM_info("=>%s\n",command.c_str());
     ADM_info("==================== Start of spawner process job ================\n");
@@ -134,13 +144,17 @@ bool jobWindow::runProcess(spawnData *data)
     vector <string> args;
     if(portable)
         args.push_back(string("--portable"));
-    args.push_back(string("--nogui "));
+    args.push_back(string("--nogui"));
     char str[100];
-    sprintf(str,"--slave %d",localPort);
+    snprintf(str, 100, "--slave %d", localPort);
     args.push_back(string(str));
-    string s=string("--run \"")+data->script+string("\" ");
+    string s = "--run \"";
+    s += data->script;
+    s += "\"";
     args.push_back(s);
-    s=string("--save \"")+data->outputFile+string("\" ");
+    s = "--save \"";
+    s += data->outputFile;
+    s += "\"";
     args.push_back(s);
 #ifndef _WIN32
     args.push_back(string("--quit > /tmp/prout.log"));
@@ -149,6 +163,27 @@ bool jobWindow::runProcess(spawnData *data)
 #endif
     return spawnProcess(data->exeName,args);
 }
+
+static string escapeString(const string &in)
+{
+    if (std::string::npos == in.find("\"") &&
+        std::string::npos == in.find("\\"))
+        return in;
+    string out;
+    for (size_t i = 0; i < in.size(); i++)
+    {
+        switch(in[i])
+        {
+            case '\"':
+            case '\\':
+                out += "\\";
+            default:
+                out += in[i];
+        }
+    }
+    return out;
+}
+
 /**
     \fn spawnChild
     \brief Spawn a child to execute a commande
@@ -156,23 +191,22 @@ bool jobWindow::runProcess(spawnData *data)
 bool jobWindow::spawnChild(const char *exeName, const string &script, const string &outputFile)
 {
     spawnData data;
-            data.script=script;
-            data.outputFile=outputFile;
-            data.exeName=exeName;
-            data.me=this;
-            pthread_t threadId;
-        // Have to spawn a thread that will handle the exec...
-            if( pthread_create(&threadId,NULL,
-                                spawnerBoomerang, &data))
-            {
-                ADM_error("Spawn failed\n");
-                return false;
-            }
-            // Everything is fine, give process 1 second to use the stack allocated data....
-            ADM_usleep(1000*1000LL);
-            QApplication::processEvents();
-            ADM_info("Spawning successfull\n");
-            return true;
+    data.script = escapeString(script);
+    data.outputFile = escapeString(outputFile);
+    data.exeName = exeName;
+    data.me=this;
+    pthread_t threadId;
+    // Have to spawn a thread that will handle the exec...
+    if (pthread_create(&threadId, NULL, spawnerBoomerang, &data))
+    {
+        ADM_error("Spawn failed\n");
+        return false;
+    }
+    // Everything is fine, give process 1 second to use the stack allocated data....
+    ADM_usleep(1000*1000LL);
+    QApplication::processEvents();
+    ADM_info("Spawning successfull\n");
+    return true;
 }
  
 /**
@@ -193,7 +227,8 @@ bool jobWindow::runOneJob( ADMJob &job)
     // 1- Start listening to socket
 
     // 2- Spawn  child
-    string ScriptFullPath=ADM_getJobDir()+slash+string(job.scriptName);
+    string ScriptFullPath = ADM_getJobDir(); // already separator-terminated
+    ScriptFullPath += job.scriptName;
     const char *avidemuxVersion=MKCLI();
     if(ui.checkBoxUseQt4->isChecked())
     {
