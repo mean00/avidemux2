@@ -154,7 +154,7 @@ void diaElemText::getMe(void)
   QLineEdit *lineEdit=(QLineEdit *)myWidget;
   ADM_assert(lineEdit);
   if(*c) ADM_dealloc(*c);
-  *c=ADM_strdup(lineEdit->text().toLatin1().data());
+  *c=ADM_strdup(lineEdit->text().toUtf8().constData());
  
 }
 void diaElemText::enable(uint32_t onoff)
