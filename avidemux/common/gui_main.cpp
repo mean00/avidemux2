@@ -1237,13 +1237,11 @@ void cleanUp (void)
  */
 bool parseScript(IScriptEngine *engine, const char *name, IScriptEngine::RunMode mode)
 {
+    if (playing)
+        return false;
+
     bool ret;
     char *longname = ADM_PathCanonize(name);
-
-    if (playing)
-    {
-        return false;
-    }
 
     ret = engine->runScriptFile(longname, IScriptEngine::Normal);
 
@@ -1255,7 +1253,8 @@ bool parseScript(IScriptEngine *engine, const char *name, IScriptEngine::RunMode
     if (strcmp(longname, getDefaultSettingsFilePath().c_str()) &&
         strcmp(longname, getLastSessionFilePath().c_str()) &&
         strcmp(longname, getCrashRecoveryFilePath().c_str()) &&
-        strstr(longname, ADM_getCustomDir().c_str()) != longname)
+        strstr(longname, ADM_getCustomDir().c_str()) != longname &&
+        strstr(longname, ADM_getJobDir().c_str()) != longname)
     {
         prefs->set_lastprojectfile(longname);
         UI_updateRecentProjectMenu();
