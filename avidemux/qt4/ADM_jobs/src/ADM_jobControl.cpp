@@ -340,7 +340,7 @@ void jobWindow::quit(void)
 void jobWindow::cleanup(void)
 {
     int n=listOfJob.size();
-    ADM_info("Cleaning up %d jobs\n",n);
+    ADM_info("Cleaning up based on total of %d jobs\n",n);
     std::vector <int> toDel;
     for(int i=0;i<n;i++)
     {
@@ -352,12 +352,12 @@ void jobWindow::cleanup(void)
             }
     }
     n=toDel.size();
-    if(!n) 
+    if(!n)
     {
-        ADM_info("Nothing to do ..\n");
+        ADM_info("No completed jobs, nothing to do.\n");
         return;
     }
-    ADM_info("%d jobs done to delete\n",n);
+    ADM_info("%d completed jobs to delete.\n",n);
     for(int i=n-1;i>=0;i--)
     {
         int dex=toDel[i];
@@ -366,7 +366,7 @@ void jobWindow::cleanup(void)
         ADMJob::jobDelete(*j);
     }
     toDel.clear();
-    ADM_info("%d jobs to delete\n");
+    ADM_info("%d jobs deleted.\n",n);
     refreshList();
     return ;
 }
