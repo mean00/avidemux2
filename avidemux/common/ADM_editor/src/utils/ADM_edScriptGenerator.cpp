@@ -111,8 +111,9 @@ void ADM_ScriptGenerator::generateScript(std::iostream& stream,const GeneratorTy
 
             if(pool->at(i)->getTrackType()==ADM_EDAUDIO_EXTERNAL)
             {
-                 std::string name=pool->at(i)->castToExternal()->getMyName();
-                 this->_scriptWriter->addExternalAudioTrack(i,name.c_str());
+                 const char *audnm = ADM_cleanupPath(pool->at(i)->castToExternal()->getMyName().c_str());
+                 this->_scriptWriter->addExternalAudioTrack(i, audnm);
+                 ADM_dealloc(audnm);
             }
             const std::string lang=pool->at(i)->getLanguage();            
             this->_scriptWriter->setAudioPoolLanguage(i, lang.c_str());
