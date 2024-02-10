@@ -90,11 +90,6 @@ ADM_CORE6_EXPORT void            ADM_usleep(unsigned long us);
 #endif
 
 // ADM_cleanupPath returns a cleaned up copy of the parameter
-#ifdef _WIN32
-	ADM_CORE6_EXPORT char *ADM_slashToBackSlash(const char *in);
-	#define ADM_cleanupPath(x) ADM_slashToBackSlash(x)
-#else
-	#define ADM_cleanupPath(x) ADM_strdup(x)
-#endif
+ADM_CORE6_EXPORT char *ADM_cleanupPath(const char *in);
 #endif
 // EOF
