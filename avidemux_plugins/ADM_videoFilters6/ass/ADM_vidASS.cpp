@@ -148,8 +148,8 @@ subAss::subAss( ADM_coreVideoFilter *in,CONFcouple *setup) : ADM_coreVideoFilter
     if (!setup || !ADM_paramLoad(setup, ass_ssa_param, &param)) {
         param.font_scale = 1.;
         param.line_spacing = param.topMargin = param.bottomMargin = 0;
-        param.subtitleFile = std::string("");
-        param.fontDirectory = std::string(DEFAULT_FONT_DIR);
+        param.subtitleFile.clear();
+        param.fontDirectory = DEFAULT_FONT_DIR;
         param.extractEmbeddedFonts = 1;
         param.displayAspectRatio = 0;
     }
@@ -198,14 +198,14 @@ void subAss::setCoupledConf(CONFcouple *couples)
 */
 bool subAss::configure(void)
 {
-
+    std::string subfile = param.subtitleFile;
 #define PX(x) &(param.x)
 #define MKME(x,y) x=(ELEM_TYPE_FLOAT)param.y
   ELEM_TYPE_FLOAT scale,spacing;
 
     MKME(scale,font_scale);
     MKME(spacing,line_spacing);
-    diaElemFile       file(0,param.subtitleFile,QT_TRANSLATE_NOOP("ass","_Subtitle file (ASS/SSA):"), NULL, QT_TRANSLATE_NOOP("ass","Select Subtitle File"));
+    diaElemFile       file(0,subfile,QT_TRANSLATE_NOOP("ass","_Subtitle file (ASS/SSA):"), NULL, QT_TRANSLATE_NOOP("ass","Select Subtitle File"));
     diaElemFloat      dSpacing(&spacing,QT_TRANSLATE_NOOP("ass","_Line spacing:"),0.10,10.0);
     diaElemFloat      dScale(&scale,QT_TRANSLATE_NOOP("ass","_Font scale:"),0.10,10.0);
     diaElemUInteger   dTop(PX(topMargin),QT_TRANSLATE_NOOP("ass","_Top margin:"),0,200);
@@ -223,7 +223,12 @@ bool subAss::configure(void)
 again:
     if(!diaFactoryRun(QT_TRANSLATE_NOOP("ass","ASS"),6,elems))
         return false;
-   
+
+    char *slashpath = ADM_cleanupPath(subfile.c_str());
+    param.subtitleFile = slashpath;
+    ADM_dealloc(slashpath);
+    slashpath = NULL;
+
     const char *p=param.subtitleFile.c_str();
     int l=strlen(p);
     if(l>3 && !strcasecmp(p+l-4,".srt"))
@@ -252,7 +257,7 @@ again:
             GUI_Error_HIG(QT_TRANSLATE_NOOP("ass","Error"), QT_TRANSLATE_NOOP("ass","Cannot save converted file."));
             goto again;                              
         }
-        param.subtitleFile=std::string(newName);
+        param.subtitleFile = newName;
     }
 
 
