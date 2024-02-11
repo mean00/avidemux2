@@ -166,6 +166,9 @@ bool jobWindow::runProcess(spawnData *data)
 
 static string escapeString(const string &in)
 {
+#ifdef _WIN32
+    return in;
+#else
     if (std::string::npos == in.find("\"") &&
         std::string::npos == in.find("\\"))
         return in;
@@ -182,6 +185,7 @@ static string escapeString(const string &in)
         }
     }
     return out;
+#endif
 }
 
 /**
