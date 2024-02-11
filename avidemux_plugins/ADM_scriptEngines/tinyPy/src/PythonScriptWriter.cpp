@@ -5,6 +5,8 @@
 #include "ADM_edEditableAudioTrack.h"
 #include "ADM_edAudioTrackExternal.h"
 
+static char *escapeString(const char *in);
+
 PythonScriptWriter::PythonScriptWriter()
 {
 	this->_stream = NULL;
@@ -16,8 +18,11 @@ void PythonScriptWriter::setAudioPoolLanguage(int trackIndex, const char *lang) 
 }
 void PythonScriptWriter::addExternalAudioTrack(int trackIndex,const char *file)
 {
-    
-    *(this->_stream) << "adm.audioAddExternal(\"" << file << "\")" << std::endl;
+    char *escapedPath = escapeString(file);
+    *(this->_stream) << "if not adm.audioAddExternal(\"" << escapedPath << "\"):" << std::endl;
+    *(this->_stream) << "    raise(\"Cannot add external audio track from " << file << "\")" << std::endl;
+    ADM_dealloc(escapedPath);
+    escapedPath = NULL;
 }
 void PythonScriptWriter::addAudioOutput(int trackIndex, ADM_audioEncoder *encoder, EditableAudioTrack* track)
 {
@@ -49,8 +54,11 @@ void PythonScriptWriter::addVideoFilter(ADM_vf_plugin *plugin, ADM_VideoFilterEl
 
 void PythonScriptWriter::appendVideo(const char* path)
 {
-    *(this->_stream) << "if not adm.appendVideo(\"" << path << "\"):" << std::endl;
+    char *escapedPath = escapeString(path);
+    *(this->_stream) << "if not adm.appendVideo(\"" << escapedPath << "\"):" << std::endl;
     *(this->_stream) << "    raise(\"Cannot append " << path << "\")" << std::endl;
+    ADM_dealloc(escapedPath);
+    escapedPath = NULL;
 }
 
 void PythonScriptWriter::clearAudioTracks()
@@ -84,8 +92,11 @@ void PythonScriptWriter::disconnectStream()
 
 void PythonScriptWriter::loadVideo(const char* path)
 {
-    *(this->_stream) << "if not adm.loadVideo(\"" << path << "\"):" << std::endl;
+    char *escapedPath = escapeString(path);
+    *(this->_stream) << "if not adm.loadVideo(\"" << escapedPath << "\"):" << std::endl;
     *(this->_stream) << "    raise(\"Cannot load " << path << "\")" << std::endl;
+    ADM_dealloc(escapedPath);
+    escapedPath = NULL;
 }
 
 void PythonScriptWriter::setAudioGain(int trackIndex, ADM_GAINMode gainMode, int32_t gainValue, int32_t maxLevel)
@@ -224,8 +235,15 @@ void PythonScriptWriter::dumpConfCouple(CONFcouple *c)
         char *name, *value;
 
         c->getInternalName(j, &name, &value);
-        str=str+std::string(", \"")+std::string(name)+std::string("=")+std::string(value)+std::string("\"");
-        
+        // name cannot contain characters in need of escaping, right?
+        char *escaped = escapeString(value);
+        str += ", \"";
+        str += name;
+        str += "=";
+        str += escaped;
+        str += "\"";
+        ADM_dealloc(escaped);
+        escaped = NULL;
         // tinyPy does not like line > 1024 chars
         if (str.length() >= 200)
         {
@@ -236,3 +254,53 @@ void PythonScriptWriter::dumpConfCouple(CONFcouple *c)
     }
     *(this->_stream) << str;
 }
+
+/**
+ * \fn escapeString
+ * \brief Escape backslashes and double quotes.
+ *        Returned pointer must be freed with ADM_dealloc().
+ */
+char *escapeString(const char *in)
+{
+    if (!in) return NULL;
+
+    int sz = (int)strlen(in);
+    if (!sz) return NULL;
+
+    int outlen = sz;
+    for(int i = 0; i < sz; i++)
+    {
+        switch(in[i])
+        {
+            case '\\':
+            case '\"':
+                outlen++;
+            default:break;
+        }
+    }
+    char *out = (char *)ADM_alloc(outlen+1);
+    int off = 0;
+    int checked = 0;
+    for(int i = 0; i < outlen; i++)
+    {
+        if(off > sz) break;
+        if(!checked)
+        {
+            switch(in[off])
+            {
+                case '\\':
+                case '\"':
+                    out[i] = '\\';
+                    checked = 1;
+                    continue;
+                default:break;
+            }
+        }
+        checked = 0;
+        out[i] = in[off];
+        off++;
+    }
+    out[outlen] = '\0';
+    return out;
+}
+// EOF
