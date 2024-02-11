@@ -264,60 +264,22 @@ FILE *file;
 */
 char *ADM_cleanupPath(const char *in)
 {
-    char *out,*cout;
-    int i, n;
+    if (!in) return NULL;
 
-    ADM_assert(in);
+    int sz = (int)strlen(in);
+    if (!sz) return NULL;
 
-    n=(int)strlen(in);
-    ADM_assert(n);
+    char *out = ADM_strdup(in);
 
 #ifdef _WIN32
     // On Windows, replace backslashes with forward slashes
-    cout=out=(char *)ADM_alloc(n+1);   
-    for(i=0;i<n+1;i++)
+    for(int i = 0; i < sz; i++)
     {
-        if(   in[i]=='\\') out[i]='/';
-        else    out[i]=in[i];
+        if (in[i] == '\\')
+            out[i] = '/';
     }
-#else
-    // On *nix, escape backslashes and double quotes.
-    int outlen=n;
-    for(i=0;i<n;i++)
-    {
-        switch(in[i])
-        {
-            case '\\':
-            case '\"':
-                outlen++;
-            default:break;
-        }
-    }
-    cout=out=(char *)ADM_alloc(outlen+1);
-    int off=0;
-    int checked = 0;
-    for(i=0; i<outlen; i++)
-    {
-        if(off > n) break;
-        if(!checked)
-        {
-            switch(in[off])
-            {
-                case '\\':
-                case '\"':
-                    out[i] = '\\';
-                    checked = 1;
-                    continue;
-                default:break;
-            }
-        }
-        checked = 0;
-        out[i] = in[off];
-        off++;
-    }
-    out[outlen]='\0';
 #endif
-    return cout;
+    return out;
 }
 /*
  * \fn    ADM_getCurrentDate 
