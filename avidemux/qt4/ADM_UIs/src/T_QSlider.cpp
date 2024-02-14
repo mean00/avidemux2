@@ -19,6 +19,7 @@ Custom slider
 #include <QToolTip>
 #include <QMouseEvent>
 #include <QPainter>
+#include <QPainterPath>
 #include "ADM_toolkitQt.h"
 #include "ADM_assert.h"
 /**
@@ -228,10 +229,74 @@ void ADM_flyNavSlider::drawSelection(void)
         painter.setPen(QColor(30,144,255));
     else
         painter.setPen(Qt::blue);
-    if (layoutDirection() == Qt::LeftToRight)
-        painter.drawRect(left, 1, right - left, height() - 3);
-    else
-        painter.drawRect(width() - right, 1, right - left, height() - 3);
+
+    const int r = 6; // curvature radius
+    const int d = r * 2;
+    const int h = height() - 2;
+    const int span = right - left;
+
+    if (layoutDirection() == Qt::RightToLeft)
+    { // unswap markers' x coordinates
+        int swp = width() - right;
+        right = width() - left;
+        left = swp;
+    }
+    // Shall we hint at start or end marker being at its initial position?
+    if ((span > r) && (h > d))
+    {
+        if (a > 0 && b == totalDuration)
+        {
+            if (layoutDirection() == Qt::LeftToRight)
+            {
+                QPainterPath sel(QPointF(left, 1)); // starting top left
+                sel.lineTo(right - r, 1);
+                sel.arcTo(right - d, 1, d, d, 90, -90); // top right, rounded
+                sel.lineTo(right, h - r);
+                sel.arcTo(right - d, h - d, d, d, 0, -90); // bottom right, rounded
+                sel.lineTo(left, h); // bottom left
+                sel.closeSubpath();
+                painter.drawPath(sel);
+            } else
+            {
+                QPainterPath sel(QPointF(left + r, 1)); // starting past left rounded corner
+                sel.lineTo(right, 1); // top right
+                sel.lineTo(right, h); // bottom right
+                sel.lineTo(left + r, h);
+                sel.arcTo(left, h - d, d, d, 270, -90); // bottom left rounded corner
+                sel.lineTo(left, r + 1);
+                sel.arcTo(left, 1, d, d, 180, -90); // top left rounded corner
+                painter.drawPath(sel);
+            }
+            return;
+        }
+        if (a <= 0 && b < totalDuration)
+        {
+            if (layoutDirection() == Qt::LeftToRight)
+            {
+                QPainterPath sel(QPointF(left + r, 1)); // starting past left rounded corner
+                sel.lineTo(right, 1); // top right
+                sel.lineTo(right, h); // bottom right
+                sel.lineTo(left + r, h);
+                sel.arcTo(left, h - d, d, d, 270, -90); // bottom left, rounded
+                sel.lineTo(left, 1 + r);
+                sel.arcTo(left, 1, d, d, 180, -90); // top left, rounded
+                painter.drawPath(sel);
+            } else
+            {
+                QPainterPath sel(QPointF(left, 1)); // starting top left
+                sel.lineTo(right - r, 1);
+                sel.arcTo(right - d, 1, d, d, 90, -90); // top right rounded corner
+                sel.lineTo(right, h - r);
+                sel.arcTo(right - d, h - d, d, d, 0, -90); // bottom right rounded corner
+                sel.lineTo(left, h); // bottom left
+                sel.closeSubpath();
+                painter.drawPath(sel);
+            }
+            return;
+        }
+    }
+    // No, draw a simple rectangle. We need to reduce the height by one, why?
+    painter.drawRect(left, 1, span, h - 1);
 }
 
 /**
