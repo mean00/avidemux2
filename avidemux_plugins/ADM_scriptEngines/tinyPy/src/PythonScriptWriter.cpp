@@ -262,11 +262,9 @@ void PythonScriptWriter::dumpConfCouple(CONFcouple *c)
  */
 char *escapeString(const char *in)
 {
-    if (!in) return NULL;
+    ADM_assert(in);
 
     int sz = (int)strlen(in);
-    if (!sz) return NULL;
-
     int outlen = sz;
     for(int i = 0; i < sz; i++)
     {
@@ -278,6 +276,9 @@ char *escapeString(const char *in)
             default:break;
         }
     }
+    if(outlen == sz) // no escaping needed
+        return ADM_strdup(in);
+
     char *out = (char *)ADM_alloc(outlen+1);
     int off = 0;
     int checked = 0;
