@@ -55,6 +55,7 @@ ACT(FineScale)
 ACT(Refresh)
 ACT(SeekBackward)
 ACT(SeekForward)
+ACT(FastForward)
 ACT(NAVIGATE_END)
 //ACT(JumpToTime)
 

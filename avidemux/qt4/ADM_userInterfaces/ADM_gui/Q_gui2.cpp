@@ -562,6 +562,12 @@ void MainWindow::sendAction(Action a)
     if (((a==ACT_NextFrame)||(a==ACT_NextKFrame)) && (playing || (navigateWhilePlayingState != 0)))
         navigateWhilePlaying(ACT_SeekForward);
     else
+    if (a==ACT_FastForward)
+    {
+        if (actionLock==0)
+            emit actionSignal(a);
+    }
+    else
     if(a>ACT_NAVIGATE_BEGIN && a<ACT_NAVIGATE_END && a!=ACT_Scale)
     {
         if (actionLock<=NAVIGATION_ACTION_LOCK_THRESHOLD)
@@ -2076,6 +2082,8 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
                             sendAction(ACT_Back1Second);
                         else if (keyEvent->modifiers() & Qt::ControlModifier)
                             sendAction(ACT_Back2Seconds);
+                        else if (keyEvent->modifiers() & Qt::AltModifier)
+                            sendAction(ACT_Back1Second);
                         else
                             sendAction(ACT_PreviousFrame);
 
@@ -2087,6 +2095,8 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
                             sendAction(ACT_Forward1Second);
                         else if (keyEvent->modifiers() & Qt::ControlModifier)
                             sendAction(ACT_Forward2Seconds);
+                        else if (keyEvent->modifiers() & Qt::AltModifier)
+                            sendAction(ACT_FastForward);
                         else 
                             sendAction(ACT_NextFrame);
 
