@@ -211,6 +211,17 @@
    <addaction name="separator"/>
    <addaction name="actionPlayFiltered"/>
    <addaction name="actionHDRSettings"/>
+   <addaction name="separator"/>
+   <addaction name="actionScript0"/>
+   <addaction name="actionScript1"/>
+   <addaction name="actionScript2"/>
+   <addaction name="actionScript3"/>
+   <addaction name="actionScript4"/>
+   <addaction name="actionScript5"/>
+   <addaction name="actionScript6"/>
+   <addaction name="actionScript7"/>
+   <addaction name="actionScript8"/>
+   <addaction name="actionScript9"/>
   </widget>
   <widget class="QDockWidget" name="codecWidget">
    <property name="styleSheet">
@@ -1756,6 +1767,96 @@
    </property>
    <property name="text">
     <string>HDR tone mapping</string>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
+  </action>
+  <action name="actionScript0">
+   <property name="icon">
+    <iconset resource="avidemux.qrc">
+     <normaloff>:/new/prefix1/pics/script0.png</normaloff>:/new/prefix1/pics/script0.png</iconset>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
+  </action>
+  <action name="actionScript1">
+   <property name="icon">
+    <iconset resource="avidemux.qrc">
+     <normaloff>:/new/prefix1/pics/script1.png</normaloff>:/new/prefix1/pics/script1.png</iconset>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
+  </action>
+  <action name="actionScript2">
+   <property name="icon">
+    <iconset resource="avidemux.qrc">
+     <normaloff>:/new/prefix1/pics/script2.png</normaloff>:/new/prefix1/pics/script2.png</iconset>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
+  </action>
+  <action name="actionScript3">
+   <property name="icon">
+    <iconset resource="avidemux.qrc">
+     <normaloff>:/new/prefix1/pics/script3.png</normaloff>:/new/prefix1/pics/script3.png</iconset>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
+  </action>
+  <action name="actionScript4">
+   <property name="icon">
+    <iconset resource="avidemux.qrc">
+     <normaloff>:/new/prefix1/pics/script4.png</normaloff>:/new/prefix1/pics/script4.png</iconset>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
+  </action>
+  <action name="actionScript5">
+   <property name="icon">
+    <iconset resource="avidemux.qrc">
+     <normaloff>:/new/prefix1/pics/script5.png</normaloff>:/new/prefix1/pics/script5.png</iconset>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
+  </action>
+  <action name="actionScript6">
+   <property name="icon">
+    <iconset resource="avidemux.qrc">
+     <normaloff>:/new/prefix1/pics/script6.png</normaloff>:/new/prefix1/pics/script6.png</iconset>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
+  </action>
+  <action name="actionScript7">
+   <property name="icon">
+    <iconset resource="avidemux.qrc">
+     <normaloff>:/new/prefix1/pics/script7.png</normaloff>:/new/prefix1/pics/script7.png</iconset>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
+  </action>
+  <action name="actionScript8">
+   <property name="icon">
+    <iconset resource="avidemux.qrc">
+     <normaloff>:/new/prefix1/pics/script8.png</normaloff>:/new/prefix1/pics/script8.png</iconset>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
+  </action>
+  <action name="actionScript9">
+   <property name="icon">
+    <iconset resource="avidemux.qrc">
+     <normaloff>:/new/prefix1/pics/script9.png</normaloff>:/new/prefix1/pics/script9.png</iconset>
    </property>
    <property name="visible">
     <bool>false</bool>

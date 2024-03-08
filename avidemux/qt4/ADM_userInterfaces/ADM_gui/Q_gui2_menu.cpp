@@ -190,6 +190,14 @@ void MainWindow::addScriptDirToMenu(QMenu* scriptMenu, const QString& dir, const
             {
                 if (fileInfo.fileName().length() > 0)
                 {
+                    #define SET_TOOLBAR(X) \
+                            if (qset->value("alt" #X "toolbar").toBool()) \
+                            { \
+                                ui.actionScript ##X ->setVisible(true); \
+                                ui.actionScript ##X ->setToolTip(fileInfo.fileName() + "\n[" + action->shortcut().toString() + "]"); \
+                                connect(ui.actionScript ##X, &QAction::triggered, this, [=](){action->activate(QAction::Trigger);}); \
+                            }
+
                     if (qset->value("altHome").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_Home);          else
                     if (qset->value("altEnd").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_End);            else
                     if (qset->value("altLeft").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_Left);          else
@@ -198,17 +206,18 @@ void MainWindow::addScriptDirToMenu(QMenu* scriptMenu, const QString& dir, const
                     if (qset->value("altDown").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_Down);          else
                     if (qset->value("altPageUp").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_PageUp);      else
                     if (qset->value("altPageDown").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_PageDown);  else
-                    if (qset->value("alt0").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_0);                else
-                    if (qset->value("alt1").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_1);                else
-                    if (qset->value("alt2").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_2);                else
-                    if (qset->value("alt3").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_3);                else
-                    if (qset->value("alt4").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_4);                else
-                    if (qset->value("alt5").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_5);                else
-                    if (qset->value("alt6").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_6);                else
-                    if (qset->value("alt7").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_7);                else
-                    if (qset->value("alt8").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_8);                else
-                    if (qset->value("alt9").toString() == fileInfo.fileName()) action->setShortcut(Qt::ALT | Qt::Key_9);                else
+                    if (qset->value("alt0").toString() == fileInfo.fileName()) {action->setShortcut(Qt::ALT | Qt::Key_0); SET_TOOLBAR(0);}  else
+                    if (qset->value("alt1").toString() == fileInfo.fileName()) {action->setShortcut(Qt::ALT | Qt::Key_1); SET_TOOLBAR(1);}  else
+                    if (qset->value("alt2").toString() == fileInfo.fileName()) {action->setShortcut(Qt::ALT | Qt::Key_2); SET_TOOLBAR(2);}  else
+                    if (qset->value("alt3").toString() == fileInfo.fileName()) {action->setShortcut(Qt::ALT | Qt::Key_3); SET_TOOLBAR(3);}  else
+                    if (qset->value("alt4").toString() == fileInfo.fileName()) {action->setShortcut(Qt::ALT | Qt::Key_4); SET_TOOLBAR(4);}  else
+                    if (qset->value("alt5").toString() == fileInfo.fileName()) {action->setShortcut(Qt::ALT | Qt::Key_5); SET_TOOLBAR(5);}  else
+                    if (qset->value("alt6").toString() == fileInfo.fileName()) {action->setShortcut(Qt::ALT | Qt::Key_6); SET_TOOLBAR(6);}  else
+                    if (qset->value("alt7").toString() == fileInfo.fileName()) {action->setShortcut(Qt::ALT | Qt::Key_7); SET_TOOLBAR(7);}  else
+                    if (qset->value("alt8").toString() == fileInfo.fileName()) {action->setShortcut(Qt::ALT | Qt::Key_8); SET_TOOLBAR(8);}  else
+                    if (qset->value("alt9").toString() == fileInfo.fileName()) {action->setShortcut(Qt::ALT | Qt::Key_9); SET_TOOLBAR(9);}  else
                     {}
+                    #undef SET_TOOLBAR
                 }
             }
             scriptMenu->addAction(action);
@@ -260,6 +269,11 @@ void MainWindow::buildCustomMenu(void)
 
     ui.menuCustom->clear();
     ui.menuAuto->clear();
+    #define X_NUMS X(0) X(1) X(2) X(3) X(4) X(5) X(6) X(7) X(8) X(9)
+    #define X(key) ui.actionScript ## key ->setVisible(false); ui.actionScript ## key ->disconnect();
+        X_NUMS
+    #undef X
+    #undef X_NUMS
 
     this->addScriptDirToMenu(ui.menuCustom, ADM_getCustomDir().c_str(), fileExts, true);
     this->addScriptDirToMenu(ui.menuAuto, ADM_getAutoDir().c_str(), fileExts, false);

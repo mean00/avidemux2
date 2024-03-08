@@ -30,6 +30,10 @@ scriptShortcutConfigDialog::scriptShortcutConfigDialog(QWidget* parent) : QDialo
     #define X(key) ui.lineEditAlt ## key ->setText(qset->value("alt" #key).toString());
         SCRIPT_SHORTCUT_CONFIG_LIST_XMACRO
     #undef X
+    #define X(key) ui.checkBoxAlt ## key ->setChecked(qset->value("alt" #key "toolbar").toBool());
+        SCRIPT_NUMERIC_SHORTCUT_CONFIG_LIST_XMACRO
+    #undef X
+
         qset->endGroup();
         delete qset;
         qset = NULL;
@@ -101,6 +105,9 @@ void DIA_ScriptShortcutConfig()
             qset->beginGroup("GuiScriptShortcuts");
         #define X(key) qset->setValue("alt" #key, dialog.ui.lineEditAlt ## key ->text());
             SCRIPT_SHORTCUT_CONFIG_LIST_XMACRO
+        #undef X
+        #define X(key) qset->setValue("alt" #key "toolbar", dialog.ui.checkBoxAlt ## key ->isChecked());
+            SCRIPT_NUMERIC_SHORTCUT_CONFIG_LIST_XMACRO
         #undef X
             qset->endGroup();
             delete qset;

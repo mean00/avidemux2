@@ -84,6 +84,26 @@
         <file>pics/delete_selection@2x.png</file>
         <file>pics/hdr.png</file>
         <file>pics/hdr@2x.png</file>
+        <file>pics/script0.png</file>
+        <file>pics/script0@2x.png</file>
+        <file>pics/script1.png</file>
+        <file>pics/script1@2x.png</file>
+        <file>pics/script2.png</file>
+        <file>pics/script2@2x.png</file>
+        <file>pics/script3.png</file>
+        <file>pics/script3@2x.png</file>
+        <file>pics/script4.png</file>
+        <file>pics/script4@2x.png</file>
+        <file>pics/script5.png</file>
+        <file>pics/script5@2x.png</file>
+        <file>pics/script6.png</file>
+        <file>pics/script6@2x.png</file>
+        <file>pics/script7.png</file>
+        <file>pics/script7@2x.png</file>
+        <file>pics/script8.png</file>
+        <file>pics/script8@2x.png</file>
+        <file>pics/script9.png</file>
+        <file>pics/script9@2x.png</file>
         <file>sounds/notify.wav</file>
     </qresource>
 </RCC>

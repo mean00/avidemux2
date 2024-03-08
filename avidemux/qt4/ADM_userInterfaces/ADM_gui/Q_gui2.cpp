@@ -771,7 +771,6 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     AUTOREPEAT_TOOLBUTTON(toolButtonPreviousIntraFrame)
     AUTOREPEAT_TOOLBUTTON(toolButtonNextIntraFrame)
 
-    ui.toolBar->addSeparator();
     actionHDRSeparator = ui.toolBar->insertSeparator(ui.actionHDRSettings);
 
     // Crash in some cases addScriptReferencesToHelpMenu();
@@ -1231,6 +1230,12 @@ void MainWindow::buildActionLists(void)
 #define PUSH_ALWAYS_AVAILABLE_TOOLBAR(event) { QAction *a = findActionInToolBar(ui.toolBar, event); if(a) ActionsAlwaysAvailable.push_back(a); }
 
     PUSH_ALWAYS_AVAILABLE_TOOLBAR(ACT_OPEN_VIDEO)
+
+#define PUSH_ALWAYS_AVAILABLE_TOOLBAR_SCRIPTS X(0) X(1) X(2) X(3) X(4) X(5) X(6) X(7) X(8) X(9)
+    #define X(key) if ( ui.actionScript ## key ->isVisible() ) { ActionsAlwaysAvailable.push_back(ui.actionScript ## key);}
+        PUSH_ALWAYS_AVAILABLE_TOOLBAR_SCRIPTS
+    #undef X
+    #undef PUSH_ALWAYS_AVAILABLE_TOOLBAR_SCRIPTS
 
 #define PUSH_FULL_MENU_ALWAYS_AVAILABLE(menu) for(int i=0;i<ui.menu->actions().size();i++)    ActionsAlwaysAvailable.push_back(ui.menu->actions().at(i));
 
