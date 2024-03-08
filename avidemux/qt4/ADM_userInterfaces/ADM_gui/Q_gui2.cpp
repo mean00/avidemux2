@@ -1231,6 +1231,12 @@ void MainWindow::buildActionLists(void)
 
     PUSH_ALWAYS_AVAILABLE_TOOLBAR(ACT_OPEN_VIDEO)
 
+#define PUSH_ALWAYS_AVAILABLE_TOOLBAR_SCRIPTS X(0) X(1) X(2) X(3) X(4) X(5) X(6) X(7) X(8) X(9)
+    #define X(key) if ( ui.actionScript ## key ->isVisible() ) { ActionsAlwaysAvailable.push_back(ui.actionScript ## key);}
+        PUSH_ALWAYS_AVAILABLE_TOOLBAR_SCRIPTS
+    #undef X
+    #undef PUSH_ALWAYS_AVAILABLE_TOOLBAR_SCRIPTS
+
 #define PUSH_FULL_MENU_ALWAYS_AVAILABLE(menu) for(int i=0;i<ui.menu->actions().size();i++)    ActionsAlwaysAvailable.push_back(ui.menu->actions().at(i));
 
     PUSH_FULL_MENU_ALWAYS_AVAILABLE(menuHelp)
