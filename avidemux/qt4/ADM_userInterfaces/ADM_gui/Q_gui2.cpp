@@ -771,7 +771,6 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     AUTOREPEAT_TOOLBUTTON(toolButtonPreviousIntraFrame)
     AUTOREPEAT_TOOLBUTTON(toolButtonNextIntraFrame)
 
-    ui.toolBar->addSeparator();
     actionHDRSeparator = ui.toolBar->insertSeparator(ui.actionHDRSettings);
 
     // Crash in some cases addScriptReferencesToHelpMenu();

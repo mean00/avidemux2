@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>436</width>
+    <width>516</width>
     <height>660</height>
    </rect>
   </property>
@@ -22,86 +22,6 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="4" column="2">
-      <widget class="QComboBox" name="comboBoxAltPageDown"/>
-     </item>
-     <item row="6" column="0">
-      <widget class="QLabel" name="labelAltRight">
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="17" column="2">
-      <widget class="QComboBox" name="comboBoxAlt8"/>
-     </item>
-     <item row="4" column="1">
-      <widget class="QLineEdit" name="lineEditAltPageDown"/>
-     </item>
-     <item row="15" column="2">
-      <widget class="QComboBox" name="comboBoxAlt6"/>
-     </item>
-     <item row="3" column="1">
-      <widget class="QLineEdit" name="lineEditAltPageUp"/>
-     </item>
-     <item row="12" column="1">
-      <widget class="QLineEdit" name="lineEditAlt3"/>
-     </item>
-     <item row="14" column="2">
-      <widget class="QComboBox" name="comboBoxAlt5"/>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="labelAltHome">
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="15" column="0">
-      <widget class="QLabel" name="labelAlt6">
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="8" column="1">
-      <widget class="QLineEdit" name="lineEditAltDown"/>
-     </item>
-     <item row="5" column="2">
-      <widget class="QComboBox" name="comboBoxAltLeft"/>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="labelAltPageUp">
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="lineEditAltHome">
-       <property name="minimumSize">
-        <size>
-         <width>320</width>
-         <height>0</height>
-        </size>
-       </property>
-      </widget>
-     </item>
-     <item row="16" column="2">
-      <widget class="QComboBox" name="comboBoxAlt7"/>
-     </item>
-     <item row="13" column="2">
-      <widget class="QComboBox" name="comboBoxAlt4"/>
-     </item>
-     <item row="16" column="1">
-      <widget class="QLineEdit" name="lineEditAlt7"/>
-     </item>
-     <item row="10" column="1">
-      <widget class="QLineEdit" name="lineEditAlt1"/>
-     </item>
-     <item row="3" column="2">
-      <widget class="QComboBox" name="comboBoxAltPageUp"/>
-     </item>
      <item row="7" column="0">
       <widget class="QLabel" name="labelAltUp">
        <property name="text">
@@ -109,70 +29,17 @@
        </property>
       </widget>
      </item>
-     <item row="9" column="1">
-      <widget class="QLineEdit" name="lineEditAlt0"/>
+     <item row="3" column="2">
+      <widget class="QComboBox" name="comboBoxAltPageUp"/>
      </item>
-     <item row="18" column="0">
-      <widget class="QLabel" name="labelAlt9">
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
+     <item row="12" column="2">
+      <widget class="QComboBox" name="comboBoxAlt3"/>
      </item>
-     <item row="5" column="0">
-      <widget class="QLabel" name="labelAltLeft">
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
+     <item row="8" column="1">
+      <widget class="QLineEdit" name="lineEditAltDown"/>
      </item>
-     <item row="6" column="1">
-      <widget class="QLineEdit" name="lineEditAltRight"/>
-     </item>
-     <item row="9" column="2">
-      <widget class="QComboBox" name="comboBoxAlt0"/>
-     </item>
-     <item row="7" column="2">
-      <widget class="QComboBox" name="comboBoxAltUp"/>
-     </item>
-     <item row="2" column="1">
-      <widget class="QLineEdit" name="lineEditAltEnd"/>
-     </item>
-     <item row="2" column="2">
-      <widget class="QComboBox" name="comboBoxAltEnd"/>
-     </item>
-     <item row="8" column="2">
-      <widget class="QComboBox" name="comboBoxAltDown"/>
-     </item>
-     <item row="9" column="0">
-      <widget class="QLabel" name="labelAlt0">
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="labelAltEnd">
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="1">
-      <widget class="QLineEdit" name="lineEditAltLeft"/>
-     </item>
-     <item row="8" column="0">
-      <widget class="QLabel" name="labelAltDown">
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="1">
-      <widget class="QLineEdit" name="lineEditAltUp"/>
-     </item>
-     <item row="17" column="0">
-      <widget class="QLabel" name="labelAlt8">
+     <item row="10" column="3">
+      <widget class="QCheckBox" name="checkBoxAlt1">
        <property name="text">
         <string/>
        </property>
@@ -185,63 +52,41 @@
        </property>
       </widget>
      </item>
-     <item row="16" column="0">
-      <widget class="QLabel" name="labelAlt7">
+     <item row="6" column="2">
+      <widget class="QComboBox" name="comboBoxAltRight"/>
+     </item>
+     <item row="18" column="3">
+      <widget class="QCheckBox" name="checkBoxAlt9">
        <property name="text">
         <string/>
        </property>
       </widget>
      </item>
-     <item row="15" column="1">
-      <widget class="QLineEdit" name="lineEditAlt6"/>
-     </item>
-     <item row="17" column="1">
-      <widget class="QLineEdit" name="lineEditAlt8"/>
-     </item>
-     <item row="14" column="1">
-      <widget class="QLineEdit" name="lineEditAlt5"/>
-     </item>
-     <item row="12" column="2">
-      <widget class="QComboBox" name="comboBoxAlt3"/>
-     </item>
-     <item row="10" column="2">
-      <widget class="QComboBox" name="comboBoxAlt1"/>
-     </item>
-     <item row="1" column="2">
-      <widget class="QComboBox" name="comboBoxAltHome"/>
-     </item>
-     <item row="12" column="0">
-      <widget class="QLabel" name="labelAlt3">
+     <item row="17" column="0">
+      <widget class="QLabel" name="labelAlt8">
        <property name="text">
         <string/>
        </property>
       </widget>
      </item>
-     <item row="11" column="2">
-      <widget class="QComboBox" name="comboBoxAlt2"/>
+     <item row="14" column="2">
+      <widget class="QComboBox" name="comboBoxAlt5"/>
      </item>
-     <item row="14" column="0">
-      <widget class="QLabel" name="labelAlt5">
+     <item row="12" column="3">
+      <widget class="QCheckBox" name="checkBoxAlt3">
        <property name="text">
         <string/>
        </property>
       </widget>
      </item>
-     <item row="11" column="0">
-      <widget class="QLabel" name="labelAlt2">
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
+     <item row="15" column="2">
+      <widget class="QComboBox" name="comboBoxAlt6"/>
      </item>
-     <item row="11" column="1">
-      <widget class="QLineEdit" name="lineEditAlt2"/>
+     <item row="17" column="2">
+      <widget class="QComboBox" name="comboBoxAlt8"/>
      </item>
-     <item row="18" column="2">
-      <widget class="QComboBox" name="comboBoxAlt9"/>
-     </item>
-     <item row="18" column="1">
-      <widget class="QLineEdit" name="lineEditAlt9"/>
+     <item row="7" column="2">
+      <widget class="QComboBox" name="comboBoxAltUp"/>
      </item>
      <item row="13" column="0">
       <widget class="QLabel" name="labelAlt4">
@@ -250,8 +95,119 @@
        </property>
       </widget>
      </item>
-     <item row="6" column="2">
-      <widget class="QComboBox" name="comboBoxAltRight"/>
+     <item row="17" column="1">
+      <widget class="QLineEdit" name="lineEditAlt8"/>
+     </item>
+     <item row="1" column="2">
+      <widget class="QComboBox" name="comboBoxAltHome"/>
+     </item>
+     <item row="10" column="1">
+      <widget class="QLineEdit" name="lineEditAlt1"/>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="lineEditAltHome">
+       <property name="minimumSize">
+        <size>
+         <width>320</width>
+         <height>0</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item row="15" column="3">
+      <widget class="QCheckBox" name="checkBoxAlt6">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="labelAltHome">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="18" column="2">
+      <widget class="QComboBox" name="comboBoxAlt9"/>
+     </item>
+     <item row="16" column="2">
+      <widget class="QComboBox" name="comboBoxAlt7"/>
+     </item>
+     <item row="16" column="3">
+      <widget class="QCheckBox" name="checkBoxAlt7">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="3">
+      <widget class="QCheckBox" name="checkBoxAlt0">
+       <property name="text">
+        <string>Toolbar</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="labelAltRight">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="1">
+      <widget class="QLineEdit" name="lineEditAlt2"/>
+     </item>
+     <item row="14" column="3">
+      <widget class="QCheckBox" name="checkBoxAlt5">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="labelAltLeft">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="2">
+      <widget class="QComboBox" name="comboBoxAlt1"/>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="labelAltPageUp">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="3">
+      <widget class="QCheckBox" name="checkBoxAlt2">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="17" column="3">
+      <widget class="QCheckBox" name="checkBoxAlt8">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="2">
+      <widget class="QComboBox" name="comboBoxAlt2"/>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="labelAltEnd">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLineEdit" name="lineEditAltPageUp"/>
      </item>
      <item row="4" column="0">
       <widget class="QLabel" name="labelAltPageDown">
@@ -260,8 +216,122 @@
        </property>
       </widget>
      </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="lineEditAltEnd"/>
+     </item>
+     <item row="18" column="1">
+      <widget class="QLineEdit" name="lineEditAlt9"/>
+     </item>
      <item row="13" column="1">
       <widget class="QLineEdit" name="lineEditAlt4"/>
+     </item>
+     <item row="5" column="2">
+      <widget class="QComboBox" name="comboBoxAltLeft"/>
+     </item>
+     <item row="15" column="0">
+      <widget class="QLabel" name="labelAlt6">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
+      <widget class="QLineEdit" name="lineEditAltUp"/>
+     </item>
+     <item row="15" column="1">
+      <widget class="QLineEdit" name="lineEditAlt6"/>
+     </item>
+     <item row="13" column="2">
+      <widget class="QComboBox" name="comboBoxAlt4"/>
+     </item>
+     <item row="8" column="2">
+      <widget class="QComboBox" name="comboBoxAltDown"/>
+     </item>
+     <item row="9" column="2">
+      <widget class="QComboBox" name="comboBoxAlt0"/>
+     </item>
+     <item row="8" column="0">
+      <widget class="QLabel" name="labelAltDown">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="14" column="1">
+      <widget class="QLineEdit" name="lineEditAlt5"/>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLineEdit" name="lineEditAltPageDown"/>
+     </item>
+     <item row="9" column="1">
+      <widget class="QLineEdit" name="lineEditAlt0"/>
+     </item>
+     <item row="12" column="1">
+      <widget class="QLineEdit" name="lineEditAlt3"/>
+     </item>
+     <item row="11" column="0">
+      <widget class="QLabel" name="labelAlt2">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="14" column="0">
+      <widget class="QLabel" name="labelAlt5">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="16" column="0">
+      <widget class="QLabel" name="labelAlt7">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="16" column="1">
+      <widget class="QLineEdit" name="lineEditAlt7"/>
+     </item>
+     <item row="9" column="0">
+      <widget class="QLabel" name="labelAlt0">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="12" column="0">
+      <widget class="QLabel" name="labelAlt3">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="18" column="0">
+      <widget class="QLabel" name="labelAlt9">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QLineEdit" name="lineEditAltLeft"/>
+     </item>
+     <item row="6" column="1">
+      <widget class="QLineEdit" name="lineEditAltRight"/>
+     </item>
+     <item row="4" column="2">
+      <widget class="QComboBox" name="comboBoxAltPageDown"/>
+     </item>
+     <item row="2" column="2">
+      <widget class="QComboBox" name="comboBoxAltEnd"/>
+     </item>
+     <item row="13" column="3">
+      <widget class="QCheckBox" name="checkBoxAlt4">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -277,6 +347,54 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>lineEditAltHome</tabstop>
+  <tabstop>comboBoxAltHome</tabstop>
+  <tabstop>lineEditAltEnd</tabstop>
+  <tabstop>comboBoxAltEnd</tabstop>
+  <tabstop>lineEditAltPageUp</tabstop>
+  <tabstop>comboBoxAltPageUp</tabstop>
+  <tabstop>lineEditAltPageDown</tabstop>
+  <tabstop>comboBoxAltPageDown</tabstop>
+  <tabstop>lineEditAltLeft</tabstop>
+  <tabstop>comboBoxAltLeft</tabstop>
+  <tabstop>lineEditAltRight</tabstop>
+  <tabstop>comboBoxAltRight</tabstop>
+  <tabstop>lineEditAltUp</tabstop>
+  <tabstop>comboBoxAltUp</tabstop>
+  <tabstop>lineEditAltDown</tabstop>
+  <tabstop>comboBoxAltDown</tabstop>
+  <tabstop>lineEditAlt0</tabstop>
+  <tabstop>comboBoxAlt0</tabstop>
+  <tabstop>checkBoxAlt0</tabstop>
+  <tabstop>lineEditAlt1</tabstop>
+  <tabstop>comboBoxAlt1</tabstop>
+  <tabstop>checkBoxAlt1</tabstop>
+  <tabstop>lineEditAlt2</tabstop>
+  <tabstop>comboBoxAlt2</tabstop>
+  <tabstop>checkBoxAlt2</tabstop>
+  <tabstop>lineEditAlt3</tabstop>
+  <tabstop>comboBoxAlt3</tabstop>
+  <tabstop>checkBoxAlt3</tabstop>
+  <tabstop>lineEditAlt4</tabstop>
+  <tabstop>comboBoxAlt4</tabstop>
+  <tabstop>checkBoxAlt4</tabstop>
+  <tabstop>lineEditAlt5</tabstop>
+  <tabstop>comboBoxAlt5</tabstop>
+  <tabstop>checkBoxAlt5</tabstop>
+  <tabstop>lineEditAlt6</tabstop>
+  <tabstop>comboBoxAlt6</tabstop>
+  <tabstop>checkBoxAlt6</tabstop>
+  <tabstop>lineEditAlt7</tabstop>
+  <tabstop>comboBoxAlt7</tabstop>
+  <tabstop>checkBoxAlt7</tabstop>
+  <tabstop>lineEditAlt8</tabstop>
+  <tabstop>comboBoxAlt8</tabstop>
+  <tabstop>checkBoxAlt8</tabstop>
+  <tabstop>lineEditAlt9</tabstop>
+  <tabstop>comboBoxAlt9</tabstop>
+  <tabstop>checkBoxAlt9</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
@@ -286,8 +404,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>257</x>
+     <y>650</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -302,8 +420,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>325</x>
+     <y>650</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>

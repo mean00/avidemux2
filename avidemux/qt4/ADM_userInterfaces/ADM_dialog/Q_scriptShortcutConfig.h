@@ -24,6 +24,19 @@
     X(9) \
     // end_of_list
 
+#define SCRIPT_NUMERIC_SHORTCUT_CONFIG_LIST_XMACRO \
+    X(0) \
+    X(1) \
+    X(2) \
+    X(3) \
+    X(4) \
+    X(5) \
+    X(6) \
+    X(7) \
+    X(8) \
+    X(9) \
+    // end_of_list
+
 class scriptShortcutConfigDialog : public QDialog
 {
     Q_OBJECT
