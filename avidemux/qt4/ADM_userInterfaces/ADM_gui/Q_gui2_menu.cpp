@@ -100,7 +100,10 @@ void MainWindow::addScriptShellsToToolsMenu(vector<MenuEntry>& toolMenu)
 
         it = toolMenu.insert(it, entry) + 1;
     }
-    
+
+    if (it == toolMenu.begin()) // no script engines available
+        return;
+
     // sneak in here for now:
     MenuEntry entry = {MENU_ACTION, QT_TRANSLATE_NOOP("qgui2menu","Script Shortcuts"), NULL, (Action)(ACT_ScriptShortcutConfig), NULL, NULL, true};
     toolMenu.insert(it, entry);
@@ -260,6 +263,15 @@ void MainWindow::scriptFileActionHandler()
 */
 void MainWindow::buildCustomMenu(void)
 {
+    ui.menuCustom->clear();
+    ui.menuAuto->clear();
+
+    if (this->_scriptEngines.empty())
+    {
+        buildActionLists();
+        return;
+    }
+
     QStringList fileExts;
 
     for (int engineIndex = 0; engineIndex < this->_scriptEngines.size(); engineIndex++)
@@ -267,8 +279,6 @@ void MainWindow::buildCustomMenu(void)
         fileExts << QString("*.") + this->_scriptEngines[engineIndex]->defaultFileExtension().c_str();
     }
 
-    ui.menuCustom->clear();
-    ui.menuAuto->clear();
     #define X_NUMS X(0) X(1) X(2) X(3) X(4) X(5) X(6) X(7) X(8) X(9)
     #define X(key) ui.actionScript ## key ->setVisible(false); ui.actionScript ## key ->disconnect();
         X_NUMS
