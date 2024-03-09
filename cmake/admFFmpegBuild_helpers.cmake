@@ -331,11 +331,12 @@ MACRO(ADM_FF_BUILD_UNIX_STYLE)
 #
 #
 MACRO(ADM_FF_ADD_DUMMY_TARGET)
+    SET(PARRALLEL "-j1")
     if(NOT MSVC)
        include(ProcessorCount)
        ProcessorCount(NPROC)
        if(NOT NPROC EQUAL 0)
-          SET(PARRALLEL -j${NPROC})
+          SET(PARRALLEL "-j${NPROC}")
        endif(NOT NPROC EQUAL 0)
     endif(NOT MSVC)
     add_custom_target(         libavutil_dummy ALL
