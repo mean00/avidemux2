@@ -113,6 +113,8 @@ bool    decoderVPX::uncompress (ADMCompressedImage * in, ADMImage * out)
                     r->_pixfrmt=ADM_PIXFRMT_YV12;
                     r->Pts=in->demuxerPts;
                     r->flags=in->flags;
+                    r->_width = img->w;
+                    r->_height = img->h;
                     return true;
             }
                 
