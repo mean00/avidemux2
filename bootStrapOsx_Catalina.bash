@@ -350,7 +350,7 @@ fi
 if [ "x$do_plugins" = "x1" -a "x$do_cli" = "x1" ] ; then
         echo "** Plugins CLI **"
         cd $TOP
-        Process buildPluginsCLI ../avidemux_plugins "-DPLUGIN_UI=CLI $EXTRA_CMAKE_DEFS"
+        Process buildPluginsCli ../avidemux_plugins "-DPLUGIN_UI=CLI $EXTRA_CMAKE_DEFS"
 fi
 if [ "x$do_plugins" = "x1" ] ; then
         echo "** Plugins Settings **"
