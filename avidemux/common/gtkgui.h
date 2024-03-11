@@ -28,6 +28,8 @@ bool GUI_PreviousKeyFrame(void);
 bool GUI_GoToTime(uint64_t time);
 uint8_t GUI_close(void);
 
+void GUI_PrevSceneChange();
+void GUI_NextSceneChange();
 void GUI_PrevBlackFrame(void);
 void GUI_NextBlackFrame( ) ;
 void GUI_NextPrevBlackFrame( int ) ;
