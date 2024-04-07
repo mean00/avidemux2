@@ -39,5 +39,6 @@ public slots:
     void dimensionSpinBoxChanged(int value);
     void roundupChanged(int index);
     void setPreferences(bool f);
+    void swapDimensions(bool f);
 };
 #endif // Q_fitToSize_h
