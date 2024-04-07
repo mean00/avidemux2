@@ -30,6 +30,7 @@
 fitToSizeWindow::fitToSizeWindow(QWidget *parent, resParam *param) : QDialog(parent)
 {
     ui.setupUi(this);
+    ui.pushButtonSwapDimensions->setText(QString::fromUtf8("\u21C4"));
     _param=param;
 
     if (_param->firstRun)
