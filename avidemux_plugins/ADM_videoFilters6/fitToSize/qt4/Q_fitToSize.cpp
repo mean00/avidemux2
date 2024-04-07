@@ -311,10 +311,18 @@ void fitToSizeWindow::setPreferences(bool f)
 void fitToSizeWindow::swapDimensions(bool f)
 {
     UNUSED_ARG(f);
+
+    disconnectDimensionControls();
+
     uint32_t width = ui.spinBoxWidth->value();
     uint32_t height = ui.spinBoxHeight->value();
     ui.spinBoxWidth->setValue(height);
     ui.spinBoxHeight->setValue(width);
+
+    roundUp();
+    printInfo();
+
+    connectDimensionControls();
 }
 
 void fitToSizeWindow::okButtonClicked()
