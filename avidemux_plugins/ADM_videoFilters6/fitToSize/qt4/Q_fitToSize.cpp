@@ -75,6 +75,7 @@ fitToSizeWindow::fitToSizeWindow(QWidget *parent, resParam *param) : QDialog(par
     preferencesButton = ui.buttonBox->addButton(QT_TRANSLATE_NOOP("fitToSize","Preferences"),QDialogButtonBox::ResetRole);
     preferencesButton->setCheckable(true);
     connect(preferencesButton,SIGNAL(clicked(bool)),this,SLOT(setPreferences(bool)));
+    connect(ui.pushButtonSwapDimensions,SIGNAL(clicked(bool)),this,SLOT(swapDimensions(bool)));
     
     connectDimensionControls();
 
@@ -305,6 +306,15 @@ void fitToSizeWindow::setPreferences(bool f)
     qset = NULL;
 
     preferencesButton->setChecked(false);
+}
+
+void fitToSizeWindow::swapDimensions(bool f)
+{
+    UNUSED_ARG(f);
+    uint32_t width = ui.spinBoxWidth->value();
+    uint32_t height = ui.spinBoxHeight->value();
+    ui.spinBoxWidth->setValue(height);
+    ui.spinBoxHeight->setValue(width);
 }
 
 void fitToSizeWindow::okButtonClicked()
