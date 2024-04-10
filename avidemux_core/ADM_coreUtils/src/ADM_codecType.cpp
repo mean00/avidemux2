@@ -85,6 +85,7 @@ bool isH265Compatible (uint32_t fourcc)
   CHECK ("hevc");
   CHECK ("HVC1");
   CHECK ("hvc1");
+  CHECK ("hev1");
   return false;
 }
 
