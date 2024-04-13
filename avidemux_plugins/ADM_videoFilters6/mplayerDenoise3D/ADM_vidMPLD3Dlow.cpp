@@ -217,7 +217,7 @@ bool ADMVideoMPD3Dlow::getNextFrame(uint32_t *fn,ADMImage *image)
     
         *fn=nextFrame;
         uint32_t n = nextFrame;
-printf("MP3d: next frame= %d\n",(int)n);
+        aprintf("MP3d: next frame= %d\n",(int)n);
         src = vidCache->getImage(n);
         if(!src) return false;
         // If possible get previous image...
