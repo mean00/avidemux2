@@ -128,8 +128,8 @@ bool ADM_commandSocket::pollMessage(ADM_socketMessage &msg)
         FD_SET(mySocket,&er);
         struct timeval timeout; 
 
-        timeout.tv_sec=1;
-        timeout.tv_usec=0; // 1 sec
+        timeout.tv_sec=2;
+        timeout.tv_usec=0;
         //ADM_info("Selecting\n");
         int evt=select(1+mySocket,&set,NULL,&er,&timeout);
         if(evt<0) 
