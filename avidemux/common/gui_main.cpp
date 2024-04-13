@@ -65,9 +65,6 @@ static int cutsNotOnIntraWarned;
 //***********************************
 //******** GUI Function**************
 //***********************************
-extern const char * GUI_getCustomJsScript(uint32_t nb);
-extern const char * GUI_getCustomPyScript(uint32_t nb);
-extern const char * GUI_getAutoPyScript(uint32_t nb);
 extern void call_scriptEngine(const char *scriptFile);
 extern int     GUI_handleVFilter (void);
 extern int     GUI_handleVPartialFilter (void);
@@ -106,8 +103,6 @@ void HandleAction (Action action);
 void HandleAction_Navigate(Action action);
 void HandleAction_Save(Action action);
 void HandleAction_Staged(Action action);
-
-extern void call_scriptEngine(const char *scriptFile);
 
 static std::string getDefaultSettingsFilePath(void);
 static std::string getLastSessionFilePath(void);
