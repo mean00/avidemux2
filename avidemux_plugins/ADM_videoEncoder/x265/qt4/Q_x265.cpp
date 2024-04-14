@@ -528,6 +528,9 @@ bool x265Dialog::upload(void)
             //encodingModeComboBox_currentIndexChanged(1);
             ui.quantiserSpinBox->setValue(ENCODING(qz));
             break;
+        case COMPRESS_LOSSLESS:
+            ui.encodingModeComboBox->setCurrentIndex(5);
+            break;
 
         default: ADM_assert(0);break;
     }
@@ -679,6 +682,7 @@ bool x265Dialog::download(void)
         case 2: ENCODING(mode)=COMPRESS_AQ;ENCODING(qz)=ui.quantiserSpinBox->value();break;
         case 3: ENCODING(mode)=COMPRESS_2PASS;ENCODING(finalsize)=ui.targetRateControlSpinBox->value();;break;
         case 4: ENCODING(mode)=COMPRESS_2PASS_BITRATE;ENCODING(avg_bitrate)=ui.targetRateControlSpinBox->value();;break;
+        case 5: ENCODING(mode)=COMPRESS_LOSSLESS;break;
     }
 
 #if X265_BUILD < 47
@@ -710,7 +714,7 @@ bool x265Dialog::download(void)
 // General tab
 void x265Dialog::encodingModeComboBox_currentIndexChanged(int index)
 {
-	bool enableQp = false, enableMaxCrf = false, enableStrictCbr = false;
+	bool enableQp = false, enableMaxCrf = false, enableStrictCbr = false, lossless = false;
 
 	switch (index)
 	{
@@ -739,6 +743,9 @@ void x265Dialog::encodingModeComboBox_currentIndexChanged(int index)
 			ui.targetRateControlLabel2->setText(QString::fromUtf8(QT_TRANSLATE_NOOP("x265","kbit/s")));
 			ui.targetRateControlSpinBox->setValue(lastBitrate);
 			break;
+                case 5: // Lossless
+                        lossless = true;
+                    break;
 	}
 
 	ui.quantiserLabel1->setEnabled(enableQp);
@@ -747,9 +754,9 @@ void x265Dialog::encodingModeComboBox_currentIndexChanged(int index)
 	ui.quantiserSlider->setEnabled(enableQp);
 	ui.quantiserSpinBox->setEnabled(enableQp);
 
-	ui.targetRateControlLabel1->setEnabled(!enableQp);
-	ui.targetRateControlLabel2->setEnabled(!enableQp);
-	ui.targetRateControlSpinBox->setEnabled(!enableQp);
+	ui.targetRateControlLabel1->setEnabled(!enableQp && !lossless);
+	ui.targetRateControlLabel2->setEnabled(!enableQp && !lossless);
+	ui.targetRateControlSpinBox->setEnabled(!enableQp && !lossless);
         
 #if X265_BUILD >= 41
         ui.strictCbrCheckBox->setEnabled(enableStrictCbr);
