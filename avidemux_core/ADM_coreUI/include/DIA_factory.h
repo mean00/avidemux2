@@ -669,11 +669,11 @@ public:
         void finalize(void);
 };
 /**********************************************/
-typedef diaElem *(CREATE_TILING_T)(uint32_t *tiling, uint32_t *maxlog2, const char *title, const char *tip);
+typedef diaElem *(CREATE_TILING_T)(uint32_t *tiling, uint32_t *maxlog2cols, uint32_t *maxlog2rows, const char *title, const char *tip);
 class ADM_COREUI6_EXPORT diaElemTiling : public diaElem
 {
 public:
-	diaElemTiling(uint32_t *tiling, uint32_t *maxlog2, const char *title, const char *tip = NULL);
+	diaElemTiling(uint32_t *tiling, uint32_t *maxlog2cols, uint32_t *maxlog2rows, const char *title, const char *tip = NULL);
 	virtual ~diaElemTiling();
 	void setMe(void *dialog, void *opaque, uint32_t line);
 	void getMe(void);

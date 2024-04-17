@@ -26,10 +26,10 @@ namespace ADM_qt4Factory
 class diaElemTiling : public diaElem, QtFactoryUtils
 {
 private:
-    uint32_t maxLog2Tiles;
+    uint32_t maxLog2Cols, maxLog2Rows;
     void *rowControl, *label;
 public:
-    diaElemTiling(uint32_t *tiling, uint32_t *maxlog2, const char *title, const char *tip = NULL);
+    diaElemTiling(uint32_t *tiling, uint32_t *maxlog2cols, uint32_t *maxlog2rows, const char *title, const char *tip = NULL);
     virtual ~diaElemTiling();
     void setMe(void *dialog, void *opaque, uint32_t line);
     void getMe(void);
@@ -37,10 +37,11 @@ public:
     int getRequiredLayout(void);
 };
 
-diaElemTiling::diaElemTiling(uint32_t *tiling, uint32_t *maxlog2, const char *title, const char *tip) : diaElem(ELEM_TILING), QtFactoryUtils(title)
+diaElemTiling::diaElemTiling(uint32_t *tiling, uint32_t *maxlog2cols, uint32_t *maxlog2rows, const char *title, const char *tip) : diaElem(ELEM_TILING), QtFactoryUtils(title)
 {
     param = (void *)tiling; // (log2(nbRows) << 16) + log2(nbCols)
-    this->maxLog2Tiles = *maxlog2;
+    this->maxLog2Cols = *maxlog2cols;
+    this->maxLog2Rows = *maxlog2rows;
     this->tip = tip;
 }
 
@@ -68,11 +69,13 @@ void diaElemTiling::setMe(void *dialog, void *opaque, uint32_t line)
     colBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("tiling", "Columns: 1")));
     rowBox->addItem(QString::fromUtf8(QT_TRANSLATE_NOOP("tiling", "Rows: 1")));
 
-    for(int i = 1; i <= maxLog2Tiles; i++)
+    for(int i = 1; i <= ((maxLog2Cols > maxLog2Rows) ? maxLog2Cols : maxLog2Rows); i++)
     {
         QString s = QString("%1").arg(1 << i);
-        colBox->addItem(s);
-        rowBox->addItem(s);
+        if (i <= maxLog2Cols)
+            colBox->addItem(s);
+        if (i <= maxLog2Rows)
+            rowBox->addItem(s);
     }
 
     uint32_t tiling = *(uint32_t *)param;
@@ -125,9 +128,9 @@ int diaElemTiling::getRequiredLayout(void) { return FAC_QT_GRIDLAYOUT; }
 } // End of namespace
 //****************************Hoook*****************
 
-diaElem *qt4CreateTiling(uint32_t *tiling, uint32_t *maxlog2, const char *title, const char *tip)
+diaElem *qt4CreateTiling(uint32_t *tiling, uint32_t *maxlog2cols, uint32_t *maxlog2rows, const char *title, const char *tip)
 {
-    return new ADM_qt4Factory::diaElemTiling(tiling, maxlog2, title, tip);
+    return new ADM_qt4Factory::diaElemTiling(tiling, maxlog2cols, maxlog2rows, title, tip);
 }
 
 void qt4DestroyTiling(diaElem *e)

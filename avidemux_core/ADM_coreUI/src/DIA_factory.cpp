@@ -530,12 +530,12 @@ void      diaElemAspectRatio::enable(uint32_t onoff)
 	}
 DIA_MKSTUBS(diaElemAspectRatio)
 // ****************** diaElemTiling ********************
-diaElemTiling::diaElemTiling(uint32_t *tiling, uint32_t *maxlog2, const char *title, const char *tip):
+diaElemTiling::diaElemTiling(uint32_t *tiling, uint32_t *maxlog2cols, uint32_t *maxlog2rows, const char *title, const char *tip):
 	diaElem(ELEM_TILING)
 {
 	ADM_assert(Factory);
 	ADM_assert(Factory->CreateTiling);
-	internalPointer=Factory->CreateTiling(tiling, maxlog2, title, tip);
+	internalPointer=Factory->CreateTiling(tiling, maxlog2cols, maxlog2rows, title, tip);
 }
 diaElemTiling::~diaElemTiling()
 {
