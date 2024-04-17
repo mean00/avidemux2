@@ -38,10 +38,14 @@ bool av1AomEncoderConfigure(void)
         QT_TRANSLATE_NOOP("aomencoder","Speed"),
         0, maxspeed,
         QT_TRANSLATE_NOOP("aomencoder", "Lower values favor quality over speed."));
-    uint32_t maxlog2 = 3;
-    diaElemTiling tilingmenu(PX(tiling), &maxlog2,
+
+    uint32_t maxlog2cols, maxlog2rows;
+    maxlog2cols = maxlog2rows = 3;
+
+    diaElemTiling tilingmenu(PX(tiling), &maxlog2cols, &maxlog2rows,
         QT_TRANSLATE_NOOP("aomencoder","Tiling"),
         QT_TRANSLATE_NOOP("aomencoder","Tiling benefits multi-threading of encoding and decoding."));
+
     diaElemUInteger concu(PX(nbThreads),
         QT_TRANSLATE_NOOP("aomencoder","Threads"),
         1, AV1_ENC_MAX_THREADS,
