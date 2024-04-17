@@ -319,6 +319,21 @@ bool vp9Encoder::setup(void)
     {
         ADM_warning("[vp9Encoder] Cannot set VP9E_SET_COLOR_RANGE codec control to %d\n",vp9Settings.fullrange);
     }
+
+    unsigned int colCount = ((vp9Settings.tiling >> 0) & 0xFFFF);
+
+    if(VPX_CODEC_OK != vpx_codec_control(&context, VP9E_SET_TILE_COLUMNS, colCount))
+    {
+        ADM_warning("[vp9Encoder] Cannot set VP9E_SET_TILE_COLUMNS codec control to %u\n", colCount);
+    }
+
+    unsigned int rowCount = ((vp9Settings.tiling >> 16) & 0xFFFF);
+
+    if(VPX_CODEC_OK != vpx_codec_control(&context, VP9E_SET_TILE_ROWS, rowCount))
+    {
+        ADM_warning("[vp9Encoder] Cannot set VP9E_SET_TILE_ROWS codec control to %u\n", rowCount);
+    }
+
     return true;
 }
 

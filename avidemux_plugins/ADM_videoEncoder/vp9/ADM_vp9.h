@@ -39,6 +39,7 @@ enum vp9DeadlinePreset
      2, /* nbThreads */ \
      1, /* autoThreads */ \
     13, /* speed = VP8E_SET_CPUUSED + 9 */ \
+     6, /* tiling = max. possible # of tile columns, will be capped by encoder to respect min. col. width of 256 px, a single tile row */ \
      1, /* deadline = 1s */ \
    128, /* keyint */ \
      0  /* fullrange */ \

@@ -36,6 +36,14 @@ bool vp9EncoderConfigure(void)
 
     diaElemMenu menudl(PX(deadline),QT_TRANSLATE_NOOP("vp9encoder","Deadline"),3,dltype);
     diaElemInteger speedi(&spdi,QT_TRANSLATE_NOOP("vp9encoder","Speed"),-9,9);
+
+    uint32_t maxlog2cols = 6;
+    uint32_t maxlog2rows = 2;
+
+    diaElemTiling tilingmenu(PX(tiling), &maxlog2cols, &maxlog2rows,
+        QT_TRANSLATE_NOOP("vp9encoder","Tiling"),
+        QT_TRANSLATE_NOOP("vp9encoder","Tiling benefits multi-threading of encoding and decoding."));
+
     diaElemUInteger conc(PX(nbThreads),QT_TRANSLATE_NOOP("vp9encoder","Threads"),1,VP9_ENC_MAX_THREADS);
     diaElemToggle thrmatic(PX(autoThreads),QT_TRANSLATE_NOOP("vp9encoder","Use as many threads as CPU cores"));
 
@@ -50,6 +58,7 @@ bool vp9EncoderConfigure(void)
 
     diaElemFrame frameEncSpeed(QT_TRANSLATE_NOOP("vp9encoder","Speed vs Quality"));
     frameEncSpeed.swallow(&speedi);
+    frameEncSpeed.swallow(&tilingmenu);
     frameEncSpeed.swallow(&conc);
     frameEncSpeed.swallow(&thrmatic);
     frameEncSpeed.swallow(&menudl);
