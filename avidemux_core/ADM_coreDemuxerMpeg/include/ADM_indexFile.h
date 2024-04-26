@@ -20,6 +20,7 @@
 #include "ADM_coreDemuxerMpeg6_export.h"
 #include <BVector.h>
 #include "ADM_byteBuffer.h"
+#include "ADM_memFile.h"
 /**
     \class indexFile
     \brief Read a index file easily
@@ -59,6 +60,7 @@ protected:
     void            purgeTokens(void);
 
     FILE            *file;
+    MFILE           *mFile;
     BVector         <dmxToken *> ListOfTokens;
 public:
 

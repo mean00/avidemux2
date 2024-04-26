@@ -34,6 +34,13 @@ static const uint32_t FPS[16]={
         };
 
 
+
+#define ifprintf(...)   do { \
+                            if (index) qfprintf(index,__VA_ARGS__); \
+                            else mfprintf(mFile, __VA_ARGS__); \
+                        } while(0)
+
+
 /**
     \fn runMpeg2
 */  
@@ -64,12 +71,17 @@ uint8_t result=1;
 
     string indexName=string(file);
     indexName=indexName+string(".idx2");
-    index=qfopen(indexName,"wt");
+    index=qfopen(indexName,"wt",true);
 
     if(!index)
     {
         printf("[TsIndexerMpeg2] Cannot create %s\n",indexName.c_str());
-        return 0;
+        mFile=mfopen(indexName,"wt");
+        if (!mFile)
+        {
+            printf("[TsIndexerMpeg2] Cannot create memFile either\n");
+            return 0;
+        }
     }
     
     int append=0;
@@ -79,8 +91,11 @@ uint8_t result=1;
     int nbFollowUps=ADM_probeSequencedFile(file,&append);
     if(nbFollowUps<0)
     {
-        qfclose(index);
-        index=NULL;
+        if (index)
+        {
+            qfclose(index);
+            index=NULL;
+        }
         return 0;
     }
     if(!nbFollowUps || false==GUI_Question(QT_TRANSLATE_NOOP("tsdemuxer","There are several files with sequential file names. Should they be all loaded ?")))
@@ -96,8 +111,11 @@ uint8_t result=1;
         delete pkt;
         pkt=NULL;
         audioTracks=NULL;
-        qfclose(index);
-        index=NULL;
+        if (index)
+        {
+            qfclose(index);
+            index=NULL;
+        }
         return 0;
     }
     data.pkt=pkt;
@@ -124,7 +142,7 @@ uint8_t result=1;
             {
                 writeVideo(&video, video.type ? ADM_TS_MPEG2 : ADM_TS_MPEG1);
                 writeAudio();
-                qfprintf(index,"[Data]");
+                ifprintf("[Data]");
                 seqEntryPending=false;
                 pkt->collectStats();
                 CHECK(addUnit(data,unitTypeSps,spsUnit,4+4+4))
@@ -231,7 +249,7 @@ uint8_t result=1;
                                             video.interlaced=(picture_structure!=3);
                                             writeVideo(&video, video.type ? ADM_TS_MPEG2 : ADM_TS_MPEG1);
                                             writeAudio();
-                                            qfprintf(index,"[Data]");
+                                            ifprintf("[Data]");
                                             seqEntryPending=false;
                                             pkt->collectStats();
                                             CHECK(addUnit(data,unitTypeSps,spsUnit,4+4+4))
@@ -298,12 +316,20 @@ uint8_t result=1;
       }
 the_end:
         printf("\n");
-        qfprintf(index,"\n[End]\n");
-        qfprintf(index,"\n# Found %" PRIu32" images \n",data.nbPics); // Size
-        qfprintf(index,"# Found %" PRIu32" frame pictures\n",video.frameCount); // Size
-        qfprintf(index,"# Found %" PRIu32" field pictures\n",video.fieldCount); // Size
-        qfclose(index);
-        index=NULL;
+        ifprintf("\n[End]\n");
+        ifprintf("\n# Found %" PRIu32" images \n",data.nbPics); // Size
+        ifprintf("# Found %" PRIu32" frame pictures\n",video.frameCount); // Size
+        ifprintf("# Found %" PRIu32" field pictures\n",video.fieldCount); // Size
+        if (index)
+        {
+            qfclose(index);
+            index=NULL;
+        }
+        if (mFile)
+        {
+            mfclose(mFile);
+            mFile = NULL;
+        }
         audioTracks=NULL;
         delete pkt;
         pkt=NULL;

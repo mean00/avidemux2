@@ -122,7 +122,8 @@ class tsHeader         :public vidHeader
     bool    processVideoIndex(char *buffer);
     bool    processAudioIndex(char *buffer);
 
-    std::vector <dmxFrame *> ListOfFrames;      
+    std::vector <dmxFrame *> ListOfFrames;
+    std::vector <std::string> ListOfIndexFiles;
     fileParser      parser;
     uint32_t       lastFrame;
     tsPacketLinear *tsPacket;

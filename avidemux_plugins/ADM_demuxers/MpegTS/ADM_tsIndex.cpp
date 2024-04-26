@@ -36,6 +36,10 @@ static const uint32_t FPS[16]={
                 0                       // 15
         };
 
+#define ifprintf(...)   do { \
+                            if (index) qfprintf(index,__VA_ARGS__); \
+                            else mfprintf(mFile, __VA_ARGS__); \
+                        } while(0)
 
 /**
       \fn TsIndexer 
@@ -120,6 +124,7 @@ TsIndexerBase::TsIndexerBase(listOfTsAudioTracks *trk)
 {
 
     index=NULL;
+    mFile=NULL;
     pkt=NULL;
     audioTracks=NULL;
     beginConsuming=0;
@@ -155,29 +160,29 @@ bool  TsIndexerBase::updateUI(void)
 */
 bool TsIndexerBase::writeVideo(TSVideo *video,ADM_TS_TRACK_TYPE trkType)
 {
-    qfprintf(index,"[Video]\n");
-    qfprintf(index,"Width=%d\n",video->w);
-    qfprintf(index,"Height=%d\n",video->h);
-    qfprintf(index,"Fps=%d\n",video->fps);
-    qfprintf(index,"Interlaced=%d\n",video->interlaced);
-    qfprintf(index,"AR=%d\n",video->ar);
-    qfprintf(index,"Pid=%d\n",video->pid);
+    ifprintf("[Video]\n");
+    ifprintf("Width=%d\n",video->w);
+    ifprintf("Height=%d\n",video->h);
+    ifprintf("Fps=%d\n",video->fps);
+    ifprintf("Interlaced=%d\n",video->interlaced);
+    ifprintf("AR=%d\n",video->ar);
+    ifprintf("Pid=%d\n",video->pid);
     if(video->extraDataLength)
     {
-        qfprintf(index,"ExtraData=%d ",video->extraDataLength);
+        ifprintf("ExtraData=%d ",video->extraDataLength);
         ADM_assert(video->extraData);
         uint8_t *p = video->extraData;
         for(int i=0;i<video->extraDataLength;i++)
-            qfprintf(index," %02x",*p++);
-        qfprintf(index,"\n");
+            ifprintf(" %02x",*p++);
+        ifprintf("\n");
     }
  switch(trkType)
     {
-        case ADM_TS_MPEG1: qfprintf(index,"VideoCodec=Mpeg1\n");break;
-        case ADM_TS_MPEG2: qfprintf(index,"VideoCodec=Mpeg2\n");break;
-        case ADM_TS_H264:  qfprintf(index,"VideoCodec=H264\n");break;
-        case ADM_TS_H265:  qfprintf(index,"VideoCodec=H265\n");break;
-        case ADM_TS_VC1:   qfprintf(index,"VideoCodec=VC1\n");break;
+        case ADM_TS_MPEG1: ifprintf("VideoCodec=Mpeg1\n");break;
+        case ADM_TS_MPEG2: ifprintf("VideoCodec=Mpeg2\n");break;
+        case ADM_TS_H264:  ifprintf("VideoCodec=H264\n");break;
+        case ADM_TS_H265:  ifprintf("VideoCodec=H265\n");break;
+        case ADM_TS_VC1:   ifprintf("VideoCodec=VC1\n");break;
         default: printf("[TsIndexer] Unsupported video codec\n");return false;
 
     }
@@ -189,12 +194,12 @@ bool TsIndexerBase::writeVideo(TSVideo *video,ADM_TS_TRACK_TYPE trkType)
 */
 bool TsIndexerBase::writeSystem(const char *filename,int append)
 {
-    qfprintf(index,"PSD1\n");
-    qfprintf(index,"[System]\n");
-    qfprintf(index,"Version=%d\n",ADM_INDEX_FILE_VERSION);
-    qfprintf(index,"Type=T\n");
-    qfprintf(index,"File=%s\n",filename);
-    qfprintf(index,"Append=%u\n",(uint32_t)append);
+    ifprintf("PSD1\n");
+    ifprintf("[System]\n");
+    ifprintf("Version=%d\n",ADM_INDEX_FILE_VERSION);
+    ifprintf("Type=T\n");
+    ifprintf("File=%s\n",filename);
+    ifprintf("Append=%u\n",(uint32_t)append);
     return true;
 }
 /**
@@ -204,27 +209,27 @@ bool TsIndexerBase::writeSystem(const char *filename,int append)
 bool TsIndexerBase::writeAudio(void)
 {
     if(!audioTracks) return false;
-    qfprintf(index,"[Audio]\n");
-    qfprintf(index,"Tracks=%d\n",audioTracks->size());
+    ifprintf("[Audio]\n");
+    ifprintf("Tracks=%d\n",audioTracks->size());
     for(int i=0;i<audioTracks->size();i++)
     {
         char head[30];
         tsAudioTrackInfo *t=&(*audioTracks)[i];
         sprintf(head,"Track%1d",i);
-        qfprintf(index,"%s.pid=%x\n",head,t->esId);
-        qfprintf(index,"%s.codec=%d\n",head,t->wav.encoding);
-        qfprintf(index,"%s.fq=%d\n",head,t->wav.frequency);
-        qfprintf(index,"%s.chan=%d\n",head,t->wav.channels);
-        qfprintf(index,"%s.br=%d\n",head,t->wav.byterate);
-        qfprintf(index,"%s.muxing=%d\n",head,t->mux);
-        qfprintf(index,"%s.language=%s\n",head,t->language.c_str());
+        ifprintf("%s.pid=%x\n",head,t->esId);
+        ifprintf("%s.codec=%d\n",head,t->wav.encoding);
+        ifprintf("%s.fq=%d\n",head,t->wav.frequency);
+        ifprintf("%s.chan=%d\n",head,t->wav.channels);
+        ifprintf("%s.br=%d\n",head,t->wav.byterate);
+        ifprintf("%s.muxing=%d\n",head,t->mux);
+        ifprintf("%s.language=%s\n",head,t->language.c_str());
         if(t->extraDataLen)
         {
-            qfprintf(index,"%s.extraData=%d",head,t->extraDataLen);
+            ifprintf("%s.extraData=%d",head,t->extraDataLen);
             uint8_t *p=t->extraData;
             for(int i=0;i<t->extraDataLen;i++)
-                qfprintf(index," %02x",p[i]);
-            qfprintf(index,"\n");
+                ifprintf(" %02x",p[i]);
+            ifprintf("\n");
         }
     }
     return true;
@@ -274,7 +279,7 @@ bool TsIndexerBase::dumpUnits(indexerData &data,uint64_t nextConsumed,const dmxP
         {
             if(audioTracks)
             {
-                qfprintf(index,"\nAudio bf:%08" PRIx64" ",nextPacket->startAt);
+                ifprintf("\nAudio bf:%08" PRIx64" ",nextPacket->startAt);
                 packetTSStats *s;
                 uint32_t na;
                 pkt->getStats(&na,&s);      
@@ -282,14 +287,14 @@ bool TsIndexerBase::dumpUnits(indexerData &data,uint64_t nextConsumed,const dmxP
                 for(int i=0;i<na;i++)
                 {   
                     packetTSStats *current=s+i;
-                    qfprintf(index,"Pes:%x:%08" PRIx64":%" PRIi32":%" PRId64" ",
+                    ifprintf("Pes:%x:%08" PRIx64":%" PRIi32":%" PRId64" ",
                                 current->pid,current->startAt,current->startSize,current->startDts);
                 }                
             }
             data.beginPts=pic->pts;
             data.beginDts=pic->dts;
             // start a new line
-            qfprintf(index,"\nVideo at:%08" PRIx64":%04" PRIx32" Pts:%08" PRId64":%08" PRId64" ",
+            ifprintf("\nVideo at:%08" PRIx64":%04" PRIx32" Pts:%08" PRId64":%08" PRId64" ",
                         p->startAt,p->offset-unit->overRead,pic->pts,pic->dts);
         }
        
@@ -303,13 +308,13 @@ bool TsIndexerBase::dumpUnits(indexerData &data,uint64_t nextConsumed,const dmxP
                 else deltaDts=pic->dts-data.beginDts;            
 
 
-        qfprintf(index," %c%c",Type[picUnit->imageType],Structure[pictStruct%6]);
+        ifprintf(" %c%c",Type[picUnit->imageType],Structure[pictStruct%6]);
         int32_t delta=(int32_t)(nextConsumed-beginConsuming);
         
     //    printf("%d -- %d = %d\n",nextConsumed, beginConsuming,delta);
         
-        qfprintf(index,":%06" PRIx32,delta);
-        qfprintf(index,":%" PRId64":%" PRId64,deltaPts,deltaDts);
+        ifprintf(":%06" PRIx32,delta);
+        ifprintf(":%" PRId64":%" PRId64,deltaPts,deltaDts);
     
         beginConsuming=nextConsumed;
         listOfUnits.clear();

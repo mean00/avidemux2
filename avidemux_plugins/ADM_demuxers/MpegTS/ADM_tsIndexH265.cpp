@@ -22,6 +22,13 @@
 #else
 #define aprintf printf
 #endif
+
+
+#define ifprintf(...)   do { \
+                            if (index) qfprintf(index,__VA_ARGS__); \
+                            else mfprintf(mFile, __VA_ARGS__); \
+                        } while(0)
+
 /**
  * 
  * @param sc
@@ -217,7 +224,7 @@ bool TsIndexerH265::findH265VPS(tsPacketLinearTracker *pkt,TSVideo &video)
     video.fps=info.fps1000;
     writeVideo(&video,ADM_TS_H265);
     writeAudio();
-    qfprintf(index,"[Data]");
+    ifprintf("[Data]");
     
     ADM_info("Found video %d x %d\n",info.width,info.height);
     return true;
@@ -311,7 +318,12 @@ uint8_t TsIndexerH265::run(const char *file,ADM_TS_TRACK *videoTrac)
     if(!index)
     {
         printf("[TsIndexerH265] Cannot create %s\n",indexName.c_str());
-        return false;
+        mFile=mfopen(indexName,"wt");
+        if (!mFile)
+        {
+            printf("[TsIndexerH265] Cannot create memFile either\n");
+            return false;
+        }
     }
 
     uint8_t result=0;
@@ -492,7 +504,7 @@ uint8_t TsIndexerH265::run(const char *file,ADM_TS_TRACK *videoTrac)
     result=1;
 the_end:
         printf("\n");
-        qfprintf(index,"\n[End]\n");
+        ifprintf("\n[End]\n");
         qfclose(index);
         index=NULL;
         audioTracks=NULL;

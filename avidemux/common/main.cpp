@@ -25,6 +25,7 @@
 #include "ADM_coreVideoFilterFunc.h"
 #include "ADM_coreDemuxer.h"
 #include "ADM_muxerProto.h"
+#include "ADM_memFile.h"
 
 #define __DECLARE__
 #include "avi_vars.h"
@@ -351,6 +352,7 @@ int startAvidemux(int argc, char *argv[])
 
     // Load .avidemuxrc
     quotaInit();
+    memFileInit();
 
     ADM_lavFormatInit();
 

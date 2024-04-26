@@ -18,7 +18,10 @@ static const uint32_t  VC1_ar[16][2] = {  // From VLC
                         {24,11}, {20,11}, {32,11}, {80,33}, {18,11}, {15,11},
                         {64,33}, {160,99},{ 0, 0}, { 0, 0}};
 
-
+#define ifprintf(...)   do { \
+                            if (index) qfprintf(index,__VA_ARGS__); \
+                            else mfprintf(mFile, __VA_ARGS__); \
+                        } while(0)
 /**
     \fn runVC1
     \brief Index VC1 stream
@@ -53,8 +56,13 @@ dmxPacketInfo info;
 
     if(!index)
     {
-        printf("[PsIndex] Cannot create %s\n",indexName.c_str());
-        return false;
+        printf("[TsIndex] Cannot create %s\n",indexName.c_str());
+        mFile=mfopen(indexName,"wt");
+        if (!mFile)
+        {
+            printf("[TsIndex] Cannot create memFile either\n");
+            return false;
+        }
     }
     writeSystem(file,false);
     pkt=new tsPacketLinearTracker(videoTrac->trackPid, audioTracks);
@@ -125,7 +133,7 @@ dmxPacketInfo info;
                           delete [] video.extraData;
                           video.extraData = NULL;
                           writeAudio();
-                          qfprintf(index,"[Data]");
+                          ifprintf("[Data]");
                           pkt->collectStats();
                           pkt->getInfo(&thisUnit.packetInfo);
                           thisUnit.consumedSoFar=pkt->getConsumed();
@@ -172,10 +180,10 @@ dmxPacketInfo info;
 the_end:
         printf("\n");
 //        Mark(&data,&info,2);
-        qfprintf(index,"\n[End]\n");
-        qfprintf(index,"\n# Found %" PRIu32" images \n",data.nbPics); // Size
-        qfprintf(index,"# Found %" PRIu32" frame pictures\n",video.frameCount); // Size
-        qfprintf(index,"# Found %" PRIu32" field pictures\n",video.fieldCount); // Size
+        ifprintf("\n[End]\n");
+        ifprintf("\n# Found %" PRIu32" images \n",data.nbPics); // Size
+        ifprintf("# Found %" PRIu32" frame pictures\n",video.frameCount); // Size
+        ifprintf("# Found %" PRIu32" field pictures\n",video.fieldCount); // Size
         qfclose(index);
         index=NULL;
         audioTracks=NULL;

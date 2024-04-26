@@ -1,8 +1,9 @@
 /** *************************************************************************
-    \fn ADM_quota.h
-    \brief Handle disk full etc
+    \fn ADM_memFile.h
+    \brief temporary file in memory
                       
     copyright            : (C) 2008 by mean
+                               2024 szlldm
     
  ***************************************************************************/
 
@@ -13,8 +14,8 @@
  *   the Free Software Foundation; either version 2 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
-#ifndef ADM_quota_h
-#define ADM_quota_h
+#ifndef ADM_memFile_h
+#define ADM_memFile_h
 
 #include "ADM_coreUtils6_export.h"
 #include <stdio.h>
@@ -27,20 +28,33 @@
 
 #include "ADM_coreConfig.h"
 
-/* qfopen stands for quota-fopen() */
+typedef struct
+{
+    char * buf;
+    ssize_t seek;
+    size_t length;
+    size_t allocated;
+} MFILE;
 
-ADM_COREUTILS6_EXPORT FILE *qfopen(const char *, const char *, bool silent = false);
+ADM_COREUTILS6_EXPORT MFILE *mfopen(const char *, const char *);
 #ifdef __cplusplus
-ADM_COREUTILS6_EXPORT FILE *qfopen(const std::string &name, const char *, bool silent = false);
+ADM_COREUTILS6_EXPORT MFILE *mfopen(const std::string &name, const char *);
 #endif
-/* qfprintf stands for quota-fprintf() */
-ADM_COREUTILS6_EXPORT void qfprintf(FILE *, const char *, ...);
-size_t qfwrite(const void *ptr, size_t size, size_t  nmemb, FILE *stream);
-ssize_t qwrite(int fd, const void *buf, size_t numbytes);
 
-/* qfclose stands for quota-fclose() */
-ADM_COREUTILS6_EXPORT int qfclose(FILE *);
+ADM_COREUTILS6_EXPORT void mfprintf(MFILE *, const char *, ...);
+size_t mfwrite(const void *ptr, size_t size, size_t  nmemb, MFILE *stream);
 
-ADM_COREUTILS6_EXPORT uint8_t  quotaInit(void);
+ADM_COREUTILS6_EXPORT int mfseek (MFILE * stream, ssize_t offset, int origin);
+ADM_COREUTILS6_EXPORT char * mfgets (char * str, int num, MFILE * stream);
+
+ADM_COREUTILS6_EXPORT int mfclose(MFILE *);     // dummy close!
+
+ADM_COREUTILS6_EXPORT void mfcleanup(const char * name);
+#ifdef __cplusplus
+ADM_COREUTILS6_EXPORT void mfcleanup(const std::string &name);
+#endif
+
+
+ADM_COREUTILS6_EXPORT uint8_t  memFileInit(void);
 
 #endif
