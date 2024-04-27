@@ -614,6 +614,263 @@ bool mkvHeader::readCue(ADM_ebml_file *parser)
     }
 
 }
+
+bool mkvHeader::loadIndex(const std::string &idxName, uint64_t fileSize)
+{
+    FILE * f = ADM_fopen(idxName.c_str(), "rb");
+    if (!f) return false;
+
+    uint64_t indexSize = ADM_fileSize(idxName.c_str());
+
+    bool ret = false;
+    uint8_t * buf;
+    uint64_t buf64;
+    ADM_assert(strlen(ADM_MKV_INDEX_MAGIC) == 8);
+    
+    uint64_t bufPos=0;
+    buf = new uint8_t[8];
+
+
+    if (indexSize < 40) goto loadErr;
+    if (ADM_fread(buf,8,1,f)!=1) goto loadErr;
+    if (memcmp(buf,ADM_MKV_INDEX_MAGIC,8)) goto loadErr;
+    if (ADM_fread(&buf64,sizeof(uint64_t),1,f)!=1) goto loadErr;
+    if (buf64 != ADM_MKV_INDEX_VERSION) goto loadErr;
+    if (ADM_fread(&buf64,sizeof(uint64_t),1,f)!=1) goto loadErr;
+    if (buf64 != fileSize) goto loadErr;
+    indexSize -= 8+2*sizeof(uint64_t);
+    if (indexSize < 8) goto loadErr;
+    if (indexSize > ADM_MKV_INDEX_SIZE_LIMIT) goto loadErr;
+    
+    delete [] buf;
+    buf = new uint8_t[indexSize+65536];
+    
+    if (ADM_fread(buf,indexSize,1,f)!=1) goto loadErr;
+    
+    if (memcmp(ADM_MKV_INDEX_MAGIC,buf+(indexSize - 8),8)) goto loadErr;
+    indexSize -= 8;
+    
+     // _clusters
+    memcpy(&buf64, buf+bufPos, sizeof(uint64_t));   bufPos+=sizeof(uint64_t);   ADM_assert(bufPos<=indexSize);
+    _clusters.clear();
+    for (uint64_t i=0; i<buf64; i++)
+    {
+        mkvIndex tmp;
+        memcpy(&tmp, buf+bufPos, sizeof(mkvIndex));   bufPos+=sizeof(mkvIndex);   ADM_assert(bufPos<=indexSize);
+        _clusters.append(tmp);
+    }
+    
+    // _nbAudioTrack
+    memcpy(&buf64, buf+bufPos, sizeof(uint64_t));   bufPos+=sizeof(uint64_t);   ADM_assert(bufPos<=indexSize);
+    _nbAudioTrack = buf64;
+    // _tracks
+    for (int t=0; t<1+_nbAudioTrack; t++)
+    {
+        memcpy(&buf64, buf+bufPos, sizeof(uint64_t));   bufPos+=sizeof(uint64_t);   ADM_assert(bufPos<=indexSize);
+        _tracks[t].index.clear();
+        for (uint64_t i=0; i<buf64; i++)
+        {
+            mkvIndex tmp;
+            memcpy(&tmp, buf+bufPos, sizeof(mkvIndex));   bufPos+=sizeof(mkvIndex);   ADM_assert(bufPos<=indexSize);
+            _tracks[t].index.append(tmp);
+        }
+        
+        memcpy(&buf64, buf+bufPos, sizeof(uint64_t));   bufPos+=sizeof(uint64_t);   ADM_assert(bufPos<=indexSize);
+        _tracks[t].streamIndex = buf64;
+
+        memcpy(&buf64, buf+bufPos, sizeof(uint64_t));   bufPos+=sizeof(uint64_t);   ADM_assert(bufPos<=indexSize);
+        _tracks[t].duration = buf64;
+
+        memcpy(&_tracks[t].wavHeader, buf+bufPos, sizeof(WAVHeader));   bufPos+=sizeof(WAVHeader);   ADM_assert(bufPos<=indexSize);
+        
+        memcpy(&buf64, buf+bufPos, sizeof(uint64_t));   bufPos+=sizeof(uint64_t);   ADM_assert(bufPos<=indexSize);
+        _tracks[t].nbPackets = buf64;
+
+        memcpy(&buf64, buf+bufPos, sizeof(uint64_t));   bufPos+=sizeof(uint64_t);   ADM_assert(bufPos<=indexSize);
+        _tracks[t].nbFrames = buf64;
+
+        memcpy(&buf64, buf+bufPos, sizeof(uint64_t));   bufPos+=sizeof(uint64_t);   ADM_assert(bufPos<=indexSize);
+        _tracks[t].length = buf64;
+
+        memcpy(&buf64, buf+bufPos, sizeof(uint64_t));   bufPos+=sizeof(uint64_t);   ADM_assert(bufPos<=indexSize);
+        _tracks[t]._sizeInBytes = buf64;
+
+        memcpy(&buf64, buf+bufPos, sizeof(uint64_t));   bufPos+=sizeof(uint64_t);   ADM_assert(bufPos<=indexSize);
+        _tracks[t]._defaultFrameDuration = buf64;
+
+        int64_t bufi64;
+
+        memcpy(&bufi64, buf+bufPos, sizeof(int64_t));   bufPos+=sizeof(int64_t);   ADM_assert(bufPos<=indexSize);
+        _tracks[t]._needBuffering = bufi64;
+
+        memcpy(&bufi64, buf+bufPos, sizeof(int64_t));   bufPos+=sizeof(int64_t);   ADM_assert(bufPos<=indexSize);
+        _tracks[t]._needExtraData = bufi64;
+
+        memcpy(&buf64, buf+bufPos, sizeof(uint64_t));   bufPos+=sizeof(uint64_t);   ADM_assert(bufPos<=indexSize);
+        _tracks[t]._secondField = (buf64 != 0);
+
+        memcpy(&buf64, buf+bufPos, sizeof(uint64_t));   bufPos+=sizeof(uint64_t);   ADM_assert(bufPos<=indexSize);
+        _tracks[t]._nalSize = buf64;
+        
+        memcpy(&buf64, buf+bufPos, sizeof(uint64_t));   bufPos+=sizeof(uint64_t);   ADM_assert(bufPos<=indexSize);
+        if (buf64 > 0)
+        {
+            _tracks[t].extraDataLen = buf64;
+            if (_tracks[t].extraData) delete [] _tracks[t].extraData;
+            _tracks[t].extraData = new uint8_t[buf64];
+            ADM_assert(bufPos+buf64<=indexSize);
+            memcpy(_tracks[t].extraData, buf+bufPos, buf64);   bufPos+=buf64;   ADM_assert(bufPos<=indexSize);
+        }
+
+        memcpy(&buf64, buf+bufPos, sizeof(uint64_t));   bufPos+=sizeof(uint64_t);   ADM_assert(bufPos<=indexSize);
+        if (buf64 > 0)
+        {
+            _tracks[t].infoCacheSize = buf64;
+            if (_tracks[t].infoCache) delete [] _tracks[t].infoCache;
+            _tracks[t].infoCache = new uint8_t[buf64];
+            ADM_assert(bufPos+buf64<=indexSize);
+            memcpy(_tracks[t].infoCache, buf+bufPos, buf64);   bufPos+=buf64;   ADM_assert(bufPos<=indexSize);
+        }
+
+        memcpy(&buf64, buf+bufPos, sizeof(uint64_t));   bufPos+=sizeof(uint64_t);   ADM_assert(bufPos<=indexSize);
+        if (buf64 > 0)
+        {
+            _tracks[t].paramCacheSize = buf64;
+            if (_tracks[t].paramCache) delete [] _tracks[t].paramCache;
+            _tracks[t].paramCache = new uint8_t[buf64];
+            ADM_assert(bufPos+buf64<=indexSize);
+            memcpy(_tracks[t].paramCache, buf+bufPos, buf64);   bufPos+=buf64;   ADM_assert(bufPos<=indexSize);
+        }
+
+        memcpy(&buf64, buf+bufPos, sizeof(uint64_t));   bufPos+=sizeof(uint64_t);   ADM_assert(bufPos<=indexSize);
+        ADM_assert(buf64 <= MKV_MAX_REPEAT_HEADER_SIZE);
+        _tracks[t].headerRepeatSize = buf64;
+        ADM_assert(bufPos+buf64<=indexSize);
+        memcpy(_tracks[t].headerRepeat, buf+bufPos, buf64);   bufPos+=buf64;   ADM_assert(bufPos<=indexSize);
+        
+        memcpy(&buf64, buf+bufPos, sizeof(uint64_t));   bufPos+=sizeof(uint64_t);   ADM_assert(bufPos<=indexSize);
+        ADM_assert(buf64 == ADM_MKV_INDEX_MAGICMARK);
+    }    
+    
+    ADM_assert(bufPos==indexSize);
+    ret = true;
+loadErr:
+    delete [] buf;
+    ADM_fclose(f);
+    return ret;
+}
+
+void mkvHeader::saveIndex(const std::string &idxName, uint64_t fileSize)
+{
+    FILE * f = ADM_fopen(idxName.c_str(), "rb");
+    if (f)  // already exists, quit
+    {
+        ADM_fclose(f);
+        return;
+    }
+    
+    f = ADM_fopen(idxName.c_str(), "wb");
+    if (!f) return;
+    
+    uint64_t buf64;
+    ADM_fwrite(ADM_MKV_INDEX_MAGIC,8,1,f);
+    buf64 = ADM_MKV_INDEX_VERSION;
+    ADM_fwrite(&buf64,sizeof(uint64_t),1,f);
+    ADM_fwrite(&fileSize,sizeof(uint64_t),1,f);
+    
+    buf64 = _clusters.size();
+    ADM_fwrite(&buf64,sizeof(uint64_t),1,f);
+    for (uint64_t i=0; i<buf64; i++)
+    {
+        mkvIndex tmp = _clusters[i];
+        if (ADM_fwrite(&tmp,sizeof(mkvIndex),1,f) !=1 ) break;
+    }
+    
+    buf64 = _nbAudioTrack;
+    ADM_fwrite(&buf64,sizeof(uint64_t),1,f);
+    for (int t=0; t<1+_nbAudioTrack; t++)
+    {
+        buf64 = _tracks[t].index.size();
+        ADM_fwrite(&buf64,sizeof(uint64_t),1,f);
+        for (uint64_t i=0; i<buf64; i++)
+        {
+            mkvIndex tmp = _tracks[t].index[i];
+            if (ADM_fwrite(&tmp,sizeof(mkvIndex),1,f) !=1 ) break;
+        }
+        
+        buf64 = _tracks[t].streamIndex;
+        if (ADM_fwrite(&buf64,sizeof(uint64_t),1,f) !=1 ) break;
+
+        buf64 = _tracks[t].duration;
+        if (ADM_fwrite(&buf64,sizeof(uint64_t),1,f) !=1 ) break;
+
+        if (ADM_fwrite(&_tracks[t].wavHeader,sizeof(WAVHeader),1,f) !=1 ) break;
+        
+        buf64 = _tracks[t].nbPackets;
+        if (ADM_fwrite(&buf64,sizeof(uint64_t),1,f) !=1 ) break;
+
+        buf64 = _tracks[t].nbFrames;
+        if (ADM_fwrite(&buf64,sizeof(uint64_t),1,f) !=1 ) break;
+
+        buf64 = _tracks[t].length;
+        if (ADM_fwrite(&buf64,sizeof(uint64_t),1,f) !=1 ) break;
+
+        buf64 = _tracks[t]._sizeInBytes;
+        if (ADM_fwrite(&buf64,sizeof(uint64_t),1,f) !=1 ) break;
+
+        buf64 = _tracks[t]._defaultFrameDuration;
+        if (ADM_fwrite(&buf64,sizeof(uint64_t),1,f) !=1 ) break;
+        
+        int64_t bufi64;
+        
+        bufi64 = _tracks[t]._needBuffering;
+        if (ADM_fwrite(&bufi64,sizeof(int64_t),1,f) !=1 ) break;
+
+        bufi64 = _tracks[t]._needExtraData;
+        if (ADM_fwrite(&bufi64,sizeof(int64_t),1,f) !=1 ) break;
+        
+        buf64 = _tracks[t]._secondField ? 1:0;
+        if (ADM_fwrite(&buf64,sizeof(uint64_t),1,f) !=1 ) break;
+
+        buf64 = _tracks[t]._nalSize;
+        if (ADM_fwrite(&buf64,sizeof(uint64_t),1,f) !=1 ) break;
+
+        buf64 = _tracks[t].extraDataLen;
+        if (ADM_fwrite(&buf64,sizeof(uint64_t),1,f) !=1 ) break;
+        if (buf64 > 0)
+        {
+            if (ADM_fwrite(_tracks[t].extraData,buf64,1,f) !=1 ) break;
+        }
+
+        buf64 = _tracks[t].infoCacheSize;
+        if (ADM_fwrite(&buf64,sizeof(uint64_t),1,f) !=1 ) break;
+        if (buf64 > 0)
+        {
+            if (ADM_fwrite(_tracks[t].infoCache,buf64,1,f) !=1 ) break;
+        }
+
+        buf64 = _tracks[t].paramCacheSize;
+        if (ADM_fwrite(&buf64,sizeof(uint64_t),1,f) !=1 ) break;
+        if (buf64 > 0)
+        {
+            if (ADM_fwrite(_tracks[t].paramCache,buf64,1,f) !=1 ) break;
+        }
+        
+        buf64 = _tracks[t].headerRepeatSize;
+        if (ADM_fwrite(&buf64,sizeof(uint64_t),1,f) !=1 ) break;
+        if (buf64 > 0)
+        {
+            if (ADM_fwrite(_tracks[t].headerRepeat,buf64,1,f) !=1 ) break;
+        }
+
+        buf64 = ADM_MKV_INDEX_MAGICMARK;
+        if (ADM_fwrite(&buf64,sizeof(uint64_t),1,f) !=1 ) break;
+    }
+    
+    ADM_fwrite(ADM_MKV_INDEX_MAGIC,8,1,f);
+    ADM_fclose(f);
+}
+
 /**
     \fn indexClusters
     \brief Create a list of all clusters with there position & size, index each one.
@@ -627,6 +884,16 @@ uint8_t mkvHeader::indexClusters(ADM_ebml_file *parser)
     const char *ss;
     uint64_t pos;
     uint8_t res=1;
+    
+    
+    if (getenv("ADM_INDEX_MKV"))
+    {
+        if (loadIndex(_idxName, parser->getFileSize()))
+        {
+            printf("[MKV] Video track indexing loaded from \"%s\"\n", _idxName.c_str());
+            return ADM_OK;
+        }
+    }
 
     mkvIndex tmpCluster;
 
@@ -700,6 +967,15 @@ tryAgain:
     delete _work;
     _work = NULL;
     //ADM_info("[MKV] Found %u clusters\n",(int)_clusters.size());
+    
+    if (getenv("ADM_INDEX_MKV"))
+    {
+        if ((res == ADM_OK) && (!!VIDEO.index.size()))
+        {
+            saveIndex(_idxName, parser->getFileSize());
+        }
+    }
+    
     return (ADM_IGN == res)? res : !!VIDEO.index.size();
 }
 /**
