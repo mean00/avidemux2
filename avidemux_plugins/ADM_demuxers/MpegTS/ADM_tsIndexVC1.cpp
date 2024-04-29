@@ -52,7 +52,7 @@ dmxPacketInfo info;
     
     string indexName=string(file);
     indexName=indexName+string(".idx2");
-    index=qfopen(indexName,"wt");
+    index=qfopen(indexName,"wt",true);
 
     if(!index)
     {
@@ -72,8 +72,11 @@ dmxPacketInfo info;
     {
         delete pkt;
         pkt=NULL;
-        qfclose(index);
-        index=NULL;
+        if (index)
+        {
+            qfclose(index);
+            index=NULL;
+        }
         audioTracks=NULL;
         return 0;
     }
@@ -184,8 +187,11 @@ the_end:
         ifprintf("\n# Found %" PRIu32" images \n",data.nbPics); // Size
         ifprintf("# Found %" PRIu32" frame pictures\n",video.frameCount); // Size
         ifprintf("# Found %" PRIu32" field pictures\n",video.fieldCount); // Size
-        qfclose(index);
-        index=NULL;
+        if (index)
+        {
+            qfclose(index);
+            index=NULL;
+        }
         audioTracks=NULL;
         delete pkt;
         pkt=NULL;

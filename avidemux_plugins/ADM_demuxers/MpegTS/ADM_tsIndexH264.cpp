@@ -242,7 +242,7 @@ uint8_t TsIndexerH264::run(const char *file, ADM_TS_TRACK *videoTrac)
     data.picStructure=pictureFrame;
     string indexName=string(file);
     indexName=indexName+string(".idx2");
-    index=qfopen(indexName,(const char*)"wt");
+    index=qfopen(indexName,(const char*)"wt",true);
 
     if(!index)
     {
@@ -270,8 +270,11 @@ uint8_t TsIndexerH264::run(const char *file, ADM_TS_TRACK *videoTrac)
     int nbFollowUps=ADM_probeSequencedFile(file,&append);
     if(nbFollowUps<0)
     {
-        qfclose(index);
-        index=NULL;
+        if (index)
+        {
+            qfclose(index);
+            index=NULL;
+        }
         return 0;
     }
     if(!nbFollowUps || false==GUI_Question(QT_TRANSLATE_NOOP("tsdemuxer","There are several files with sequential file names. Should they be all loaded ?")))
@@ -573,8 +576,11 @@ resume:
 the_end:
     printf("\n");
     ifprintf("\n[End]\n");
-    qfclose(index);
-    index=NULL;
+    if (index)
+    {
+        qfclose(index);
+        index=NULL;
+    }
     audioTracks=NULL;
     delete pkt;
     pkt=NULL;
