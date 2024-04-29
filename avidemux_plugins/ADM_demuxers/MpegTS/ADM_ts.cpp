@@ -38,6 +38,7 @@ uint8_t tsHeader::open(const char *name)
     uint8_t r=1;
 
     sprintf(idxName,"%s.idx2",name);
+    ListOfIndexFiles.push_back(idxName);
     if(!ADM_fileExist(idxName))
         r=tsIndexer(name);
     if(r!=ADM_OK)
@@ -246,6 +247,14 @@ uint8_t tsHeader::close(void)
         delete tsPacket;
         tsPacket=NULL;
     }
+    
+    n = ListOfIndexFiles.size();
+    for (int i=0; i<n; i++)
+    {
+        mfcleanup(ListOfIndexFiles.back());
+        ListOfIndexFiles.pop_back();
+    }
+    
     return 1;
 }
 /**

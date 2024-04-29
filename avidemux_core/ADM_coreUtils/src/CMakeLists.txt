@@ -4,6 +4,7 @@ ADM_confCouple.cpp
 ADM_bitstream.cpp 
 avidemutils.cpp  
 ADM_quota.cpp
+ADM_memFile.cpp
 fourcc.cpp
 ADM_extraDataExtractor.cpp
 ADM_infoExtractor.cpp

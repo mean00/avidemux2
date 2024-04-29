@@ -136,6 +136,7 @@ protected:
         
 protected:
         FILE                    *index;
+        MFILE                    *mFile;
         tsPacketLinearTracker   *pkt;
         listOfTsAudioTracks     *audioTracks;
         DIA_processingBase      *gui;        

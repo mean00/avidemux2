@@ -15,6 +15,12 @@
 #include "DIA_coreToolkit.h"
 #include <algorithm>
 
+
+#define ifprintf(...)   do { \
+                            if (index) qfprintf(index,__VA_ARGS__); \
+                            else mfprintf(mFile, __VA_ARGS__); \
+                        } while(0)
+
 static bool decoderSei1(const ADM_SPSInfo &spsInfo, uint32_t size, uint8_t *bfer, pictureStructure *pic);
 static bool decoderSei6(uint32_t size, uint8_t *bfer, uint32_t *recovery);
 /**
@@ -202,7 +208,7 @@ bool TsIndexerH264::findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video)
         pkt->collectStats();
         writeVideo(&video,ADM_TS_H264);
         writeAudio();
-        qfprintf(index,"[Data]");
+        ifprintf("[Data]");
     }
     return sps_found;
 }
@@ -236,12 +242,17 @@ uint8_t TsIndexerH264::run(const char *file, ADM_TS_TRACK *videoTrac)
     data.picStructure=pictureFrame;
     string indexName=string(file);
     indexName=indexName+string(".idx2");
-    index=qfopen(indexName,(const char*)"wt");
+    index=qfopen(indexName,(const char*)"wt",true);
 
     if(!index)
     {
         ADM_error("[TsIndexerH264] Cannot create %s\n",indexName.c_str());
-        return 0;
+        mFile=mfopen(indexName,"wt");
+        if (!mFile)
+        {
+            printf("[TsIndexerH264] Cannot create memFile either\n");
+            return 0;
+        }
     }
 
     uint64_t lastAudOffset=0;
@@ -259,8 +270,11 @@ uint8_t TsIndexerH264::run(const char *file, ADM_TS_TRACK *videoTrac)
     int nbFollowUps=ADM_probeSequencedFile(file,&append);
     if(nbFollowUps<0)
     {
-        qfclose(index);
-        index=NULL;
+        if (index)
+        {
+            qfclose(index);
+            index=NULL;
+        }
         return 0;
     }
     if(!nbFollowUps || false==GUI_Question(QT_TRANSLATE_NOOP("tsdemuxer","There are several files with sequential file names. Should they be all loaded ?")))
@@ -561,9 +575,12 @@ resume:
     result=1;
 the_end:
     printf("\n");
-    qfprintf(index,"\n[End]\n");
-    qfclose(index);
-    index=NULL;
+    ifprintf("\n[End]\n");
+    if (index)
+    {
+        qfclose(index);
+        index=NULL;
+    }
     audioTracks=NULL;
     delete pkt;
     pkt=NULL;

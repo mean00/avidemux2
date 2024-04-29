@@ -39,12 +39,12 @@ uint8_t  quotaInit(void)
 /* why here?: don't use mean's malloc rewrites for all of the xml2 library */
 #include "ADM_assert.h"
 
-FILE *qfopen(const string &fileName, const char *mode)
+FILE *qfopen(const string &fileName, const char *mode, bool silent)
 {
-    return qfopen(fileName.c_str(),mode);
+    return qfopen(fileName.c_str(),mode, silent);
 }
 /* store open filenames and it's current "ignore"-status */
-FILE *qfopen(const char *path, const char *mode){
+FILE *qfopen(const char *path, const char *mode, bool silent){
     // Mean:Should be the first funtion to be called
     // The qfile array may or may not be initialized with 0
     // We will trigger an assert in the malloc if we send dummy
@@ -61,20 +61,27 @@ FILE *qfopen(const char *path, const char *mode){
 		  char msg[msg_len];
 		  	fprintf(stderr,"qfopen(): can't open \"%s\": %s\n", path,
 				       (errno==ENOSPC?"filesystem full":"quota exceeded"));
-		  	ADM_assert(snprintf(msg,msg_len,QT_TRANSLATE_NOOP("adm","can't open \"%s\": %s\n%s\n"),
-						        path,
-							(errno==ENOSPC?QT_TRANSLATE_NOOP("adm","filesystem full"):QT_TRANSLATE_NOOP("adm","quota exceeded")),
-							QT_TRANSLATE_NOOP("adm","Please free up some space and press RETRY to try again."))!=-1);
-			GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Error"),msg);
+                        if (!silent)
+                        {
+                            ADM_assert(snprintf(msg,msg_len,QT_TRANSLATE_NOOP("adm","can't open \"%s\": %s\n%s\n"),
+                                                            path,
+                                                            (errno==ENOSPC?QT_TRANSLATE_NOOP("adm","filesystem full"):QT_TRANSLATE_NOOP("adm","quota exceeded")),
+                                                            QT_TRANSLATE_NOOP("adm","Please free up some space and press RETRY to try again."))!=-1);
+                            GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Error"),msg);
+                        }
 			/* same behaviour for IGNORE and RETRY */
 			continue;
 		}
-		if( !FD ){
-		  char msg[msg_len];
-			ADM_assert(snprintf(msg,msg_len,QT_TRANSLATE_NOOP("adm","can't open \"%s\": %u (%s)\n"), path, errno, strerror(errno))!=-1);
-			fprintf(stderr,"qfopen(): %s",msg);
-			GUI_Error_HIG(msg,NULL);
-			return NULL;
+		if( !FD )
+                {
+                    if (!silent)
+                    {
+                        char msg[msg_len];
+                        ADM_assert(snprintf(msg,msg_len,QT_TRANSLATE_NOOP("adm","can't open \"%s\": %u (%s)\n"), path, errno, strerror(errno))!=-1);
+                        fprintf(stderr,"qfopen(): %s",msg);
+                        GUI_Error_HIG(msg,NULL);
+                    }
+                    return NULL;
 		}
 	}
 	/* keep filename for messages and ignore status */

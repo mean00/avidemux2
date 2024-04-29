@@ -21,6 +21,7 @@
 #include "ADM_memsupport.h"
 #include "ADM_crashdump.h"
 #include "ADM_win32.h"
+#include "ADM_memFile.h"
 #include <QAction>
 
 void onexit( void );
@@ -120,6 +121,7 @@ int main(int argc, char *argv[])
 
 	// Load .avidemuxrc
     quotaInit();
+    memFileInit();
 
     // Init jobs
     ADMJob::jobInit();

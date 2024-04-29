@@ -78,6 +78,7 @@ uint64_t v;
 indexFile::indexFile()
 {
     file=NULL;
+    mFile=NULL;
     buffer.setSize(ADM_INDEX_BUFFER);
 }
 /**
@@ -120,7 +121,14 @@ dmxToken        *indexFile::searchToken(const char *name)
 bool indexFile::open(const char *name)
 {
     file=ADM_fopen(name,"rt");
-    if(!file) return false;
+    if(!file)
+    {
+        mFile = mfopen(name,"rt");
+        if(!mFile)
+        {
+            return false;
+        }
+    }
     return true;
 }
 
@@ -135,6 +143,11 @@ bool indexFile::close(void)
         fclose(file);
         file=NULL;
     }
+    if(mFile)
+    {
+        mfclose(mFile);
+        mFile=NULL;
+    }
     purgeTokens();
     return true;
 }
@@ -147,16 +160,33 @@ bool indexFile::goToSection(const char *section)
 {
 char match[100];
     sprintf(match,"[%s]\n",section);
-    fseek(file,0,SEEK_SET);
-    while(1)
+    if (file)
     {
-        if(!fgets((char*)buffer.at(0),ADM_INDEX_BUFFER,file) )
+        fseek(file,0,SEEK_SET);
+        while(1)
         {
-            printf("[indexFile] Cannot find section %s,%s*\n",section,match);
-            return false;
+            if(!fgets((char*)buffer.at(0),ADM_INDEX_BUFFER,file) )
+            {
+                printf("[indexFile] Cannot find section %s,%s*\n",section,match);
+                return false;
+            }
+            if(!strcasecmp((char*)buffer.at(0),match)) return true;
         }
-        if(!strcasecmp((char*)buffer.at(0),match)) return true;
     }
+    else
+    {
+        mfseek(mFile,0,SEEK_SET);
+        while(1)
+        {
+            if(!mfgets((char*)buffer.at(0),ADM_INDEX_BUFFER,mFile) )
+            {
+                printf("[indexFile] Cannot find section %s,%s*\n",section,match);
+                return false;
+            }
+            if(!strcasecmp((char*)buffer.at(0),match)) return true;
+        }
+    }
+
     return false;
 }
 
@@ -254,7 +284,14 @@ char *indexFile::getAsString(const char *name)
 
 bool  indexFile::readString(uint32_t maxLen,uint8_t *buffer)
 {
-    if(!fgets((char *)buffer,maxLen,file)) return false;
+    if (file)
+    {
+        if(!fgets((char *)buffer,maxLen,file)) return false;
+    }
+    else
+    {
+        if(!mfgets((char *)buffer,maxLen,mFile)) return false;
+    }
     buffer[maxLen-1]=0;
     if(buffer[0])
         while(1)
