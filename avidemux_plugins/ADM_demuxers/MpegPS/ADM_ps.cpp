@@ -38,6 +38,7 @@ uint8_t psHeader::open(const char *name)
     uint8_t r=1;
 
     sprintf(idxName,"%s.idx2",name);
+    ListOfIndexFiles.push_back(idxName);
     if(!ADM_fileExist(idxName))
         r=psIndexer(name);
     if(r!=ADM_OK)
@@ -257,6 +258,12 @@ uint8_t psHeader::close(void)
         listOfAudioTracks[i] = 0;
     }
     listOfAudioTracks.clear();
+    nb = ListOfIndexFiles.size();
+    for (int i=0; i<nb; i++)
+    {
+        mfcleanup(ListOfIndexFiles.back());
+        ListOfIndexFiles.pop_back();
+    }
     return 1;
 }
 /**

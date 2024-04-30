@@ -49,6 +49,12 @@ static const uint32_t FPS[16]={
                 0                       // 15
         };
 
+#define ifprintf(...)   do { \
+                            if (index) qfprintf(index,__VA_ARGS__); \
+                            else if (mFile) mfprintf(mFile, __VA_ARGS__); \
+                            else ADM_assert(0); \
+                        } while(0)
+
 typedef struct
 {
     uint32_t w;
@@ -102,6 +108,7 @@ class PsIndexer
 {
 protected:
         FILE *index;
+        MFILE *mFile;
         psPacketLinearTracker *pkt;
         listOfPsAudioTracks *audioTracks;
         DIA_workingBase  *ui;
@@ -148,6 +155,7 @@ uint8_t r;
 PsIndexer::PsIndexer(void)
 {
     index=NULL;
+    mFile=NULL;
     pkt=NULL;
     audioTracks=NULL;
     headerDumped=false;
@@ -189,12 +197,17 @@ uint8_t PsIndexer::run(const char *file)
     char *indexName=(char *)malloc(strlen(file)+6);
     sprintf(indexName,"%s.idx2",file);
 
-    index=qfopen(indexName,"wt");
+    index=qfopen(indexName,"wt",true);
     if(!index)
     {
         printf("[PsIndex] Cannot create %s\n",indexName);
-        free(indexName);        
-        return false;
+        mFile = mfopen(indexName,"wt");
+        if (!mFile)
+        {
+            printf("[PsIndex] Cannot create memFile either\n");
+            free(indexName);
+            return 0;
+        }
     }
 
     int append=PS_DEFAULT_FRAGMENT_SIZE;
@@ -203,8 +216,11 @@ uint8_t PsIndexer::run(const char *file)
     if(nbFollowUps<0)
     {
         printf("[PsIndex] Cannot open %s\n",file);
-        qfclose(index);
-        index=NULL;
+        if (index)
+        {
+            qfclose(index);
+            index=NULL;
+        }
         free(indexName);
         indexName=NULL;
         return 0;
@@ -390,7 +406,7 @@ uint8_t PsIndexer::run(const char *file)
 
                             }
 
-#define PREAMBLE qfprintf(index,"[Data]");
+#define PREAMBLE ifprintf("[Data]");
                           if(!seq_found) continue;
                           if(headerDumped==false)
                           {
@@ -482,20 +498,23 @@ theEnd:
         else
             Mark(&data,&info,timingIsInvalid,pkt->getConsumed(),markStart);
 
-        qfprintf(index,"\n# Found %" PRIu32" images \n",data.nbPics); // Size
-        qfprintf(index,"# Found %" PRIu32" frame pictures\n",video.frameCount); // Size
-        qfprintf(index,"# Found %" PRIu32" field pictures\n",video.fieldCount); // Size
+        ifprintf("\n# Found %" PRIu32" images \n",data.nbPics); // Size
+        ifprintf("# Found %" PRIu32" frame pictures\n",video.frameCount); // Size
+        ifprintf("# Found %" PRIu32" field pictures\n",video.fieldCount); // Size
 
        
         // Now write the header
         writeVideo(&video);
         writeAudio();
         writeScrReset();
-        qfprintf(index,"\n[End]\n");
+        ifprintf("\n[End]\n");
         res=ADM_OK;
 cleanup:
-        qfclose(index);
-        index=NULL;
+        if (index)
+        {
+            qfclose(index);
+            index=NULL;
+        }
         if(audioTracks) DestroyListOfPsAudioTracks( audioTracks);
         audioTracks=NULL;
         delete pkt;
@@ -523,7 +542,7 @@ bool  PsIndexer::Mark(indexerData *data,dmxPacketInfo *info,bool invalidateTimin
         if(data->nbPics)
         {
             // Write previous image data (size) : TODO
-            qfprintf(index,":%06" PRIx32" ",size); // Size
+            ifprintf(":%06" PRIx32" ",size); // Size
         }
     }
     if(update==markEnd || update==markNow)
@@ -540,18 +559,18 @@ bool  PsIndexer::Mark(indexerData *data,dmxPacketInfo *info,bool invalidateTimin
             // If audio, also dump audio
             if(audioTracks)
             {
-                qfprintf(index,"\nAudio bf:%08" PRIx64" ",data->startAt);
+                ifprintf("\nAudio bf:%08" PRIx64" ",data->startAt);
                 for(int i=0;i<audioTracks->size();i++)
                 {
                     uint8_t e=(*audioTracks)[i]->esID;
                     packetStats *s=pkt->getStat(e);
                     
-                    qfprintf(index,"Pes:%x:%08" PRIx64":%" PRIi32":%" PRId64" ",e,s->startAt,s->startSize,s->startDts);
+                    ifprintf("Pes:%x:%08" PRIx64":%" PRIi32":%" PRId64" ",e,s->startAt,s->startSize,s->startDts);
                 }
                 
             }
             // start a new line
-            qfprintf(index,"\nVideo at:%08" PRIx64":%04" PRIx32" Pts:%08" PRId64":%08" PRId64" ",data->startAt,data->offset,pts,dts);
+            ifprintf("\nVideo at:%08" PRIx64":%04" PRIx32" Pts:%08" PRId64":%08" PRId64" ",data->startAt,data->offset,pts,dts);
             data->gopStartDts=dts;
         }
         int64_t deltaDts,deltaPts;
@@ -562,7 +581,7 @@ bool  PsIndexer::Mark(indexerData *data,dmxPacketInfo *info,bool invalidateTimin
                 else deltaDts=(int64_t)dts-(int64_t)data->gopStartDts;
         if(pts==ADM_NO_PTS || data->gopStartDts==ADM_NO_PTS) deltaPts=-1;
                 else deltaPts=(int64_t)pts-(int64_t)data->gopStartDts;
-        qfprintf(index,"%c%c:%" PRId64":%" PRId64,Type[data->frameType],Structure[data->picStructure%sizeof(Structure)],
+        ifprintf("%c%c:%" PRId64":%" PRId64,Type[data->frameType],Structure[data->picStructure%sizeof(Structure)],
                     deltaPts,deltaDts);
     }
     if(update==markEnd || update==markNow)
@@ -584,13 +603,13 @@ bool  PsIndexer::Mark(indexerData *data,dmxPacketInfo *info,bool invalidateTimin
 */
 bool PsIndexer::writeVideo(PSVideo *video)
 {
-    qfprintf(index,"[Video]\n");
-    qfprintf(index,"Width=%d\n",video->w);
-    qfprintf(index,"Height=%d\n",video->h);
-    qfprintf(index,"Fps=%d\n",video->fps);
-    qfprintf(index,"Interlaced=%d\n",video->interlaced);
-    qfprintf(index,"AR=%d\n",video->ar);
-    qfprintf(index,"VideoCodec=%s\n",video->type ? "Mpeg2" : "Mpeg1");
+    ifprintf("[Video]\n");
+    ifprintf("Width=%d\n",video->w);
+    ifprintf("Height=%d\n",video->h);
+    ifprintf("Fps=%d\n",video->fps);
+    ifprintf("Interlaced=%d\n",video->interlaced);
+    ifprintf("AR=%d\n",video->ar);
+    ifprintf("VideoCodec=%s\n",video->type ? "Mpeg2" : "Mpeg1");
     return true;
 }
 
@@ -607,15 +626,15 @@ bool PsIndexer::writeScrReset(void)
         ADM_info("No SCR reset detected\n");
         return true;
     }
-    qfprintf(index,"[ScrResets]\n");
-    qfprintf(index,"NbResets=%d\n",n);
+    ifprintf("[ScrResets]\n");
+    ifprintf("NbResets=%d\n",n);
     for(int i=0;i<n;i++)
     {
         char head[30];
         sprintf(head,"Reset%1d",i);
-        qfprintf(index,"#%s\n",ADM_us2plain(timeConvert(listOfScrReset[i].timeOffset)));
-        qfprintf(index,"%s.position=%" PRId64"\n",head,listOfScrReset[i].position);
-        qfprintf(index,"%s.timeOffset=%" PRId64"\n",head,listOfScrReset[i].timeOffset);
+        ifprintf("#%s\n",ADM_us2plain(timeConvert(listOfScrReset[i].timeOffset)));
+        ifprintf("%s.position=%" PRId64"\n",head,listOfScrReset[i].position);
+        ifprintf("%s.timeOffset=%" PRId64"\n",head,listOfScrReset[i].timeOffset);
     }
     return true;
 }
@@ -625,12 +644,12 @@ bool PsIndexer::writeScrReset(void)
 */
 bool PsIndexer::writeSystem(const char *filename,bool append)
 {
-    qfprintf(index,"PSD1\n");
-    qfprintf(index,"[System]\n");
-    qfprintf(index,"Version=%d\n",ADM_INDEX_FILE_VERSION);
-    qfprintf(index,"Type=P\n");
-    qfprintf(index,"File=%s\n",filename);
-    qfprintf(index,"Append=%d\n",append);
+    ifprintf("PSD1\n");
+    ifprintf("[System]\n");
+    ifprintf("Version=%d\n",ADM_INDEX_FILE_VERSION);
+    ifprintf("Type=P\n");
+    ifprintf("File=%s\n",filename);
+    ifprintf("Append=%d\n",append);
     return true;
 }
 /**
@@ -640,18 +659,18 @@ bool PsIndexer::writeSystem(const char *filename,bool append)
 bool PsIndexer::writeAudio(void)
 {
     if(!audioTracks) return false;
-    qfprintf(index,"[Audio]\n");
-    qfprintf(index,"Tracks=%d\n",audioTracks->size());
+    ifprintf("[Audio]\n");
+    ifprintf("Tracks=%d\n",audioTracks->size());
     for(int i=0;i<audioTracks->size();i++)
     {
         char head[30];
         psAudioTrackInfo *t=(*audioTracks)[i];
         sprintf(head,"Track%1d",i);
-        qfprintf(index,"%s.pid=%x\n",head,t->esID);
-        qfprintf(index,"%s.codec=%d\n",head,t->header.encoding);
-        qfprintf(index,"%s.fq=%d\n",head,t->header.frequency);
-        qfprintf(index,"%s.chan=%d\n",head,t->header.channels);
-        qfprintf(index,"%s.br=%d\n",head,t->header.byterate);
+        ifprintf("%s.pid=%x\n",head,t->esID);
+        ifprintf("%s.codec=%d\n",head,t->header.encoding);
+        ifprintf("%s.fq=%d\n",head,t->header.frequency);
+        ifprintf("%s.chan=%d\n",head,t->header.channels);
+        ifprintf("%s.br=%d\n",head,t->header.byterate);
     }
     return true;
 }

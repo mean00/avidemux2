@@ -122,6 +122,8 @@ class psHeader : public vidHeader
     fileParser          parser;
     psPacketLinear      *psPacket;
 
+    std::vector <std::string> ListOfIndexFiles;
+
     BVector <dmxFrame *> ListOfFrames;
     BVector <ADM_psTrackDescriptor *> listOfAudioTracks;
     ListOfScr           listOfScrGap;
