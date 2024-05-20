@@ -232,8 +232,7 @@ bool jobRun(int ac,char **av)
     Q_INIT_RESOURCE(jobs);
 #endif
     loadTranslator();
-    bool pmode=ac>1 && !strcmp(av[1],"--portable");
-    jobWindow *jWindow=new jobWindow(pmode);
+    jobWindow *jWindow=new jobWindow(isPortableMode(ac,av));
 
     jWindow->exec();
     destroyTranslator();
