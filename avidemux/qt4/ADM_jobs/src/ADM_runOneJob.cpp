@@ -143,11 +143,11 @@ bool jobWindow::runProcess(spawnData *data)
 {
     vector <string> args;
     if(portable)
-        args.push_back(string("--portable"));
-    args.push_back(string("--nogui"));
+        args.push_back("--portable");
+    args.push_back("--nogui");
     char str[100];
     snprintf(str, 100, "--slave %d", localPort);
-    args.push_back(string(str));
+    args.push_back(str);
     string s = "--run \"";
     s += data->script;
     s += "\"";
@@ -157,9 +157,9 @@ bool jobWindow::runProcess(spawnData *data)
     s += "\"";
     args.push_back(s);
 #ifndef _WIN32
-    args.push_back(string("--quit > /tmp/prout.log"));
+    args.push_back("--quit > /tmp/prout.log");
 #else
-    args.push_back(string("--quit"));
+    args.push_back("--quit");
 #endif
     return spawnProcess(data->exeName,args);
 }
