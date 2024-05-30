@@ -309,6 +309,7 @@ bool MP4Header::indexVideoFragments(int trackNo)
 bool MP4Header::indexAudioFragments(int trackNo)
 {
      MP4Track *trk=&_tracks[trackNo];
+     ADM_assert(trk->scale);
      std::vector <mp4Fragment>   &fragList=_tracks[trackNo].fragments;
     trk->nbIndex=fragList.size();
     trk->index=new MP4Index[trk->nbIndex];

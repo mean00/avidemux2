@@ -557,6 +557,7 @@ uint8_t MP4Header::parseHdlr(adm_atom *tom, uint32_t *trackType, uint32_t *track
             if(0 == *trackId)
                 ADM_warning("Invalid track ID for audio track %d\n",nbAudioTrack);
             _tracks[nbAudioTrack].id = *trackId;
+            _tracks[nbAudioTrack].scale = trackScale;
             _tracks[nbAudioTrack].delay = _currentDelay;
             _tracks[nbAudioTrack].startOffset = _currentStartOffset;
             _tracks[nbAudioTrack].language = *language;
