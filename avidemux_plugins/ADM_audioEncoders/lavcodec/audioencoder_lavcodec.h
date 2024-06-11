@@ -33,7 +33,7 @@ typedef enum {
     flushed
 } ADM_encoderState;
 
-    void                *_context;
+    AVCodecContext      *_context;
     AVFrame             *_frame;
     AVPacket            *_pkt;
     uint32_t             _chunk;

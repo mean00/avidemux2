@@ -64,8 +64,6 @@ static ADM_audioEncoder encoderDesc = {
 ADM_DECLARE_AUDIO_ENCODER_CONFIG();
 
 /******************* / Declare plugin*******************************************************/
-#define CONTEXT ((AVCodecContext  	*)_context)
-
 
 /**
     \fn AUDMEncoder_Lavcodec
@@ -101,11 +99,10 @@ AUDMEncoder_Lavcodec::AUDMEncoder_Lavcodec(AUDMAudioFilter * instream,bool globa
 uint8_t AUDMEncoder_Lavcodec::extraData(uint32_t *l,uint8_t **d)
 {
     ADM_assert(_context);
-    int size=0;
-    size=CONTEXT->extradata_size;
+    int size = _context->extradata_size;
     if(size)
     {
-        *d=CONTEXT->extradata;
+        *d=_context->extradata;
         *l=(uint32_t)size;
     }
     else
@@ -121,26 +118,19 @@ uint8_t AUDMEncoder_Lavcodec::extraData(uint32_t *l,uint8_t **d)
 
 AUDMEncoder_Lavcodec::~AUDMEncoder_Lavcodec()
 {
-  ADM_info("[Lavcodec] Deleting Lavcodec\n");
-  if(_pkt)
+    ADM_info("[Lavcodec] Destructing encoder instance.\n");
+    if (_pkt)
         av_packet_free(&_pkt);
-  if(_context)
-  {
-    avcodec_close(CONTEXT);
-    av_free(_context);
-  }
-  _context=NULL;
-  if(_frame)   
-  {
-      av_frame_free(&_frame);
-  }
-  _frame=NULL;
-  if(planarBuffer) 
-  {
-      delete [] planarBuffer;
-  }
-  planarBuffer=NULL;;
-};
+    if (_context)
+        avcodec_free_context(&_context);
+    if (_frame)
+        av_frame_free(&_frame);
+    if (planarBuffer)
+    {
+        delete [] planarBuffer;
+    }
+    planarBuffer = NULL;
+}
 
 /**
     \fn initialize
@@ -180,31 +170,29 @@ bool AUDMEncoder_Lavcodec::initialize(void)
     }
     ADM_info("[Lavcodec] Selected %s as sample format.\n", av_get_sample_fmt_name(*sfmt));
     // Allocate and fill codec context
-    AVCodecContext *ctx = avcodec_alloc_context3(codec);
-    if(!ctx)
+    _context = avcodec_alloc_context3(codec);
+    if(!_context)
     {
         ADM_error("[Lavcodec] Cannot allocate context.\n");
         return false;
     }
-    ctx->channels = wavheader.channels;
-    ctx->channel_layout = av_get_default_channel_layout(wavheader.channels);
-    ctx->sample_rate = wavheader.frequency;
-    ctx->sample_fmt = *sfmt;
-    ctx->frame_size = ADM_LAV_SAMPLE_PER_P;
-    ctx->bit_rate = _config.bitrate * 1000; // bits -> kbits
-    ctx->strict_std_compliance = FF_COMPLIANCE_EXPERIMENTAL;
+    av_channel_layout_default(&_context->ch_layout, wavheader.channels);
+    _context->sample_rate = wavheader.frequency;
+    _context->sample_fmt = *sfmt;
+    _context->frame_size = ADM_LAV_SAMPLE_PER_P;
+    _context->bit_rate = _config.bitrate * 1000; // bits -> kbits
+    _context->strict_std_compliance = FF_COMPLIANCE_EXPERIMENTAL;
 
     if(_globalHeader)
     {
         ADM_info("Configuring audio codec to use global headers\n");
-        ctx->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
+        _context->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
     }
-    _context = (void *)ctx;
 
     _chunk = ADM_LAV_SAMPLE_PER_P * wavheader.channels; // AC3
 
     // Can we use the encoder?
-    int ret = avcodec_open2(ctx,codec,NULL);
+    int ret = avcodec_open2(_context, codec, NULL);
     if (ret<0)
     {
          printError("Init failed",ret);
@@ -222,9 +210,15 @@ bool AUDMEncoder_Lavcodec::initialize(void)
         return false;
     }
 
-    _frame->nb_samples = ctx->frame_size;
-    _frame->format = ctx->sample_fmt;
-    _frame->channel_layout = ctx->channel_layout;
+    _frame->nb_samples = _context->frame_size;
+    _frame->format = _context->sample_fmt;
+
+    ret = av_channel_layout_copy(&_frame->ch_layout, &_context->ch_layout);
+    if(ret < 0)
+    {
+        printError("av_channel_layout_copy", ret);
+        return false;
+    }
 
     ret = av_frame_get_buffer(_frame, 0);
     if(ret < 0)
@@ -351,30 +345,32 @@ float * AUDMEncoder_Lavcodec::i2p(int count)
  */
 bool AUDMEncoder_Lavcodec::computeChannelLayout(void)
 {
-#define CHANMIX(x,y) case AV_CH_##y: *o=ADM_CH_##x;cprintf(" =>%s\n",ADM_printChannel(*o));o++;break;
-    
-        int channels=wavheader.channels;
-        CHANNEL_TYPE *o=channelMapping;
-        for(int i=0;i<channels;i++)
+#define CHANMIX(x,y) case AV_CHAN_##y: *o=ADM_CH_##x; cprintf(" => %s\n", ADM_printChannel(*o)); o++; break;
+#define CHBUFLEN 64
+    char buf[CHBUFLEN] = {0};
+    int channels = wavheader.channels;
+    CHANNEL_TYPE *o = channelMapping;
+    for(int i=0;i<channels;i++)
+    {
+        AVChannel chan = av_channel_layout_channel_from_index(&_context->ch_layout, i);
+        ADM_assert(av_channel_name(buf, CHBUFLEN, chan) > 0);
+        cprintf("Channel %s\t", buf);
+        switch(chan)
         {
-          uint64_t chan=av_channel_layout_extract_channel(CONTEXT->channel_layout,i);
-          cprintf("Channel %s\t",av_get_channel_name(chan));
-          switch(chan)
-          {
-              CHANMIX(FRONT_LEFT,FRONT_LEFT)
-              CHANMIX(FRONT_RIGHT,FRONT_RIGHT)
-              CHANMIX(LFE,LOW_FREQUENCY)
-              CHANMIX(FRONT_CENTER,FRONT_CENTER)
-              CHANMIX(REAR_LEFT,BACK_LEFT)
-              CHANMIX(REAR_RIGHT,BACK_RIGHT)
-                default:
-                    cprintf(" =>???\n");
-                    ADM_warning("Channel %s not mapped\n",av_get_channel_name(chan));
-                    *o++=ADM_CH_FRONT_LEFT;
-                    break;
-          }
+            CHANMIX(FRONT_LEFT,FRONT_LEFT)
+            CHANMIX(FRONT_RIGHT,FRONT_RIGHT)
+            CHANMIX(LFE,LOW_FREQUENCY)
+            CHANMIX(FRONT_CENTER,FRONT_CENTER)
+            CHANMIX(REAR_LEFT,BACK_LEFT)
+            CHANMIX(REAR_RIGHT,BACK_RIGHT)
+            default:
+                cprintf(" => ???\n");
+                ADM_warning("Channel %s not mapped\n", buf);
+                *o++=ADM_CH_FRONT_LEFT; // ?
+                break;
         }
-        return true;
+    }
+    return true;
 }
 /**
     \fn encode
@@ -416,13 +412,13 @@ again:
     }
     if(encoderState == flushing)
     {
-        er = avcodec_send_frame(CONTEXT, NULL);
+        er = avcodec_send_frame(_context, NULL);
         encoderState = flushed;
     }else if(encoderState == normal)
     { // feed raw audio to encoder
         if(!fillFrame(spoonful))
             return false;
-        er = avcodec_send_frame(CONTEXT, _frame);
+        er = avcodec_send_frame(_context, _frame);
     }
     if(er < 0)
     {
@@ -433,7 +429,7 @@ again:
         }
     }
 
-    er = avcodec_receive_packet(CONTEXT, _pkt);
+    er = avcodec_receive_packet(_context, _pkt);
 
     if(er < 0)
     {
