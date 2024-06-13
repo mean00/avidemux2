@@ -180,6 +180,7 @@ bool x265Encoder::setup(void)
         MKPARAM(transferCharacteristics,transfer_characteristics)
     }
 
+  param.bLossless = 0;
   // -------------- rate control------------
   switch(x265Settings.general.params.mode)
   {
@@ -242,6 +243,9 @@ bool x265Encoder::setup(void)
                         param.rc.bitrate =  x265Settings.general.params.bitrate;
                         param.rc.qp = 0;
                         param.rc.rfConstant = 0;
+                        break;
+      case COMPRESS_LOSSLESS:
+                        param.bLossless = 1;
                         break;
         default:
                         GUI_Error_HIG(QT_TRANSLATE_NOOP("x265","Not coded"),QT_TRANSLATE_NOOP("x265","this mode has not been implemented\n"));
