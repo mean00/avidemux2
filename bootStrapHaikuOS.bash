@@ -194,7 +194,7 @@ fi
 if [ "x$do_plugins" = "x1" -a "x$do_cli" = "x1" ] ; then 
         echo "** Plugins CLI **"
         cd $TOP
-        Process buildPluginsCLI ../avidemux_plugins -DPLUGIN_UI=CLI
+        Process buildPluginsCli ../avidemux_plugins -DPLUGIN_UI=CLI
 fi
 
 echo "** Preparing debs **"
