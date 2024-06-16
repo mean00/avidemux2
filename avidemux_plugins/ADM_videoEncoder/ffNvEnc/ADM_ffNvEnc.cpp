@@ -20,7 +20,7 @@
 #include "ADM_ffNvEnc.h"
 #undef ADM_MINIMAL_UI_INTERFACE // we need the full UI
 #include "DIA_factory.h"
-//#define USE_NV12 
+#define USE_NV12
 #if 1
 #define aprintf(...) {}
 #else
@@ -47,7 +47,6 @@ ADM_ffNvEncEncoder::ADM_ffNvEncEncoder(ADM_coreVideoFilter *src,bool globalHeade
 #else
     ADM_info("(H264) Creating.\n");
 #endif
-    nv12=NULL;
     frameIncrement=src->getInfo()->frameIncrement;
 
 }
@@ -197,13 +196,11 @@ bool ADM_ffNvEncEncoder::configureContext(void)
             av_dict_set(&_options,"weighted_pred","1",0);
     }
 
-#ifdef USE_NV12    
-    _context->pix_fmt=  AV_PIX_FMT_NV12;        
-#else    
-    _context->pix_fmt=AV_PIX_FMT_YUV420P;
-#endif    
-    
-    return true;             
+#ifdef USE_NV12
+    targetPixFrmt = ADM_PIXFRMT_NV12;
+#endif
+
+    return true;
 }
 
 /**
@@ -225,15 +222,7 @@ bool ADM_ffNvEncEncoder::setup(void)
     }
 #undef LAVC_ENCODER_NAME
     ADM_info("[ffMpeg] Setup ok\n");
-#ifdef USE_NV12
-    int w= getWidth();
-    int h= getHeight();
-    
-    w=(w+31)&~31;
-    h=(h+15)&~15;
-    nv12=new uint8_t[(w*h)/2]; 
-    nv12Stride=w;
-#endif
+
     return true;
 }
 
@@ -254,12 +243,6 @@ uint64_t ADM_ffNvEncEncoder::getEncoderDelay(void)
 ADM_ffNvEncEncoder::~ADM_ffNvEncEncoder()
 {
     ADM_info("[ffNvEncEncoder] Destroying.\n");
-    if(nv12)
-    {
-        delete [] nv12;
-        nv12=NULL;
-    }
-
 }
 
 /**
@@ -301,24 +284,6 @@ again:
     aprintf("[CODEC] Flags = 0x%x, QSCALE=%x, bit_rate=%d, quality=%d qz=%d incoming qz=%d\n",_context->flags,CODEC_FLAG_QSCALE,
                                      _context->bit_rate,  _frame->quality, _frame->quality/ FF_QP2LAMBDA,q);
 
-    _frame->reordered_opaque=image->Pts;
-    _frame->width=image->GetWidth(PLANAR_Y);
-    _frame->height=image->GetHeight(PLANAR_Y);
-
-// convert to nv12
-#ifdef USE_NV12
-    image->interleaveUVtoNV12(nv12,nv12Stride);
-    _frame->data[0] = image->GetReadPtr(PLANAR_Y);
-    _frame->data[1] = nv12;
-    _frame->data[2] = NULL;
-
-    _frame->linesize[0]=image->GetPitch(PLANAR_Y);
-    _frame->linesize[1]=nv12Stride;
-    _frame->linesize[2]=0;
-    _frame->format=  AV_PIX_FMT_NV12;    
-#else
-    _frame->format=  AV_PIX_FMT_YUV420P;    
-#endif        
     sz=encodeWrapper(_frame,out);
     if(sz<0)
     {
