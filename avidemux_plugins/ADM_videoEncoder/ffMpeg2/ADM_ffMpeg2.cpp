@@ -216,10 +216,11 @@ again:
     }
     aprintf("[CODEC] Flags = 0x%x, QSCALE=%x, bit_rate=%d, quality=%d qz=%d incoming qz=%d\n",_context->flags,AV_CODEC_FLAG_QSCALE,
                                      _context->bit_rate,  _frame->quality, _frame->quality/ FF_QP2LAMBDA,q);     
-    
-    _frame->reordered_opaque=image->Pts;
-    _frame->interlaced_frame=Settings.lavcSettings.interlaced;
-    _frame->top_field_first=!Settings.lavcSettings.bff;
+
+    if(Settings.lavcSettings.interlaced)
+        _frame->flags |= AV_FRAME_FLAG_INTERLACED;
+    if(!Settings.lavcSettings.bff)
+        _frame->flags |= AV_FRAME_FLAG_TOP_FIELD_FIRST;
     r=encodeWrapper(_frame,out);
 
     if(encoderState == ADM_ENCODER_STATE_FLUSHED)
