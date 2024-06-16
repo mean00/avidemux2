@@ -215,7 +215,9 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
     // Fills in some values...
     _context->codec_type=AVMEDIA_TYPE_AUDIO;
     _context->sample_rate = info->frequency;
-    _context->channels = info->channels;
+
+    av_channel_layout_default(&_context->ch_layout, info->channels);
+
     _context->block_align = info->blockalign;
     _context->bit_rate = info->byterate*8;
     _context->sample_fmt=AV_SAMPLE_FMT_FLT;
@@ -225,14 +227,14 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
     {
         // Need to translate from adm to xiph
         int xiphLen=(int)l+(l/255)+4+5;
-        uint8_t *xiph=new uint8_t[xiphLen+AV_INPUT_BUFFER_PADDING_SIZE];
+        uint8_t *xiph = (uint8_t *)av_malloc(xiphLen + AV_INPUT_BUFFER_PADDING_SIZE);
         memset(xiph,0,xiphLen+AV_INPUT_BUFFER_PADDING_SIZE);
         xiphLen=ADMXiph::admExtraData2xiph(l,d,xiph);
         _paddedExtraData=xiph;
         l=xiphLen;
     }else if(l)
     {
-        _paddedExtraData=new uint8_t[l+AV_INPUT_BUFFER_PADDING_SIZE];
+        _paddedExtraData = (uint8_t *)av_malloc(l + AV_INPUT_BUFFER_PADDING_SIZE);
         memset(_paddedExtraData,0,l+AV_INPUT_BUFFER_PADDING_SIZE);
         memcpy(_paddedExtraData,d,l);
     }
@@ -244,7 +246,7 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
       _blockalign = _context->block_align;
     }
 
-    ADM_info("[ADM_AD_LAV] Using %d bytes of extra header data, %d channels\n", _context->extradata_size,_context->channels);
+    ADM_info("[ADM_AD_LAV] Using %d bytes of extra header data, %d channels\n", _context->extradata_size, _context->ch_layout.nb_channels);
     mixDump((uint8_t *)_context->extradata,_context->extradata_size);
     
     if (avcodec_open2(_context, codec, NULL) < 0)
@@ -302,16 +304,16 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
         _blockalign=378;
       }
     }
-    ADM_info("[ADM_ad_lav] init successful (blockalign %d), channels=%d\n",_blockalign,_context->channels);
+    ADM_info("[ADM_ad_lav] init successful (blockalign %d), channels=%d\n", _blockalign, _context->ch_layout.nb_channels);
     if(_context->sample_rate!=outputFrequency)
     {
         ADM_warning("Output frequency does not match input frequency (SBR ?) : %d / %d\n",
             _context->sample_rate,outputFrequency);
         reconfigureNeeded=true;
     }
-    if(_context->channels!=info->channels)
+    if(_context->ch_layout.nb_channels != info->channels)
     {
-        ADM_warning("Decoder and demuxer disagree about # of channels: %d / %d\n",_context->channels,info->channels);
+        ADM_warning("Decoder and demuxer disagree about # of channels: %d / %d\n", _context->ch_layout.nb_channels, info->channels);
         reconfigureNeeded=true;
     }
 }
@@ -320,16 +322,9 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
 */
  ADM_AudiocoderLavcodec::~ADM_AudiocoderLavcodec()
 {
-    avcodec_close(_context);
-    av_free(_context);
-    _context=NULL;
+    avcodec_free_context(&_context); // frees _paddedExtraData as well
     av_packet_free(&_pkt);
     av_frame_free(&_frame);
-    if(_paddedExtraData)
-    {
-        delete [] _paddedExtraData;
-       _paddedExtraData=NULL;
-    }
 }
 /**
     \fn decodeToS16
@@ -553,17 +548,17 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
                 frequencyChecked=true;
                 reconfigureNeeded=true;
             }
-            if(_context->channels!=channels)
+            if(_context->ch_layout.nb_channels != channels)
             {
                 if(!nbChannelsChecked)
                 {
                     ADM_warning("Decoder and demuxer disagree about # of channels: %d vs %u\n",
-                        _context->channels,channels);
+                        _context->ch_layout.nb_channels, channels);
                 }
                 nbChannelsChecked=true;
                 reconfigureNeeded=true;
             }
-            if(reconfigureNeeded && _context->channels == channels && _context->sample_rate == outputFrequency)
+            if(reconfigureNeeded && _context->ch_layout.nb_channels == channels && _context->sample_rate == outputFrequency)
             {
                 ADM_info("Output frequency and # of channels match again, cancelling the reconfigure request\n");
                 reconfigureNeeded = false;
@@ -632,9 +627,9 @@ bool ADM_AudiocoderLavcodec::setChannelMapping(void)
     memset(channelMapping,0,sizeof(CHANNEL_TYPE) * MAX_CHANNELS);
 
     CHANNEL_TYPE *p_ch_type = channelMapping;
-    if(!_context->channel_layout)
-        _context->channel_layout=av_get_default_channel_layout(channels);
-#define HAVE(chan) (_context->channel_layout & AV_CH_ ##chan)
+    if(!_context->ch_layout.nb_channels) // ??
+        av_channel_layout_default(&_context->ch_layout, channels);
+#define HAVE(chan) (av_channel_layout_index_from_channel(&_context->ch_layout, AV_CHAN_ ##chan) >= 0)
 #define MAPIT(chan) *(p_ch_type++)=ADM_CH_ ##chan;
 #define DOIT(x,y) if HAVE(x) MAPIT(y)
     DOIT(FRONT_LEFT,FRONT_LEFT)
@@ -672,7 +667,7 @@ uint32_t ADM_AudiocoderLavcodec::getOutputFrequency(void)
 uint32_t ADM_AudiocoderLavcodec::getOutputChannels(void)
 {
     ADM_assert(_context);
-    uint32_t chan=_context->channels;
+    uint32_t chan = _context->ch_layout.nb_channels;
     return chan;
 }
 /**
@@ -682,9 +677,9 @@ uint32_t ADM_AudiocoderLavcodec::getOutputChannels(void)
 bool ADM_AudiocoderLavcodec::reconfigureCompleted(void)
 {
     outputFrequency=_context->sample_rate;
-    if(false==updateChannels(_context->channels))
+    if(false == updateChannels(_context->ch_layout.nb_channels))
         return false;
-    channels=_context->channels;
+    channels = _context->ch_layout.nb_channels;
     setChannelMapping();
     reconfigureNeeded=false;
     frequencyChecked=false;
