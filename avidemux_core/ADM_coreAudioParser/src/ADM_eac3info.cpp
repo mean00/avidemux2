@@ -295,7 +295,9 @@ bool ADM_EAC3GetInfo(const uint8_t *data, uint32_t len, uint32_t *syncoff, ADM_E
             if(lfe)
                 channelLayout |= AV_CH_LOW_FREQUENCY;
 
-            info->channels = av_get_channel_layout_nb_channels(channelLayout);
+            AVChannelLayout chl;
+            ADM_assert(0 == av_channel_layout_from_mask(&chl, channelLayout) && chl.nb_channels); // no need to call av_channel_layout_uninit()
+            info->channels = chl.nb_channels;
             info->frequency >>= shift;
             info->samples = blk * 256;
             info->byterate += frameSize * info->frequency / info->samples;
