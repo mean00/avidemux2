@@ -322,7 +322,6 @@ again:
     //printf("[decoderFFLIBVA::getBuffer] Alloc Buffer in ADM_vaSurface at %p, VASurfaceID 0x%08x\n",s,(int)s->surface);
     pic->data[0]=(uint8_t *)s;
     pic->data[3]=(uint8_t *)(uintptr_t)s->surface;
-    pic->reordered_opaque= avctx->reordered_opaque;    
     return 0;
 }
 
@@ -577,7 +576,6 @@ bool decoderFFLIBVA::uncompress (ADMCompressedImage * in, ADMImage * out)
 
    // Put a safe value....
     out->Pts=in->demuxerPts;
-    _context->reordered_opaque=in->demuxerPts;
 
     AVFrame *frame=_parent->getFramePointer();
     ADM_assert(frame);
@@ -597,6 +595,7 @@ bool decoderFFLIBVA::uncompress (ADMCompressedImage * in, ADMImage * out)
         ADM_assert(pkt);
         pkt->data = in->data;
         pkt->size = in->dataLength;
+        pkt->pts  = in->demuxerPts;
 
         if(in->flags&AVI_KEY_FRAME)
             pkt->flags = AV_PKT_FLAG_KEY;
@@ -625,7 +624,6 @@ bool decoderFFLIBVA::uncompress (ADMCompressedImage * in, ADMImage * out)
     {
         out->_noPicture=true;
         out->refType=ADM_HW_NONE;
-        out->Pts= (uint64_t)(frame->reordered_opaque);
         ADM_info("[LIBVA] No picture \n");
         return false;
     }
@@ -640,9 +638,8 @@ bool decoderFFLIBVA::uncompress (ADMCompressedImage * in, ADMImage * out)
  */
 bool     decoderFFLIBVA::readBackBuffer(AVFrame *decodedFrame, ADMCompressedImage * in, ADMImage * out)
 {
-    uint64_t pts_opaque=(uint64_t)(decodedFrame->reordered_opaque);
     if(_context->codec_id != AV_CODEC_ID_AV1)
-        out->Pts = pts_opaque; // not usable with AV1 where decoder may output multiple pictures per packet (or none)
+        out->Pts = decodedFrame->pts; // not usable with AV1 where decoder may output multiple pictures per packet (or none)
     out->flags=admFrameTypeFromLav(decodedFrame);
     out->_range=(decodedFrame->color_range==AVCOL_RANGE_JPEG)? ADM_COL_RANGE_JPEG : ADM_COL_RANGE_MPEG;
     out->refType=ADM_HW_LIBVA;
