@@ -129,8 +129,7 @@ again:
     }
     aprintf("[CODEC] Flags = 0x%x, QSCALE=%x, bit_rate=%d, quality=%d qz=%d incoming qz=%d\n",_context->flags,AV_CODEC_FLAG_QSCALE,
                                      _context->bit_rate,  _frame->quality, _frame->quality/ FF_QP2LAMBDA,q);     
-    
-    _frame->reordered_opaque=image->Pts;
+
     int  r=encodeWrapper(_frame,out);
     if(r<0)
     {
