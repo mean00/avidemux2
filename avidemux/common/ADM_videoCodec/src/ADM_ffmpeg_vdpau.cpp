@@ -186,7 +186,6 @@ int decoderFFVDPAU::getBuffer(AVCodecContext *avctx, AVFrame *pic)
 
     pic->data[0]=(uint8_t *)render;
     pic->data[3]=(uint8_t *)(uintptr_t)render->surface;
-    pic->reordered_opaque= avctx->reordered_opaque;
     aprintf("Alloc ===> Got buffer = %d\n",render->surface);
     return 0;
 }
@@ -404,7 +403,6 @@ bool decoderFFVDPAU::uncompress (ADMCompressedImage * in, ADMImage * out)
 
    // Put a safe value....
     out->Pts=in->demuxerPts;
-    _context->reordered_opaque=in->demuxerPts;
 
     AVFrame *frame=_parent->getFramePointer();
     ADM_assert(frame);
@@ -424,6 +422,7 @@ bool decoderFFVDPAU::uncompress (ADMCompressedImage * in, ADMImage * out)
         ADM_assert(pkt);
         pkt->data = in->data;
         pkt->size = in->dataLength;
+        pkt->pts  = in->demuxerPts;
 
         if(in->flags&AVI_KEY_FRAME)
             pkt->flags = AV_PKT_FLAG_KEY;
@@ -451,7 +450,7 @@ bool decoderFFVDPAU::uncompress (ADMCompressedImage * in, ADMImage * out)
     if(frame->pict_type==AV_PICTURE_TYPE_NONE)
     {
         out->_noPicture=true;
-        out->Pts= (uint64_t)(frame->reordered_opaque);
+        out->refType = ADM_HW_NONE;
         ADM_info("[VDPAU] No picture \n");
         return false;
     }
@@ -479,9 +478,8 @@ bool     decoderFFVDPAU::readBackBuffer(AVFrame *decodedFrame, ADMCompressedImag
     out->refDescriptor.refMarkUnused=vdpauMarkSurfaceUnused;
     out->refDescriptor.refDownload=vdpauRefDownload;
     vdpauMarkSurfaceUsed(&vdpau,(void *)rndr);
-    
-    uint64_t pts_opaque=(uint64_t)(decodedFrame->reordered_opaque);
-    out->Pts= (uint64_t)(pts_opaque);    
+
+    out->Pts = decodedFrame->pts;
     out->flags=admFrameTypeFromLav(decodedFrame);
     out->_range=(decodedFrame->color_range==AVCOL_RANGE_JPEG)? ADM_COL_RANGE_JPEG : ADM_COL_RANGE_MPEG;
     return true;
