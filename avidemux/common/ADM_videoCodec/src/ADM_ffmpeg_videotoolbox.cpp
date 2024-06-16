@@ -129,7 +129,6 @@ bool decoderFFVT::uncompress(ADMCompressedImage *in, ADMImage *out)
     }
 
     out->Pts=in->demuxerPts;
-    _context->reordered_opaque=in->demuxerPts;
 
     AVFrame *frame=_parent->getFramePointer();
     ADM_assert(frame);
@@ -149,6 +148,7 @@ bool decoderFFVT::uncompress(ADMCompressedImage *in, ADMImage *out)
         ADM_assert(pkt);
         pkt->data = in->data;
         pkt->size = in->dataLength;
+        pkt->pts  = in->demuxerPts;
 
         if(in->flags&AVI_KEY_FRAME)
             pkt->flags = AV_PKT_FLAG_KEY;
