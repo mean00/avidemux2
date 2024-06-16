@@ -31,6 +31,7 @@ extern "C"
 #define INT_MAX (0x7FFFFFFF)
 #endif
 #include "libavutil/avconfig.h"
+#include "config.h"
 #include "libavcodec/get_bits.h"
 #include "libavcodec/golomb.h"
 }
