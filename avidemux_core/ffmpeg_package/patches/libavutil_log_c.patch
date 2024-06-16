@@ -1,5 +1,5 @@
---- libavutil/log.c.orig	2022-07-22 19:58:39.000000000 +0200
-+++ libavutil/log.c	2022-10-26 11:55:54.000000000 +0200
+--- libavutil/log.c.orig	2024-04-05 01:23:00.000000000 +0200
++++ libavutil/log.c	2024-05-31 20:57:25.821315862 +0200
 @@ -41,6 +41,7 @@
  #include "common.h"
  #include "internal.h"
@@ -17,7 +17,7 @@
  #if defined(_WIN32) && HAVE_SETCONSOLETEXTATTRIBUTE && HAVE_GETSTDHANDLE
  static void win_console_puts(const char *str)
  {
-@@ -490,3 +491,18 @@
+@@ -495,3 +496,18 @@
      missing_feature_sample(0, avc, msg, argument_list);
      va_end(argument_list);
  }

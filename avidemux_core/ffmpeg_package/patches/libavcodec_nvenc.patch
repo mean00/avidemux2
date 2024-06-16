@@ -1,6 +1,6 @@
---- libavcodec/nvenc.c.orig	2023-11-10 01:30:25.000000000 +0100
-+++ libavcodec/nvenc.c	2023-12-05 00:15:48.374821092 +0100
-@@ -56,7 +56,7 @@
+--- libavcodec/nvenc.c.orig	2024-04-05 01:22:59.000000000 +0200
++++ libavcodec/nvenc.c	2024-05-31 20:40:51.534059089 +0200
+@@ -57,7 +57,7 @@
      AV_PIX_FMT_YUV420P,
      AV_PIX_FMT_NV12,
      AV_PIX_FMT_P010,
@@ -9,7 +9,7 @@
      AV_PIX_FMT_P016,      // Truncated to 10bits
      AV_PIX_FMT_YUV444P16, // Truncated to 10bits
      AV_PIX_FMT_0RGB32,
-@@ -67,7 +67,7 @@
+@@ -68,7 +68,7 @@
      AV_PIX_FMT_X2BGR10,
      AV_PIX_FMT_GBRP,
      AV_PIX_FMT_GBRP16,    // Truncated to 10bits
@@ -18,22 +18,15 @@
  #if CONFIG_D3D11VA
      AV_PIX_FMT_D3D11,
  #endif
-@@ -1673,12 +1673,13 @@
- {
-     switch (pix_fmt) {
-     case AV_PIX_FMT_YUV420P:
--        return NV_ENC_BUFFER_FORMAT_YV12_PL;
-+        // MEANX return NV_ENC_BUFFER_FORMAT_YV12_PL;
-     case AV_PIX_FMT_NV12:
-         return NV_ENC_BUFFER_FORMAT_NV12_PL;
+@@ -1710,6 +1710,7 @@
      case AV_PIX_FMT_P010:
      case AV_PIX_FMT_P016:
          return NV_ENC_BUFFER_FORMAT_YUV420_10BIT;
 +#if 0 /* MEANX */
      case AV_PIX_FMT_GBRP:
      case AV_PIX_FMT_YUV444P:
-         return NV_ENC_BUFFER_FORMAT_YUV444_PL;
-@@ -1695,6 +1696,7 @@
+         return NV_ENC_BUFFER_FORMAT_YUV444;
+@@ -1726,6 +1727,7 @@
          return NV_ENC_BUFFER_FORMAT_ARGB10;
      case AV_PIX_FMT_X2BGR10:
          return NV_ENC_BUFFER_FORMAT_ABGR10;
@@ -41,7 +34,7 @@
      default:
          return NV_ENC_BUFFER_FORMAT_UNDEFINED;
      }
-@@ -1977,10 +1979,33 @@
+@@ -2013,10 +2015,33 @@
  
      return tmp_surf;
  }
@@ -75,8 +68,8 @@
      int dst_linesize[4] = {
          lock_buffer_params->pitch,
          lock_buffer_params->pitch,
-@@ -2006,6 +2031,34 @@
-                   avctx->width, avctx->height);
+@@ -2042,6 +2067,34 @@
+                    avctx->width, avctx->height);
  
      return 0;
 +#else // MEANX

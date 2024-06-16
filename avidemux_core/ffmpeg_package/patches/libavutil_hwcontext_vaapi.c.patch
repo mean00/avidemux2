@@ -1,6 +1,6 @@
---- libavutil/hwcontext_vaapi.c.orig	2023-07-16 18:01:04.041322765 +0200
-+++ libavutil/hwcontext_vaapi.c	2023-07-16 18:15:57.994409931 +0200
-@@ -108,10 +108,10 @@
+--- libavutil/hwcontext_vaapi.c.orig	2024-04-05 01:23:00.000000000 +0200
++++ libavutil/hwcontext_vaapi.c	2024-05-31 20:57:25.818315888 +0200
+@@ -127,10 +127,10 @@
  // plane swap cases.  The frame handling below tries to hide these.
  static const VAAPIFormatDescriptor vaapi_format_map[] = {
      MAP(NV12, YUV420,  NV12,    0),

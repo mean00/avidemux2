@@ -1,6 +1,6 @@
---- libavcodec/h264_parser.c.orig	2023-02-27 21:43:45.000000000 +0100
-+++ libavcodec/h264_parser.c	2023-05-12 23:21:38.025609813 +0200
-@@ -66,6 +66,107 @@
+--- libavcodec/h264_parser.c.orig	2023-11-11 01:25:17.000000000 +0100
++++ libavcodec/h264_parser.c	2024-05-30 01:09:42.571921235 +0200
+@@ -67,6 +67,103 @@
      int last_frame_num, last_picture_structure;
  } H264ParseContext;
  
@@ -12,7 +12,7 @@
 +    \fn AVCodecParserContext
 +    \brief find a valid sps, take the 1st one that looks ok
 +*/
-+static SPS *findValidSPS(H264ParamSets *ps)
++static const SPS *findValidSPS(H264ParamSets *ps)
 +{
 +    int i;
 +    if(!ps)
@@ -22,13 +22,9 @@
 +    }
 +    for (i = 0; i<MAX_SPS_COUNT; i++)
 +    {
-+        AVBufferRef *ref=ps->sps_list[i];
-+        if (ref)
-+        {
-+            SPS *sps = ( SPS *)ref->data; // actually it's a const
-+            if(sps->mb_width)
-+                return sps;
-+        }
++        const SPS *sps = ps->sps_list[i];
++        if (sps && sps->mb_width)
++            return sps;
 +    }
 +    av_log(NULL, AV_LOG_ERROR, "findValidSPS no valid SPS found\n");
 +    return NULL;
@@ -43,7 +39,7 @@
 +{
 +    H264ParseContext *ctx = parser->priv_data;
 +    int f;
-+    SPS *sps;
++    const SPS *sps;
 +    memset(info,0,sizeof(*info));
 +    sps=findValidSPS(&(ctx->ps));
 +    if(!sps)
