@@ -922,13 +922,11 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
     if(!decodeErrorHandler(ret))
         return false;
 
-#if 0
     if(!bFramePossible())
     {
         // No delay, the value is sure, no need to hide it in opaque
-        _frame->reordered_opaque=(int64_t)in->demuxerPts;
+        _frame->pts = in->demuxerPts;
     }
-#endif
     // We have an image....
     bool swap = false;
     ADM_pixelFormat pix_fmt;
