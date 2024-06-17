@@ -189,7 +189,7 @@ bool decoderFFVT::uncompress(ADMCompressedImage *in, ADMImage *out)
     if(frame->pict_type==AV_PICTURE_TYPE_NONE)
     {
         out->_noPicture=true;
-        out->Pts = (uint64_t)(frame->reordered_opaque);
+        out->Pts = in->demuxerPts;
         ADM_info("[VideoToolbox] No picture \n");
         return false;
     }
