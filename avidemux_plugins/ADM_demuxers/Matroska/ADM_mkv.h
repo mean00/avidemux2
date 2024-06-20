@@ -206,6 +206,10 @@ public:
 
 
 #define ADM_MKV_MAX_TRACKS 20
+#define ADM_MKV_INDEX_VERSION       (1)     // to validate .idx2 file
+#define ADM_MKV_INDEX_MAGIC         ("MKVINDEX")
+#define ADM_MKV_INDEX_MAGICMARK     (0x0123456789ABCDEFull)
+#define ADM_MKV_INDEX_SIZE_LIMIT    (1073741824ULL)     // max 1GB index file
 /**
     \class mkvHeader
     \brief Matroska demuxer
@@ -235,6 +239,8 @@ class mkvHeader         :public vidHeader
     uint64_t                _cuePosition;
     uint64_t                _trackPosition;
     uint32_t                _H264Recovery;
+    
+    std::string             _idxName;
 
     uint8_t                 checkHeader(void *head,uint32_t headlen);
     bool                    analyzeTracks(ADM_ebml_file *parser);
@@ -252,6 +258,8 @@ class mkvHeader         :public vidHeader
     uint8_t                 addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t where, uint32_t size,uint32_t flags,
                                             uint32_t timecodeMS);
     bool                    readCue(ADM_ebml_file *parser);
+    bool                    loadIndex(const std::string &idxName, uint64_t fileSize);
+    void                    saveIndex(const std::string &idxName, uint64_t fileSize);
     uint8_t                 indexClusters(ADM_ebml_file *parser);
     uint8_t                 indexLastCluster(ADM_ebml_file *parser);
     uint8_t                 indexBlock(ADM_ebml_file *parser,uint32_t count,uint32_t timecodeMS);

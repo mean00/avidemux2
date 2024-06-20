@@ -89,6 +89,11 @@ uint8_t mkvHeader::open(const char *name)
 
   _timeBase=1000; // default value is 1 ms timebase (unit is in us)
   _isvideopresent=0;
+  
+    
+    _idxName = name;
+    _idxName += ".idx2";
+    
   if(!ebml.open(name))
   {
     printf("[MKV]Failed to open file\n");
