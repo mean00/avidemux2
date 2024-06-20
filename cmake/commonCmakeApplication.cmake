@@ -62,6 +62,7 @@ SET(ADM_EXE_SRCS
 ../common/main.cpp
 ../common/gui_action.cpp
 ../common/gui_blackframes.cpp
+../common/gui_scenechange.cpp
 ../common/ADM_gettext.cpp
 ../common/ADM_slave.cpp
 )

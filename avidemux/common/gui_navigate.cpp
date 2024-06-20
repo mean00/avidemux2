@@ -271,6 +271,12 @@ static int ignore_change=0;
       case ACT_NextCutPoint:
         GUI_NextCutPoint();
       break;
+      case ACT_PrevSceneChange:
+        GUI_PrevSceneChange();
+      break;
+      case ACT_NextSceneChange:
+        GUI_NextSceneChange();
+      break;
       case ACT_NextBlackFrame:
         GUI_NextBlackFrame();
       break;
