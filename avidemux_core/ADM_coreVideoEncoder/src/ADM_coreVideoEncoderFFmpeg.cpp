@@ -448,10 +448,6 @@ bool ADM_coreVideoEncoderFFmpeg::setupInternal(const AVCodec *codec)
         encoderMT();
     }
 
-   if(!configureContext()) {
-     return false;
-   }
-
     switch(targetPixFrmt)
     {
 #define BARK(x,y) case ADM_PIXFRMT_ ##x: _context->pix_fmt = AV_PIX_FMT_ ##y; break;
@@ -463,6 +459,9 @@ bool ADM_coreVideoEncoderFFmpeg::setupInternal(const AVCodec *codec)
 #undef BARK
         default: ADM_assert(0);
     }
+
+    if(!configureContext())
+        return false;
 
    ADM_info("Opening context\n");
    if(_options)
