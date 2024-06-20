@@ -461,11 +461,13 @@ resume:
                                             spsInfo.width, spsInfo.height, tmpInfo.width, tmpInfo.height, data.nbPics, thisUnit.packetInfo.startAt);
                                     char alert[1024];
                                     alert[0]='\0';
-                                    snprintf(alert,1024,QT_TRANSLATE_NOOP("tsdemuxer","The size of the video changes at frame %u "
-                                            "from %ux%u to %ux%u. This is unsupported and will result in a crash.\n"
+                                    snprintf(alert,1024,QT_TRANSLATE_NOOP("tsdemuxer","The resolution of the video changes from %ux%u to %ux%u "
+                                            "at frame %u.\nIf hardware decoders are enabled, this will result in a crash.\n"
+                                            "Software decoder will scale every frame to %ux%u.\n"
+                                            "Scaling will affect re-encode, but not copy mode.\n"
                                             "Proceed nevertheless?\n"
                                             "This warning won't be shown again for this video."),
-                                            data.nbPics, spsInfo.width, spsInfo.height, tmpInfo.width, tmpInfo.height);
+                                            spsInfo.width, spsInfo.height, tmpInfo.width, tmpInfo.height, data.nbPics, spsInfo.width, spsInfo.height);
                                     alert[1023]='\0';
                                     if(!warningIgnored && !GUI_Question(alert,true))
                                     {
