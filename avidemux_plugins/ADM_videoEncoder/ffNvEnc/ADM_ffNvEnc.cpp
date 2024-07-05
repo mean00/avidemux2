@@ -20,7 +20,7 @@
 #include "ADM_ffNvEnc.h"
 #undef ADM_MINIMAL_UI_INTERFACE // we need the full UI
 #include "DIA_factory.h"
-#define USE_NV12
+//#define USE_NV12
 #if 1
 #define aprintf(...) {}
 #else
