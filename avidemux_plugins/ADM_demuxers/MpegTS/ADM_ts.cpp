@@ -184,6 +184,7 @@ bool tsHeader::updateIdr()
     }
     printf("[TsDemuxer] Found %d I, %d B, %d P\n",nbI,nbB,nbP);
     printf("[TsH264] Found %d IDR\n",nbIdr);
+#if 0
     if(nbIdr>1) // Change IDR to I and I to P...
     { 
         printf("[TsH264] Remapping IDR to I and I TO P\n");
@@ -207,6 +208,7 @@ bool tsHeader::updateIdr()
         }
         
     }
+#endif
     return true;
 }
 

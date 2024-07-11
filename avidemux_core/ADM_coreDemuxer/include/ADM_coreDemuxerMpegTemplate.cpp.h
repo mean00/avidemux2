@@ -147,14 +147,24 @@ uint8_t   MY_CLASS::getNbAudioStreams(void)
 
 uint8_t  MY_CLASS::setFlag(uint32_t frame,uint32_t flags)
 {
-    if(frame>=ListOfFrames.size()) return 0;
-     uint32_t f=2;
-     uint32_t intra=flags & AVI_FRAME_TYPE_MASK;
-     if(intra & AVI_KEY_FRAME) f=1;
-     if(intra & AVI_B_FRAME) f=3;
-     
-      ListOfFrames[frame]->type=f;
-      ListOfFrames[frame]->pictureType=flags & AVI_STRUCTURE_TYPE_MASK;
+    if(frame>=ListOfFrames.size())
+        return 0;
+
+    uint32_t f = 2;
+    switch(flags & AVI_FRAME_TYPE_MASK)
+    {
+        case AVI_KEY_FRAME:
+            f = 1;
+            if (flags & AVI_IDR_FRAME)
+                f = 4;
+            break;
+        case AVI_B_FRAME:
+            f = 3;
+            break;
+        default: break;
+    }
+    ListOfFrames[frame]->type = f;
+    ListOfFrames[frame]->pictureType = flags & AVI_STRUCTURE_TYPE_MASK;
     return 1;
 }
 /**
@@ -164,16 +174,23 @@ uint8_t  MY_CLASS::setFlag(uint32_t frame,uint32_t flags)
 
 uint32_t MY_CLASS::getFlags(uint32_t frame,uint32_t *flags)
 {
-    if(frame>=ListOfFrames.size()) return 0;
-    uint32_t f=ListOfFrames[frame]->type;
-    switch(f)
+    if(frame>=ListOfFrames.size())
+        return 0;
+
+    switch(ListOfFrames[frame]->type)
     {
         case 1: *flags=AVI_KEY_FRAME;break;
-        case 2: *flags=0;break;
         case 3: *flags=AVI_B_FRAME;break;
+        case 4:
+            *flags = (AVI_KEY_FRAME | AVI_IDR_FRAME);
+            break;
+        case 2:
+        default:
+            *flags = 0;
+            break;
     }
-    *flags=*flags+ListOfFrames[frame]->pictureType;
-    return  1;
+    *flags += ListOfFrames[frame]->pictureType;
+    return 1;
 }
 
 /**

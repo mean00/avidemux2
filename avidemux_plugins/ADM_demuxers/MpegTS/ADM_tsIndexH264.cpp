@@ -550,8 +550,8 @@ resume:
                 }
                 if(startCode==NAL_IDR) thisUnit.imageType=4; // IDR
                 aprintf("[>>>>>>>>] Pic Type %" PRIu32" Recovery %" PRIu32"\n",thisUnit.imageType,recoveryCount);
-                if(thisUnit.imageType==1 && !thisUnit.recoveryCount)
-                    thisUnit.imageType=4; //I  + Recovery=0 = IDR!
+                if(thisUnit.imageType!=1 && thisUnit.imageType!=4 && !thisUnit.recoveryCount)
+                    thisUnit.imageType=1;
 
                 data.nbPics++;
                 decodingImage=true;
