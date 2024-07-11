@@ -631,18 +631,53 @@ bool mkvHeader::loadIndex(const std::string &idxName, uint64_t fileSize)
     uint64_t bufPos=0;
     buf = new uint8_t[8];
 
-
-    if (indexSize < 40) goto loadErr;
-    if (ADM_fread(buf,8,1,f)!=1) goto loadErr;
-    if (memcmp(buf,ADM_MKV_INDEX_MAGIC,8)) goto loadErr;
-    if (ADM_fread(&bufU64,sizeof(uint64_t),1,f)!=1) goto loadErr;
-    if (bufU64 != ADM_MKV_INDEX_VERSION) goto loadErr;
-    if (ADM_fread(&bufU64,sizeof(uint64_t),1,f)!=1) goto loadErr;
-    if (bufU64 != fileSize) goto loadErr;
+    const char *failmsg = "unknown";
+    if (indexSize < 40)
+    {
+        failmsg = "Index size too small";
+        goto loadErr;
+    }
+    if (ADM_fread(buf,8,1,f)!=1)
+    {
+        failmsg = "Cannot read index magic";
+        goto loadErr;
+    }
+    if (memcmp(buf,ADM_MKV_INDEX_MAGIC,8))
+    {
+        failmsg = "Index magic is wrong";
+        goto loadErr;
+    }
+    if (ADM_fread(&bufU64,sizeof(uint64_t),1,f)!=1)
+    {
+        failmsg = "Cannot read index version";
+        goto loadErr;
+    }
+    if (bufU64 != ADM_MKV_INDEX_VERSION)
+    {
+        failmsg = "Index version mismatch";
+        goto loadErr;
+    }
+    if (ADM_fread(&bufU64,sizeof(uint64_t),1,f)!=1)
+    {
+        failmsg = "Cannot read file size";
+        goto loadErr;
+    }
+    if (bufU64 != fileSize)
+    {
+        failmsg = "File size mismatch";
+        goto loadErr;
+    }
     indexSize -= 8+2*sizeof(uint64_t);
-    if (indexSize < 8) goto loadErr;
-    if (indexSize > ADM_MKV_INDEX_SIZE_LIMIT) goto loadErr;
-    
+    if (indexSize < 8)
+    {
+        failmsg = "Remaning index size too small";
+        goto loadErr;
+    }
+    if (indexSize > ADM_MKV_INDEX_SIZE_LIMIT)
+    {
+        failmsg = "Index size too large";
+        goto loadErr;
+    }
     delete [] buf;
     buf = new uint8_t[indexSize+65536];
     
@@ -743,11 +778,11 @@ bool mkvHeader::loadIndex(const std::string &idxName, uint64_t fileSize)
         ADM_assert(tmpU64 == ADM_MKV_INDEX_MAGICMARK);
     }    
     
-    #undef LOAD_U64(X)
-    #undef LOAD_I64(X)
-    #undef LOAD_BOOL(X)
-    #undef LOAD_TYPE(X,T)
-    #undef LOAD_BVECT(X,L)
+    #undef LOAD_U64
+    #undef LOAD_I64
+    #undef LOAD_BOOL
+    #undef LOAD_TYPE
+    #undef LOAD_BVECT
     
     
     ADM_assert(bufPos==indexSize);
@@ -755,55 +790,77 @@ bool mkvHeader::loadIndex(const std::string &idxName, uint64_t fileSize)
 loadErr:
     delete [] buf;
     ADM_fclose(f);
+    ADM_warning("Cannot load index, reason: %s.\n", failmsg);
     return ret;
 }
 
 void mkvHeader::saveIndex(const std::string &idxName, uint64_t fileSize)
 {
-    FILE * f = ADM_fopen(idxName.c_str(), "rb");
-    if (f)  // already exists, quit
-    {
-        ADM_fclose(f);
+    if (ADM_fileExist(idxName.c_str())) // nothing to do
         return;
-    }
-    
-    f = ADM_fopen(idxName.c_str(), "wb");
+
+    FILE *f = ADM_fopen(idxName.c_str(), "wb");
     if (!f) return;
     
     uint64_t bufU64;
     int64_t bufI64;
-    
-    #define SAVE_U64(X)         do{ bufU64 = (X); ADM_fwrite(&bufU64,sizeof(uint64_t),1,f); } while(0)
-    #define SAVE_I64(X)         do{ bufI64 = (X); ADM_fwrite(&bufI64,sizeof(int64_t),1,f); } while(0)
-    #define SAVE_U64_BRK(X)     bufU64 = (X); if (ADM_fwrite(&bufU64,sizeof(uint64_t),1,f) !=1 ) break
-    #define SAVE_I64_BRK(X)     bufI64 = (X); if (ADM_fwrite(&bufI64,sizeof(int64_t),1,f) !=1 ) break
-    #define SAVE_TYPE_BRK(X,T)  if (ADM_fwrite(&X,sizeof(T),1,f) !=1 ) break;
-    #define SAVE_BVECT_BRK(X,L) if (ADM_fwrite(X,L,1,f) !=1 ) break;
+    uint64_t nbWrite = 0;
+
+    #define SAVE_U64(X)         do{ bufU64 = (X); if (1 != ADM_fwrite(&bufU64,sizeof(uint64_t),1,f)) goto saveErr; nbWrite++; } while(0)
+    #define SAVE_I64(X)         do{ bufI64 = (X); if (1 != ADM_fwrite(&bufI64,sizeof(int64_t),1,f)) goto saveErr; nbWrite++; } while(0)
+    #define SAVE_U64_BRK(X)     bufU64 = (X); if (ADM_fwrite(&bufU64,sizeof(uint64_t),1,f) !=1 ) goto saveErr; nbWrite++;
+    #define SAVE_I64_BRK(X)     bufI64 = (X); if (ADM_fwrite(&bufI64,sizeof(int64_t),1,f) !=1 ) goto saveErr; nbWrite++;
+    #define SAVE_TYPE_BRK(X,T)  if (ADM_fwrite(X,sizeof(T),1,f) !=1 ) goto saveErr; nbWrite++;
+    #define SAVE_BVECT_BRK(X,L) if (ADM_fwrite(X,L,1,f) !=1 ) goto saveErr; nbWrite++;
     
     ADM_fwrite(ADM_MKV_INDEX_MAGIC,8,1,f);
     SAVE_U64(ADM_MKV_INDEX_VERSION);
     SAVE_U64(fileSize);
     
     SAVE_U64(_clusters.size());
-    for (uint64_t i=0; i<_clusters.size(); i++)
+    for (uint32_t i=0; i<_clusters.size(); i++)
     {
-        mkvIndex tmp = _clusters[i];
+        mkvIndex *tmp = &(_clusters[i]);
         SAVE_TYPE_BRK(tmp, mkvIndex);
     }
     
     SAVE_U64(_nbAudioTrack);
     for (int t=0; t<1+_nbAudioTrack; t++)
     {
-        SAVE_U64(_tracks[t].index.size());
-        for (uint64_t i=0; i<_tracks[t].index.size(); i++)
+        uint32_t nbIdx = _tracks[t].index.size();
+        SAVE_U64(nbIdx);
+        uint32_t chunk = (nbIdx < 0x1000) ? nbIdx : 0x1000;
+        uint8_t *tmpbuf = (uint8_t *)ADM_alloc(chunk * sizeof(mkvIndex));
+        if (tmpbuf == NULL) goto saveErr;
+        //ADM_info("Allocated %" PRIu64" bytes for temporary index buffer for track %d\n", chunk * sizeof(mkvIndex), t);
+        uint32_t indexOffset = 0;
+        while (nbIdx)
         {
-            mkvIndex tmp = _tracks[t].index[i];
-            SAVE_TYPE_BRK(tmp, mkvIndex);
+            nbIdx -= chunk;
+            uint8_t *p = tmpbuf;
+            for (uint32_t i=0; i < chunk; i++)
+            {
+                memcpy(p, &(_tracks[t].index[indexOffset]), sizeof(mkvIndex));
+                p += sizeof(mkvIndex);
+                indexOffset++;
+            }
+            if (1 != ADM_fwrite(tmpbuf, chunk * sizeof(mkvIndex), 1, f))
+            {
+                ADM_dealloc(tmpbuf);
+                tmpbuf = NULL;
+                goto saveErr;
+            }
+            nbWrite++;
+            //ADM_info("%" PRIu32" index entries for track %d written, remaining: %" PRIu32"\n", chunk, t, nbIdx);
+            if (chunk > nbIdx)
+                chunk = nbIdx;
         }
+        ADM_dealloc(tmpbuf);
+        tmpbuf = NULL;
 
         SAVE_U64_BRK(_tracks[t].streamIndex);
         SAVE_U64_BRK(_tracks[t].duration);
-        SAVE_TYPE_BRK(_tracks[t].wavHeader, WAVHeader);
+        SAVE_TYPE_BRK(&(_tracks[t].wavHeader), WAVHeader);
         SAVE_U64_BRK(_tracks[t].nbPackets);
         SAVE_U64_BRK(_tracks[t].nbFrames);
         SAVE_U64_BRK(_tracks[t].length);
@@ -841,15 +898,21 @@ void mkvHeader::saveIndex(const std::string &idxName, uint64_t fileSize)
         SAVE_U64_BRK(ADM_MKV_INDEX_MAGICMARK);
     }
 
-    #undef SAVE_U64(X)
-    #undef SAVE_I64(X)
-    #undef SAVE_U64_BRK(X)
-    #undef SAVE_I64_BRK(X)
-    #undef SAVE_TYPE_BRK(X,T)
-    #undef SAVE_BVECT_BRK(X,L)
-    
-    ADM_fwrite(ADM_MKV_INDEX_MAGIC,8,1,f);
+    #undef SAVE_U64
+    #undef SAVE_I64
+    #undef SAVE_U64_BRK
+    #undef SAVE_I64_BRK
+    #undef SAVE_TYPE_BRK
+    #undef SAVE_BVECT_BRK
+
+    if (1 != ADM_fwrite(ADM_MKV_INDEX_MAGIC,8,1,f))
+        goto saveErr;
     ADM_fclose(f);
+    ADM_info("Index written, %" PRIu64" write-outs.\n", nbWrite);
+    return;
+saveErr:
+    ADM_fclose(f);
+    remove(idxName.c_str());
 }
 
 /**
