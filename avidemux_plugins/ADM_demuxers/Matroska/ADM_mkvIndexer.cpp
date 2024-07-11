@@ -790,7 +790,8 @@ bool mkvHeader::loadIndex(const std::string &idxName, uint64_t fileSize)
 loadErr:
     delete [] buf;
     ADM_fclose(f);
-    ADM_warning("Cannot load index, reason: %s.\n", failmsg);
+    if (!ret)
+        ADM_warning("Cannot load index, reason: %s.\n", failmsg);
     return ret;
 }
 
