@@ -929,9 +929,12 @@ uint8_t mkvHeader::indexClusters(ADM_ebml_file *parser)
     const char *ss;
     uint64_t pos;
     uint8_t res=1;
-    
-    
-    if (getenv("ADM_INDEX_MKV"))
+    bool indexOnDisk = true;
+
+    if (NULL != getenv("ADM_NOINDEX_MKV") && !strncmp(getenv("ADM_NOINDEX_MKV"), "1", 1))
+        indexOnDisk = false;
+
+    if (indexOnDisk)
     {
         if (loadIndex(_idxName, parser->getFileSize()))
         {
@@ -1012,8 +1015,8 @@ tryAgain:
     delete _work;
     _work = NULL;
     //ADM_info("[MKV] Found %u clusters\n",(int)_clusters.size());
-    
-    if (getenv("ADM_INDEX_MKV"))
+
+    if (indexOnDisk)
     {
         if ((res == ADM_OK) && (!!VIDEO.index.size()))
         {
