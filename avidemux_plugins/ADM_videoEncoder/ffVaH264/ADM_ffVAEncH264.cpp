@@ -306,8 +306,6 @@ again:
         hwFrame->quality / FF_QP2LAMBDA,
         q);
 
-    hwFrame->reordered_opaque=image->Pts;
-
     sz=encodeWrapper(hwFrame,out);
     if(sz<0)
     {

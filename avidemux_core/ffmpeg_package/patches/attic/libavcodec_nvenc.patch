@@ -1,0 +1,105 @@
+--- libavcodec/nvenc.c.orig	2024-04-05 01:22:59.000000000 +0200
++++ libavcodec/nvenc.c	2024-05-31 20:40:51.534059089 +0200
+@@ -57,7 +57,7 @@
+     AV_PIX_FMT_YUV420P,
+     AV_PIX_FMT_NV12,
+     AV_PIX_FMT_P010,
+-    AV_PIX_FMT_YUV444P,
++    /* MEANX AV_PIX_FMT_YUV444P,
+     AV_PIX_FMT_P016,      // Truncated to 10bits
+     AV_PIX_FMT_YUV444P16, // Truncated to 10bits
+     AV_PIX_FMT_0RGB32,
+@@ -68,7 +68,7 @@
+     AV_PIX_FMT_X2BGR10,
+     AV_PIX_FMT_GBRP,
+     AV_PIX_FMT_GBRP16,    // Truncated to 10bits
+-    AV_PIX_FMT_CUDA,
++    AV_PIX_FMT_CUDA, */
+ #if CONFIG_D3D11VA
+     AV_PIX_FMT_D3D11,
+ #endif
+@@ -1710,6 +1710,7 @@
+     case AV_PIX_FMT_P010:
+     case AV_PIX_FMT_P016:
+         return NV_ENC_BUFFER_FORMAT_YUV420_10BIT;
++#if 0 /* MEANX */
+     case AV_PIX_FMT_GBRP:
+     case AV_PIX_FMT_YUV444P:
+         return NV_ENC_BUFFER_FORMAT_YUV444;
+@@ -1726,6 +1727,7 @@
+         return NV_ENC_BUFFER_FORMAT_ARGB10;
+     case AV_PIX_FMT_X2BGR10:
+         return NV_ENC_BUFFER_FORMAT_ABGR10;
++#endif /* MEANX */
+     default:
+         return NV_ENC_BUFFER_FORMAT_UNDEFINED;
+     }
+@@ -2013,10 +2015,33 @@
+ 
+     return tmp_surf;
+ }
++/**
++        MEANX
++*/
++static void interleave_nv12(unsigned char *dest, int dest_stride,unsigned char *u,int u_stride,unsigned char *v,int v_stride,int width, int height)
++{
++        int x,y;
++        unsigned char *d;
++        unsigned char *pu;
++        unsigned char *pv;
++        for(y=0;y<height;y++)
++        {
++                d=dest;dest+=dest_stride;
++                pu=u;u+=u_stride;
++                pv=v;v+=v_stride;
++                for(x=0;x<width;x++)
++                {
++                        *(d++)=*(pu++);
++                        *(d++)=*(pv++);
++                }
++
++        }
++}
+ 
+ static int nvenc_copy_frame(AVCodecContext *avctx, NvencSurface *nv_surface,
+             NV_ENC_LOCK_INPUT_BUFFER *lock_buffer_params, const AVFrame *frame)
+ {
++#if 0 // MEANX
+     int dst_linesize[4] = {
+         lock_buffer_params->pitch,
+         lock_buffer_params->pitch,
+@@ -2042,6 +2067,34 @@
+                    avctx->width, avctx->height);
+ 
+     return 0;
++#else // MEANX
++  // MEANX
++        uint8_t *buf = lock_buffer_params->bufferDataPtr;
++          av_image_copy_plane(buf, lock_buffer_params->pitch,
++                 frame->data[0], frame->linesize[0],
++                 avctx->width, avctx->height);
++// MEANX : We accept YV12 and interleave while copying, it saves us one intermediate image buffer
++        buf += nv_surface->height * lock_buffer_params->pitch;
++        switch(avctx->pix_fmt)
++        {
++                case AV_PIX_FMT_YUV420P:
++                        // Interleave U & V to NV12
++                        interleave_nv12(buf, lock_buffer_params->pitch,frame->data[1],frame->linesize[1],frame->data[2],frame->linesize[2],avctx->width>>1, avctx->height>>1); 
++                        break;
++
++                case AV_PIX_FMT_NV12:
++                        av_image_copy_plane(buf, lock_buffer_params->pitch,
++                                frame->data[1], frame->linesize[1],
++                                avctx->width, avctx->height >> 1);
++                        break;
++                default:
++                        av_log(avctx, AV_LOG_FATAL, "NVENC: Invalid pixel format!\n");
++                        return AVERROR(EINVAL);
++        } 
++
++#endif // MEANX
++        
++ return 0;
+ }
+ 
+ static int nvenc_find_free_reg_resource(AVCodecContext *avctx)

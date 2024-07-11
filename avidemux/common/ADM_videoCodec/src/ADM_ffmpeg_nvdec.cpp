@@ -275,7 +275,6 @@ bool decoderFFnvDec::uncompress(ADMCompressedImage *in, ADMImage *out)
     }
 
     out->Pts = in->demuxerPts;
-    _context->reordered_opaque = in->demuxerPts;
 
     AVFrame *frame = _parent->getFramePointer();
     ADM_assert(frame);
@@ -295,6 +294,7 @@ bool decoderFFnvDec::uncompress(ADMCompressedImage *in, ADMImage *out)
         ADM_assert(pkt);
         pkt->data = in->data;
         pkt->size = in->dataLength;
+        pkt->pts = in->demuxerPts;
 
         if(in->flags & AVI_KEY_FRAME)
             pkt->flags = AV_PKT_FLAG_KEY;
@@ -331,7 +331,7 @@ bool decoderFFnvDec::uncompress(ADMCompressedImage *in, ADMImage *out)
     if(frame->pict_type == AV_PICTURE_TYPE_NONE)
     {
         out->_noPicture = true;
-        out->Pts = (uint64_t)(frame->reordered_opaque);
+        out->Pts = in->demuxerPts;
         ADM_info("[NVDEC] No picture \n");
         return false;
     }
@@ -395,10 +395,8 @@ bool decoderFFnvDec::readBackBuffer(AVFrame *decodedFrame, ADMCompressedImage *i
     out->refDescriptor.refMarkUnused = nvDecMarkSurfaceUnused;
     out->refDescriptor.refDownload = nvDecRefDownload;
 
-    if(_context->codec_id == AV_CODEC_ID_AV1)
-        out->Pts = in->demuxerPts;
-    else
-        out->Pts = (uint64_t)(decodedFrame->reordered_opaque);
+    if(_context->codec_id != AV_CODEC_ID_AV1)
+        out->Pts = decodedFrame->pts;
     out->flags = admFrameTypeFromLav(decodedFrame);
     _parent->cloneColorInfo(decodedFrame, out);
     bool swap = false;

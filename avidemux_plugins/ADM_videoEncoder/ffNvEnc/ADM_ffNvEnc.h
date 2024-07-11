@@ -115,9 +115,6 @@ enum FF_NVencBframeRefMode
 class ADM_ffNvEncEncoder : public ADM_coreVideoEncoderFFmpeg
 {
 protected:
-
-               uint8_t      *nv12;
-               int          nv12Stride;
                uint64_t     frameIncrement;
 public:
 

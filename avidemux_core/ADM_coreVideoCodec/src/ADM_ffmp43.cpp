@@ -91,10 +91,9 @@ uint8_t decoderFF::clonePic (AVFrame * src, ADMImage * out, bool swap)
     ADM_assert(src->height > 0);
     out->_height = src->height;
 
-    uint64_t pts_opaque=(uint64_t)(src->reordered_opaque);
     //printf("[LAVC] Old pts :%"PRId64" new pts :%"PRId64"\n",out->Pts, pts_opaque);
     //printf("[LAVC] pts: %"PRIu64"\n",src->pts);
-    out->Pts= (uint64_t)(pts_opaque);
+    out->Pts = src->pts;
 
     return cloneColorInfo(src, out);
 }
@@ -352,7 +351,7 @@ decoderFF::decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen
   if(extraDataLen)
     {
             _extraDataLen=(int)extraDataLen;
-            _extraDataCopy=new uint8_t[extraDataLen+AV_INPUT_BUFFER_PADDING_SIZE];
+            _extraDataCopy = (uint8_t *)av_malloc(extraDataLen + AV_INPUT_BUFFER_PADDING_SIZE);
             memset(_extraDataCopy,0,extraDataLen+AV_INPUT_BUFFER_PADDING_SIZE);
             memcpy(_extraDataCopy,extraData,extraDataLen);
     }
@@ -374,11 +373,7 @@ decoderFF::~decoderFF ()
   av_frame_free(&_frame);
   av_packet_free(&_packet);
 
-  if(_extraDataCopy)
-  {
-      delete [] _extraDataCopy;
-      _extraDataCopy=NULL;
-  }
+  _extraDataCopy=NULL; // freed by avcodec_free_context()
   delete hwDecoder;
   hwDecoder=NULL;
 }
@@ -453,9 +448,7 @@ void decoderFF::lavFree(void)
 {
     if (!_context) return;
 
-    avcodec_close (_context);
-    av_free(_context);
-    _context = NULL;
+    avcodec_free_context(&_context);
     ADM_info("Codec context freed\n");
 }
 
@@ -676,7 +669,7 @@ uint32_t decoderFF::admFrameTypeFromLav (AVFrame *pic)
                 break;
         case AV_PICTURE_TYPE_I:
                 SET (AVI_KEY_FRAME);
-                if (!pic->key_frame)
+                if (!(pic->flags & AV_FRAME_FLAG_KEY))
                   {
                     if (codecId == AV_CODEC_ID_H264 || codecId == AV_CODEC_ID_FFV1)
                         SET (AVI_P_FRAME)
@@ -688,7 +681,7 @@ uint32_t decoderFF::admFrameTypeFromLav (AVFrame *pic)
                 _gmc = 1;			// No break, just inform that gmc is there
         case AV_PICTURE_TYPE_P:
                 SET (AVI_P_FRAME);
-                if (pic->key_frame)
+                if (pic->flags & AV_FRAME_FLAG_KEY)
                         aprintf ("\n But keyframe is set\n");
                 break;
         case AV_PICTURE_TYPE_NONE:
@@ -698,10 +691,10 @@ uint32_t decoderFF::admFrameTypeFromLav (AVFrame *pic)
                 break;
     }
     outFlags&=~AVI_STRUCTURE_TYPE_MASK;
-    if(pic->interlaced_frame)
+    if(pic->flags & AV_FRAME_FLAG_INTERLACED)
     {
         SET_ADD(AVI_FIELD_STRUCTURE)
-        if(pic->top_field_first)
+        if(pic->flags & AV_FRAME_FLAG_TOP_FIELD_FIRST)
             SET_ADD(AVI_TOP_FIELD)
         else
             SET_ADD(AVI_BOTTOM_FIELD)
@@ -825,7 +818,6 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
     }
     // Put a safe value....
     out->Pts=in->demuxerPts;
-    _context->reordered_opaque=in->demuxerPts;
   //_frame.opaque=(void *)out->Pts;
   //printf("Incoming Pts :%"PRId64"\n",out->Pts);
     if(_drain)
@@ -839,6 +831,7 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
     {
         _packet->data = in->data;
         _packet->size = in->dataLength;
+        _packet->pts = in->demuxerPts;
 
         if(in->flags&AVI_KEY_FRAME)
             _packet->flags = AV_PKT_FLAG_KEY;
@@ -932,9 +925,8 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
     if(!bFramePossible())
     {
         // No delay, the value is sure, no need to hide it in opaque
-        _frame->reordered_opaque=(int64_t)in->demuxerPts;
+        _frame->pts = in->demuxerPts;
     }
-
     // We have an image....
     bool swap = false;
     ADM_pixelFormat pix_fmt;

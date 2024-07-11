@@ -1,11 +1,11 @@
---- libavformat/mpegtsenc.c.orig	2023-02-27 21:43:45.000000000 +0100
-+++ libavformat/mpegtsenc.c	2023-05-12 21:26:11.064208679 +0200
-@@ -1760,7 +1760,7 @@
-             av_log(s, AV_LOG_ERROR, "H.264 bitstream malformed, "
-                    "no startcode found, use the video bitstream filter 'h264_mp4toannexb' to fix it "
-                    "('-bsf:v h264_mp4toannexb' option with ffmpeg)\n");
+--- libavformat/mpegtsenc.c.orig	2024-05-31 20:43:39.419526221 +0200
++++ libavformat/mpegtsenc.c	2024-05-31 20:52:43.430790734 +0200
+@@ -1771,7 +1771,7 @@
+             av_log(s, AV_LOG_ERROR, "%s bitstream malformed, "
+                    "no startcode found, use the video bitstream filter '%s_mp4toannexb' to fix it "
+                    "('-bsf:v %s_mp4toannexb' option with ffmpeg)\n", codec, codec, codec);
 -            return AVERROR_INVALIDDATA;
 +            // MEANX : Avidemux does not align the packet well, ignore this error    return AVERROR_INVALIDDATA;
          }
-         av_log(s, AV_LOG_WARNING, "H.264 bitstream error, startcode missing, size %d", pkt->size);
+         av_log(s, AV_LOG_WARNING, "%s bitstream error, startcode missing, size %d", codec, pkt->size);
          if (pkt->size)

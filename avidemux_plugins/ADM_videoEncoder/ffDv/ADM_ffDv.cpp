@@ -132,9 +132,7 @@ again:
     q=image->_Qp;
     
     if(!q) q=2;
-   
-    
-    _frame->reordered_opaque=image->Pts;
+
     int r=encodeWrapper(_frame,out);
     if(r<0)
     {

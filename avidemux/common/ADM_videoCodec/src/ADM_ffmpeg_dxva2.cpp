@@ -88,15 +88,6 @@ bool dxva2Probe(void)
 }
 //--
 
-
-
-
-#if 1
-#define aprintf(...) {}
-#else
-#define aprintf ADM_info
-#endif
-
 /**
   \fn dxvaBitDepthFromContext
 */
@@ -483,7 +474,6 @@ bool decoderFFDXVA2::uncompress (ADMCompressedImage * in, ADMImage * out)
 
    // Put a safe value....
     out->Pts=in->demuxerPts;
-    _context->reordered_opaque=in->demuxerPts;
 
     AVFrame *frame=_parent->getFramePointer();
     ADM_assert(frame);
@@ -503,6 +493,7 @@ bool decoderFFDXVA2::uncompress (ADMCompressedImage * in, ADMImage * out)
         ADM_assert(pkt);
         pkt->data = in->data;
         pkt->size = in->dataLength;
+        pkt->pts  = in->demuxerPts;
 
         if(in->flags&AVI_KEY_FRAME)
             pkt->flags = AV_PKT_FLAG_KEY;
@@ -531,7 +522,6 @@ bool decoderFFDXVA2::uncompress (ADMCompressedImage * in, ADMImage * out)
     {
         out->_noPicture=true;
         out->refType=ADM_HW_NONE;
-        out->Pts= (uint64_t)(frame->reordered_opaque);
         ADM_info("[DXVA] --No picture \n");
         return false;
     }
@@ -544,8 +534,7 @@ bool decoderFFDXVA2::uncompress (ADMCompressedImage * in, ADMImage * out)
 bool     decoderFFDXVA2::readBackBuffer(AVFrame *decodedFrame, ADMCompressedImage * in, ADMImage * out)
 {
     aprintf("Reading Back Buffer\n");
-    uint64_t pts_opaque=(uint64_t)(decodedFrame->reordered_opaque);
-    out->Pts= (uint64_t)(pts_opaque);
+    out->Pts = decodedFrame->pts;
     out->flags=admFrameTypeFromLav(decodedFrame);
     out->_range=(decodedFrame->color_range==AVCOL_RANGE_JPEG)? ADM_COL_RANGE_JPEG : ADM_COL_RANGE_MPEG;
     out->refType=ADM_HW_DXVA;
@@ -594,7 +583,6 @@ int decoderFFDXVA2::getBuffer(AVCodecContext *avctx, AVFrame *pic)
     aprintf("Alloc Buffer : 0x%llx, surfaceid=%x\n",s,(int)s->surface);
     pic->data[0]=(uint8_t *)s;
     pic->data[3]=(uint8_t *)(uintptr_t)s->surface;
-    pic->reordered_opaque= avctx->reordered_opaque;
 
     s->addRef();
     admDxva2::decoderAddRef(s->decoder);

@@ -1,5 +1,5 @@
---- libavcodec/hevc_parser.c.orig	2022-07-22 19:58:39.000000000 +0200
-+++ libavcodec/hevc_parser.c	2022-10-23 22:35:45.000000000 +0200
+--- libavcodec/hevc_parser.c.orig	2023-11-11 01:25:17.000000000 +0100
++++ libavcodec/hevc_parser.c	2024-05-30 20:25:46.552614124 +0200
 @@ -30,6 +30,13 @@
  #include "h2645_parse.h"
  #include "parser.h"
@@ -14,7 +14,7 @@
  #define START_CODE 0x000001 ///< start_code_prefix_one_3bytes
  
  #define IS_IRAP_NAL(nal) (nal->type >= 16 && nal->type <= 23)
-@@ -173,6 +180,156 @@
+@@ -173,6 +180,136 @@
  }
  
  /**
@@ -27,7 +27,6 @@
 +    HEVCParamSets *ps;
 +    const HEVCPPS *pps;
 +    const HEVCSPS *sps;
-+    AVBufferRef *ref;
 +    unsigned int i, sps_id;
 +
 +    ctx = s->priv_data;
@@ -45,26 +44,21 @@
 +    // Nope, probably no slice header decoded yet. Pick the first PPS from the list and keep fingers crossed.
 +    for (i = 0; i < HEVC_MAX_PPS_COUNT; i++)
 +    {
-+        ref = ps->pps_list[i];
-+        if (!ref || !ref->data)
-+            continue;
-+        break;
++        pps = ps->pps_list[i];
++        if (pps)
++            break;
 +    }
 +
-+    if (!ref || !ref->data)
++    if (!pps)
 +        return NULL;
 +
 +    // From now on, follow the chain.
-+    pps = (HEVCPPS *)ref->data;
 +    sps_id = pps->sps_id;
 +    if (sps_id >= HEVC_MAX_SPS_COUNT)
 +        return NULL;
 +
-+    ref = ps->sps_list[sps_id];
-+    if (!ref || !ref->data)
-+        return NULL;
++    sps = ps->sps_list[sps_id];
 +
-+    sps = (HEVCSPS *)ref->data;
 +    return sps;
 +}
 +/**
@@ -76,7 +70,6 @@
 +    HEVCParserContext *ctx;
 +    HEVCParamSets *ps;
 +    const HEVCPPS *pps;
-+    AVBufferRef *ref;
 +    unsigned int i;
 +
 +    ctx = s->priv_data;
@@ -94,17 +87,11 @@
 +    // Nope, pick the first one from the list.
 +    for (i = 0; i < HEVC_MAX_PPS_COUNT; i++)
 +    {
-+        ref = ps->pps_list[i];
-+        if (!ref || !ref->data)
-+            continue;
-+        break;
++        pps = ps->pps_list[i];
++        if (pps)
++            return pps;
 +    }
-+
-+    if (!ref || !ref->data)
-+        return NULL;
-+
-+    pps = (HEVCPPS *)ref->data;
-+    return pps;
++    return NULL;
 +}
 +/**
 + \fn ff_hevc_parser_get_vps
@@ -117,7 +104,6 @@
 +    const HEVCPPS *pps;
 +    const HEVCSPS *sps;
 +    const HEVCVPS *vps;
-+    AVBufferRef *ref;
 +    unsigned int i, sps_id, vps_id;
 +
 +    ctx = s->priv_data;
@@ -135,34 +121,28 @@
 +    // Nope, take the first PPS from the list and follow the chain.
 +    for (i = 0; i < HEVC_MAX_PPS_COUNT; i++)
 +    {
-+        ref = ps->pps_list[i];
-+        if (!ref || !ref->data)
-+            continue;
-+        break;
++        pps = ps->pps_list[i];
++        if (pps)
++            break;
 +    }
 +
-+    if (!ref || !ref->data)
++    if (!pps)
 +        return NULL;
 +
-+    pps = (HEVCPPS *)ref->data;
 +    sps_id = pps->sps_id;
 +    if (sps_id >= HEVC_MAX_SPS_COUNT)
 +        return NULL;
 +
-+    ref = ps->sps_list[sps_id];
-+    if (!ref || !ref->data)
++    sps = ps->sps_list[sps_id];
++    if (!sps)
 +        return NULL;
 +
-+    sps = (HEVCSPS *)ref->data;
 +    vps_id = sps->vps_id;
 +    if (vps_id >= HEVC_MAX_VPS_COUNT)
 +        return NULL;
 +
-+    ref = ps->vps_list[vps_id];
-+    if (!ref || !ref->data)
-+        return NULL;
++    vps = ps->vps_list[vps_id];
 +
-+    vps = (HEVCVPS *)ref->data;
 +    return vps;
 +}
 +// /MEANX

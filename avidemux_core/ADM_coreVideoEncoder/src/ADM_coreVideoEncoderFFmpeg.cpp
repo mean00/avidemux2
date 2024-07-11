@@ -124,35 +124,95 @@ ADM_coreVideoEncoderFFmpeg::~ADM_coreVideoEncoderFFmpeg()
 }
 /**
     \fn prolog
+    \brief Set AVFrame strides and data pointers and convert incoming ADMImage
 */
-
 bool             ADM_coreVideoEncoderFFmpeg::prolog(ADMImage *img)
 {
     int w=getWidth();
+    int h=getHeight();
 
-  switch(targetPixFrmt)
+    switch(targetPixFrmt)
     {
-        case ADM_PIXFRMT_YV12:    _frame->linesize[0] = img->GetPitch(PLANAR_Y);
-                                _frame->linesize[1] = img->GetPitch(PLANAR_U);
-                                _frame->linesize[2] = img->GetPitch(PLANAR_V);
-                                _frame->format=AV_PIX_FMT_YUV420P;
-                                _context->pix_fmt =AV_PIX_FMT_YUV420P;break;
-        case ADM_PIXFRMT_YUV422P: w = ADM_IMAGE_ALIGN(w);
-                                _frame->linesize[0] = w;
-                                _frame->linesize[1] = w>>1;
-                                _frame->linesize[2] = w>>1;
-                                _frame->format=AV_PIX_FMT_YUV422P;
-                                _context->pix_fmt =AV_PIX_FMT_YUV422P;break;
-        case ADM_PIXFRMT_RGB32A : _frame->linesize[0] = ADM_IMAGE_ALIGN(w*4);
-                                _frame->linesize[1] = 0;//w >> 1;
-                                _frame->linesize[2] = 0;//w >> 1;
-                                _frame->format=AV_PIX_FMT_RGB32;
-                                _context->pix_fmt =AV_PIX_FMT_RGB32;break;
-        case ADM_PIXFRMT_RGB24:   _frame->linesize[0] = ADM_IMAGE_ALIGN(w*3);
-                                _frame->linesize[1] = 0;
-                                _frame->linesize[2] = 0;
-                                _frame->format = AV_PIX_FMT_RGB24;
-                                _context->pix_fmt = AV_PIX_FMT_RGB24;break;
+        case ADM_PIXFRMT_YV12:
+            _frame->linesize[0] = img->GetPitch(PLANAR_Y);
+            _frame->linesize[1] = img->GetPitch(PLANAR_U);
+            _frame->linesize[2] = img->GetPitch(PLANAR_V);
+            _frame->data[0] = image->GetWritePtr(PLANAR_Y);
+            _frame->data[1] = image->GetWritePtr(PLANAR_U);
+            _frame->data[2] = image->GetWritePtr(PLANAR_V);
+            _frame->format = AV_PIX_FMT_YUV420P;
+            break;
+        case ADM_PIXFRMT_NV12:
+        {
+            _frame->linesize[0] = img->GetPitch(PLANAR_Y);
+            _frame->linesize[1] = img->GetPitch(PLANAR_Y);
+            _frame->linesize[2] = 0;
+
+            uint8_t *p = rgbByteBuffer.at(0);
+#define TRYCONVERT if(!colorSpace->convertImage(image,p)) { ADM_error("[coreVideoEncoderFFmpeg] Pixel format conversion failed\n"); return false; }
+            TRYCONVERT
+
+            uint32_t off = ADM_IMAGE_ALIGN(w) * ADM_IMAGE_ALIGN(h);
+            _frame->data[0] = p;
+            p += off;
+            _frame->data[1] = p;
+            _frame->data[2] = NULL;
+            _frame->format = AV_PIX_FMT_NV12;
+            break;
+        }
+        case ADM_PIXFRMT_YUV422P:
+        {
+            w = ADM_IMAGE_ALIGN(w);
+            _frame->linesize[0] = w;
+            _frame->linesize[1] = w>>1;
+            _frame->linesize[2] = w>>1;
+
+            uint8_t *p = rgbByteBuffer.at(0);
+
+            TRYCONVERT
+
+            uint32_t off = ADM_IMAGE_ALIGN(w) * ADM_IMAGE_ALIGN(h);
+            _frame->data[0] = p;
+            p += off;
+            _frame->data[1] = p;
+            p += off >> 1;
+            _frame->data[2] = p;
+            _frame->format = AV_PIX_FMT_YUV422P;
+            break;
+        }
+        case ADM_PIXFRMT_RGB32A:
+        {
+            _frame->linesize[0] = ADM_IMAGE_ALIGN(w*4);
+            _frame->linesize[1] = 0;//w >> 1;
+            _frame->linesize[2] = 0;//w >> 1;
+
+            uint8_t *p = rgbByteBuffer.at(0);
+
+            TRYCONVERT
+
+            _frame->data[0] = p;
+            _frame->data[2] = NULL;
+            _frame->data[1] = NULL;
+            _frame->format = AV_PIX_FMT_RGB32;
+            break;
+        }
+        case ADM_PIXFRMT_RGB24:
+        {
+            _frame->linesize[0] = ADM_IMAGE_ALIGN(w*3);
+            _frame->linesize[1] = 0;
+            _frame->linesize[2] = 0;
+
+            uint8_t *p = rgbByteBuffer.at(0);
+
+            TRYCONVERT
+#undef TRYCONVERT
+            _frame->data[0] = p;
+            _frame->data[2] = NULL;
+            _frame->data[1] = NULL;
+
+            _frame->format = AV_PIX_FMT_RGB24;
+            break;
+        }
         default: ADM_assert(0);
 
     }
@@ -227,48 +287,6 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
     aprintf("Codec> real pts=%" PRIu64", internal pts=%" PRId64"\n",p,_frame->pts);
     //printf("--->>[PTS] :%"PRIu64", raw %"PRIu64" num:%"PRIu32" den:%"PRIu32"\n",_frame->pts,image->Pts,_context->time_base.num,_context->time_base.den);
     //
-    int w=getWidth();
-    int h=getHeight();
-    switch(targetPixFrmt)
-    {
-        case ADM_PIXFRMT_YV12:
-                _frame->data[0] = image->GetWritePtr(PLANAR_Y);
-                _frame->data[1] = image->GetWritePtr(PLANAR_U);
-                _frame->data[2] = image->GetWritePtr(PLANAR_V);
-                break;
-
-        case ADM_PIXFRMT_YUV422P:
-        {
-                if(!colorSpace->convertImage(image,rgbByteBuffer.at(0)))
-                {
-                    printf("[ADM_jpegEncoder::encode] Colorconversion failed\n");
-                    return false;
-                }
-                uint8_t *p = rgbByteBuffer.at(0);
-                uint32_t off = ADM_IMAGE_ALIGN(w) * ADM_IMAGE_ALIGN(h);
-                _frame->data[0] = p;
-                p += off;
-                _frame->data[1] = p;
-                p += off >> 1;
-                _frame->data[2] = p;
-                break;
-        }
-        case ADM_PIXFRMT_RGB32A:
-        case ADM_PIXFRMT_RGB24:
-        {
-                if(!colorSpace->convertImage(image,rgbByteBuffer.at(0)))
-                {
-                    printf("[ADM_jpegEncoder::encode] Colorconversion failed\n");
-                    return false;
-                }
-                _frame->data[0] = rgbByteBuffer.at(0);
-                _frame->data[2] = NULL;
-                _frame->data[1] = NULL;
-                break;
-        }
-        default:
-                ADM_assert(0);
-    }
     return true;
 }
 
@@ -388,7 +406,6 @@ bool ADM_coreVideoEncoderFFmpeg::setupInternal(const AVCodec *codec)
                 ADM_info("Codec configured to use global header\n");
                 _context->flags|=AV_CODEC_FLAG_GLOBAL_HEADER;
     }
-    prolog(image);
 
     FilterInfo *info=source->getInfo();
     int n = info->timeBaseNum & 0x7FFFFFFF;
@@ -431,9 +448,21 @@ bool ADM_coreVideoEncoderFFmpeg::setupInternal(const AVCodec *codec)
         encoderMT();
     }
 
-   if(!configureContext()) {
-     return false;
-   }
+    switch(targetPixFrmt)
+    {
+#define BARK(x,y) case ADM_PIXFRMT_ ##x: _context->pix_fmt = AV_PIX_FMT_ ##y; break;
+        BARK(YV12, YUV420P)
+        BARK(NV12, NV12)
+        BARK(YUV422P, YUV422P)
+        BARK(RGB32A, RGB32)
+        BARK(RGB24, RGB24)
+#undef BARK
+        default: ADM_assert(0);
+    }
+
+    if(!configureContext())
+        return false;
+
    ADM_info("Opening context\n");
    if(_options)
         res=avcodec_open2(_context, codec, &_options);

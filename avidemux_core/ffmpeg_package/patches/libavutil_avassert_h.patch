@@ -1,6 +1,6 @@
---- libavutil/avassert.h.orig	2022-07-22 19:58:39.000000000 +0200
-+++ libavutil/avassert.h	2022-10-26 11:54:28.000000000 +0200
-@@ -31,13 +31,17 @@
+--- libavutil/avassert.h.orig	2023-11-11 01:25:17.000000000 +0100
++++ libavutil/avassert.h	2024-05-31 20:57:25.815315915 +0200
+@@ -34,13 +34,17 @@
  #include "log.h"
  #include "macros.h"
  
