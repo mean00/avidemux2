@@ -92,7 +92,7 @@ uint8_t mkvHeader::open(const char *name)
   
     
     _idxName = name;
-    _idxName += ".idx2";
+    _idxName += ".idxb";
     
   if(!ebml.open(name))
   {
