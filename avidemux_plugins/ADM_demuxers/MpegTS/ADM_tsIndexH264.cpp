@@ -548,8 +548,11 @@ resume:
                     case 2 : thisUnit.imageType=1;break; // I
                     default: thisUnit.imageType=2;break; // SP/SI
                 }
-                if(startCode==NAL_IDR) thisUnit.imageType=4; // IDR
-                aprintf("[>>>>>>>>] Pic Type %" PRIu32" Recovery %" PRIu32"\n",thisUnit.imageType,recoveryCount);
+                if(startCode == NAL_IDR)
+                    thisUnit.imageType = 4; // IDR
+                else if(thisUnit.imageType == 1 && thisUnit.recoveryCount) // intra but neither IDR nor a recovery point
+                    thisUnit.imageType = 2; // downgrade to P
+                aprintf("[>>>>>>>>] Pic Type %" PRIu32" Recovery %" PRIu32"\n", thisUnit.imageType, thisUnit.recoveryCount);
                 if(thisUnit.imageType!=1 && thisUnit.imageType!=4 && !thisUnit.recoveryCount)
                     thisUnit.imageType=1;
 
