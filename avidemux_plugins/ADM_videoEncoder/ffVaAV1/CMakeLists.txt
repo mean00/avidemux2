@@ -1,0 +1,13 @@
+INCLUDE(ve_plugin)
+INCLUDE(admCheckLibVA)
+checkLibVA()
+INCLUDE_DIRECTORIES(${ADM_HEADER_DIR}/ADM_coreLibVAEnc)
+SET(ffVaEncAV1_SRCS
+    ffVAEncAV1_plugin.cpp
+    ADM_ffVAEncAV1.cpp
+)
+ADD_VIDEO_ENCODER(ADM_ve_ffVaEncAV1 ${ffVaEncAV1_SRCS})
+
+INIT_VIDEO_ENCODER(ADM_ve_ffVaEncAV1)
+INSTALL_VIDEO_ENCODER(ADM_ve_ffVaEncAV1)
+TARGET_LINK_LIBRARIES(ADM_ve_ffVaEncAV1 ADM_libavcodec ADM_libavutil ADM_coreLibVAEnc6 ADM_coreLibVA6)
