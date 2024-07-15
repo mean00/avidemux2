@@ -1824,6 +1824,8 @@ uint8_t MP4Header::parseStsd(adm_atom *tom, MPsampleinfo *info, uint32_t trackTy
                                                 }
                                                 break;
                                             }
+                                            case MKFCCR('m','p','4','a'):
+                                                break; // skip, esds should follow
                                             case MKFCCR('e','s','d','s'): // esds
                                                 if (!esdsDecoded)
                                                 {
