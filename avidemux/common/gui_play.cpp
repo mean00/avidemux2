@@ -60,11 +60,10 @@ private:
         uint64_t        vuMeterPts;
         uint64_t        audioLatency;
         uint64_t        videoLagTimer;
+        uint64_t        playbackDuration;
         ADM_coreVideoFilter  *videoFilter;
         ADM_videoFilterChain *videoChain;
 
-private :
-        bool initialized;
         bool initializeAudio();
         bool cleanup(void);
         bool audioPump(bool wait);
@@ -91,10 +90,10 @@ GUIPlayback::GUIPlayback(void)
     wavbuf=NULL;
     videoFilter=NULL;
     videoChain=NULL;
-    initialized=false;
     vuMeterPts=0;
     audioLatency=0;
     videoLagTimer=0;
+    playbackDuration=0;
 }
 /**
     \fn ~GUIPlayback
@@ -126,7 +125,7 @@ void GUI_PlayAvi(bool quit)
     float oldZoom=admPreview::getCurrentZoom();
     video_body->getVideoInfo(&info);
 
-    oldTimeFrame=admPreview::getCurrentPts();
+    newTimeFrame = oldTimeFrame = admPreview::getCurrentPts();
 	uint32_t priorityLevel;
 
 #ifdef _WIN32
@@ -142,10 +141,13 @@ void GUI_PlayAvi(bool quit)
     //admPreview::samePicture();
 
     GUIPlayback *playLoop=new GUIPlayback;
-    playLoop->initialize();
-    playLoop->run();
-    newTimeFrame=oldTimeFrame+playLoop->getLastPts();
+    if (playLoop->initialize())
+    {
+        playLoop->run();
+        newTimeFrame += playLoop->getLastPts();
+    }
     delete playLoop;
+    playLoop = NULL;
     playing = 0;
 
     // Don't touch display on application exit
@@ -239,6 +241,7 @@ bool GUIPlayback::initialize(void)
     int nb=videoChain->size();
     videoFilter=(*videoChain)[nb-1];
     FilterInfo *info=videoFilter->getInfo();
+    playbackDuration = info->totalDuration;
     float currentZoom=admPreview::getCurrentZoom();
     float zoom=ZOOM_AUTO;
     // if the video output has same width/height as input, we keep the same zoom
@@ -268,6 +271,7 @@ bool GUIPlayback::run(void)
     uint32_t fn;
     bool gotAudio=true;
     bool first=true;
+    bool endOfVideo = false;
     int refreshCounter=0;
     ticktock.reset();
     tocktick.reset();
@@ -298,13 +302,15 @@ bool GUIPlayback::run(void)
         lastPts=admPreview::getCurrentPts();
         if(false==videoFilter->getNextFrameAs(hwImageFormat,&fn,previewBuffer))
         {
-            printf("[Play] Cancelling playback, nextPicture failed\n");
-            break;
+            ADM_info("[Play] Cancelling playback, nextPicture failed\n");
+            endOfVideo = true;
         }
         if(gotAudio)
             gotAudio=audioPump(false);
         systemTime = ticktock.getElapsedMS();
-        movieTime=(uint32_t)(lastPts/1000);
+        movieTime = (uint32_t)(previewBuffer->Pts / 1000); // next pic PTS
+        if (endOfVideo)
+            movieTime = (uint32_t)(playbackDuration / 1000);
         movieTime+=audioLatency;
         //printf("[Playback] systemTime: %lu movieTime : %lu audioLatency=%lu \r",systemTime,movieTime,(uint32_t)audioLatency);
         //printf("[LastPTS]=%s \n",ADM_us2plain(lastPts));
@@ -363,7 +369,7 @@ bool GUIPlayback::run(void)
             lastUIpurgeTime = systemTime;
         }
     }
-    while (!stop_req);
+    while (!stop_req && !endOfVideo);
     return true;
 };
 
