@@ -49,6 +49,9 @@ _hasSettings=false;
     if(set) {
         memcpy(&Settings,set,sizeof(*set));
         _hasSettings=true;
+    } else
+    {
+        Settings.params.mode = COMPRESS_MAX; // must be initialized
     }
     _context=NULL;
     _options=NULL;
