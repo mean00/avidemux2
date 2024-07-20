@@ -84,12 +84,16 @@ static void tryLoadingEngine(const char* path, IEditor *editor)
  */
 const vector<IScriptEngine*>& initialiseScriptEngines(const char* path, IEditor *editor,const char *subFolder)
 {
-    ADM_assert(engines.size() == 0);
+    ADM_assert(engines.empty());
 
-    std::string p=std::string(path);
-    tryLoadingEngine(p.c_str(),editor);
-    p+=std::string("/")+std::string(subFolder);
-    tryLoadingEngine(p.c_str(),editor);
+    tryLoadingEngine(path, editor);
+    if (subFolder)
+    {
+        std::string p = path;
+        p += "/";
+        p += subFolder;
+        tryLoadingEngine(p.c_str(),editor);
+    }
     sort(engines.begin(), engines.end(), compareEngineRank);
     return engines;
 }
