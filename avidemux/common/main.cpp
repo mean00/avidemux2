@@ -359,7 +359,8 @@ int startAvidemux(int argc, char *argv[])
 
     {
         std::string scriptFolder=ADM_getPluginDir("scriptEngines");
-        if(!initGUI(initialiseScriptEngines(scriptFolder.c_str(), video_body,getUISpecifSubfolder())))
+        // Should ever UI-specific script engines be added again, replace NULL below with getUISpecifSubfolder().
+        if(!initGUI(initialiseScriptEngines(scriptFolder.c_str(), video_body, NULL)))
         {
                 printf("\n Fatal : could not init GUI\n");
                 exit(-1);
