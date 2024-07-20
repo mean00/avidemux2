@@ -199,17 +199,16 @@ bool ADM_coreVideoEncoder::getRealPtsFromInternal(uint64_t val,uint64_t *dts,uin
 /**
     \fn ADM_pluginSystemPath
 */
-static bool ADM_pluginSystemPath(const std::string& pluginName,int pluginVersion,std::string &rootPath)
+static bool ADM_pluginSystemPath(const std::string &pluginName, int pluginVersion, std::string &rootPath)
 {
-
-    std::string path=std::string(ADM_getSystemPluginSettingsDir());
-    std::string version;
     std::stringstream out;
     out << pluginVersion;
-    version=out.str();
-    path=path+slash+std::string(pluginName);
-    path=path+slash+version;
-    rootPath=path;
+    std::string version = out.str();
+    rootPath = ADM_getSystemPluginSettingsDir();
+    rootPath += slash;
+    rootPath += pluginName;
+    rootPath += slash;
+    rootPath += version;
     ADM_info("System Plugin preset path : %s\n",rootPath.c_str());
     return true;
 }
@@ -217,19 +216,25 @@ static bool ADM_pluginSystemPath(const std::string& pluginName,int pluginVersion
     \fn ADM_pluginGetPath
     \brief returns the user plugin path, containing the presets for that plugin
 */
-bool ADM_pluginGetPath(const std::string& pluginName,int pluginVersion,std::string &rootPath)
+bool ADM_pluginGetPath(const std::string &pluginName, int pluginVersion, std::string &rootPath)
 {
-    std::string path=ADM_getUserPluginSettingsDir();
-    std::string version;
     std::stringstream out;
     out << pluginVersion;
-    version=out.str();
-    ADM_mkdir(path.c_str());
-    path=path+slash+std::string(pluginName);
-    ADM_mkdir(path.c_str());
-    path=path+slash+version;
-    ADM_mkdir(path.c_str());
-    rootPath=path;
+    std::string version = out.str();
+    rootPath = ADM_getUserPluginSettingsDir();
+
+    ADM_mkdir(rootPath.c_str());
+
+    rootPath += slash;
+    rootPath += pluginName;
+
+    ADM_mkdir(rootPath.c_str());
+
+    rootPath += slash;
+    rootPath += version;
+
+    ADM_mkdir(rootPath.c_str());
+
     ADM_info("Plugin preset path : %s\n",rootPath.c_str());
     return true;
 }
