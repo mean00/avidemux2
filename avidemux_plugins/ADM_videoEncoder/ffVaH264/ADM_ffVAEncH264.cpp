@@ -20,8 +20,7 @@
 #include "ADM_ffVAEncH264.h"
 #undef ADM_MINIMAL_UI_INTERFACE // we need the full UI
 #include "DIA_factory.h"
-//#define USE_NV12
-//#define USE_VBR
+#define USE_VBR
 #if 1
 #define aprintf(...) {}
 #else
@@ -135,6 +134,40 @@ bool ADM_ffVAEncH264Encoder::configureContext(void)
         return false;
     }
     av_buffer_unref(&hwFramesRef);
+
+    swFrame = av_frame_alloc();
+
+    if(!swFrame)
+    {
+        ADM_error("Could not allocate sw frame\n");
+        return false;
+    }
+
+    FilterInfo *fo = source->getInfo();
+
+    swFrame->width = fo->width;
+    swFrame->height = fo->height;
+    swFrame->format = AV_PIX_FMT_NV12;
+
+    err = av_frame_get_buffer(swFrame, 64);
+
+    if(err<0)
+    {
+        CLEARTEXT(err)
+        ADM_warning("get buffer for sw frame failed with error code %d (%s)\n",err,buf);
+        return false;
+    }
+
+    hwFrame = av_frame_alloc();
+
+    if(!hwFrame)
+    {
+        ADM_error("Could not allocate hw frame\n");
+        return false;
+    }
+
+    encoderDelay = (VaEncSettings.profile && VaEncSettings.bframes) ? source->getInfo()->frameIncrement * 2 : 0;
+
     return true;
 }
 
@@ -162,15 +195,9 @@ ADM_ffVAEncH264Encoder::~ADM_ffVAEncH264Encoder()
 {
     ADM_info("[ffVAEncH264] Destroying.\n");
     if(swFrame)
-    {
         av_frame_free(&swFrame);
-        swFrame=NULL;
-    }
     if(hwFrame)
-    {
         av_frame_free(&hwFrame);
-        hwFrame=NULL;
-    }
     if(hwDeviceCtx)
     {
         av_buffer_unref(&hwDeviceCtx);
@@ -179,19 +206,10 @@ ADM_ffVAEncH264Encoder::~ADM_ffVAEncH264Encoder()
 }
 
 /**
-    \fn getEncoderDelay
+    \fn preEncode
+    \brief Get next picture and upload it to a hw surface
 */
-uint64_t ADM_ffVAEncH264Encoder::getEncoderDelay(void)
-{
-    uint64_t inc=source->getInfo()->frameIncrement;
-    if(VaEncSettings.profile && VaEncSettings.bframes)
-        return inc*2;
-    return 0;
-}
-
-/**
- */
-bool             ADM_ffVAEncH264Encoder::preEncode(void)
+bool ADM_ffVAEncH264Encoder::preEncode(void)
 {
     uint32_t nb;
     if(source->getNextFrame(&nb,image)==false)
@@ -200,47 +218,23 @@ bool             ADM_ffVAEncH264Encoder::preEncode(void)
         return false;
     }
 
-    swFrame=av_frame_alloc();
-    if(!swFrame)
+    FilterInfo *fo = source->getInfo();
+    if(fo->width != image->_width || fo->height != image->_height)
     {
-        ADM_error("Could not allocate sw frame\n");
+        ADM_error("[ffVaH264] Input picture size mismatch: expected %d x %d, got %d x %d\n", fo->width, fo->height, image->_width, image->_height);
         return false;
     }
 
-    swFrame->width=source->getInfo()->width;
-    swFrame->height=source->getInfo()->height;
-    swFrame->format=AV_PIX_FMT_NV12;
-
-    int err=av_frame_get_buffer(swFrame, 64);
-    if(err<0)
-    {
-        CLEARTEXT(err)
-        ADM_warning("get buffer for sw frame failed with error code %d (%s)\n",err,buf);
-        return false;
-    }
-
-    swFrame->linesize[0] = swFrame->linesize[1] = image->GetPitch(PLANAR_Y);
-    swFrame->linesize[2] = 0;
-    swFrame->data[2] = NULL;
     image->convertToNV12(swFrame->data[0],swFrame->data[1],swFrame->linesize[0],swFrame->linesize[1]);
 
-    if(hwFrame)
-    {
-        av_frame_free(&hwFrame);
-        hwFrame=NULL;
-    }
-    hwFrame=av_frame_alloc();
-    if(!hwFrame)
-    {
-        ADM_error("Could not allocate hw frame\n");
-        return false;
-    }
+    av_frame_unref(hwFrame);
 
-    hwFrame->width=source->getInfo()->width;
-    hwFrame->height=source->getInfo()->height;
-    hwFrame->format=AV_PIX_FMT_VAAPI;
+    hwFrame->width = fo->width;
+    hwFrame->height = fo->height;
+    hwFrame->format = AV_PIX_FMT_VAAPI;
 
-    err=av_hwframe_get_buffer(_context->hw_frames_ctx,hwFrame,0);
+    int err = av_hwframe_get_buffer(_context->hw_frames_ctx, hwFrame, 0);
+
     if(err<0)
     {
         CLEARTEXT(err)
@@ -269,8 +263,6 @@ bool             ADM_ffVAEncH264Encoder::preEncode(void)
     map.internalTS=hwFrame->pts;
     mapper.push_back(map);
 
-    av_frame_free(&swFrame);
-    swFrame=NULL;
     return true;
 }
 
@@ -319,15 +311,6 @@ again:
     aprintf("[ffVAEncH264] encoder produces %d bytes\n",sz);
 link:
     return postEncode(out,sz);
-}
-
-/**
-    \fn isDualPass
-
-*/
-bool         ADM_ffVAEncH264Encoder::isDualPass(void)
-{
-    return false;
 }
 
 /**
@@ -384,10 +367,11 @@ bool         ffVAEncConfigure(void)
     rcMode.link(rateControlMode,1,&quality);
     rcMode.link(rateControlMode+1,1,&bitrate);
 
+    profile.link(h264Profile+1,1,&maxBframes);
+    profile.link(h264Profile+2,1,&maxBframes);
+
     frameControl.swallow(&gopSize);
     frameControl.swallow(&maxBframes);
-
-    profile.link(h264Profile,0,&maxBframes);
 
     diaElem *diamode[] = {&profile,&rateControl,&frameControl};
 

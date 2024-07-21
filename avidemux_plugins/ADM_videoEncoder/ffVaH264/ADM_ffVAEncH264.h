@@ -27,34 +27,34 @@
 #define VAENC_CONF_DEFAULT \
 { \
     FF_PROFILE_H264_HIGH, \
-    100, \
-    2, \
-    4000, \
-    8000, \
-    20, \
-    0 \
+    100, /* gopsize */ \
+    2, /* bframes */ \
+    4000, /* bitrate */ \
+    8000, /* max_bitrate */ \
+    20, /* quality */ \
+    0 /* rc_mode */ \
 }
 
 /**
-        \class ADM_ffVAEncH264Encoder
-        \brief
-
+    \class ADM_ffVAEncH264Encoder
+    \brief
 */
 class ADM_ffVAEncH264Encoder : public ADM_coreVideoEncoderFFmpeg
 {
-public:
-                           ADM_ffVAEncH264Encoder(ADM_coreVideoFilter *src,bool globalHeader);
-virtual                    ~ADM_ffVAEncH264Encoder();
-virtual        bool        configureContext(void);
-virtual        bool        setup(void);
-virtual        bool        encode (ADMBitstream * out);
-virtual const  char        *getFourcc(void) {return "H264";}
-virtual        uint64_t    getEncoderDelay(void);
-virtual        bool        isDualPass(void) ;
-
 protected:
                 AVBufferRef *hwDeviceCtx;
-                AVFrame    *swFrame;
-                AVFrame    *hwFrame;
-                bool       preEncode(void);
+                AVFrame     *swFrame;
+                AVFrame     *hwFrame;
+
+virtual         bool        preEncode(void);
+virtual         bool        configureContext(void);
+
+public:
+                            ADM_ffVAEncH264Encoder(ADM_coreVideoFilter *src, bool globalHeader);
+virtual                     ~ADM_ffVAEncH264Encoder();
+
+virtual         bool        setup(void);
+virtual         bool        encode(ADMBitstream * out);
+virtual const   char        *getFourcc(void) {return "H264";}
+
 };
