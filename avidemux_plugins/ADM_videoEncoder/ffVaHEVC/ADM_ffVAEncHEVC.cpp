@@ -20,7 +20,6 @@
 #include "ADM_ffVAEncHEVC.h"
 #undef ADM_MINIMAL_UI_INTERFACE // we need the full UI
 #include "DIA_factory.h"
-//#define USE_NV12
 //#define USE_VBR
 #if 1
 #define aprintf(...) {}
@@ -110,8 +109,11 @@ bool ADM_ffVAEncHEVC::configureContext(void)
     hwFramesCtx=(AVHWFramesContext*)(hwFramesRef->data);
     hwFramesCtx->format=AV_PIX_FMT_VAAPI;
     hwFramesCtx->sw_format=AV_PIX_FMT_NV12;
-    hwFramesCtx->width=source->getInfo()->width;
-    hwFramesCtx->height=source->getInfo()->height;
+
+    FilterInfo *fo = source->getInfo();
+
+    hwFramesCtx->width = fo->width;
+    hwFramesCtx->height = fo->height;
     hwFramesCtx->initial_pool_size=20;
     err = av_hwframe_ctx_init(hwFramesRef);
     if(err<0)
@@ -128,6 +130,38 @@ bool ADM_ffVAEncHEVC::configureContext(void)
         return false;
     }
     av_buffer_unref(&hwFramesRef);
+
+    swFrame = av_frame_alloc();
+
+    if(!swFrame)
+    {
+        ADM_error("Could not allocate sw frame\n");
+        return false;
+    }
+
+    swFrame->width = fo->width;
+    swFrame->height = fo->height;
+    swFrame->format = AV_PIX_FMT_NV12;
+
+    err = av_frame_get_buffer(swFrame, 64);
+
+    if(err<0)
+    {
+        CLEARTEXT(err)
+        ADM_warning("get buffer for sw frame failed with error code %d (%s)\n",err,buf);
+        return false;
+    }
+
+    hwFrame = av_frame_alloc();
+
+    if(!hwFrame)
+    {
+        ADM_error("Could not allocate hw frame\n");
+        return false;
+    }
+
+    encoderDelay = VaEncHevcSettings.bframes ? fo->frameIncrement * 2 : 0;
+
     return true;
 }
 
@@ -155,15 +189,9 @@ ADM_ffVAEncHEVC::~ADM_ffVAEncHEVC()
 {
     ADM_info("[ffVAEncHEVC] Destroying.\n");
     if(swFrame)
-    {
         av_frame_free(&swFrame);
-        swFrame=NULL;
-    }
     if(hwFrame)
-    {
         av_frame_free(&hwFrame);
-        hwFrame=NULL;
-    }
     if(hwDeviceCtx)
     {
         av_buffer_unref(&hwDeviceCtx);
@@ -172,68 +200,35 @@ ADM_ffVAEncHEVC::~ADM_ffVAEncHEVC()
 }
 
 /**
-    \fn getEncoderDelay
+    \fn preEncode
+    \brief Get next picture and upload it to a hw surface
 */
-uint64_t ADM_ffVAEncHEVC::getEncoderDelay(void)
-{
-    uint64_t inc=source->getInfo()->frameIncrement;
-    if(VaEncHevcSettings.bframes)
-        return inc*2;
-    return 0;
-}
-
-/**
- */
 bool ADM_ffVAEncHEVC::preEncode(void)
 {
     uint32_t nb;
-    if(source->getNextFrame(&nb,image)==false)
+    if (false == source->getNextFrame(&nb, image))
     {
-        ADM_warning("[ffVAEncHEVC] Cannot get next image\n");
+        ADM_warning("[ffVaHEVC] Cannot get next image\n");
         return false;
     }
 
-    swFrame=av_frame_alloc();
-    if(!swFrame)
+    FilterInfo *fo = source->getInfo();
+    if(fo->width != image->_width || fo->height != image->_height)
     {
-        ADM_error("Could not allocate sw frame\n");
+        ADM_error("[ffVaHEVC] Input picture size mismatch: expected %d x %d, got %d x %d\n", fo->width, fo->height, image->_width, image->_height);
         return false;
     }
 
-    swFrame->width=source->getInfo()->width;
-    swFrame->height=source->getInfo()->height;
-    swFrame->format=AV_PIX_FMT_NV12;
-
-    int err=av_frame_get_buffer(swFrame, 64);
-    if(err<0)
-    {
-        CLEARTEXT(err)
-        ADM_warning("get buffer for sw frame failed with error code %d (%s)\n",err,buf);
-        return false;
-    }
-
-    swFrame->linesize[0] = swFrame->linesize[1] = image->GetPitch(PLANAR_Y);
-    swFrame->linesize[2] = 0;
-    swFrame->data[2] = NULL;
     image->convertToNV12(swFrame->data[0],swFrame->data[1],swFrame->linesize[0],swFrame->linesize[1]);
 
-    if(hwFrame)
-    {
-        av_frame_free(&hwFrame);
-        hwFrame=NULL;
-    }
-    hwFrame=av_frame_alloc();
-    if(!hwFrame)
-    {
-        ADM_error("Could not allocate hw frame\n");
-        return false;
-    }
+    av_frame_unref(hwFrame);
 
-    hwFrame->width=source->getInfo()->width;
-    hwFrame->height=source->getInfo()->height;
-    hwFrame->format=AV_PIX_FMT_VAAPI;
+    hwFrame->width = fo->width;
+    hwFrame->height = fo->height;
+    hwFrame->format = AV_PIX_FMT_VAAPI;
 
-    err=av_hwframe_get_buffer(_context->hw_frames_ctx,hwFrame,0);
+    int err = av_hwframe_get_buffer(_context->hw_frames_ctx, hwFrame, 0);
+
     if(err<0)
     {
         CLEARTEXT(err)
@@ -262,8 +257,6 @@ bool ADM_ffVAEncHEVC::preEncode(void)
     map.internalTS=hwFrame->pts;
     mapper.push_back(map);
 
-    av_frame_free(&swFrame);
-    swFrame=NULL;
     return true;
 }
 
@@ -315,15 +308,6 @@ link:
 }
 
 /**
-    \fn isDualPass
-
-*/
-bool ADM_ffVAEncHEVC::isDualPass(void)
-{
-    return false;
-}
-
-/**
     \fn ffVAEncConfigure
     \brief UI configuration for ffVAEncHEVC encoder
 */
@@ -341,12 +325,11 @@ bool ffVAEncHevcConfigure(void)
     };
 
 #define PX(x) &(conf->x)
+#define NB_ELEM(x) (sizeof(x) / sizeof(diaMenuEntry))
 
+    diaElemMenu rcMode(PX(rc_mode), QT_TRANSLATE_NOOP("ffVAEncHEVC","Rate Control:"), NB_ELEM(rateControlMode), rateControlMode);
 #ifdef USE_VBR
-    diaElemMenu rcMode(PX(rc_mode),QT_TRANSLATE_NOOP("ffVAEncHEVC","Rate Control:"),3,rateControlMode);
     diaElemUInteger maxBitrate(PX(max_bitrate),QT_TRANSLATE_NOOP("ffVAEncHEVC","Max Bitrate (kbps):"),1,50000);
-#else
-    diaElemMenu rcMode(PX(rc_mode),QT_TRANSLATE_NOOP("ffVAEncHEVC","Rate Control:"),2,rateControlMode);
 #endif
     diaElemUInteger gopSize(PX(gopsize),QT_TRANSLATE_NOOP("ffVAEncHEVC","GOP Size:"),1,250);
     diaElemUInteger maxBframes(PX(bframes),QT_TRANSLATE_NOOP("ffVAEncHEVC","Maximum Consecutive B-Frames:"),0,4);
@@ -374,7 +357,10 @@ bool ffVAEncHevcConfigure(void)
 
     diaElem *diamode[] = {&rateControl,&frameControl};
 
-    if( diaFactoryRun(QT_TRANSLATE_NOOP("ffVAEncHEVC","FFmpeg VA-API HEVC Encoder Configuration"),2,diamode))
+#undef NB_ELEM
+#define NB_ELEM(x) (sizeof(x) / sizeof(diaElem *))
+
+    if (diaFactoryRun(QT_TRANSLATE_NOOP("ffVAEncHEVC","FFmpeg VA-API HEVC Encoder Configuration"), NB_ELEM(diamode), diamode))
     {
         return true;
     }

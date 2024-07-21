@@ -26,37 +26,33 @@
 
 #define VAENC_HEVC_CONF_DEFAULT \
 { \
-    100, \
-    2, \
-    2500, \
-    5000, \
-    25, \
-    0 \
+    100, /* gopsize */ \
+    2, /* bframes */ \
+    2500, /* bitrate */ \
+    5000, /* max_bitrate */ \
+    25, /* quality */ \
+    0 /* rc_mode */ \
 }
 
 /**
-        \class ADM_ffVAEncH264Encoder
-        \brief
-
+    \class ADM_ffVAEncHEVC
 */
 class ADM_ffVAEncHEVC : public ADM_coreVideoEncoderFFmpeg
 {
 protected:
+                AVBufferRef *hwDeviceCtx;
+                AVFrame     *swFrame;
+                AVFrame     *hwFrame;
+
+virtual         bool        preEncode(void);
+virtual         bool        configureContext(void);
 
 public:
+                            ADM_ffVAEncHEVC(ADM_coreVideoFilter *src, bool globalHeader);
+virtual                     ~ADM_ffVAEncHEVC();
 
-                           ADM_ffVAEncHEVC(ADM_coreVideoFilter *src, bool globalHeader);
-virtual                    ~ADM_ffVAEncHEVC();
-virtual        bool        configureContext(void);
-virtual        bool        setup(void);
-virtual        bool        encode (ADMBitstream * out);
-virtual const  char        *getFourcc(void) {return "HEVC";}
-virtual        uint64_t    getEncoderDelay(void);
-virtual        bool        isDualPass(void) ;
+virtual         bool        setup(void);
+virtual         bool        encode(ADMBitstream *out);
+virtual const   char        *getFourcc(void) {return "HEVC";}
 
-protected:
-                AVBufferRef *hwDeviceCtx;
-                AVFrame    *swFrame;
-                AVFrame    *hwFrame;
-                bool       preEncode(void);
 };
