@@ -116,8 +116,11 @@ bool ADM_ffVAEncH264Encoder::configureContext(void)
     hwFramesCtx=(AVHWFramesContext*)(hwFramesRef->data);
     hwFramesCtx->format=AV_PIX_FMT_VAAPI;
     hwFramesCtx->sw_format=AV_PIX_FMT_NV12;
-    hwFramesCtx->width=source->getInfo()->width;
-    hwFramesCtx->height=source->getInfo()->height;
+
+    FilterInfo *fo = source->getInfo();
+
+    hwFramesCtx->width = fo->width;
+    hwFramesCtx->height = fo->height;
     hwFramesCtx->initial_pool_size=20;
     err = av_hwframe_ctx_init(hwFramesRef);
     if(err<0)
@@ -143,8 +146,6 @@ bool ADM_ffVAEncH264Encoder::configureContext(void)
         return false;
     }
 
-    FilterInfo *fo = source->getInfo();
-
     swFrame->width = fo->width;
     swFrame->height = fo->height;
     swFrame->format = AV_PIX_FMT_NV12;
@@ -166,7 +167,7 @@ bool ADM_ffVAEncH264Encoder::configureContext(void)
         return false;
     }
 
-    encoderDelay = (VaEncSettings.profile && VaEncSettings.bframes) ? source->getInfo()->frameIncrement * 2 : 0;
+    encoderDelay = (VaEncSettings.profile && VaEncSettings.bframes) ? fo->frameIncrement * 2 : 0;
 
     return true;
 }
