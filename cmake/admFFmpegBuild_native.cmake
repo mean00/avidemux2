@@ -31,8 +31,8 @@ endif (USE_VDPAU)
 
 if (USE_LIBVA)
     xadd(--enable-vaapi)
-    set(FFMPEG_DECODERS ${FFMPEG_DECODERS} h264_vaapi hevc_vaapi)
-    set(FFMPEG_ENCODERS ${FFMPEG_ENCODERS} h264_vaapi hevc_vaapi)
+    set(FFMPEG_DECODERS ${FFMPEG_DECODERS} h264_vaapi hevc_vaapi av1_vaapi)
+    set(FFMPEG_ENCODERS ${FFMPEG_ENCODERS} h264_vaapi hevc_vaapi av1_vaapi)
 endif (USE_LIBVA)
 
 if (USE_VIDEOTOOLBOX)
