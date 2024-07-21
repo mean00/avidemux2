@@ -20,7 +20,7 @@
 #include "ADM_ffVAEncH264.h"
 #undef ADM_MINIMAL_UI_INTERFACE // we need the full UI
 #include "DIA_factory.h"
-#define USE_VBR
+//#define USE_VBR
 #if 1
 #define aprintf(...) {}
 #else
@@ -337,13 +337,12 @@ bool         ffVAEncConfigure(void)
     };
 
 #define PX(x) &(conf->x)
+#define NB_ELEM(x) (sizeof(x) / sizeof(diaMenuEntry))
 
-    diaElemMenu profile(PX(profile),QT_TRANSLATE_NOOP("ffVAEncH264","Profile:"),3,h264Profile);
+    diaElemMenu profile(PX(profile), QT_TRANSLATE_NOOP("ffVAEncH264","Profile:"), NB_ELEM(h264Profile), h264Profile);
+    diaElemMenu rcMode(PX(rc_mode), QT_TRANSLATE_NOOP("ffVAEncH264","Rate Control:"), NB_ELEM(rateControlMode), rateControlMode);
 #ifdef USE_VBR
-    diaElemMenu rcMode(PX(rc_mode),QT_TRANSLATE_NOOP("ffVAEncH264","Rate Control:"),3,rateControlMode);
     diaElemUInteger maxBitrate(PX(max_bitrate), QT_TRANSLATE_NOOP("ffVAEncH264","Max Bitrate (kbps):"),1,50000);
-#else
-    diaElemMenu rcMode(PX(rc_mode),QT_TRANSLATE_NOOP("ffVAEncH264","Rate Control:"),2,rateControlMode);
 #endif
     diaElemUInteger gopSize(PX(gopsize),QT_TRANSLATE_NOOP("ffVAEncH264","GOP Size:"),1,250);
 
@@ -376,7 +375,10 @@ bool         ffVAEncConfigure(void)
 
     diaElem *diamode[] = {&profile,&rateControl,&frameControl};
 
-    if( diaFactoryRun(QT_TRANSLATE_NOOP("ffVAEncH264","FFmpeg VA-API H.264 Encoder Configuration"),3,diamode))
+#undef NB_ELEM
+#define NB_ELEM(x) (sizeof(x) / sizeof(diaElem *))
+
+    if (diaFactoryRun(QT_TRANSLATE_NOOP("ffVAEncH264","FFmpeg VA-API H.264 Encoder Configuration"), NB_ELEM(diamode), diamode))
     {
         return true;
     }
