@@ -179,11 +179,20 @@ bool ADM_ffVAEncH264Encoder::setup(void)
 {
     if(false== ADM_coreVideoEncoderFFmpeg::setupByName("h264_vaapi"))
     {
-        ADM_info("[ffMpeg] Setup failed\n");
+        ADM_info("[ffVAEncH264] Setup failed\n");
         return false;
     }
 
-    ADM_info("[ffMpeg] Setup ok\n");
+    if (_globalHeader && !_context->extradata_size)
+    {
+        ADM_warning("[ffVAEncH264] Encoder failed to provide extradata as requested global headers, bailing out.\n");
+        ADM_warning("[ffVAEncH264] This may be a bug in the driver or a hardware flaw.\n");
+        ADM_warning("[ffVAEncH264] Output formats which do not require global headers like MPEG-TS may still work.\n");
+
+        return false;
+    }
+
+    ADM_info("[ffVAEncH264] Setup OK\n");
 
     return true;
 }
