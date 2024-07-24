@@ -246,7 +246,7 @@ uint64_t tail;
             uint64_t maxPts=seg->_refStartTimeUs+seg->_durationUs;
             if(false== nextPictureInternal(seg->_reference,image,maxPts))
             {
-                if(flags & 2)
+                if(flags & ADM_EDITOR_NP_FLAG_NOSKIP_TO_KF)
                 {
                     goto np_nextSeg;
                 }
@@ -288,7 +288,7 @@ uint64_t tail;
 
 // Try to get an image for the following segment....
 np_nextSeg:
-        if(flags & 1)
+        if(flags & ADM_EDITOR_NP_FLAG_SAME_SEGMENT)
         {
             ADM_warning("Not allowed to cross segment\n");
             return false;
@@ -351,7 +351,7 @@ uint8_t ADM_Composer::decodeTillPictureAtPts(uint64_t targetPts,ADMImage *image)
                 // Now forward till we reach out frame
                 while(1)
                 {
-                    if(false==nextPicture(image,3))
+                    if(false == nextPicture(image, ADM_EDITOR_NP_FLAG_SAME_SEGMENT | ADM_EDITOR_NP_FLAG_NOSKIP_TO_KF))
                     {
                             ADM_warning("Error in decoding forward\n");
                             return ADM_IGN;
