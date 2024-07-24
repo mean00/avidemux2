@@ -356,7 +356,7 @@ bool ADM_Composer::getFrameNumFromPtsOrBefore(_VIDEOS *v,uint64_t refTime,int &f
         }
         if(pts < refTime)
         {
-            if(pts > last)
+            if(!last || pts > last)
             {
                 candidate = curFrame;
                 last = pts;
