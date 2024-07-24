@@ -229,10 +229,7 @@ bool ADM_Composer::searchNextKeyFrameInRef(int ref,uint64_t refTime,uint64_t *nk
         if(pts==ADM_NO_PTS) continue;
         if(pts>refTime)
         {
-            uint32_t hh,mm,ss,ms,ms2;
-            ms=pts/1000;
-            ms2time(ms,&hh,&mm,&ss,&ms2);
-            ADM_info("Found nextkeyframe %" PRIu32" %u:%u:%u at frame %" PRIu32"\n",ms,hh,mm,ss,i);
+            ADM_info("Found next keyframe: frame %" PRIu32", ref time %s (%" PRIu64")\n", i, ADM_us2plain(pts), pts);
             *nkTime=pts;
             return true;
         }
@@ -259,13 +256,12 @@ bool ADM_Composer::getFrameNumFromPtsOrBefore(_VIDEOS *v,uint64_t refTime,int &f
     }
 
     uint32_t nbFrame = v->_nb_video_frames;
-    uint64_t pts, dts, margin = v->timeIncrementInUs * 16;
-    const uint64_t rangeBegin = (refTime < margin)? 0 : (refTime - margin);
-    const uint64_t rangeEnd = refTime + margin;
+    uint64_t pts, dts;
     uint32_t curFrame = nbFrame >> 1;
     uint32_t splitMoval = (curFrame + 1) >> 1;
     uint32_t minFrame = 0;
     bool worked = false;
+#define MAX_REORDER_DEPTH 32 /* max_ref * 2 fields */
     pivotPrintf("Looking for frame with pts %" PRIu64" us (%s)\n",refTime,ADM_us2plain(refTime));
     // Try to find the frame that as the timestamp close enough to refTime, while being smaller
     do 
@@ -310,12 +306,9 @@ bool ADM_Composer::getFrameNumFromPtsOrBefore(_VIDEOS *v,uint64_t refTime,int &f
             frameNumber = curFrame;
             return true;
         }
-        // nope, are we at least close enough?
-        if(pts != ADM_NO_PTS && pts >= rangeBegin && pts <= rangeEnd)
-            break; // switch to linear search
         // nope, continue to bisect
         pivotPrintf("SplitMoval=%d\n",splitMoval);
-        if(splitMoval < 16)
+        if(splitMoval < MAX_REORDER_DEPTH / 2)
             break;
         pivotPrintf("Pivot frame is %" PRIu32" at %s\n",curFrame,ADM_us2plain(pts));
         if (pts > refTime)
@@ -338,13 +331,15 @@ bool ADM_Composer::getFrameNumFromPtsOrBefore(_VIDEOS *v,uint64_t refTime,int &f
     } while(refTime != pts);
 
     // linear search with a generous safety margin
-    curFrame = (curFrame < 32)? 0 : curFrame - 32;
+    curFrame = (curFrame < MAX_REORDER_DEPTH)? 0 : curFrame - MAX_REORDER_DEPTH;
     pivotPrintf("Starting linear search at frame %" PRIu32", total frames: %" PRIu32"\n",curFrame,nbFrame);
     int candidate = -1;
     uint64_t last = 0;
-    for(int i = 0; i < 65; i++)
+    int overrun = MAX_REORDER_DEPTH;
+    for(int i = 0; i < MAX_REORDER_DEPTH * 2; i++)
     {
         if(curFrame >= nbFrame) break;
+        if(overrun < 1) break;
         pts = ADM_NO_PTS;
         worked = v->_aviheader->getPtsDts(curFrame,&pts,&dts);
         if(!worked || pts == ADM_NO_PTS)
@@ -359,10 +354,16 @@ bool ADM_Composer::getFrameNumFromPtsOrBefore(_VIDEOS *v,uint64_t refTime,int &f
             frameNumber = curFrame;
             return true;
         }
-        if(pts >= rangeBegin && (last? pts > last : true) && pts < refTime)
+        if(pts < refTime)
         {
-            candidate = curFrame;
-            last = pts;
+            if(pts > last)
+            {
+                candidate = curFrame;
+                last = pts;
+            }
+        } else
+        {
+            overrun--;
         }
         curFrame++;
     }
