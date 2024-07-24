@@ -712,37 +712,17 @@ ADM_audioStreamTrack::~ADM_audioStreamTrack()
 */
 bool        ADM_EditorSegment::convertLinearTimeToSeg(  uint64_t frameTime, uint32_t *seg, uint64_t *segTime)
 {
-    if(!frameTime && segments.size()) // pick the first one
-    {
-        //ADM_info("Frame time=0, taking first segment \n");
-        *seg=0;
-        *segTime=0; // ??
-        return true;
-    }
     for(int i=0;i<segments.size();i++)
     {
-        if(segments[i]._startTimeUs<=frameTime && segments[i]._startTimeUs+segments[i]._durationUs>frameTime)
-        {
-            *seg=i;
-            *segTime=frameTime-segments[i]._startTimeUs;
-            return true;
-        }
+        if (segments[i]._startTimeUs > frameTime)
+            break;
+        if (segments[i]._startTimeUs + segments[i]._durationUs <= frameTime)
+            continue;
+        *seg = i;
+        *segTime = frameTime - segments[i]._startTimeUs;
+        return true;
     }
-#if 0 /* time matching the total duration doesn't belong to a segment */
-    int max=segments.size();
-    if(max)
-    {
-        _SEGMENT *last=&(segments[max-1]);
-        if(frameTime==last->_startTimeUs+last->_durationUs)
-        {
-            ADM_info("End of last segment\n");
-            *seg=max-1;
-            *segTime=frameTime-last->_startTimeUs;
-            return true;
-        }
-    }
-#endif
-    ADM_warning("Cannot find segment matching time %" PRIu64"ms \n",frameTime/1000);
+    ADM_warning("Cannot find segment matching time %s (%" PRIu64")\n", ADM_us2plain(frameTime), frameTime);
     dump();
     return false;
 }
