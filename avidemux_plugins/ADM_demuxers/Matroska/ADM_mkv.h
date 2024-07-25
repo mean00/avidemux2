@@ -206,7 +206,7 @@ public:
 
 
 #define ADM_MKV_MAX_TRACKS 20
-#define ADM_MKV_INDEX_VERSION       (1)     // to validate the index file
+#define ADM_MKV_INDEX_VERSION       (2)     // to validate the index file
 #define ADM_MKV_INDEX_MAGIC         ("MKVINDEX")
 #define ADM_MKV_INDEX_MAGICMARK     (0x0123456789ABCDEFull)
 #define ADM_MKV_INDEX_SIZE_LIMIT    (1073741824ULL)     // max 1GB index file
