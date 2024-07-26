@@ -805,6 +805,7 @@ uint8_t mkvHeader::indexClusters(ADM_ebml_file *parser)
         }
         // UI update
         _work->update(segment.tell() >> 10, fileSize >> 10);
+        memset(&tmpCluster, 0, sizeof(mkvIndex));
         tmpCluster.pos=segment.tell();
         tmpCluster.size=alen;
         _clusters.append(tmpCluster);
