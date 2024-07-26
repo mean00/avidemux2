@@ -2,6 +2,7 @@
 SET(ADMcoreDemuxer_SRCS
 ADM_dynaDemuxer.cpp
 ADM_demuxer.cpp
+ADM_metaToFile.cpp
 )	
 
 ADM_ADD_SHARED_LIBRARY(ADM_coreDemuxer6 ${ADMcoreDemuxer_SRCS})

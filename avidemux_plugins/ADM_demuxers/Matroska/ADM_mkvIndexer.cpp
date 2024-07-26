@@ -25,6 +25,7 @@
 #include "ADM_codecType.h"
 #include "ADM_videoInfoExtractor.h"
 #include "ADM_vidMisc.h"
+#include "ADM_metaToFile.h"
 #define VIDEO _tracks[0]
 
 #if 0
@@ -617,303 +618,131 @@ bool mkvHeader::readCue(ADM_ebml_file *parser)
 
 bool mkvHeader::loadIndex(const std::string &idxName, uint64_t fileSize)
 {
-    FILE * f = ADM_fopen(idxName.c_str(), "rb");
-    if (!f) return false;
-
-    uint64_t indexSize = ADM_fileSize(idxName.c_str());
-
-    bool ret = false;
-    uint8_t * buf;
-    uint64_t bufU64, tmpU64;
-    int64_t bufI64;
-    ADM_assert(strlen(ADM_MKV_INDEX_MAGIC) == 8);
+    metaToFile m(idxName, fileSize, ADM_MKV_INDEX_MAGIC, ADM_MKV_INDEX_VERSION);
     
-    uint64_t bufPos=0;
-    buf = new uint8_t[8];
-
-    const char *failmsg = "unknown";
-    if (indexSize < 40)
+    try
     {
-        failmsg = "Index size too small";
-        goto loadErr;
-    }
-    if (ADM_fread(buf,8,1,f)!=1)
-    {
-        failmsg = "Cannot read index magic";
-        goto loadErr;
-    }
-    if (memcmp(buf,ADM_MKV_INDEX_MAGIC,8))
-    {
-        failmsg = "Index magic is wrong";
-        goto loadErr;
-    }
-    if (ADM_fread(&bufU64,sizeof(uint64_t),1,f)!=1)
-    {
-        failmsg = "Cannot read index version";
-        goto loadErr;
-    }
-    if (bufU64 != ADM_MKV_INDEX_VERSION)
-    {
-        failmsg = "Index version mismatch";
-        goto loadErr;
-    }
-    if (ADM_fread(&bufU64,sizeof(uint64_t),1,f)!=1)
-    {
-        failmsg = "Cannot read file size";
-        goto loadErr;
-    }
-    if (bufU64 != fileSize)
-    {
-        failmsg = "File size mismatch";
-        goto loadErr;
-    }
-    indexSize -= 8+2*sizeof(uint64_t);
-    if (indexSize < 8)
-    {
-        failmsg = "Remaning index size too small";
-        goto loadErr;
-    }
-    if (indexSize > ADM_MKV_INDEX_SIZE_LIMIT)
-    {
-        failmsg = "Index size too large";
-        goto loadErr;
-    }
-    delete [] buf;
-    buf = new uint8_t[indexSize+65536];
-    
-    if (ADM_fread(buf,indexSize,1,f)!=1) goto loadErr;
-    
-    if (memcmp(ADM_MKV_INDEX_MAGIC,buf+(indexSize - 8),8)) goto loadErr;
-    indexSize -= 8;
-    
-    #define LOAD_U64(X)     memcpy(&bufU64, buf+bufPos, sizeof(uint64_t)); \
-                            bufPos+=sizeof(uint64_t); \
-                            ADM_assert(bufPos<=indexSize); \
-                            X = bufU64
-    #define LOAD_I64(X)     memcpy(&bufI64, buf+bufPos, sizeof(int64_t)); \
-                            bufPos+=sizeof(int64_t); \
-                            ADM_assert(bufPos<=indexSize); \
-                            X = bufI64
-    #define LOAD_BOOL(X)    memcpy(&bufU64, buf+bufPos, sizeof(uint64_t)); \
-                            bufPos+=sizeof(uint64_t); \
-                            ADM_assert(bufPos<=indexSize); \
-                            X = (bufU64 != 0)
-    #define LOAD_TYPE(X,T)  memcpy(&X, buf+bufPos, sizeof(T)); \
-                            bufPos+=sizeof(T); \
-                            ADM_assert(bufPos<=indexSize)
-    #define LOAD_BVECT(X,L) ADM_assert(bufPos+L<=indexSize); \
-                            memcpy(X, buf+bufPos, L); \
-                            bufPos+=L; \
-                            ADM_assert(bufPos<=indexSize)
-     // _clusters
-    uint64_t clusterCount;
-    LOAD_U64(clusterCount);
-    _clusters.clear();
-    for (uint64_t i=0; i<clusterCount; i++)
-    {
-        mkvIndex tmp;
-        LOAD_TYPE(tmp, mkvIndex);
-        _clusters.append(tmp);
-    }
-    
-    LOAD_U64(_nbAudioTrack);
-    // _tracks
-    for (int t=0; t<1+_nbAudioTrack; t++)
-    {
-        uint64_t indexCount;
-        LOAD_U64(indexCount);
-        _tracks[t].index.clear();
-        for (uint64_t i=0; i<indexCount; i++)
+        m.loadIndexFile();
+        
+        uint64_t clusterCount = m.readUnsignedInt();
+        _clusters.clear();
+        for (uint64_t i=0; i<clusterCount; i++)
         {
             mkvIndex tmp;
-            LOAD_TYPE(tmp, mkvIndex);
-            _tracks[t].index.append(tmp);
+            tmp.pos = m.readUnsignedInt();
+            tmp.size = m.readUnsignedInt();
+            tmp.flags = m.readUnsignedInt();
+            tmp.Dts = m.readUnsignedInt();
+            tmp.Pts = m.readUnsignedInt();
+            _clusters.append(tmp);
         }
-
-        LOAD_U64(_tracks[t].streamIndex);
-        LOAD_U64(_tracks[t].duration);
-        LOAD_TYPE(_tracks[t].wavHeader, WAVHeader);
-        LOAD_U64(_tracks[t].nbPackets);
-        LOAD_U64(_tracks[t].nbFrames);
-        LOAD_U64(_tracks[t].length);
-        LOAD_U64(_tracks[t]._sizeInBytes);
-        LOAD_U64(_tracks[t]._defaultFrameDuration);
-        LOAD_I64(_tracks[t]._needBuffering);
-        LOAD_I64(_tracks[t]._needExtraData);
-        LOAD_BOOL(_tracks[t]._secondField);
-        LOAD_U64(_tracks[t]._nalSize);
-
-        LOAD_U64(tmpU64);
-        if (tmpU64 > 0)
-        {
-            _tracks[t].extraDataLen = tmpU64;
-            if (_tracks[t].extraData) delete [] _tracks[t].extraData;
-            _tracks[t].extraData = new uint8_t[_tracks[t].extraDataLen];
-            LOAD_BVECT(_tracks[t].extraData, _tracks[t].extraDataLen);
-        }
-
-        LOAD_U64(tmpU64);
-        if (tmpU64 > 0)
-        {
-            _tracks[t].infoCacheSize = tmpU64;
-            if (_tracks[t].infoCache) delete [] _tracks[t].infoCache;
-            _tracks[t].infoCache = new uint8_t[_tracks[t].infoCacheSize];
-            LOAD_BVECT(_tracks[t].infoCache, _tracks[t].infoCacheSize);
-        }
-
-        LOAD_U64(tmpU64);
-        if (tmpU64 > 0)
-        {
-            _tracks[t].paramCacheSize = tmpU64;
-            if (_tracks[t].paramCache) delete [] _tracks[t].paramCache;
-            _tracks[t].paramCache = new uint8_t[_tracks[t].paramCacheSize];
-            LOAD_BVECT(_tracks[t].paramCache, _tracks[t].paramCacheSize);
-        }
-
-        LOAD_U64(_tracks[t].headerRepeatSize);
-        ADM_assert(_tracks[t].headerRepeatSize <= MKV_MAX_REPEAT_HEADER_SIZE);
-        LOAD_BVECT(_tracks[t].headerRepeat, _tracks[t].headerRepeatSize);
         
-        LOAD_U64(tmpU64);
-        ADM_assert(tmpU64 == ADM_MKV_INDEX_MAGICMARK);
-    }    
+        _nbAudioTrack = m.readUnsignedInt();
+        // _tracks
+        for (int t=0; t<1+_nbAudioTrack; t++)
+        {
+            uint64_t indexCount = m.readUnsignedInt();
+            _tracks[t].index.clear();
+            for (uint64_t i=0; i<indexCount; i++)
+            {
+                mkvIndex tmp;
+                tmp.pos = m.readUnsignedInt();
+                tmp.size = m.readUnsignedInt();
+                tmp.flags = m.readUnsignedInt();
+                tmp.Dts = m.readUnsignedInt();
+                tmp.Pts = m.readUnsignedInt();
+                _tracks[t].index.append(tmp);
+            }
+            
+            _tracks[t].streamIndex = m.readUnsignedInt();
+            _tracks[t].duration = m.readUnsignedInt();
+            m.readVariable(&(_tracks[t].wavHeader), sizeof(WAVHeader));
+            _tracks[t].nbPackets = m.readUnsignedInt();
+            _tracks[t].nbFrames = m.readUnsignedInt();
+            _tracks[t].length = m.readUnsignedInt();
+            _tracks[t]._sizeInBytes = m.readUnsignedInt();
+            _tracks[t]._defaultFrameDuration = m.readUnsignedInt();
+            _tracks[t]._needBuffering = m.readSignedInt();
+            _tracks[t]._needExtraData = m.readSignedInt();
+            _tracks[t]._secondField = m.readBool();
+            _tracks[t]._nalSize = m.readUnsignedInt();
+
+            _tracks[t].extraDataLen = m.readByteArrayWithNew(&(_tracks[t].extraData));
+            _tracks[t].infoCacheSize = m.readByteArrayWithNew(&(_tracks[t].infoCache));
+            _tracks[t].paramCacheSize = m.readByteArrayWithNew(&(_tracks[t].paramCache));
+            _tracks[t].headerRepeatSize = m.readByteArray(_tracks[t].headerRepeat, MKV_MAX_REPEAT_HEADER_SIZE);
+            
+            if (m.readUnsignedInt() != ADM_MKV_INDEX_MAGICMARK) throw "Invalid index structure";
+        }
+    }
+    catch(char const * e)
+    {
+        ADM_warning("Cannot load index, reason: %s.\n", e);
+        return false;
+    }
     
-    #undef LOAD_U64
-    #undef LOAD_I64
-    #undef LOAD_BOOL
-    #undef LOAD_TYPE
-    #undef LOAD_BVECT
-    
-    
-    ADM_assert(bufPos==indexSize);
-    ret = true;
-loadErr:
-    delete [] buf;
-    ADM_fclose(f);
-    if (!ret)
-        ADM_warning("Cannot load index, reason: %s.\n", failmsg);
-    return ret;
+    return true;
 }
 
 void mkvHeader::saveIndex(const std::string &idxName, uint64_t fileSize)
 {
-    if (ADM_fileExist(idxName.c_str())) // nothing to do
-        return;
-
-    FILE *f = ADM_fopen(idxName.c_str(), "wb");
-    if (!f) return;
+    metaToFile m(idxName, fileSize, ADM_MKV_INDEX_MAGIC, ADM_MKV_INDEX_VERSION);
     
-    uint64_t bufU64;
-    int64_t bufI64;
-    uint64_t nbWrite = 0;
-
-    #define SAVE_U64(X)         do{ bufU64 = (X); if (1 != ADM_fwrite(&bufU64,sizeof(uint64_t),1,f)) goto saveErr; nbWrite++; } while(0)
-    #define SAVE_I64(X)         do{ bufI64 = (X); if (1 != ADM_fwrite(&bufI64,sizeof(int64_t),1,f)) goto saveErr; nbWrite++; } while(0)
-    #define SAVE_U64_BRK(X)     bufU64 = (X); if (ADM_fwrite(&bufU64,sizeof(uint64_t),1,f) !=1 ) goto saveErr; nbWrite++;
-    #define SAVE_I64_BRK(X)     bufI64 = (X); if (ADM_fwrite(&bufI64,sizeof(int64_t),1,f) !=1 ) goto saveErr; nbWrite++;
-    #define SAVE_TYPE_BRK(X,T)  if (ADM_fwrite(X,sizeof(T),1,f) !=1 ) goto saveErr; nbWrite++;
-    #define SAVE_BVECT_BRK(X,L) if (ADM_fwrite(X,L,1,f) !=1 ) goto saveErr; nbWrite++;
-    
-    ADM_fwrite(ADM_MKV_INDEX_MAGIC,8,1,f);
-    SAVE_U64(ADM_MKV_INDEX_VERSION);
-    SAVE_U64(fileSize);
-    
-    SAVE_U64(_clusters.size());
-    for (uint32_t i=0; i<_clusters.size(); i++)
+    try
     {
-        mkvIndex *tmp = &(_clusters[i]);
-        SAVE_TYPE_BRK(tmp, mkvIndex);
+        m.createIndexFile();
+        
+        m.writeUnsignedInt(_clusters.size());
+        for (uint32_t i=0; i<_clusters.size(); i++)
+        {
+            m.writeUnsignedInt(_clusters[i].pos);
+            m.writeUnsignedInt(_clusters[i].size);
+            m.writeUnsignedInt(_clusters[i].flags);
+            m.writeUnsignedInt(_clusters[i].Dts);
+            m.writeUnsignedInt(_clusters[i].Pts);
+        }
+
+        m.writeUnsignedInt(_nbAudioTrack);
+        for (int t=0; t<1+_nbAudioTrack; t++)
+        {
+            m.writeUnsignedInt(_tracks[t].index.size());
+            for (uint64_t i=0; i<_tracks[t].index.size(); i++)
+            {
+                mkvIndex tmp = _tracks[t].index[i];
+                m.writeUnsignedInt(tmp.pos);
+                m.writeUnsignedInt(tmp.size);
+                m.writeUnsignedInt(tmp.flags);
+                m.writeUnsignedInt(tmp.Dts);
+                m.writeUnsignedInt(tmp.Pts);
+            }
+
+            m.writeUnsignedInt(_tracks[t].streamIndex);
+            m.writeUnsignedInt(_tracks[t].duration);
+            m.writeVariable(&(_tracks[t].wavHeader), sizeof(WAVHeader));
+            m.writeUnsignedInt(_tracks[t].nbPackets);
+            m.writeUnsignedInt(_tracks[t].nbFrames);
+            m.writeUnsignedInt(_tracks[t].length);
+            m.writeUnsignedInt(_tracks[t]._sizeInBytes);
+            m.writeUnsignedInt(_tracks[t]._defaultFrameDuration);
+            m.writeSignedInt(_tracks[t]._needBuffering);
+            m.writeSignedInt(_tracks[t]._needExtraData);
+            m.writeBool(_tracks[t]._secondField);
+            m.writeUnsignedInt(_tracks[t]._nalSize);
+
+            m.writeByteArray(_tracks[t].extraData, _tracks[t].extraDataLen);
+            m.writeByteArray(_tracks[t].infoCache, _tracks[t].infoCacheSize);
+            m.writeByteArray(_tracks[t].paramCache, _tracks[t].paramCacheSize);
+            m.writeByteArray(_tracks[t].headerRepeat, _tracks[t].headerRepeatSize);
+
+            m.writeUnsignedInt(ADM_MKV_INDEX_MAGICMARK);
+        }        
+        
+        m.finishIndexFile();
     }
-    
-    SAVE_U64(_nbAudioTrack);
-    for (int t=0; t<1+_nbAudioTrack; t++)
+    catch(char const * e)
     {
-        uint32_t nbIdx = _tracks[t].index.size();
-        SAVE_U64(nbIdx);
-        uint32_t chunk = (nbIdx < 0x1000) ? nbIdx : 0x1000;
-        uint8_t *tmpbuf = (uint8_t *)ADM_alloc(chunk * sizeof(mkvIndex));
-        if (tmpbuf == NULL) goto saveErr;
-        //ADM_info("Allocated %" PRIu64" bytes for temporary index buffer for track %d\n", chunk * sizeof(mkvIndex), t);
-        uint32_t indexOffset = 0;
-        while (nbIdx)
-        {
-            nbIdx -= chunk;
-            uint8_t *p = tmpbuf;
-            for (uint32_t i=0; i < chunk; i++)
-            {
-                memcpy(p, &(_tracks[t].index[indexOffset]), sizeof(mkvIndex));
-                p += sizeof(mkvIndex);
-                indexOffset++;
-            }
-            if (1 != ADM_fwrite(tmpbuf, chunk * sizeof(mkvIndex), 1, f))
-            {
-                ADM_dealloc(tmpbuf);
-                tmpbuf = NULL;
-                goto saveErr;
-            }
-            nbWrite++;
-            //ADM_info("%" PRIu32" index entries for track %d written, remaining: %" PRIu32"\n", chunk, t, nbIdx);
-            if (chunk > nbIdx)
-                chunk = nbIdx;
-        }
-        ADM_dealloc(tmpbuf);
-        tmpbuf = NULL;
-
-        SAVE_U64_BRK(_tracks[t].streamIndex);
-        SAVE_U64_BRK(_tracks[t].duration);
-        SAVE_TYPE_BRK(&(_tracks[t].wavHeader), WAVHeader);
-        SAVE_U64_BRK(_tracks[t].nbPackets);
-        SAVE_U64_BRK(_tracks[t].nbFrames);
-        SAVE_U64_BRK(_tracks[t].length);
-        SAVE_U64_BRK(_tracks[t]._sizeInBytes);
-        SAVE_U64_BRK(_tracks[t]._defaultFrameDuration);
-        SAVE_I64_BRK(_tracks[t]._needBuffering);
-        SAVE_I64_BRK(_tracks[t]._needExtraData);
-        SAVE_U64_BRK(_tracks[t]._secondField ? 1:0);
-        SAVE_U64_BRK(_tracks[t]._nalSize);
-
-        SAVE_U64_BRK(_tracks[t].extraDataLen);
-        if (_tracks[t].extraDataLen > 0)
-        {
-            SAVE_BVECT_BRK(_tracks[t].extraData, _tracks[t].extraDataLen);
-        }
-
-        SAVE_U64_BRK(_tracks[t].infoCacheSize);
-        if (_tracks[t].infoCacheSize > 0)
-        {
-            SAVE_BVECT_BRK(_tracks[t].infoCache, _tracks[t].infoCacheSize);
-        }
-
-        SAVE_U64_BRK(_tracks[t].paramCacheSize);
-        if (_tracks[t].paramCacheSize > 0)
-        {
-            SAVE_BVECT_BRK(_tracks[t].paramCache, _tracks[t].paramCacheSize);
-        }
-
-        SAVE_U64_BRK(_tracks[t].headerRepeatSize);
-        if (_tracks[t].headerRepeatSize > 0)
-        {
-            SAVE_BVECT_BRK(_tracks[t].headerRepeat, _tracks[t].headerRepeatSize);
-        }
-
-        SAVE_U64_BRK(ADM_MKV_INDEX_MAGICMARK);
+        ADM_warning("Failed to create index, reason: %s.\n", e);
     }
-
-    #undef SAVE_U64
-    #undef SAVE_I64
-    #undef SAVE_U64_BRK
-    #undef SAVE_I64_BRK
-    #undef SAVE_TYPE_BRK
-    #undef SAVE_BVECT_BRK
-
-    if (1 != ADM_fwrite(ADM_MKV_INDEX_MAGIC,8,1,f))
-        goto saveErr;
-    ADM_fclose(f);
-    ADM_info("Index written, %" PRIu64" write-outs.\n", nbWrite);
-    return;
-saveErr:
-    ADM_fclose(f);
-    remove(idxName.c_str());
 }
 
 /**
