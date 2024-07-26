@@ -668,8 +668,10 @@ bool mkvHeader::loadIndex(const std::string &idxName, uint64_t fileSize)
             _tracks[t]._nalSize = m.readUnsignedInt();
 
             _tracks[t].extraDataLen = m.readByteArrayWithNew(&(_tracks[t].extraData));
+#if ADM_MKV_INDEX_VERSION < 3
             _tracks[t].infoCacheSize = m.readByteArrayWithNew(&(_tracks[t].infoCache));
             _tracks[t].paramCacheSize = m.readByteArrayWithNew(&(_tracks[t].paramCache));
+#endif
             _tracks[t].headerRepeatSize = m.readByteArray(_tracks[t].headerRepeat, MKV_MAX_REPEAT_HEADER_SIZE);
             
             if (m.readUnsignedInt() != ADM_MKV_INDEX_MAGICMARK) throw "Invalid index structure";
@@ -730,8 +732,10 @@ void mkvHeader::saveIndex(const std::string &idxName, uint64_t fileSize)
             m.writeUnsignedInt(_tracks[t]._nalSize);
 
             m.writeByteArray(_tracks[t].extraData, _tracks[t].extraDataLen);
+#if ADM_MKV_INDEX_VERSION < 3
             m.writeByteArray(_tracks[t].infoCache, _tracks[t].infoCacheSize);
             m.writeByteArray(_tracks[t].paramCache, _tracks[t].paramCacheSize);
+#endif
             m.writeByteArray(_tracks[t].headerRepeat, _tracks[t].headerRepeatSize);
 
             m.writeUnsignedInt(ADM_MKV_INDEX_MAGICMARK);
