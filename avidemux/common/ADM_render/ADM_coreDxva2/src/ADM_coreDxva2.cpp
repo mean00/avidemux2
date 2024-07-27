@@ -62,6 +62,7 @@ DEFINE_GUID(DXVA2_ModeHEVC_VLD_Main,  0x5b11d51b, 0x2f4c,0x4452,0xbc,0xc3,0x09,0
 DEFINE_GUID(DXVA2_ModeVP9_VLD_Profile0, 0x463707f8, 0xa1d0,0x4585,0x87,0x6d,0x83,0xaa,0x6d,0x60,0xb8,0x9e);
 DEFINE_GUID(DXVA2_NoEncrypt,          0x1b81beD0, 0xa0c7,0x11d3,0xb9,0x84,0x00,0xc0,0x4f,0x2e,0x73,0xc5);
 DEFINE_GUID(DXVA2_ModeHEVC_VLD_Main10,0x107af0e0, 0xef1a,0x4d19,0xab,0xa8,0x67,0xa1,0x63,0x07,0x3d,0x13);
+DEFINE_GUID(DXVA2_ModeAV1_VLD_Profile0, 0xb8be4ccb, 0xcf53,0x46ba,0x8d,0x59,0xd6,0xb8,0xa6,0xda,0x5d,0x2a);
 DEFINE_GUID(GUID_NULL,                0x00000000, 0x0000,0x0000,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00);
 /**
  */
@@ -99,6 +100,9 @@ static const dxva2_mode dxva2_modes[] =
     /* VP8/9 */
     { &DXVA2_ModeVP9_VLD_Profile0,AV_CODEC_ID_VP9 ,8},
 
+    /* AV1 */
+    { &DXVA2_ModeAV1_VLD_Profile0,AV_CODEC_ID_AV1, 8},
+
     { NULL,                      (AVCodecID)0 ,0},
 };
 typedef struct
@@ -119,6 +123,7 @@ static Dxv2SupportMap dxva2VP9={AV_CODEC_ID_VP9,false,0,0,INT_MAX,INT_MAX};
 static Dxv2SupportMap dxva2H265={AV_CODEC_ID_HEVC,false,0,0,INT_MAX,INT_MAX};
 static Dxv2SupportMap dxva2H264={AV_CODEC_ID_H264,false,0,0,INT_MAX,INT_MAX};
 static Dxv2SupportMap dxva2H265_10Bits={AV_CODEC_ID_HEVC,false,0,0,INT_MAX,INT_MAX};
+static Dxv2SupportMap dxva2AV1={AV_CODEC_ID_AV1,false,0,0,INT_MAX,INT_MAX};
 
 /**
   \fn dxvaBitsToFormat
@@ -384,6 +389,7 @@ bool admDxva2::init(GUI_WindowInfo *x)
         lookupCodec("H265",&dxva2H265,guid_count,guid_list,8,dummyCodedW,dummyCodedH);
         lookupCodec("H265",&dxva2H265_10Bits,guid_count,guid_list,10,dummyCodedW,dummyCodedH);
         lookupCodec("VP9",&dxva2VP9,guid_count,guid_list,8,dummyCodedW,dummyCodedH);
+        lookupCodec("AV1",&dxva2AV1,guid_count,guid_list,8,dummyCodedW,dummyCodedH);
         CoTaskMemFree(guid_list);
     }
     ADM_info("Scanning supported format done\n");
@@ -561,6 +567,7 @@ bool admDxva2::supported(AVCodecID codec, int bits, int width, int height)
     SUPSUP(AV_CODEC_ID_HEVC,dxva2H265,8)
     SUPSUP(AV_CODEC_ID_HEVC,dxva2H265_10Bits,10)
     SUPSUP(AV_CODEC_ID_VP9,dxva2VP9,8)
+    SUPSUP(AV_CODEC_ID_AV1,dxva2AV1,8)
 
     unsigned int guid_count = 0;
     GUID *guid_list = NULL;
@@ -580,6 +587,8 @@ bool admDxva2::supported(AVCodecID codec, int bits, int width, int height)
         r = lookupCodec("H265",&dxva2H265_10Bits,guid_count,guid_list,10,width,height);
     else if(codec == AV_CODEC_ID_VP9 && bits == 8)
         r = lookupCodec("VP9",&dxva2VP9,guid_count,guid_list,8,width,height);
+    else if(codec == AV_CODEC_ID_AV1 && bits == 8)
+        r = lookupCodec("AV1",&dxva2AV1,guid_count,guid_list,8,width,height);
     CoTaskMemFree(guid_list);
     return r;
 }
@@ -592,13 +601,14 @@ DXVA2_ConfigPictureDecode *admDxva2::getDecoderConfig(AVCodecID codec,int bits)
     switch(codec)
     {
         case AV_CODEC_ID_H264: cmap=&dxva2H264;break;
-        case AV_CODEC_ID_VP9: cmap=&dxva2VP9;break;
         case AV_CODEC_ID_H265:
               if(10==bits)
                 cmap=&dxva2H265_10Bits;
               else
                 cmap=&dxva2H265;
               break;
+        case AV_CODEC_ID_VP9: cmap=&dxva2VP9;break;
+        case AV_CODEC_ID_AV1: cmap=&dxva2VP9;break;
         default:
             ADM_assert(0);
             break;
@@ -638,6 +648,10 @@ IDirectXVideoDecoder *admDxva2::createDecoder(AVCodecID codec, int width, int he
         case AV_CODEC_ID_VP9:
             ADM_info("Creating decoder DXVA2/VP9/8 Bits\n");
             cmap=&dxva2VP9;
+            break;
+        case AV_CODEC_ID_AV1:
+            ADM_info("Creating decoder DXVA2/AV1/8 Bits\n");
+            cmap=&dxva2AV1;
             break;
         default:
             ADM_assert(0);

@@ -254,6 +254,7 @@ static enum AVPixelFormat ADM_DXVA2_getFormat(struct AVCodecContext *avctx,  con
             break;
             //FMT_V_CHECK(H265,H265)
             FMT_V_CHECK(VP9,VP9)
+            FMT_V_CHECK(AV1,AV1)
             default:
                 ADM_info("DXVA2 No hw support for format %d\n",avctx->codec_id);
                 continue;
@@ -339,6 +340,7 @@ decoderFFDXVA2::decoderFFDXVA2(AVCodecContext *avctx,decoderFF *parent)
                 num_surfaces+=16;
                 break;
         case AV_CODEC_ID_VP9:
+        case AV_CODEC_ID_AV1: // very unsure
                 num_surfaces+=8;
                 break;
         default:

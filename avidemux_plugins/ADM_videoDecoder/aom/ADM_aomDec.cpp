@@ -86,6 +86,10 @@ decoderAom::decoderAom(uint32_t w, uint32_t h, uint32_t fcc, uint32_t extraDataL
     if(!tryHwdec && false == prefs->get(FEATURES_NVDEC,&tryHwdec))
         tryHwdec = false;
 #endif
+#ifdef USE_DXVA2
+    if(!tryHwdec && false == prefs->get(FEATURES_DXVA2,&tryHwdec))
+        tryHwdec = false;
+#endif
     if(tryHwdec)
     {
         ADM_info("Can we actually use a hw decoder instead of libaom?\n");
