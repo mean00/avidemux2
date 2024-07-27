@@ -17,11 +17,6 @@ IF("${CROSS_C_COMPILER}" STREQUAL "clang")
 	patch_file("${FFMPEG_SOURCE_DIR}" "${FFMPEG_PATCH_DIR}/clang_win32_workaround.diff")
 ENDIF("${CROSS_C_COMPILER}" STREQUAL "clang")
 
-
-
-#@@
-ADM_FF_ADD_OPTIONS()
-
 if (ADM_CPU_X86_32)
         IF("${CROSS_C_COMPILER}" STREQUAL "clang")
                 # With clang we use the -mstackrealign -mstack-alignment=16
@@ -34,7 +29,6 @@ endif (ADM_CPU_X86_32)
 xadd(--enable-w32threads)
 
 #  Cross compiler override (win32 & win64)
-xadd(--prefix ${CROSS})
 xadd(--host-cc gcc)
 xadd(--nm ${CMAKE_CROSS_PREFIX}-nm)
 xadd(--extra-cflags  -I${CROSS}/include)
@@ -73,7 +67,6 @@ ADM_FF_SET_EXTRA_FLAGS()
 
 IF(USE_DXVA2)
       xadd(--enable-dxva2)
-      set(FFMPEG_DECODERS ${FFMPEG_DECODERS} h264_dxva2 hevc_dxva2)
       # We assume 32 bits mean windows XP; disable d3d11
       IF(NOT ADM_CPU_X86_64)
             xadd(--disable-d3d11va)
