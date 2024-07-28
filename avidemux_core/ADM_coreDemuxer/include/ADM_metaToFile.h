@@ -66,7 +66,7 @@ public:
         uint32_t    readByteArrayWithMalloc(uint8_t ** array, uint32_t maxLen = 4294967295ul);
         void        readVariable(void * variable, uint32_t size);
         
-        void        createIndexFile(void);
+        void        createIndexFile(bool overwrite = false);
         void        finishIndexFile(void);
         void        writeUnsignedInt(uint64_t x);
         void        writeSignedInt(int64_t x);

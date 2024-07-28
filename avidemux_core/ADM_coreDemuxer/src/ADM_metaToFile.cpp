@@ -170,10 +170,16 @@ void metaToFile::loadIndexFile(void)
     }
 }
 
-void metaToFile::createIndexFile(void)
+void metaToFile::createIndexFile(bool overwrite)
 {
     if (!_initialized) throw "metaToFile error";
-    if (ADM_fileExist(_idxFileName.c_str())) throw "Index file already exist";
+    if (ADM_fileExist(_idxFileName.c_str()))
+    {
+        if (overwrite)
+            ADM_info("Index file already exists, will be overwritten.\n");
+        else
+            throw "Not allowed to overwrite existing index file";
+    }
 
     for (int i=0; i<8; i++)
     {
