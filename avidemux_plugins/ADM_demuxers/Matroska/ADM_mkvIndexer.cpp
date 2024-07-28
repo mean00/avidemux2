@@ -686,13 +686,13 @@ bool mkvHeader::loadIndex(const std::string &idxName, uint64_t fileSize)
     return true;
 }
 
-void mkvHeader::saveIndex(const std::string &idxName, uint64_t fileSize)
+void mkvHeader::saveIndex(const std::string &idxName, uint64_t fileSize, bool overwrite)
 {
     metaToFile m(idxName, fileSize, ADM_MKV_INDEX_MAGIC, ADM_MKV_INDEX_VERSION);
     
     try
     {
-        m.createIndexFile();
+        m.createIndexFile(overwrite);
         
         m.writeUnsignedInt(_clusters.size());
         for (uint32_t i=0; i<_clusters.size(); i++)
@@ -763,12 +763,15 @@ uint8_t mkvHeader::indexClusters(ADM_ebml_file *parser)
     uint64_t pos;
     uint8_t res=1;
     bool indexOnDisk = true;
+    bool indexAllowOverwrite = false;
 
     if (NULL != getenv("ADM_NOINDEX_MKV") && !strncmp(getenv("ADM_NOINDEX_MKV"), "1", 1))
         indexOnDisk = false;
 
     if (indexOnDisk)
     {
+        if (NULL != getenv("ADM_MKV_INDEX_ALLOW_OVERWRITE") && !strncmp(getenv("ADM_MKV_INDEX_ALLOW_OVERWRITE"), "1", 1))
+            indexAllowOverwrite = true;
         if (loadIndex(_idxName, parser->getFileSize()))
         {
             printf("[MKV] Video track indexing loaded from \"%s\"\n", _idxName.c_str());
@@ -854,7 +857,7 @@ tryAgain:
     {
         if ((res == ADM_OK) && (!!VIDEO.index.size()))
         {
-            saveIndex(_idxName, parser->getFileSize());
+            saveIndex(_idxName, parser->getFileSize(), indexAllowOverwrite);
         }
     }
     

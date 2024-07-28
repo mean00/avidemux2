@@ -259,7 +259,7 @@ class mkvHeader         :public vidHeader
                                             uint32_t timecodeMS);
     bool                    readCue(ADM_ebml_file *parser);
     bool                    loadIndex(const std::string &idxName, uint64_t fileSize);
-    void                    saveIndex(const std::string &idxName, uint64_t fileSize);
+    void                    saveIndex(const std::string &idxName, uint64_t fileSize, bool overwrite);
     uint8_t                 indexClusters(ADM_ebml_file *parser);
     uint8_t                 indexLastCluster(ADM_ebml_file *parser);
     uint8_t                 indexBlock(ADM_ebml_file *parser,uint32_t count,uint32_t timecodeMS);
