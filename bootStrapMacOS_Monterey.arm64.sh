@@ -1,6 +1,8 @@
 #!/bin/bash
 # Bootstrapper to semi-automatically build avidemux from source on OSX
 # (c) Mean 2009
+source "./checkCaseSensitivity.sh"
+
 export MAJOR=`cat cmake/avidemuxVersion.cmake | grep "VERSION_MAJOR " | sed 's/..$//g' | sed 's/^.*"//g'`
 export MINOR=`cat cmake/avidemuxVersion.cmake | grep "VERSION_MINOR " | sed 's/..$//g' | sed 's/^.*"//g'`
 export PATCH=`cat cmake/avidemuxVersion.cmake | grep "VERSION_P " | sed 's/..$//g' | sed 's/^.*"//g'`
@@ -28,6 +30,11 @@ external_libmp4v2=1
 
 export SDKROOT=$(xcrun --sdk macosx --show-sdk-path)
 export MACOSX_DEPLOYMENT_TARGET=$(xcrun --sdk macosx --show-sdk-version)
+
+if ! isCaseSensitive; then
+    >&2 echo "Error: filesystem is not case sensitive"
+    exit 1
+fi
 
 test -f $HOME/myCC  && export COMPILER="-DCMAKE_C_COMPILER=$HOME/myCC -DCMAKE_CXX_COMPILER=$HOME/myC++"
 

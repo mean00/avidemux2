@@ -11,11 +11,10 @@ Avidemux is a simple cross-platform video editor for Linux, Windows and macOS.
 # Build from source
 
 To get Avidemux source code from the main repository and the translations,
-run the following commands in a directory located on a case-sensitive file system:
+run the following commands in a directory located on a **_case-sensitive_** file system:
 ```
-git clone https://github.com/mean00/avidemux2.git
+git clone --recursive https://github.com/mean00/avidemux2.git
 cd avidemux2
-git submodule update --init --recursive
 ```
 
 
