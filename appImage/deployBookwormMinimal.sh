@@ -1,7 +1,7 @@
 #!/bin/bash
 #############################################################################
 # Populate appImage with a minimum set of required libraries, but leave out #
-# conflicting libc and libGL stuff. This presumes that glibc 2.28 or later, #
+# conflicting libc and libGL stuff. This presumes that glibc 2.36 or later, #
 # legacy libGL and PulseAudio are available on host.                        #
 #############################################################################
 
