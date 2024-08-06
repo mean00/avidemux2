@@ -116,16 +116,20 @@ static bool  lookupSupportedFormat(VAProfile profile)
 bool ADM_initLibVAEncoder(void)
 {
     ADM_info("initializing VA encoder\n");
+#ifdef LIBVA_AV1_DEC
     if(lookupSupportedFormat(VAProfileAV1Profile0))
     {
         ADM_info("AV1 Profile0 is supported\n");
         globalAV1Caps.profile=VAProfileAV1Profile0;
     }
+#endif
+#ifdef LIBVA_HEVC_DEC
     if(lookupSupportedFormat(VAProfileHEVCMain))
     {
         ADM_info("HEVC Main is supported\n");
         globalHevcCaps.profile=VAProfileHEVCMain;
     }
+#endif
     if(lookupSupportedFormat(VAProfileH264High))
     {
         ADM_info("H264 High is supported\n");
