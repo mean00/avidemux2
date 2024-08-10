@@ -1,5 +1,7 @@
 include(dm_plugin)
-ADD_DEFINITIONS("-std=c++11")
+IF(NOT MSVC)
+    ADD_DEFINITIONS("-std=c++11")
+ENDIF(NOT MSVC)
 SET(ADM_ts_SRCS 
 	ADM_ts.cpp
 	ADM_tsPlugin.cpp

@@ -1,4 +1,6 @@
-add_definitions("-std=c++11")
+if (NOT MSVC)
+    add_definitions("-std=c++11")
+endif (NOT MSVC)
 include_directories(../include)
 SET(ADM_editor_SRCS
 ADM_edit.cpp

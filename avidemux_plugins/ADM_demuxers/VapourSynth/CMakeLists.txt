@@ -14,7 +14,6 @@ IF(USE_VAPOURSYNTH)
                 ADD_DEFINITIONS("-DNO_WINSOCK2") # else double include on windows
             ENDIF(MSVC)
             #ADD_DEFINITIONS("-g3 -O0")
-            ADD_DEFINITIONS("-std=c++11")
             #ADD_DEFINITIONS("-std=c++11")
             ADD_DEFINITIONS(${VAPOURSYNTHSCRIPT_CFLAGS})
             SET(SRCS ADM_vsProxy.cpp ADM_vsProxy_cli.cpp)
