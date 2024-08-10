@@ -69,42 +69,19 @@ bool ADMImage::duplicateMacro(ADMImage *src,bool swap)
         }
     } else // it is a hw surface
     {
-        hwRefDescriptor old;
-        ADM_HW_IMAGE oldRefType = refType;
-        if(refType != ADM_HW_NONE)
-            memcpy(&old, &refDescriptor, sizeof(refDescriptor));
+        // Increment ref count of the hw surface in the source image first.
+        src->hwIncRefCount();
+        // Only then decrement ref count in the target, else in case when both
+        // images reference the same hw surface, the latter may be freed and
+        // recycled before duplication is completed.
+        hwDecRefCount();
 
         refType                     = src->refType;
         refDescriptor.refCodec      = src->refDescriptor.refCodec;
         refDescriptor.refHwImage    = src->refDescriptor.refHwImage;
         refDescriptor.refMarkUsed   = src->refDescriptor.refMarkUsed;
-        refDescriptor.refDownload   = src->refDescriptor.refDownload;
-
-        hwIncRefCount();
-
-        // free previously referenced hw image if applicable
-        if(oldRefType != ADM_HW_NONE)
-        {
-            if (old.refHwImage == src->refDescriptor.refHwImage &&
-                oldRefType == src->refType &&
-                old.refCodec == src->refDescriptor.refCodec)
-            { // same hw image means we may not decrement ref count
-                //ADM_warning("Duplicating to ADMImage referencing the same hw image.\n");
-            } else
-            {
-                refDescriptor.refCodec      = old.refCodec;
-                refDescriptor.refHwImage    = old.refHwImage;
-                refDescriptor.refMarkUnused = old.refMarkUnused;
-
-                hwDecRefCount();
-
-                // restore pointers
-                refType                     = src->refType;
-                refDescriptor.refCodec      = src->refDescriptor.refCodec;
-                refDescriptor.refHwImage    = src->refDescriptor.refHwImage;
-            }
-        }
         refDescriptor.refMarkUnused = src->refDescriptor.refMarkUnused;
+        refDescriptor.refDownload   = src->refDescriptor.refDownload;
     }
     return true;
 }
