@@ -14,13 +14,17 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "BVector.h"
+
 #include "ADM_default.h"
+#include "ADM_coreMuxerFfmpeg.h"
+#include "ADM_muxerUtils.h"
 #include "ADM_muxerInternal.h"
 #include "ADM_muxerProto.h"
 
+#include "BVector.h"
 extern "C" {
 #include "libavformat/url.h"
+
 }
 
 void ADM_MuxersCleanup(void);
