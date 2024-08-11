@@ -126,7 +126,7 @@
 	/*	Win64 section should be places before Win32 one, because
 	**	most likely both WIN32 and WIN64 will be defined in 64-bit case.
 	*/
-
+#if 0 // MEANX Let's use the slow one for the moment, these are defined in recent VC++
 	#include	<math.h>
 
 	/*	Win64 doesn't seem to have these functions, nor inline assembly.
@@ -146,7 +146,7 @@
 	{
 		return _mm_cvtss_si32(_mm_load_ss(&flt));
 	}
-
+#endif
 #elif (defined (WIN32) || defined (_WIN32))
 
 	#undef		HAVE_LRINT_REPLACEMENT
