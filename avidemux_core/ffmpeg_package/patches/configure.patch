@@ -76,7 +76,7 @@
      random_seed
      ranlib
      samples
--    stdc
+     stdc
 -    stdcxx
      strip
      sws_max_filter_size
@@ -86,6 +86,7 @@
  ar_default="ar"
  cc_default="gcc"
 -stdc_default="c17"
++stdc_default="c11"
 -stdcxx_default="c++11"
  cxx_default="g++"
  host_cc_default="gcc"
@@ -113,7 +114,7 @@
              # on Windows, does enable remarks so disable them here.
              -Wall)                echo $flag -Qdiag-disable:remark ;;
 -            -std=$stdc)           echo -Qstd=$stdc ;;
-+            -std=c17)             echo -Qstd=c17 ;;
++            -std=c11)             echo -Qstd=c11 ;;
              -flto*)               echo -ipo ;;
          esac
      done
@@ -122,7 +123,7 @@
                  esac
                  ;;
 -            -std=$stdc)           echo -x$stdc            ;;
-+            -std=c17)             echo -xc17              ;;
++            -std=c11)             echo -xc11              ;;
              -fomit-frame-pointer) echo -xregs=frameptr    ;;
              -fPIC)                echo -KPIC -xcode=pic32 ;;
              -W*,*)                echo $flag              ;;
@@ -132,8 +133,8 @@
          _DEPCMD='$(DEP$(1)) $(DEP$(1)FLAGS) $($(1)DEP_FLAGS) $< | sed -e "1s,^.*: ,$@: ," -e "\$$!s,\$$, \\\," -e "1!s,^.*: , ," > $(@:.o=.d)'
 -        _DEPFLAGS='-xM1 -x$stdc'
 -        _ldflags='-std=$stdc'
-+        _DEPFLAGS='-xM1 -xc17'
-+        _ldflags='-std=c17'
++        _DEPFLAGS='-xM1 -xc11'
++        _ldflags='-std=c11'
          _cflags_speed='-O5'
          _cflags_size='-O5 -xspace'
          _flags_filter=suncc_flags
@@ -154,7 +155,7 @@
 -    { check_cflags_cc -std=c11 ctype.h "__STDC_VERSION__ >= 201112L" && stdc="c11" || die "Compiler lacks C11 support"; }
 +test_cflags_cc -std=c11 ctype.h "__STDC_VERSION__ >= 201112L" &&
 +    add_cflags -std=c11 ||
-+    check_cflags -std=c17
++    check_cflags -std=c11
  
  test_cc <<EOF || die "Compiler lacks support for C11 static assertions"
  #include <assert.h>
@@ -167,7 +168,7 @@
 -    check_host_cflags_cc -std=c11 ctype.h "__STDC_VERSION__ >= 201112L" || die "Host compiler lacks C11 support"
 -
 +add_host_cppflags -D_ISOC11_SOURCE
-+check_host_cflags -std=c17
++check_host_cflags -std=c11
  check_host_cflags -Wall
  check_host_cflags $host_cflags_speed
  
