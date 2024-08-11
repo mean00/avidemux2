@@ -34,6 +34,7 @@ endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
 #  Cross compiler override (win32 & win64)
 xadd(--extra-cflags  -I${VS_ROOT}/include )
 xadd(--extra-ldflags  user32.lib )
+xadd(--stdc=c11 )
 
 message(STATUS "Using VS compilation flag: ${FFMPEG_FLAGS}")
 
