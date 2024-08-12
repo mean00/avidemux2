@@ -237,15 +237,15 @@ create_release_package()
     libgobject-*.dll \
     libharfbuzz-*.dll \
     libiconv-*.dll \
-    icudt66.dll \
-    icuin66.dll \
-    icuuc66.dll \
+    icudt*.dll \
+    icuin*.dll \
+    icuuc*.dll \
     libintl-*.dll \
     libmp3lame-*.dll \
     libogg-*.dll \
     libopus-*.dll \
     libpcre2-16-*.dll \
-    libpcre-*.dll \
+    libpcre2-8-*.dll \
     libpng16-*.dll \
     libsamplerate-*.dll \
     libsqlite3-*.dll \

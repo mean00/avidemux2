@@ -15,7 +15,7 @@ Section "Avidemux Core" SecCore
     ${File} "./ChangeLog.html"
     ${File} ${BINARY_FOLDER}/libass-9.dll
     ${File} ${BINARY_FOLDER}/libcrypto-3-x64.dll     
-    ${File} ${BINARY_FOLDER}/libpcre-*.dll
+    ${File} ${BINARY_FOLDER}/libpcre2-8-*.dll
     ${File} ${BINARY_FOLDER}/libpcre2-16-*.dll
     ${File} ${BINARY_FOLDER}/libssl-3-x64.dll
 
@@ -43,9 +43,9 @@ Section "Avidemux Core" SecCore
     SetOutPath $INSTDIR\styles
     ${File} ${BINARY_FOLDER}/styles/qwindowsvistastyle.dll
     SetOutPath $INSTDIR
-    ${File} ${BINARY_FOLDER}/icudt66.dll
-    ${File} ${BINARY_FOLDER}/icuin66.dll
-    ${File} ${BINARY_FOLDER}/icuuc66.dll
+    ${File} ${BINARY_FOLDER}/icudt*.dll
+    ${File} ${BINARY_FOLDER}/icuin*.dll
+    ${File} ${BINARY_FOLDER}/icuuc*.dll
     SetOutPath $INSTDIR\platforms
     ${File} ${BINARY_FOLDER}/platforms/qminimal.dll  
     ${File} ${BINARY_FOLDER}/platforms/qwindows.dll

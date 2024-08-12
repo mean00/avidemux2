@@ -1,5 +1,5 @@
 diff --git a/src/libvpx.mk b/src/libvpx.mk
-index a5d54b46..ba71a0d0 100644
+index a5d54b46..58978efc 100644
 --- a/src/libvpx.mk
 +++ b/src/libvpx.mk
 @@ -4,8 +4,8 @@ PKG             := libvpx
@@ -8,8 +8,17 @@ index a5d54b46..ba71a0d0 100644
  $(PKG)_IGNORE   :=
 -$(PKG)_VERSION  := 1.8.2
 -$(PKG)_CHECKSUM := 8735d9fcd1a781ae6917f28f239a8aa358ce4864ba113ea18af4bb2dc8b474ac
-+$(PKG)_VERSION  := 1.13.1
-+$(PKG)_CHECKSUM := 00dae80465567272abd077f59355f95ac91d7809a2d3006f9ace2637dd429d14
++$(PKG)_VERSION  := 1.14.1
++$(PKG)_CHECKSUM := 901747254d80a7937c933d03bd7c5d41e8e6c883e0665fadcb172542167c7977
  $(PKG)_GH_CONF  := webmproject/libvpx/tags,v
  $(PKG)_DEPS     := cc pthreads yasm
  
+@@ -19,7 +19,7 @@ define $(PKG)_BUILD
+         --disable-examples \
+         --disable-install-docs \
+         --as=$(TARGET)-yasm \
+-        --extra-cflags='-std=gnu89'
++        --extra-cflags='-std=gnu11'
+     $(MAKE) -C '$(1)' -j '$(JOBS)'
+     $(MAKE) -C '$(1)' -j 1 install
+     $(TARGET)-ranlib $(PREFIX)/$(TARGET)/lib/libvpx.a

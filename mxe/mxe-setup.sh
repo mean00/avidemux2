@@ -13,11 +13,9 @@ check()
 cur=$(pwd)
 where="$(dirname $(realpath $0))"
 x264_script="x264-snapshot.sh"
-#x265_script="x265-get-source.sh"
 libaom_script="install-libaom.bash"
 declare -a reqs
 reqs+=(${x264_script})
-#reqs+=(${x265_script})
 reqs+=(${libaom_script})
 
 # check prerequisites
@@ -55,16 +53,22 @@ patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < x264_gen.patch \
 && patch -d "${MXE_ROOT_DIR}" -p1 < x264_gen.patch \
 && cp -uv x264-*.tar.bz2 "${MXE_ROOT_DIR}/pkg/" || fail "Failed at x264 patch"
 
-# get x265 source
-#("${where}/${x265_script}") || fail "Failed at x265 source"
-# patch MXE
-#cp -uv x265_3.4.tar.gz "${MXE_ROOT_DIR}/pkg/" && \
-   patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < "${where}/x265.patch" \
-&& patch -d "${MXE_ROOT_DIR}" -p1 < "${where}/x265.patch" || fail "Failed at x265 patch"
+# Patch MXE to download and build more recent versions of some other codecs:
+# fdk-aac 2.0.0 --> 2.0.3
+patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < "${where}/fdk-aac.patch" \
+&& patch -d "${MXE_ROOT_DIR}" -p1 < "${where}/fdk-aac.patch" || fail "Failed at fdk-aac patch"
 
-# patch MXE to download and build libvpx 1.13.1 instead of 1.8.2
+# libvpx 1.8.2 --> 1.13.1
 patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < "${where}/libvpx.patch" \
 && patch -d "${MXE_ROOT_DIR}" -p1 < "${where}/libvpx.patch" || fail "Failed at libvpx patch"
+
+# opus 1.3.1 --> 1.5.2
+patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < "${where}/opus.patch" \
+&& patch -d "${MXE_ROOT_DIR}" -p1 < "${where}/opus.patch" || fail "Failed at opus patch"
+
+# x265 3.4 --> 3.6
+patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < "${where}/x265.patch" \
+&& patch -d "${MXE_ROOT_DIR}" -p1 < "${where}/x265.patch" || fail "Failed at x265 patch"
 
 #echo "MXE_TARGETS :=  i686-w64-mingw32.shared x86_64-w64-mingw32.shared" > "${MXE_ROOT_DIR}/settings.mk"
 echo "MXE_TARGETS :=  x86_64-w64-mingw32.shared" > "${MXE_ROOT_DIR}/settings.mk"
@@ -72,7 +76,7 @@ echo "MXE_TARGETS :=  x86_64-w64-mingw32.shared" > "${MXE_ROOT_DIR}/settings.mk"
 # now build MXE
 cd "${MXE_ROOT_DIR}" && MXE_SILENT_NO_NETWORK= \
 make \
-MXE_PLUGIN_DIRS="${MXE_ROOT_DIR}/plugins/gcc13" \
+MXE_PLUGIN_DIRS="${MXE_ROOT_DIR}/plugins/gcc14" \
 faad2 \
 fdk-aac \
 fribidi \
@@ -92,7 +96,7 @@ xvidcore || fail "Failed at make"
 cd "${cur}"
 
 # get and install libaom
-("${where}/${libaom_script}" "${MXE_ROOT_DIR}") || fail "Failed at libaom"
+(AOM_TAG="v3.9.1" "${where}/${libaom_script}" "${MXE_ROOT_DIR}") || fail "Failed at libaom"
 
 if [ -z "${MXE_ROOT_DIR}/usr/x86_64-w64-mingw32.shared" ]; then
     echo "All done" && exit 0
