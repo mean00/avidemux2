@@ -22,8 +22,11 @@ a directory *outside of Avidemux top source directory*. This script will
   b) create a source tarball of the latest x264 off the stable branch from
   the videolan.org x264 git mirror, generate and apply a patch for MXE;
 
-  c) patch MXE to use v3.5 of x265 instead of v2.4 and v1.13.1 of libvpx
-  instead of v1.8.2;
+  c) patch MXE to use more recent versions of the following codecs:
+        fdk-aac: 2.0.0 --> 2.0.3
+        libvpx:  1.8.2 --> 1.14.1
+        opus:    1.3.1 --> 1.5.2
+        x265:    2.4   --> 3.6
 
   d) build the 64-bit MXE target (the 32-bit target is currently untested);
 
@@ -64,11 +67,12 @@ partition, extract it on Windows and run 'avidemux.exe' from there.
 
 3. Issues:
 
-Build of the mesa package in MXE fails with python3 >= 3.8. If the Linux
-distribution used to host MXE ships with Python at version 3.8 or later,
-make sure that python2 is installed and unversioned python command points
-to python2. See https://bugs.python.org/issue40350
+Build of the mesa package in MXE was observed failing with python3 >= 3.8.
+As a workaround, make sure that python2 is installed and unversioned python
+command points to python2. See https://bugs.python.org/issue40350
+The issue seems to be resolved at least in Fedora 40 (python3 >= 3.12.4) as
+host Linux distribution.
 
 As of this writing, twolame, aften, vapoursynth and avsproxy are not available.
 
-2023-10-28
+2024-08-12
