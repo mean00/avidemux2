@@ -53,7 +53,7 @@ Install [Homebrew](https://github.com/Homebrew/brew)
 
 Install required build dependencies:
 ```
-brew install cmake nasm yasm qt xvid x264 x265 libvpx aom opus fdk-aac lame libass mp4v2 a52dec
+brew install cmake pkg-config nasm yasm qt xvid x264 x265 libvpx aom opus fdk-aac lame libass mp4v2 a52dec
 ```
 
 Build Avidemux (Apple Silicon):  
