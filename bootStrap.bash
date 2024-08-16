@@ -5,6 +5,7 @@
 # By default we use qt5 now
 #
 packages_ext=""
+packages_dir="pkgs"
 rebuild=0
 do_core=1
 do_cli=1
@@ -17,11 +18,11 @@ qt_ext=Qt5
 QT_FLAVOR="-DENABLE_QT5=True"
 COMPILER=""
 export QT_SELECT=5 # default for ubuntu, harmless for others
-export O_PARAL="-j $(nproc)"
 install_prefix="$default_install_prefix"
 # -lc is required to build libADM_ae_lav* audio encoder plugins on 32 bit ubuntu
+need_ae_lav_build_quirk=""
 if [[ $(uname -m) = i?86 ]] ; then
-        export need_ae_lav_build_quirk=1
+    need_ae_lav_build_quirk="1"
 fi
 external_libass=0
 external_liba52=0
@@ -30,48 +31,50 @@ external_libmp4v2=0
 
 fail()
 {
-        echo "** Failed at $1**"
-        exit 1
+    echo "** Failed at $1 **"
+    exit 1
 }
 
 Process()
 {
-        export BUILDDIR=$1
-        export SOURCEDIR=$2
-        export INSTALL_PREFIX="-DCMAKE_INSTALL_PREFIX=$install_prefix"
-        export EXTRA=$3
-        export DEBUG=""
-        export ASAN=""
-        export BUILD_QUIRKS=""
-        BUILDER="Unix Makefiles"
-        if [ "x$debug" = "x1" ] ; then 
-                DEBUG="-DVERBOSE=1 -DCMAKE_BUILD_TYPE=Debug  "
-                BUILDDIR="${BUILDDIR}_debug"
-                BUILDER="CodeBlocks - Unix Makefiles"
-        fi
-        if [ "x$do_asan" = "x1" ] ; then 
-                BUILDDIR="${BUILDDIR}_asan"
-                ASAN="-DASAN=True"
-        fi
-	FAKEROOT=" -DFAKEROOT=$FAKEROOT_DIR "
-        echo "Building $BUILDDIR from $SOURCEDIR with EXTRA=<$EXTRA>, DEBUG=<$DEBUG>"
-        if [ "x$rebuild" != "x1" ] ; then
-                rm -Rf ./$BUILDDIR
-        fi
-        if [ "x$need_ae_lav_build_quirk" = "x1" ] ; then
-                BUILD_QUIRKS="-DAE_LAVCODEC_BUILD_QUIRK=true"
-        fi
-        if [ ! -e "$BUILDDIR" ] ; then
-                mkdir $BUILDDIR || fail mkdir
-        fi
-        cd $BUILDDIR 
-        cmake $COMPILER $PKG $FAKEROOT $QT_FLAVOR $INSTALL_PREFIX $EXTRA $BUILD_QUIRKS $ASAN $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
-        make  $PARAL >& /tmp/log$BUILDDIR || fail "make, result in /tmp/log$BUILDDIR"
-	if  [ "x$PKG" != "x" ] ; then
-          $FAKEROOT_COMMAND make package DESTDIR=$FAKEROOT_DIR/tmp || fail package
-	fi
-        # we need the make install so that other packcges can be built against this one
-        make install DESTDIR=$FAKEROOT_DIR
+    BASE=$1
+    SOURCEDIR=$2
+    INSTALL_PREFIX="-DCMAKE_INSTALL_PREFIX=$install_prefix"
+    EXTRA=$3
+    DEBUG=""
+    ASAN=""
+    BUILD_QUIRKS=""
+    BUILDER="Unix Makefiles"
+    if [ "x$debug" = "x1" ] ; then
+        DEBUG="-DVERBOSE=1 -DCMAKE_BUILD_TYPE=Debug"
+        BASE="${BASE}_debug"
+        BUILDER="CodeBlocks - Unix Makefiles"
+    fi
+    if [ "x$do_asan" = "x1" ] ; then
+        BASE="${BASE}_asan"
+        ASAN="-DASAN=True"
+    fi
+    BUILDDIR="${PWD}/${BASE}"
+    FAKEROOT="-DFAKEROOT=$FAKEROOT_DIR"
+    echo "Building in \"${BUILDDIR}\" from \"${SOURCEDIR}\" with EXTRA=<$EXTRA>, DEBUG=<$DEBUG>"
+    if [ "x$rebuild" != "x1" ] ; then
+        rm -Rf "${BUILDDIR}"
+    fi
+    if [ "x$need_ae_lav_build_quirk" = "x1" ] ; then
+        BUILD_QUIRKS="-DAE_LAVCODEC_BUILD_QUIRK=true"
+    fi
+    if [ ! -e "$BUILDDIR" ] ; then
+        mkdir "${BUILDDIR}" || fail mkdir
+    fi
+    pushd "${BUILDDIR}"
+    cmake $COMPILER $PKG $FAKEROOT $QT_FLAVOR $INSTALL_PREFIX $EXTRA $BUILD_QUIRKS $ASAN $DEBUG -G "$BUILDER" "$SOURCEDIR" || fail cmakeZ
+    make -j $(nproc) >& /tmp/log$BASE || fail "make, result in /tmp/log$BASE"
+    if [ "x$PKG" != "x" ] ; then
+        $FAKEROOT_COMMAND make package DESTDIR="${FAKEROOT_DIR}/tmp" || fail package
+    fi
+    # we need the make install so that other packcges can be built against this one
+    make install DESTDIR="${FAKEROOT_DIR}"
+    popd
 }
 printModule()
 {
@@ -192,7 +195,6 @@ while [ $# != 0 ] ;do
          --deb)
                 packages_ext=deb
                 PKG="$PKG -DAVIDEMUX_PACKAGER=deb"
-                rm -f debs/*
                 ;;
          --rpm)
                 packages_ext=rpm
@@ -261,94 +263,85 @@ done
 config
 echo "**BootStrapping avidemux **"
 
-export TOP=$PWD
-export POSTFIX=""
-export FAKEROOT_DIR=$PWD/install
-export PARAL="$O_PARAL"
+BUILDTOP=$PWD
+if [[ $BUILDTOP = *" "* ]]; then
+    echo "The build directory path \"${BUILDTOP}\" contains one or more spaces."
+    echo "This is unsupported by FFmpeg configure."
+    fail bootstrap
+fi
+SRCTOP=$(cd $(dirname "$0") && pwd)
+POSTFIX=""
+FAKEROOT_DIR="${BUILDTOP}/install"
 if [ "x$external_libass" = "x1" ]; then
-    export EXTRA_CMAKE_DEFS="-DUSE_EXTERNAL_LIBASS=true $EXTRA_CMAKE_DEFS"
+    EXTRA_CMAKE_DEFS="-DUSE_EXTERNAL_LIBASS=true $EXTRA_CMAKE_DEFS"
 fi
 if [ "x$external_liba52" = "x1" ]; then
-    export EXTRA_CMAKE_DEFS="-DUSE_EXTERNAL_LIBA52=true $EXTRA_CMAKE_DEFS"
+    EXTRA_CMAKE_DEFS="-DUSE_EXTERNAL_LIBA52=true $EXTRA_CMAKE_DEFS"
 fi
 if [ "x$external_libmad" = "x1" ]; then
-    export EXTRA_CMAKE_DEFS="-DUSE_EXTERNAL_LIBMAD=true $EXTRA_CMAKE_DEFS"
+    EXTRA_CMAKE_DEFS="-DUSE_EXTERNAL_LIBMAD=true $EXTRA_CMAKE_DEFS"
 fi
 if [ "x$external_libmp4v2" = "x1" ]; then
-    export EXTRA_CMAKE_DEFS="-DUSE_EXTERNAL_MP4V2=true $EXTRA_CMAKE_DEFS"
+    EXTRA_CMAKE_DEFS="-DUSE_EXTERNAL_MP4V2=true $EXTRA_CMAKE_DEFS"
 fi
-echo "Top dir : $TOP"
-echo "Fake installation directory=$FAKEROOT_DIR"
-if [ "x$debug" = "x1" ] ; then echo   
-POSTFIX="_debug"
+echo "Build top dir : \"${BUILDTOP}\""
+echo "Fake installation directory : \"${FAKEROOT_DIR}\""
+if [ "x$debug" = "x1" ]; then
+    POSTFIX="_debug"
 fi
 if [ "x$packages_ext" = "x" ]; then 
-	echo ""	
+    echo ""
 else
-	rm -Rf $FAKEROOT_DIR
-	mkdir -p $FAKEROOT_DIR
-        echo "Cleaning packages"
-        find . -name "*.$packages_ext" | grep -vi cpa | xargs rm -f
+    rm -Rf "${FAKEROOT_DIR}"
+    mkdir -p "${FAKEROOT_DIR}"
+    echo "Cleaning packages"
+    find . -name "*.$packages_ext" | grep -vi cpa | xargs rm -f
 fi
 
 if [ "x$do_core" = "x1" ] ; then 
-        echo "** CORE **"
-        cd $TOP
-        Process buildCore ../avidemux_core
-        echo " Installing core"
-        cd $TOP/buildCore${POSTFIX} 
+    echo "** CORE **"
+    Process buildCore "${SRCTOP}/avidemux_core"
 fi
 if [ "x$do_qt" = "x1" ] ; then
-        echo "** $qt_ext **"
-        cd $TOP
-        Process build${qt_ext} ../avidemux/qt4
-        echo " Installing ${qt_ext}"
-        cd $TOP/build${qt_ext}${POSTFIX} 
+    echo "** $qt_ext **"
+    Process build${qt_ext} "${SRCTOP}/avidemux/qt4" "-DOpenGL_GL_PREFERENCE=GLVND"
 fi
 if [ "x$do_cli" = "x1" ] ; then 
-        echo "** CLI **"
-        cd $TOP
-        Process buildCli ../avidemux/cli 
-        echo " Installing cli"
-        cd $TOP/buildCli${POSTFIX}  
+    echo "** CLI **"
+    Process buildCli "${SRCTOP}/avidemux/cli"
 fi
 if [ "x$do_plugins" = "x1" ] ; then 
-        echo "** Plugins **"
-        cd $TOP
-        Process buildPluginsCommon ../avidemux_plugins "-DPLUGIN_UI=COMMON $EXTRA_CMAKE_DEFS"
+    echo "** Plugins **"
+    Process buildPluginsCommon "${SRCTOP}/avidemux_plugins" "-DPLUGIN_UI=COMMON $EXTRA_CMAKE_DEFS"
 fi
 if [ "x$do_plugins" = "x1" -a "x$do_qt" = "x1" ] ; then
-        echo "** Plugins ${qt_ext} **"
-        cd $TOP
-        Process buildPlugins${qt_ext} ../avidemux_plugins "-DPLUGIN_UI=QT4 $EXTRA_CMAKE_DEFS"
+    echo "** Plugins ${qt_ext} **"
+    Process buildPlugins${qt_ext} "${SRCTOP}/avidemux_plugins" "-DOpenGL_GL_PREFERENCE=GLVND -DPLUGIN_UI=QT4 $EXTRA_CMAKE_DEFS"
 fi
 if [ "x$do_plugins" = "x1" -a "x$do_cli" = "x1" ] ; then 
-        echo "** Plugins CLI **"
-        cd $TOP
-        Process buildPluginsCLI ../avidemux_plugins "-DPLUGIN_UI=CLI $EXTRA_CMAKE_DEFS"
+    echo "** Plugins CLI **"
+    Process buildPluginsCLI "${SRCTOP}/avidemux_plugins" "-DPLUGIN_UI=CLI $EXTRA_CMAKE_DEFS"
 fi
 if [ "x$do_plugins" = "x1"  ] ; then 
-        echo "** Plugins Settings **"
-        cd $TOP
-        Process buildPluginsSettings ../avidemux_plugins "-DPLUGIN_UI=SETTINGS $EXTRA_CMAKE_DEFS"
+    echo "** Plugins Settings **"
+    Process buildPluginsSettings "${SRCTOP}/avidemux_plugins" "-DPLUGIN_UI=SETTINGS $EXTRA_CMAKE_DEFS"
 fi
 
-
-echo "** Preparing debs **"
-cd $TOP
+echo "** Packaging **"
+cd "${BUILDTOP}"
 if [ "x$packages_ext" = "x" ]; then 
-        echo "No packaging"
+    echo "No packaging"
 else
-        echo "Preparing packages"
-        rm -Rf debs
-        mkdir debs
-        find . -name "*.$packages_ext" | grep -vi cpa | xargs cp -t debs
-        echo "** debs directory ready **"
-        ls -l debs
+    echo "Preparing packages"
+    rm -Rf "${packages_dir}"
+    mkdir "${packages_dir}"
+    find . -name "*.$packages_ext" | grep -vi cpa | xargs cp -t "${packages_dir}"
+    echo "** ${packages_dir} directory ready **"
+    ls -l "${packages_dir}"
 fi
 echo "** ALL DONE **"
 if [ "x$packages_ext" = "x" ]; then 
-    echo "** Copy the $FAKEROOT_DIR folder to your favorite location, i.e. sudo cp -R install/usr/* /usr/ **"
+    echo "** Copy the folder \"${FAKEROOT_DIR}\" to your favorite location, i.e. sudo cp -R install/usr/* /usr/ **"
 else
-    echo "** The installable packages are in the debs folder **"
+    echo "** Installable packages are in the ${packages_dir} folder **"
 fi
