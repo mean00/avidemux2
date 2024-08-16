@@ -24,6 +24,8 @@
 #include "fourcc.h"
 #include "ADM_mp4.h"
 
+#include "ADM_metaToFile.h"
+
 #if 1
 #define aprintf(...) {}
 #else
@@ -574,4 +576,53 @@ uint32_t sample2byte(WAVHeader *hdr,uint32_t sample)
         f*=hdr->byterate; // in byte
     return (uint32_t)floor(f);
 }
+
+
+bool MP4Header::loadIndex(const std::string &idxName, uint64_t fileSize)
+{
+    metaToFile m(idxName, fileSize, ADM_MP4_INDEX_MAGIC, ADM_MP4_INDEX_VERSION);
+    try
+    {
+        m.loadIndexFile();
+        
+        uint64_t numberOfFrames = m.readUnsignedInt();
+        if (numberOfFrames != VDEO.nbIndex) throw "Invalid number of frames";
+        
+        for ( uint32_t frame = 0; frame < VDEO.nbIndex; frame++ )
+        {
+            VDEO.index[frame].intra = m.readUnsignedInt();
+        }
+    }
+    catch(char const * e)
+    {
+        ADM_warning("Cannot load index, reason: %s.\n", e);
+        return false;
+    }
+    
+    return true;
+}
+
+void MP4Header::saveIndex(const std::string &idxName, uint64_t fileSize, bool overwrite)
+{
+    metaToFile m(idxName, fileSize, ADM_MP4_INDEX_MAGIC, ADM_MP4_INDEX_VERSION);
+    
+    try
+    {
+        m.createIndexFile(overwrite);
+        
+        m.writeUnsignedInt(VDEO.nbIndex);
+        
+        for ( uint32_t frame = 0; frame < VDEO.nbIndex; frame++ )
+        {
+            m.writeUnsignedInt(VDEO.index[frame].intra);
+        }
+        
+        m.finishIndexFile();
+    }
+    catch(char const * e)
+    {
+        ADM_warning("Failed to create index, reason: %s.\n", e);
+    }
+}
+
 // EOF
