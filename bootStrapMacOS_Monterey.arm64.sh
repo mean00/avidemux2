@@ -406,12 +406,13 @@ if [ "x$create_app_bundle" = "x1" ] ; then
         cd installer
         cmake \
         -DAVIDEMUX_VERSION="$ADM_VERSION" \
+        -DAVIDEMUX_MAJOR_MINOR="${MAJOR}.${MINOR}" \
         -DDMG_BASENAME="$dmg_base" \
         -DBUILD_REV="$REV" \
         $FLAVOR \
         "${SRCTOP}/avidemux/osxInstaller" || fail "cmake"
         echo "** Preparing packaging **"
-        make install && make package
+        make package
     fi
 fi
 echo "** ALL DONE **"

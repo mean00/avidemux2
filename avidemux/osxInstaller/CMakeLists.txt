@@ -2,7 +2,13 @@ cmake_minimum_required(VERSION 3.6)
 project("AvidemuxBundle")
 MESSAGE(STATUS  "* Start *")
 
-SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" "${CMAKE_SOURCE_DIR}/../../cmake" "${CMAKE_MODULE_PATH}")
+SET(ORIGINAL "${CMAKE_BINARY_DIR}/../Avidemux${AVIDEMUX_MAJOR_MINOR}.app")
+SET(ADM_CMAKE_DIR "${ORIGINAL}/Contents/Resources/include/avidemux/${AVIDEMUX_MAJOR_MINOR}/cmake") # needed by config helper
+SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" "${ADM_CMAKE_DIR}" "${CMAKE_MODULE_PATH}")
+
+# Can we instead propagate vars set during the build?
+include(admConfigHelper)
+include(admDetermineSystem)
 
 include(admCheckQt)
 
@@ -22,13 +28,9 @@ IF(NOT QT_FOUND)
         MESSAGE(FATAL_ERROR "Qt not found")
 ENDIF(NOT QT_FOUND)
 
-include(avidemuxVersion)
-
-#
 SET(BUNDLE_NAME "Avidemux-${AVIDEMUX_VERSION}.app")
 SET(BUNDLE "${CMAKE_BINARY_DIR}/${BUNDLE_NAME}")
 SET(RESOURCES  "${BUNDLE}/Contents/Resources")
-SET(ORIGINAL  "${CMAKE_BINARY_DIR}/../Avidemux${AVIDEMUX_MAJOR_MINOR}.app")
 #
 # Copy the skeleton, other files will be pulled automatically
 #

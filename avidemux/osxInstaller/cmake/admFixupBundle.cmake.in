@@ -24,6 +24,7 @@ makeLink("MacOS" "lib" "@BUNDLE@/Contents/")
 # Using default link location because versioned paths from VAPOURSYNTHSCRIPT_LDFLAGS
 # would result in each minor VapourSynth upgrade breaking the demuxer.
 FILE(GLOB dmvs "@BUNDLE@/Contents/MacOS/ADM_plugins6/demuxers/libADM_dm_vapoursynth.dylib")
+SET(ADM_CPU_ARM64 "@ADM_CPU_ARM64@")
 IF(dmvs)
     IF(ADM_CPU_ARM64)
         SET(HOMEBREW_PREFIX "/opt/homebrew")
@@ -67,7 +68,7 @@ ENDFOREACH(frame ${frameworks})
 
 IF(ADM_CPU_ARM64)
     MESSAGE(STATUS "")
-    MESSAGE(STATUS "Trying to adhoc-sign the app, script: ${CMAKE_BINARY_DIR}/macos-adhoc-sign-app.sh")
+    MESSAGE(STATUS "Trying to adhoc-sign the app, script: @CMAKE_BINARY_DIR@/macos-adhoc-sign-app.sh")
     MESSAGE(STATUS "")
-    EXECUTE_PROCESS(COMMAND bash "${CMAKE_BINARY_DIR}/macos-adhoc-sign-app.sh")
+    EXECUTE_PROCESS(COMMAND bash "@CMAKE_BINARY_DIR@/macos-adhoc-sign-app.sh")
 ENDIF(ADM_CPU_ARM64)
