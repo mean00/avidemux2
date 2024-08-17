@@ -120,6 +120,7 @@ ENDFOREACH(lang ${ListOfTranslationFiles})
 
 # Fixup bundle
 CONFIGURE_FILE("${CMAKE_SOURCE_DIR}/cmake/admFixupBundle.cmake.in" "${CMAKE_BINARY_DIR}/admFixupBundle.cmake" @ONLY)
+CONFIGURE_FILE("${CMAKE_SOURCE_DIR}/cmake/macos-adhoc-sign-app.sh.in" "${CMAKE_BINARY_DIR}/macos-adhoc-sign-app.sh" @ONLY)
 INSTALL(SCRIPT "${CMAKE_BINARY_DIR}/admFixupBundle.cmake" COMPONENT Runtime)
 
 #

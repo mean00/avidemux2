@@ -64,3 +64,10 @@ FOREACH(frame ${frameworks})
         FILE(REMOVE_RECURSE  "${frame}/Versions/@ADM_QT_VERSION@/Headers")
         # Create symlinks ?
 ENDFOREACH(frame ${frameworks})
+
+IF(ADM_CPU_ARM64)
+    MESSAGE(STATUS "")
+    MESSAGE(STATUS "Trying to adhoc-sign the app, script: ${CMAKE_BINARY_DIR}/macos-adhoc-sign-app.sh")
+    MESSAGE(STATUS "")
+    EXECUTE_PROCESS(COMMAND bash "${CMAKE_BINARY_DIR}/macos-adhoc-sign-app.sh")
+ENDIF(ADM_CPU_ARM64)
