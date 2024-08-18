@@ -64,17 +64,27 @@ Process()
         BUILD_QUIRKS="-DAE_LAVCODEC_BUILD_QUIRK=true"
     fi
     if [ ! -e "$BUILDDIR" ] ; then
-        mkdir "${BUILDDIR}" || fail mkdir
+        mkdir "${BUILDDIR}" || fail "creating build directory"
     fi
-    pushd "${BUILDDIR}"
-    cmake $COMPILER $PKG $FAKEROOT $QT_FLAVOR $INSTALL_PREFIX $EXTRA $BUILD_QUIRKS $ASAN $DEBUG -G "$BUILDER" "$SOURCEDIR" || fail cmakeZ
+    pushd "${BUILDDIR}" > /dev/null
+    cmake \
+    $COMPILER \
+    $PKG \
+    $FAKEROOT \
+    $INSTALL_PREFIX \
+    $EXTRA \
+    $BUILD_QUIRKS \
+    $ASAN \
+    $DEBUG \
+    -G "$BUILDER" \
+    "$SOURCEDIR" || fail "cmake"
     make -j $(nproc) >& /tmp/log$BASE || fail "make, result in /tmp/log$BASE"
     if [ "x$PKG" != "x" ] ; then
-        $FAKEROOT_COMMAND make package DESTDIR="${FAKEROOT_DIR}/tmp" || fail package
+        $FAKEROOT_COMMAND make package DESTDIR="${FAKEROOT_DIR}/tmp" || fail "packaging"
     fi
     # we need the make install so that other packcges can be built against this one
-    make install DESTDIR="${FAKEROOT_DIR}"
-    popd
+    make install DESTDIR="${FAKEROOT_DIR}" || fail "install"
+    popd > /dev/null
 }
 printModule()
 {
@@ -267,7 +277,7 @@ BUILDTOP=$PWD
 if [[ $BUILDTOP = *" "* ]]; then
     echo "The build directory path \"${BUILDTOP}\" contains one or more spaces."
     echo "This is unsupported by FFmpeg configure."
-    fail bootstrap
+    fail "build prerequisites"
 fi
 SRCTOP=$(cd $(dirname "$0") && pwd)
 POSTFIX=""
@@ -304,7 +314,7 @@ if [ "x$do_core" = "x1" ] ; then
 fi
 if [ "x$do_qt" = "x1" ] ; then
     echo "** $qt_ext **"
-    Process build${qt_ext} "${SRCTOP}/avidemux/qt4" "-DOpenGL_GL_PREFERENCE=GLVND"
+    Process build${qt_ext} "${SRCTOP}/avidemux/qt4" "-DOpenGL_GL_PREFERENCE=GLVND $QT_FLAVOR"
 fi
 if [ "x$do_cli" = "x1" ] ; then 
     echo "** CLI **"
@@ -316,7 +326,7 @@ if [ "x$do_plugins" = "x1" ] ; then
 fi
 if [ "x$do_plugins" = "x1" -a "x$do_qt" = "x1" ] ; then
     echo "** Plugins ${qt_ext} **"
-    Process buildPlugins${qt_ext} "${SRCTOP}/avidemux_plugins" "-DOpenGL_GL_PREFERENCE=GLVND -DPLUGIN_UI=QT4 $EXTRA_CMAKE_DEFS"
+    Process buildPlugins${qt_ext} "${SRCTOP}/avidemux_plugins" "-DOpenGL_GL_PREFERENCE=GLVND -DPLUGIN_UI=QT4 $QT_FLAVOR $EXTRA_CMAKE_DEFS"
 fi
 if [ "x$do_plugins" = "x1" -a "x$do_cli" = "x1" ] ; then 
     echo "** Plugins CLI **"
