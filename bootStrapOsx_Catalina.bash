@@ -1,89 +1,75 @@
 #!/bin/bash
 # Bootstrapper to semi-automatically build avidemux from source on OSX
 # (c) Mean 2009
-set -x
-export MAJOR=`cat cmake/avidemuxVersion.cmake | grep "VERSION_MAJOR " | sed 's/..$//g' | sed 's/^.*"//g'`
-export MINOR=`cat cmake/avidemuxVersion.cmake | grep "VERSION_MINOR " | sed 's/..$//g' | sed 's/^.*"//g'`
-export PATCH=`cat cmake/avidemuxVersion.cmake | grep "VERSION_P " | sed 's/..$//g' | sed 's/^.*"//g'`
-export API_VERSION="${MAJOR}.${MINOR}"
-
-DAT=`date +"%y%m%d-%Hh%Mm"`
-gt=`git log --format=oneline -1 | head -c 11`
-REV="${DAT}_$gt"
-
-FLAVOR="-DENABLE_QT5=True"
-qt_ext="Qt5"
-packages_ext=""
-do_core=1
-do_cli=1
-do_gtk=0   # Note that gtk is no fully longer supported on OSX. You are on your own here
-do_qt4=1
-do_plugins=1
-do_rebuild=0
-debug=0
-create_app_bundle=1
-create_dmg=1
-external_libass=1
-external_liba52=1
-external_libmad=0
-external_libmp4v2=1
-
-# /usr/include is no more on Catalina
-export SDKROOT=$(xcrun --sdk macosx --show-sdk-path)
-#export MACOSX_DEPLOYMENT_TARGET=$(xcrun --sdk macosx --show-sdk-version)
-if [ "x$MACOSX_DEPLOYMENT_TARGET" = "x" ] ; then
-    export MACOSX_DEPLOYMENT_TARGET=10.15
-fi
-
-test -f $HOME/myCC  && export COMPILER="-DCMAKE_C_COMPILER=$HOME/myCC -DCMAKE_CXX_COMPILER=$HOME/myC++"
+#set -x
 
 fail()
 {
-        echo "** Failed at $1**"
-        exit 1
+    echo "** Failed at $1 **"
+    exit 1
 }
 setupPaths()
 {
 # Specify the the directory where you want to install avidemux (a.k.a. the cmake_install_prefix)
 # like export BASE_INSTALL_DIR="<full_path_to_installation>". This can be /usr/local or /opt/local (macports) or /sw (Fink)
-        if [ "x$create_app_bundle" = "x1" ] ; then
-            export BASE_INSTALL_DIR="/"
-            export BASE_APP="$PWD/Avidemux${API_VERSION}.app"
-            export PREFIX="${BASE_APP}/Contents/Resources"
-            if [ ! -e $BASE_APP/Contents/Resources ] ; then
-                mkdir -p $BASE_APP/Contents/Resources
-            fi
-        else
-            export BASE_INSTALL_DIR="$PWD/out"
-            export BASE_APP="$BASE_INSTALL_DIR"
-            export PREFIX="$BASE_INSTALL_DIR"
+    if [ "x$create_app_bundle" = "x1" ] ; then
+        export BASE_INSTALL_DIR="/"
+        export BASE_APP="${BUILDTOP}/Avidemux${API_VERSION}.app"
+        export PREFIX="${BASE_APP}/Contents/Resources"
+        if [ ! -e "${BASE_APP}/Contents/Resources" ] ; then
+            mkdir -p "${BASE_APP}/Contents/Resources"
         fi
+    else
+        export BASE_INSTALL_DIR="${BUILDTOP}/out"
+        export BASE_APP="$BASE_INSTALL_DIR"
+        export PREFIX="$BASE_INSTALL_DIR"
+    fi
 }
 Process()
 {
-        BUILDDIR=$1
-        SOURCEDIR=$2
-        FAKEROOT="-DFAKEROOT=$FAKEROOT_DIR"
-        EXTRA="$3"
-        DEBUG=""
-        BUILDER="Unix Makefiles"
-        echo "**************** $1 *******************"
-        if [ "x$debug" = "x1" ] ; then 
-                DEBUG="-DVERBOSE=1 -DCMAKE_BUILD_TYPE=Debug  "
-                BUILDDIR="${BUILDDIR}_debug"
-                BUILDER="CodeBlocks - Unix Makefiles"
-        fi
-
-        echo "Building $BUILDDIR from $SOURCEDIR with EXTRA=<$EXTRA>, DEBUG=<$DEBUG>"
-        if [ "x$do_rebuild" != x1 ] ; then
-            rm -Rf ./$BUILDDIR
-        fi
-        mkdir -p $BUILDDIR || fail mkdir
-        cd $BUILDDIR 
-        cmake $COMPILER $PKG $FAKEROOT -DCMAKE_INSTALL_PREFIX="$PREFIX" -DAVIDEMUX_SOURCE_DIR=$TOP -DAVIDEMUX_VERSION="$ADM_VERSION" $EXTRA $FLAVOR $DEBUG -G "$BUILDER" $SOURCEDIR || fail cmakeZ
-        make -j 2 > /tmp/log$BUILDDIR || fail make
-        echo "** installing at $FAKEROOT_DIR **"
-        make install DESTDIR=$FAKEROOT_DIR || fail install
+    BASE=$1
+    SOURCEDIR=$2
+    EXTRA=$3
+    DEBUG=""
+    BUILDER="Unix Makefiles"
+    echo "**************** $1 *******************"
+    if [ "x$debug" = "x1" ] ; then
+        DEBUG="-DVERBOSE=1 -DCMAKE_BUILD_TYPE=Debug"
+        BASE="${BASE}_debug"
+        BUILDER="CodeBlocks - Unix Makefiles"
+    fi
+    BUILDDIR="${PWD}/${BASE}"
+    FAKEROOT=""
+    if [ -n "$FAKEROOT_DIR" ] ; then
+        FAKEROOT="-DFAKEROOT=\"${FAKEROOT_DIR}\""
+    fi
+    echo "Building in \"${BUILDDIR}\" from \"${SOURCEDIR}\" with EXTRA=<$EXTRA>, DEBUG=<$DEBUG>"
+    if [ "x$do_rebuild" != x1 ] ; then
+        rm -Rf "$BUILDDIR"
+    fi
+    if [ ! -e "$BUILDDIR" ] ; then
+        mkdir "$BUILDDIR" || fail mkdir
+    fi
+    pushd "$BUILDDIR" > /dev/null
+    cmake \
+    -DCMAKE_OSX_ARCHITECTURES="x86_64" \
+    -DCMAKE_INSTALL_PREFIX="$PREFIX" \
+    -DAVIDEMUX_SOURCE_DIR="$SOURCEDIR" \
+    -DAVIDEMUX_VERSION="$ADM_VERSION" \
+    $FAKEROOT \
+    $EXTRA \
+    $FLAVOR \
+    $DEBUG \
+    -G "$BUILDER" \
+    "$SOURCEDIR" || fail cmakeZ
+    make -j $(sysctl -n hw.ncpu) > /tmp/log${BASE} || fail make
+    if [ -n "$FAKEROOT_DIR" ] ; then
+        echo "** installing to $FAKEROOT_DIR **"
+    else
+        echo "** installing to $PREFIX **"
+    fi
+    DESTDIR="$FAKEROOT_DIR" make install || fail install
+    popd > /dev/null
 }
 printModule()
 {
@@ -168,6 +154,62 @@ validate()
             exit 1
         fi
 }
+
+# Default configuration
+FLAVOR="-DENABLE_QT5=True"
+qt_ext="Qt5"
+packages_ext=""
+do_core=1
+do_cli=1
+do_gtk=0   # Note that gtk is no fully longer supported on OSX. You are on your own here
+do_qt4=1
+do_plugins=1
+do_rebuild=0
+debug=0
+create_app_bundle=1
+create_dmg=1
+external_libass=1
+external_liba52=1
+external_libmad=0
+external_libmp4v2=1
+
+echo "** BootStrapping avidemux **"
+
+BUILDTOP=$PWD
+
+if [[ $BUILDTOP = *" "* ]]; then
+    echo "The build directory path \"${BUILDTOP}\" contains one or more spaces."
+    echo "This is unsupported by FFmpeg configure."
+    fail bootstrap
+fi
+
+SRCTOP=$(cd $(dirname "$0") && pwd)
+
+echo "Top build dir : \"${BUILDTOP}\""
+echo "Top source dir : \"${SRCTOP}\""
+
+pushd "${SRCTOP}" > /dev/null
+
+export MAJOR=`cat cmake/avidemuxVersion.cmake | grep "VERSION_MAJOR " | sed 's/..$//g' | sed 's/^.*"//g'`
+export MINOR=`cat cmake/avidemuxVersion.cmake | grep "VERSION_MINOR " | sed 's/..$//g' | sed 's/^.*"//g'`
+export PATCH=`cat cmake/avidemuxVersion.cmake | grep "VERSION_P " | sed 's/..$//g' | sed 's/^.*"//g'`
+export API_VERSION="${MAJOR}.${MINOR}"
+
+DAT=`date +"%y%m%d-%Hh%Mm"`
+gt=`git log --format=oneline -1 | head -c 11`
+REV="${DAT}_$gt"
+
+popd > /dev/null
+
+# /usr/include is no more on Catalina
+export SDKROOT=$(xcrun --sdk macosx --show-sdk-path)
+#export MACOSX_DEPLOYMENT_TARGET=$(xcrun --sdk macosx --show-sdk-version)
+if [ "x$MACOSX_DEPLOYMENT_TARGET" = "x" ] ; then
+    export MACOSX_DEPLOYMENT_TARGET=10.15
+fi
+
+test -f $HOME/myCC  && export COMPILER="-DCMAKE_C_COMPILER=$HOME/myCC -DCMAKE_CXX_COMPILER=$HOME/myC++"
+
 # Could probably do it with getopts...
 while [ $# != 0 ] ;do
         config_option="$1"
@@ -247,7 +289,7 @@ validate output "$output" || exit 1
 config
 # If the path to a custom Qt installation is passed via MYQT variable,
 # check for a conflicting one from Homebrew.
-if [ "x${MYQT}" != "x" ] && [ -f "/usr/local/bin/qmake" ]; then
+if [ -n "$MYQT" ] && [ -f "/usr/local/bin/qmake" ]; then
     echo -e "\n****************************************************************"
     echo -e "It seems that you have a Qt installation linked into /usr/local,"
     echo -e "but MYQT variable is set. Please unlink it first by executing"
@@ -272,7 +314,7 @@ if [ "$qmake_location" = "/usr/local/bin/qmake" ]; then
         exit 1
     fi
 fi
-if [ "x$MYQT" != "x" ] && [ -f "${MYQT}/bin/qmake" ] ; then
+if [ -n "$MYQT" ] && [ -f "${MYQT}/bin/qmake" ] ; then
     export QTDIR="${MYQT}" # needed for translations
 else
     if [ "${qt_ext}" = "Qt6" ]; then
@@ -298,12 +340,9 @@ else
     exit 1
 fi
 #
-echo "** BootStrapping avidemux **"
-export TOP=$PWD
-export POSTFIX=""
-echo "Top dir : $TOP"
-if [ "x$debug" = "x1" ] ; then echo
-POSTFIX="_debug"
+POSTFIX=""
+if [ "x$debug" = "x1" ] ; then
+    POSTFIX="_debug"
 fi
 if [ "x$external_libass" = "x1" ]; then
     export EXTRA_CMAKE_DEFS="-DUSE_EXTERNAL_LIBASS=true $EXTRA_CMAKE_DEFS"
@@ -323,64 +362,57 @@ else
     export DO_BUNDLE="-UCREATE_BUNDLE"
 fi
 if [ "x$do_core" = "x1" ] ; then
-        echo "** CORE **"
-        cd $TOP
-        Process buildCore ../avidemux_core $DO_BUNDLE
+    echo "** CORE **"
+    Process buildCore "${SRCTOP}/avidemux_core" $DO_BUNDLE
 fi
 if [ "x$do_qt4" = "x1" ] ; then
-        echo "** QT **"
-        cd $TOP
-        Process build${qt_ext} ../avidemux/qt4 $DO_BUNDLE
+    echo "** QT **"
+    Process build${QT_EXT} "${SRCTOP}/avidemux/qt4" $DO_BUNDLE
 fi
 if [ "x$do_cli" = "x1" ] ; then
-        echo "** CLI **"
-        cd $TOP
-        Process buildCli ../avidemux/cli
+    echo "** CLI **"
+    Process buildCli "${SRCTOP}/avidemux/cli"
 fi
 if [ "x$do_plugins" = "x1" ] ; then
-        echo "** Plugins **"
-        cd $TOP
-        Process buildPluginsCommon ../avidemux_plugins "-DPLUGIN_UI=COMMON $EXTRA_CMAKE_DEFS"
+    echo "** Plugins **"
+    Process buildPluginsCommon "${SRCTOP}/avidemux_plugins" "-DPLUGIN_UI=COMMON $EXTRA_CMAKE_DEFS"
 fi
 if [ "x$do_plugins" = "x1" -a "x$do_qt4" = "x1" ] ; then
-        echo "** Plugins Qt **"
-        cd $TOP
-        Process buildPlugins${qt_ext} ../avidemux_plugins "-DPLUGIN_UI=QT4 EXTRA_CMAKE_DEFS"
+    echo "** Plugins Qt **"
+    Process buildPlugins${QT_EXT} "${SRCTOP}/avidemux_plugins" "-DPLUGIN_UI=QT4 EXTRA_CMAKE_DEFS"
 fi
 if [ "x$do_plugins" = "x1" -a "x$do_cli" = "x1" ] ; then
-        echo "** Plugins CLI **"
-        cd $TOP
-        Process buildPluginsCLI ../avidemux_plugins "-DPLUGIN_UI=CLI $EXTRA_CMAKE_DEFS"
+    echo "** Plugins CLI **"
+    Process buildPluginsCLI "${SRCTOP}/avidemux_plugins" "-DPLUGIN_UI=CLI $EXTRA_CMAKE_DEFS"
 fi
 if [ "x$do_plugins" = "x1" ] ; then
-        echo "** Plugins Settings **"
-        cd $TOP
-        Process buildPluginsSettings ../avidemux_plugins "-DPLUGIN_UI=SETTINGS $EXTRA_CMAKE_DEFS"
+    echo "** Plugins Settings **"
+    Process buildPluginsSettings "${SRCTOP}/avidemux_plugins" "-DPLUGIN_UI=SETTINGS $EXTRA_CMAKE_DEFS"
 fi
 # 
-cd $TOP
+cd "$BUILDTOP"
 if [ "x$create_app_bundle" = "x1" ] ; then
-    mkdir $PREFIX/fonts
-    cp $TOP/cmake/osx/fonts.conf $PREFIX/fonts
+    mkdir "${PREFIX}/fonts"
+    cp "${SRCTOP}/cmake/osx/fonts.conf" "${PREFIX}/fonts"
     # Copy icons
     echo "Copying icons"
-    cp $TOP/cmake/osx/*.icns $PREFIX/
-    mkdir -p $PREFIX/../MacOS
-    if [ -d $PREFIX/../PlugIns ]; then
-        rm -Rf $PREFIX/../PlugIns
+    cp "${SRCTOP}"/cmake/osx/*.icns "$PREFIX"
+    mkdir -p "${PREFIX}"/../MacOS
+    if [ -d "${PREFIX}"/../PlugIns ]; then
+        rm -Rf "${PREFIX}"/../PlugIns
     fi
-    mkdir -p $PREFIX/../PlugIns
+    mkdir -p "${PREFIX}"/../PlugIns
     # Symlink lib directory
-    if [ -e $PREFIX/../lib ]; then
-        rm $PREFIX/../lib
+    if [ -e "${PREFIX}"/../lib ]; then
+        rm "${PREFIX}"/../lib
     fi
-    ln -s $PREFIX/lib $PREFIX/../
+    ln -s "${PREFIX}/lib" "${PREFIX}"/../
     # Symlink Qt plugins
-    ln -s ${QTDIR}/share/qt/plugins/platforms $PREFIX/../PlugIns/
-    ln -s ${QTDIR}/share/qt/plugins/styles $PREFIX/../PlugIns/
+    ln -s "${QTDIR}/share/qt/plugins/platforms" "${PREFIX}"/../PlugIns/
+    ln -s "${QTDIR}/share/qt/plugins/styles" "${PREFIX}"/../PlugIns/
     # Create qt.conf
-    echo "[Paths]" > $PREFIX/../Resources/qt.conf
-    echo "Plugins = PlugIns" >> $PREFIX/../Resources/qt.conf
+    echo "[Paths]" > "${PREFIX}"/../Resources/qt.conf
+    echo "Plugins = PlugIns" >> "${PREFIX}"/../Resources/qt.conf
     if [ "x$create_dmg" = "x1" ] ; then
         if [ -e installer ]; then
             chmod -R +w installer || fail "making the old installer directory writable"
@@ -388,9 +420,15 @@ if [ "x$create_app_bundle" = "x1" ] ; then
         fi
         mkdir installer || fail "creating new installer directory"
         cd installer
-        cmake -DAVIDEMUX_VERSION="$ADM_VERSION" -DDMG_BASENAME="$output" -DBUILD_REV="$REV" $FLAVOR ../avidemux/osxInstaller || fail "cmake"
+        cmake \
+        -DAVIDEMUX_VERSION="$ADM_VERSION" \
+        -DAVIDEMUX_MAJOR_MINOR="${MAJOR}.${MINOR}" \
+        -DDMG_BASENAME="$dmg_base" \
+        -DBUILD_REV="$REV" \
+        $FLAVOR \
+        "${SRCTOP}/avidemux/osxInstaller" || fail "cmake"
         echo "** Preparing packaging **"
-        make install && make package
+        make package || fail "packaging"
     fi
 fi
 echo "** ALL DONE **"
