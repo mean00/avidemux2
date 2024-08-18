@@ -1,4 +1,5 @@
 #!/bin/bash
+packages_dir="pkgs"
 install_packages=1
 default_install_prefix="/usr"
 install_prefix="$default_install_prefix"
@@ -56,7 +57,7 @@ install_deps()
 install_avidemux()
 {
     echo "Installing avidemux..."
-    cd debs && sudo dpkg -i *
+    cd "$packages_dir" && sudo dpkg -i *
 }
 #
 option_value()
@@ -123,9 +124,10 @@ done
 #
 install_deps
 #
-echo "Compiling avidemux, it will take 20 minutes or so"
+echo "Compiling avidemux, this may take a few minutes..."
 logfile="/tmp/log-bootstrap-$(date +%F_%T).log"
-bash bootStrap.bash --with-system-libass --deb --prefix=$install_prefix $rebuild 2>&1 | tee ${logfile}
+SRCTOP=$(cd $(dirname "$0") && pwd)
+bash "${SRCTOP}"/bootStrap.bash --with-system-libass --deb --prefix=$install_prefix $rebuild 2>&1 | tee ${logfile}
 if [ ${PIPESTATUS[0]} -ne 0 ]; then
     echo "Build failed, please inspect ${logfile} and /tmp/logbuild* files."
     if [ $install_packages -eq 1 ]; then
