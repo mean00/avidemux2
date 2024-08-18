@@ -1,9 +1,24 @@
 #!/bin/bash
+packages_dir="pkgs"
 install_packages=1
 rebuild=""
 sucommand=""
 missing_pkgs=()
+#
+echo "Automatic RPM generator for Avidemux, Fedora 40 version"
+#
 # build dependencies
+RELEASEVER=$(cat /etc/fedora-release | cut -d \  -f 3)
+if ! [[ "$RELEASEVER" =~ ^[3-9][0-9]$ ]]; then
+    echo "Fedora release version not recognized, must be between 30 and 99."
+    exit 1
+else
+    echo "Detected Fedora release version: $RELEASEVER"
+fi
+ZLIBNAME="zlib-ng-compat"
+if [ $(( $RELEASEVER )) -lt 40 ]; then
+    ZLIBNAME="zlib"
+fi
 PKGLIST="gcc \
 gcc-c++ \
 make \
@@ -12,7 +27,7 @@ yasm \
 pkgconf-pkg-config \
 fakeroot \
 bzip2 \
-zlib-devel \
+${ZLIBNAME}-devel \
 patch \
 rpm-build \
 sqlite-devel \
@@ -135,7 +150,7 @@ install_avidemux()
             sudo /usr/bin/dnf remove "avidemux*" || fail ${message}
         fi
     fi
-    cd debs || fail "debs folder not present in the current directory, aborting."
+    cd "$packages_dir" || fail "\"${packages_dir}\" folder not present in the current directory, aborting."
     message="Installation failed."
     if [ "x${sucommand}" = "xsu" ]; then
         su -c "/usr/bin/dnf install avidemux*.rpm" || fail ${message}
@@ -144,7 +159,6 @@ install_avidemux()
     fi
 }
 #
-echo "Automatic RPM generator for Avidemux, Fedora 29 version"
 ID=$(id -u)
 if [ "x${ID}" = "x0" ]; then
     fail "Don't build Avidemux as root, aborting"
@@ -187,12 +201,13 @@ install_deps
 echo "Building..."
 umask 0022
 logfile="/tmp/log-bootstrap-$(date +%F_%T).log"
-bash bootStrap.bash ${rebuild} --with-system-libass --rpm 2>&1 | tee ${logfile}
+SRCTOP=$(cd $(dirname "$0") && pwd)
+bash "${SRCTOP}"/bootStrap.bash ${rebuild} --with-system-libass --rpm 2>&1 | tee ${logfile}
 if [ ${PIPESTATUS[0]} -ne 0 ]; then
     fail "Build failed, please inspect ${logfile} and /tmp/logbuild* files."
 fi
 #
-echo "Build completed, the RPMS are in the debs folder"
+echo "Build completed, the RPMs are in the $packages_dir folder."
 #
 if [ ${install_packages} -eq 1 ]; then
     install_avidemux
