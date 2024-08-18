@@ -96,6 +96,5 @@ done
 #
 /usr/bin/codesign --force -s - ${BUNDLE_CONTENT}/MacOS/Avidemux2.8
 echo "** Bundle format warning, if issued, should be ignored. **"
-echo "** Subsequent warnings from install_name_tool about invalidation of signatures may be ignored either. **"
 echo "** Ad-hoc signing completed. **"
 exit 0
