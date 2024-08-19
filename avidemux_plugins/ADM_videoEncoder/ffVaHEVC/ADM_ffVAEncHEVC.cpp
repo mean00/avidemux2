@@ -249,8 +249,6 @@ bool ADM_ffVAEncHEVC::preEncode(void)
     aprintf("Incoming frame PTS=%" PRIu64", delay=%" PRIu64"\n",p,getEncoderDelay());
     p+=getEncoderDelay();
     hwFrame->pts=timingToLav(p);
-    if(!hwFrame->pts)
-        hwFrame->pts=AV_NOPTS_VALUE;
 
     ADM_timeMapping map; // Store real PTS <->lav value mapping
     map.realTS=p;
