@@ -284,11 +284,6 @@ bool dxvaRender::setup()
         }
      }
 
-      //
-
-      D3DFORMAT yv12=(D3DFORMAT)MAKEFOURCC('Y','V','1','2');
-
-      //
        if( ADM_FAILED(D3DCall(IDirect3DDevice9,CreateOffscreenPlainSurface,
                  d3dDevice, displayWidth,displayHeight,
                  displayMode.Format, D3DPOOL_DEFAULT, &mySurface, NULL)))
@@ -296,13 +291,19 @@ bool dxvaRender::setup()
                   ADM_warning("D3D Cannot create surface\n");
                   return false;
        }
+
+    if(useYV12)
+    {
+       D3DFORMAT yv12=(D3DFORMAT)MAKEFOURCC('Y','V','1','2');
        if( ADM_FAILED(D3DCall(IDirect3DDevice9,CreateOffscreenPlainSurface,
                  d3dDevice, imageWidth,imageHeight,
                  yv12, D3DPOOL_DEFAULT, &myYV12Surface, NULL)))
        {
-                  ADM_warning("D3D Cannot create surface\n");
+                  ADM_warning("D3D Cannot create YV12 surface\n");
                   return false;
        }
+    }
+
       // put some defaults
       D3DCall(IDirect3DDevice9,SetRenderState,d3dDevice, D3DRS_SRCBLEND, D3DBLEND_ONE);
       D3DCall(IDirect3DDevice9,SetRenderState,d3dDevice, D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
