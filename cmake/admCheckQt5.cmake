@@ -94,7 +94,7 @@ MACRO(checkQt5)
                                 SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
                         endif (Qt5_POSITION_INDEPENDENT_CODE)
       	                get_target_property(QMAKE_EXECUTABLE Qt5::qmake LOCATION)
-			exec_program(${QMAKE_EXECUTABLE} ARGS "-query QT_INSTALL_PLUGINS" RETURN_VALUE return_code OUTPUT_VARIABLE QT_PLUGINS_DIR )
+                        execute_process(COMMAND "${QMAKE_EXECUTABLE}" -query QT_INSTALL_PLUGINS RESULT_VARIABLE return_code OUTPUT_VARIABLE QT_PLUGINS_DIR)
                         MESSAGE(STATUS " plugin dir = ${QT_PLUGINS_DIR}")
                         # Do we have qtScript also ?
                         #FIND_PACKAGE(Qt5Script)
