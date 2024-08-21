@@ -9,75 +9,136 @@ check()
     to_check=$1
     which "${to_check}" > /dev/null 2>&1 || fail "\"${to_check}\" not found in PATH. Aborting"
 }
+check_prerequisites()
+{
+    declare -a reqs
+    reqs+=(${x264_script})
+    reqs+=(${libaom_script})
 
-cur=$(pwd)
-where="$(dirname $(realpath $0))"
+    # check prerequisites
+    check patch
+    check sed
+    check sha256sum
+    check git
+    git rev-parse --show-toplevel > /dev/null 2>&1 && fail "Do not run this script from within a git repository. Aborting"
+
+    missing=0
+
+    for i in "${reqs[@]}"; do
+        if [ -z "${SRCDIR}/${i}" ]; then
+            echo "${i} not found in ${SRCDIR}"
+            missing=1
+        fi
+    done
+
+    [ ${missing} -ne 0 ] && fail "Requirements not fulfilled. Aborting"
+}
+prepare_sources()
+{
+    # check for collisions
+    [ -e "${TOP}/mxe" ] && fail "mxe directory or file exists in the current directory, please rename or delete it. Aborting"
+
+    # get the source
+    git clone https://github.com/mxe/mxe.git || fail "Cannot clone MXE repository. Aborting"
+
+    [ -d "${MXE_ROOT_DIR}/pkg" ] || mkdir "${MXE_ROOT_DIR}/pkg" || fail "Cannot create folder for packages"
+
+    # get x264 source
+    ("${SRCDIR}/${x264_script}") || fail "Failed at x264 source"
+    # patch MXE
+    patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < x264_gen.patch \
+    && patch -d "${MXE_ROOT_DIR}" -p1 < x264_gen.patch \
+    && cp -uv x264-*.tar.bz2 "${MXE_ROOT_DIR}/pkg/" || fail "Failed at x264 patch"
+
+    # Patch MXE to download and build more recent versions of some other codecs:
+    # fdk-aac 2.0.0 --> 2.0.3
+    patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < "${SRCDIR}/fdk-aac.patch" \
+    && patch -d "${MXE_ROOT_DIR}" -p1 < "${SRCDIR}/fdk-aac.patch" || fail "Failed at fdk-aac patch"
+
+    # libvpx 1.8.2 --> 1.13.1
+    patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < "${SRCDIR}/libvpx.patch" \
+    && patch -d "${MXE_ROOT_DIR}" -p1 < "${SRCDIR}/libvpx.patch" || fail "Failed at libvpx patch"
+
+    # opus 1.3.1 --> 1.5.2
+    patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < "${SRCDIR}/opus.patch" \
+    && patch -d "${MXE_ROOT_DIR}" -p1 < "${SRCDIR}/opus.patch" || fail "Failed at opus patch"
+
+    # x265 3.4 --> 3.6
+    patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < "${SRCDIR}/x265.patch" \
+    && patch -d "${MXE_ROOT_DIR}" -p1 < "${SRCDIR}/x265.patch" || fail "Failed at x265 patch"
+}
+build_mxe()
+{
+    #echo "MXE_TARGETS :=  i686-w64-mingw32.shared x86_64-w64-mingw32.shared" > "${MXE_ROOT_DIR}/settings.mk"
+    echo "MXE_TARGETS :=  x86_64-w64-mingw32.shared" > "${MXE_ROOT_DIR}/settings.mk"
+
+    # now build MXE
+    pushd "${MXE_ROOT_DIR}" > /dev/null && MXE_SILENT_NO_NETWORK= \
+    make \
+    MXE_PLUGIN_DIRS="${MXE_ROOT_DIR}/plugins/gcc14" \
+    $PACKAGES \
+    $EXTRA_MXE_PACKAGES || fail "Failed at make"
+    popd > /dev/null
+}
+install_libaom()
+{
+    # get and install libaom
+    (AOM_TAG="v3.9.1" "${SRCDIR}/${libaom_script}" "${MXE_ROOT_DIR}") || fail "Failed at libaom"
+}
+install_nvidia_headers()
+{
+    # install nv-codec-headers for x86_64 only
+    if [ ! -d "${MXE_ROOT_DIR}/usr/x86_64-w64-mingw32.shared" ]; then
+        echo "Install prefix directory for 64-bit target doesn't exist, skipping."
+    else
+        if [ -d "${TOP}/nv-codec-headers" ]; then
+            rm -rf "${TOP}/nv-codec-headers" || fail "Cannot remove existing nv-codec-headers source"
+        fi
+
+        git clone https://github.com/FFmpeg/nv-codec-headers.git || fail "Cannot clone nv-codec-headers repository"
+
+        pushd nv-codec-headers > /dev/null \
+        && git checkout sdk/11.1 \
+        && sed -i '/PREFIX\ =\ \/usr\/local/d' Makefile \
+        && PREFIX="${MXE_ROOT_DIR}/usr/x86_64-w64-mingw32.shared" make install || fail "Cannot install nv-codec-headers"
+        popd > /dev/null
+    fi
+}
+show_usage()
+{
+    echo "Usage: $(basename $0) [options]"
+    echo
+    echo "When executed without options, clone MXE git repository into current"
+    echo "directory, get latest x264 code from the stable branch, patch MXE source,"
+    echo "build MXE and packages, clone libaom source, build and install it in MXE"
+    echo "target, clone nv-codec-headers and install it in MXE."
+    echo
+    echo "Options:"
+    echo
+    echo " --build          Just run make, skip cloning and patching the source."
+    echo "                  This option disables automatic installation of libaom"
+    echo "                  and nv-codec-headers, add --libaom and --nvidia-headers"
+    echo "                  correspondingly to enable."
+    echo
+    echo " --help           Print usage and exit"
+    echo
+    echo " --libaom         Clone the source, build and install libaom"
+    echo
+    echo " --nv-headers     Clone the source and install nv-codec-headers"
+    echo
+    echo " --prepare        Clone MXE repository, get x264 source, patch MXE but"
+    echo "                  do not perform build. --prepare takes precedence over"
+    echo "                  all other options except of --help."
+}
+
+TOP=$(pwd)
+SRCDIR="$(dirname $(realpath $0))"
+MXE_ROOT_DIR="${TOP}/mxe"
+
 x264_script="x264-snapshot.sh"
 libaom_script="install-libaom.bash"
-declare -a reqs
-reqs+=(${x264_script})
-reqs+=(${libaom_script})
 
-# check prerequisites
-check patch
-check sed
-check sha256sum
-check git
-git rev-parse --show-toplevel > /dev/null 2>&1 && fail "Do not run this script from within a git repository. Aborting"
-
-missing=0
-
-for i in "${reqs[@]}"; do
-    if [ -z "${where}/${i}" ]; then
-        echo "${i} not found in ${where}"
-        missing=1
-    fi
-done
-
-[ ${missing} -ne 0 ] && fail "Requirements not fulfilled. Aborting"
-
-# check for collisions
-[ -e "${cur}/mxe" ] && fail "mxe directory or file exists in the current directory, please rename or delete it. Aborting"
-
-# get the source
-git clone https://github.com/mxe/mxe.git || fail "Cannot clone MXE repository. Aborting"
-
-MXE_ROOT_DIR="${cur}/mxe"
-
-[ -d "${MXE_ROOT_DIR}/pkg" ] || mkdir "${MXE_ROOT_DIR}/pkg" || fail "Cannot create folder for packages"
-
-# get x264 source
-("${where}/${x264_script}") || fail "Failed at x264 source"
-# patch MXE
-patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < x264_gen.patch \
-&& patch -d "${MXE_ROOT_DIR}" -p1 < x264_gen.patch \
-&& cp -uv x264-*.tar.bz2 "${MXE_ROOT_DIR}/pkg/" || fail "Failed at x264 patch"
-
-# Patch MXE to download and build more recent versions of some other codecs:
-# fdk-aac 2.0.0 --> 2.0.3
-patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < "${where}/fdk-aac.patch" \
-&& patch -d "${MXE_ROOT_DIR}" -p1 < "${where}/fdk-aac.patch" || fail "Failed at fdk-aac patch"
-
-# libvpx 1.8.2 --> 1.13.1
-patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < "${where}/libvpx.patch" \
-&& patch -d "${MXE_ROOT_DIR}" -p1 < "${where}/libvpx.patch" || fail "Failed at libvpx patch"
-
-# opus 1.3.1 --> 1.5.2
-patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < "${where}/opus.patch" \
-&& patch -d "${MXE_ROOT_DIR}" -p1 < "${where}/opus.patch" || fail "Failed at opus patch"
-
-# x265 3.4 --> 3.6
-patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < "${where}/x265.patch" \
-&& patch -d "${MXE_ROOT_DIR}" -p1 < "${where}/x265.patch" || fail "Failed at x265 patch"
-
-#echo "MXE_TARGETS :=  i686-w64-mingw32.shared x86_64-w64-mingw32.shared" > "${MXE_ROOT_DIR}/settings.mk"
-echo "MXE_TARGETS :=  x86_64-w64-mingw32.shared" > "${MXE_ROOT_DIR}/settings.mk"
-
-# now build MXE
-cd "${MXE_ROOT_DIR}" && MXE_SILENT_NO_NETWORK= \
-make \
-MXE_PLUGIN_DIRS="${MXE_ROOT_DIR}/plugins/gcc14" \
-faad2 \
+PACKAGES="faad2 \
 fdk-aac \
 fribidi \
 lame \
@@ -91,29 +152,57 @@ sdl2 \
 vorbis \
 x264 \
 x265 \
-xvidcore || fail "Failed at make"
+xvidcore"
 
-cd "${cur}"
+# default options
+do_prepare_only=0
+do_build_only=0
+do_libaom_only=0
+do_nv_codec_only=0
 
-# get and install libaom
-(AOM_TAG="v3.9.1" "${where}/${libaom_script}" "${MXE_ROOT_DIR}") || fail "Failed at libaom"
+while [ $# != 0 ]; do
+    opt="$1"
+    case "$opt" in
+        -h|--help)
+            show_usage
+            exit 0
+        ;;
+        -p|--prepare)
+            do_prepare_only=1
+        ;;
+        -b|--build)
+            do_build_only=1
+        ;;
+        -l|--libaom)
+            do_libaom_only=1
+        ;;
+        -n|--nv-headers)
+            do_nv_codec_only=1
+        ;;
+        *)
+            echo "Unknown option $opt"
+            show_usage
+            exit 1
+        ;;
+    esac
+    shift
+done
 
-if [ -z "${MXE_ROOT_DIR}/usr/x86_64-w64-mingw32.shared" ]; then
-    echo "All done" && exit 0
+check_prerequisites
+if [ "$do_build_only" -eq 0 -a "$do_libaom_only" -eq 0 -a "$do_nv_codec_only" -eq 0 ] || [ "$do_prepare_only" -eq 1 ]; then
+    prepare_sources
+fi
+if [ "$do_prepare_only" -eq 0 ]; then
+    if [ "$do_build_only" -eq 1 ] || [ "$do_libaom_only" -eq 0 -a "$do_nv_codec_only" -eq 0 ]; then
+        build_mxe
+    fi
+    if [ "$do_libaom_only" -eq 1 ] || [ "$do_build_only" -eq 0 -a "$do_nv_codec_only" -eq 0 ]; then
+        install_libaom
+    fi
+    if [ "$do_nv_codec_only" -eq 1 ] || [ "$do_build_only" -eq 0 -a "$do_libaom_only" -eq 0 ]; then
+        install_nvidia_headers
+    fi
 fi
 
-# install nv-codec-headers for x86_64 only
-if [ -d "${cur}/nv-codec-headers" ]; then
-    rm -rf "${cur}/nv-codec-headers" || fail "Cannot remove existing nv-codec-headers source"
-fi
-
-git clone https://github.com/FFmpeg/nv-codec-headers.git || fail "Cannot clone nv-codec-headers repository"
-cd nv-codec-headers \
-&& git checkout sdk/11.1 \
-&& sed -i '/PREFIX\ =\ \/usr\/local/d' Makefile \
-&& PREFIX="${MXE_ROOT_DIR}/usr/x86_64-w64-mingw32.shared" make install || fail "Cannot install nv-codec-headers"
-
-# the end
-cd "${cur}"
 echo "All done"
 exit 0
