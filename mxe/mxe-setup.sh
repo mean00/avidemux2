@@ -33,6 +33,24 @@ check_prerequisites()
 
     [ ${missing} -ne 0 ] && fail "Requirements not fulfilled. Aborting"
 }
+apply_patch_from_location()
+{
+    local pbase=$1
+    local ploc=$2
+    if [ -n "$ploc" ]; then
+        ploc="${ploc}/"
+    fi
+    patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < "${ploc}${pbase}.patch" \
+    && patch -d "${MXE_ROOT_DIR}" -p1 < "${ploc}${pbase}.patch" || fail "Failed at $pbase patch"
+}
+apply_patch_current()
+{
+    apply_patch_from_location $1 "$PWD"
+}
+apply_patch()
+{
+    apply_patch_from_location $1 "$SRCDIR"
+}
 prepare_sources()
 {
     # check for collisions
@@ -44,28 +62,28 @@ prepare_sources()
     [ -d "${MXE_ROOT_DIR}/pkg" ] || mkdir "${MXE_ROOT_DIR}/pkg" || fail "Cannot create folder for packages"
 
     # get x264 source
-    ("${SRCDIR}/${x264_script}") || fail "Failed at x264 source"
+    ("${SRCDIR}/${x264_script}") \
+    && cp -uv x264-*.tar.bz2 "${MXE_ROOT_DIR}/pkg/" || fail "Failed at x264 source"
     # patch MXE
-    patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < x264_gen.patch \
-    && patch -d "${MXE_ROOT_DIR}" -p1 < x264_gen.patch \
-    && cp -uv x264-*.tar.bz2 "${MXE_ROOT_DIR}/pkg/" || fail "Failed at x264 patch"
+    apply_patch_current x264_gen
 
     # Patch MXE to download and build more recent versions of some other codecs:
     # fdk-aac 2.0.0 --> 2.0.3
-    patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < "${SRCDIR}/fdk-aac.patch" \
-    && patch -d "${MXE_ROOT_DIR}" -p1 < "${SRCDIR}/fdk-aac.patch" || fail "Failed at fdk-aac patch"
+    apply_patch fdk-aac
 
     # libvpx 1.8.2 --> 1.13.1
-    patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < "${SRCDIR}/libvpx.patch" \
-    && patch -d "${MXE_ROOT_DIR}" -p1 < "${SRCDIR}/libvpx.patch" || fail "Failed at libvpx patch"
+    apply_patch libvpx
 
     # opus 1.3.1 --> 1.5.2
-    patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < "${SRCDIR}/opus.patch" \
-    && patch -d "${MXE_ROOT_DIR}" -p1 < "${SRCDIR}/opus.patch" || fail "Failed at opus patch"
+    apply_patch opus
 
     # x265 3.4 --> 3.6
-    patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < "${SRCDIR}/x265.patch" \
-    && patch -d "${MXE_ROOT_DIR}" -p1 < "${SRCDIR}/x265.patch" || fail "Failed at x265 patch"
+    apply_patch x265
+
+    # download.qt.io redirects to the closest mirror, and at least one of the mirrors
+    # hosts corrupted files, causing download to hang (which may be a MXE bug).
+    # Hardcode a known good mirror.
+    apply_patch qtbase-download-url
 }
 build_mxe()
 {
