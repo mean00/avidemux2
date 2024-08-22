@@ -123,6 +123,9 @@ public:
 #define VDEO _tracks[0]
 #define ADIO _tracks[nbAudioTrack]._rdWav
 #define AUDIO_BYTERATE_UNSET 0xFFFFFFFF
+
+#define ADM_MP4_INDEX_VERSION       (1)     // to validate the index file
+#define ADM_MP4_INDEX_MAGIC         ("MP4iNDEX")
 /**
  * 
  */
@@ -219,6 +222,7 @@ protected:
           uint8_t                       parseStsd(adm_atom *tom, MPsampleinfo *info, uint32_t trackType, uint32_t trackScale);
           uint8_t                       decodeEsds(adm_atom *tom, uint32_t trackType);
           uint8_t                       updateCtts(MPsampleinfo *info );
+          std::string                   _idxName;
 #ifdef DERIVE_TB_FROM_MINIMUM_DELTA
           bool                          refineFps(void);
 #endif
@@ -258,6 +262,9 @@ protected:
         bool                          checkDuplicatedPts(void);
          /*********************************/
 	uint32_t                         readPackedLen(adm_atom *tom );
+        
+        bool                            loadIndex(const std::string &idxName, uint64_t fileSize);
+        void                            saveIndex(const std::string &idxName, uint64_t fileSize, bool overwrite);
 	
 public:
 virtual   void                          Dump(void) {};

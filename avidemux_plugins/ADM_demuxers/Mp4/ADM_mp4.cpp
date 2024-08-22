@@ -379,6 +379,21 @@ uint8_t    MP4Header::open(const char *name)
                 printf("\n cannot open %s \n",name);
                 return 0;
         }
+        
+        _idxName = name;
+        _idxName += ".idxb";
+        bool indexOnDisk = true;
+        bool indexAllowOverwrite = false;
+
+        if (NULL != getenv("ADM_NOINDEX_MP4") && !strncmp(getenv("ADM_NOINDEX_MP4"), "1", 1))
+            indexOnDisk = false;
+
+        if (indexOnDisk)
+        {
+            if (NULL != getenv("ADM_MP4_INDEX_ALLOW_OVERWRITE") && !strncmp(getenv("ADM_MP4_INDEX_ALLOW_OVERWRITE"), "1", 1))
+                indexAllowOverwrite = true;
+        }
+        
 #define CLR(x)              memset(& x,0,sizeof(  x));
 
         CLR( _videostream);
@@ -508,178 +523,220 @@ uint8_t    MP4Header::open(const char *name)
             ADM_SPSInfo info;
             if(extractSPSInfo_mp4Header(VDEO.extraData,VDEO.extraDataSize,&info))
             {
-                uint32_t nalSize = ADM_getNalSizeH264(VDEO.extraData,VDEO.extraDataSize);
-                uint32_t prevSpsLen=0;
-                uint8_t *prevSps=NULL, *curSps=NULL;
-#define MAX_SPS_SIZE 1024
-#define MAX_FRAME_LENGTH (1920*1080*3) // ~7 MiB, should be enough even for 4K
-                uint8_t *bfer=new uint8_t[MAX_FRAME_LENGTH];
-                ADMCompressedImage img;
-                img.data=bfer;
-                uint32_t i,fields=0,nb=VDEO.nbIndex;
-                uint64_t processed=0;
-                bool secondField = false;
-                DIA_processingBase *work=createProcessing(QT_TRANSLATE_NOOP("mp4demuxer","Decoding frame type"),nb);
-                for(i=0;i<nb;i++)
+                bool indexLoadedFromDisk = false;
+                if (indexOnDisk)
                 {
-                    if(work && work->update(1,processed++))
-                        break; // cancelling frame type decoding is non-fatal
-                    if(!getFrame(i,&img))
+                    if (loadIndex(_idxName, fileSize))
                     {
-                        ADM_warning("Could not get frame %u while decoding H.264 frame type.\n",i);
-                        continue;
-                    }
-                    if(img.flags & AVI_KEY_FRAME)
-                    {
-                        // Check for presence of SPS in the stream. If it changes on-the-fly, we are in trouble.
-                        if(!curSps)
-                            curSps=new uint8_t[MAX_SPS_SIZE];
-                        memset(curSps,0,MAX_SPS_SIZE);
-                        uint32_t curSpsLen = getRawH264SPS(img.data, img.dataLength, nalSize, curSps, MAX_SPS_SIZE);
-                        bool match=true;
-                        if(curSpsLen)
-                        {
-                            if(prevSps)
-                            {
-                                if(prevSpsLen)
-                                    match=!memcmp(prevSps,curSps,(prevSpsLen>curSpsLen)? curSpsLen : prevSpsLen);
-                            }else
-                            {
-                                prevSps=new uint8_t[MAX_SPS_SIZE];
-                            }
-                            if(!match)
-                            {
-                                ADM_warning("Codec parameters change at frame %u.\n",i);
-                                printf("\nOld SPS:\n");
-                                mixDump(prevSps,prevSpsLen);
-                                printf("\nNew SPS:\n");
-                                mixDump(curSps,curSpsLen);
-                            }
-                            prevSpsLen=curSpsLen;
-                            memset(prevSps,0,MAX_SPS_SIZE);
-                            memcpy(prevSps,curSps,prevSpsLen);
-                        }
-                        if(!match && curSps)
-                        {
-                            ADM_info("SPS mismatch? Checking deeper...\n");
-                            ADM_SPSInfo info2;
-                            if(extractSPSInfoFromData(curSps,curSpsLen,&info2))
-                            { // check only fields we actually use
-#define MATCH(x) if(info.x != info2.x) { ADM_warning("%s value does not match.\n",#x); info.x = info2.x; match=false; }
-                                match=true;
-                                // FIXME: dimensions mismatch should be fatal
-                                MATCH(CpbDpbToSkip)
-                                MATCH(hasPocInfo)
-                                MATCH(log2MaxFrameNum)
-                                MATCH(log2MaxPocLsb)
-                                MATCH(frameMbsOnlyFlag)
-                                MATCH(refFrames)
-                                if(!match)
-                                    ADM_warning("Codec parameters change on the fly, expect problems.\n");
-                            }
-                        }
-                    }
-                    uint32_t flags;
-                    if(extractH264FrameType(img.data,img.dataLength,nalSize,&flags,NULL,&info))
-                    {
-                        if(flags & AVI_FIELD_STRUCTURE)
-                        {
-                            if(flags & AVI_KEY_FRAME)
-                            {
-                                if(secondField)
-                                {
-                                    printf("Removing keyframe flag from second field at frame %u\n",i);
-                                    flags &= ~AVI_KEY_FRAME;
-                                }
-                                secondField = !secondField;
-                            }else
-                                secondField = false;
-                            if(!fields)
-                                printf("First field at frame %u\n",i);
-                            fields++;
-                        }else if(fields==1)
-                        { // discard a single field immediately followed by a frame, probably damaged stream
-                            printf("Resetting fields counter at frame %u\n",i);
-                            fields=0;
-                        }
-                        setFlag(i,flags);
+                        printf("[MP4] Video track indexing loaded from \"%s\"\n", _idxName.c_str());
+                        indexLoadedFromDisk = true;
                     }
                 }
-                if(work) delete work;
-                work=NULL;
-                delete [] bfer;
-                bfer=NULL;
-                if(curSps) delete [] curSps;
-                curSps=NULL;
-                if(prevSps) delete [] prevSps;
-                prevSps=NULL;
-                if(fields)
-                    ADM_info("Field encoded H.264 stream detected, # fields: %u\n",fields);
-                else
-                    ADM_info("Probably a frame encoded H.264 stream.\n");
+                
+                if (!indexLoadedFromDisk)
+                {
+                    uint32_t nalSize = ADM_getNalSizeH264(VDEO.extraData,VDEO.extraDataSize);
+                    uint32_t prevSpsLen=0;
+                    uint8_t *prevSps=NULL, *curSps=NULL;
+#define MAX_SPS_SIZE 1024
+#define MAX_FRAME_LENGTH (1920*1080*3) // ~7 MiB, should be enough even for 4K
+                    uint8_t *bfer=new uint8_t[MAX_FRAME_LENGTH];
+                    ADMCompressedImage img;
+                    img.data=bfer;
+                    uint32_t i,fields=0,nb=VDEO.nbIndex;
+                    uint64_t processed=0;
+                    bool secondField = false;
+                    bool cancelled = false;
+                    DIA_processingBase *work=createProcessing(QT_TRANSLATE_NOOP("mp4demuxer","Decoding frame type"),nb);
+                    for(i=0;i<nb;i++)
+                    {
+                        if(work && work->update(1,processed++))
+                        {
+                            cancelled = true;
+                            break; // cancelling frame type decoding is non-fatal
+                        }
+                        if(!getFrame(i,&img))
+                        {
+                            ADM_warning("Could not get frame %u while decoding H.264 frame type.\n",i);
+                            continue;
+                        }
+                        if(img.flags & AVI_KEY_FRAME)
+                        {
+                            // Check for presence of SPS in the stream. If it changes on-the-fly, we are in trouble.
+                            if(!curSps)
+                                curSps=new uint8_t[MAX_SPS_SIZE];
+                            memset(curSps,0,MAX_SPS_SIZE);
+                            uint32_t curSpsLen = getRawH264SPS(img.data, img.dataLength, nalSize, curSps, MAX_SPS_SIZE);
+                            bool match=true;
+                            if(curSpsLen)
+                            {
+                                if(prevSps)
+                                {
+                                    if(prevSpsLen)
+                                        match=!memcmp(prevSps,curSps,(prevSpsLen>curSpsLen)? curSpsLen : prevSpsLen);
+                                }else
+                                {
+                                    prevSps=new uint8_t[MAX_SPS_SIZE];
+                                }
+                                if(!match)
+                                {
+                                    ADM_warning("Codec parameters change at frame %u.\n",i);
+                                    printf("\nOld SPS:\n");
+                                    mixDump(prevSps,prevSpsLen);
+                                    printf("\nNew SPS:\n");
+                                    mixDump(curSps,curSpsLen);
+                                }
+                                prevSpsLen=curSpsLen;
+                                memset(prevSps,0,MAX_SPS_SIZE);
+                                memcpy(prevSps,curSps,prevSpsLen);
+                            }
+                            if(!match && curSps)
+                            {
+                                ADM_info("SPS mismatch? Checking deeper...\n");
+                                ADM_SPSInfo info2;
+                                if(extractSPSInfoFromData(curSps,curSpsLen,&info2))
+                                { // check only fields we actually use
+#define MATCH(x) if(info.x != info2.x) { ADM_warning("%s value does not match.\n",#x); info.x = info2.x; match=false; }
+                                    match=true;
+                                    // FIXME: dimensions mismatch should be fatal
+                                    MATCH(CpbDpbToSkip)
+                                    MATCH(hasPocInfo)
+                                    MATCH(log2MaxFrameNum)
+                                    MATCH(log2MaxPocLsb)
+                                    MATCH(frameMbsOnlyFlag)
+                                    MATCH(refFrames)
+                                    if(!match)
+                                        ADM_warning("Codec parameters change on the fly, expect problems.\n");
+                                }
+                            }
+                        }
+                        uint32_t flags;
+                        if(extractH264FrameType(img.data,img.dataLength,nalSize,&flags,NULL,&info))
+                        {
+                            if(flags & AVI_FIELD_STRUCTURE)
+                            {
+                                if(flags & AVI_KEY_FRAME)
+                                {
+                                    if(secondField)
+                                    {
+                                        printf("Removing keyframe flag from second field at frame %u\n",i);
+                                        flags &= ~AVI_KEY_FRAME;
+                                    }
+                                    secondField = !secondField;
+                                }else
+                                    secondField = false;
+                                if(!fields)
+                                    printf("First field at frame %u\n",i);
+                                fields++;
+                            }else if(fields==1)
+                            { // discard a single field immediately followed by a frame, probably damaged stream
+                                printf("Resetting fields counter at frame %u\n",i);
+                                fields=0;
+                            }
+                            setFlag(i,flags);
+                        }
+                    }
+                    if(work) delete work;
+                    work=NULL;
+                    delete [] bfer;
+                    bfer=NULL;
+                    if(curSps) delete [] curSps;
+                    curSps=NULL;
+                    if(prevSps) delete [] prevSps;
+                    prevSps=NULL;
+                    if(fields)
+                        ADM_info("Field encoded H.264 stream detected, # fields: %u\n",fields);
+                    else
+                        ADM_info("Probably a frame encoded H.264 stream.\n");
+                    if (indexOnDisk && !cancelled)
+                    {
+                        saveIndex(_idxName, fileSize, indexAllowOverwrite);
+                    }
+                }
             }
         }else if(isH265Compatible(_videostream.fccHandler) && VDEO.extraDataSize)
         { // Get frame type from HEVC slice headers
             ADM_SPSinfoH265 info;
             if(extractSPSInfoH265(VDEO.extraData,VDEO.extraDataSize,&info))
             {
-                uint32_t nalSize = ADM_getNalSizeH265(VDEO.extraData,VDEO.extraDataSize);
-                uint8_t *bfer = new uint8_t[MAX_FRAME_LENGTH];
-                ADMCompressedImage img;
-                img.data = bfer;
-                int poc = INT_MIN;
-                uint32_t i, nb = VDEO.nbIndex, mismatched = 0;
-                uint64_t processed = 0;
-                DIA_processingBase *work = createProcessing(QT_TRANSLATE_NOOP("mp4demuxer","Decoding frame type"),nb);
-                for(i=0;i<nb;i++)
+                bool indexLoadedFromDisk = false;
+                if (indexOnDisk)
                 {
-                    if(work && work->update(1,processed++))
-                        break; // cancelling frame type decoding is non-fatal
-                    if(!getFrame(i,&img))
+                    if (loadIndex(_idxName, fileSize))
                     {
-                        ADM_warning("Could not get frame %u while decoding HEVC frame type.\n",i);
-                        continue;
-                    }
-                    // TODO: Check for VPS/PPS/SPS changing on-the-fly. We are in trouble if this happens.
-                    uint32_t flags;
-                    if(extractH265FrameType(img.data,img.dataLength,nalSize,&info,&flags,&poc))
-                    {
-                        // Report disagreement with stss.
-                        uint32_t originalFlags = 0;
-                        if(getFlags(i,&originalFlags))
-                        {
-#define MAX_KEYFRAME_MISMATCH_WARNINGS 50
-                            if((flags & AVI_KEY_FRAME) && !(originalFlags & AVI_KEY_FRAME))
-                            {
-                                if(mismatched == MAX_KEYFRAME_MISMATCH_WARNINGS)
-                                    ADM_warning("Max. number of warnings (%u) reached, suppressing further messages.\n",mismatched++);
-                                else if(mismatched < MAX_KEYFRAME_MISMATCH_WARNINGS)
-                                {
-                                    ADM_warning("Frame %d not marked as keyframe in stss, fixing.\n",i);
-                                    mismatched++;
-                                }
-                            }
-                            if((originalFlags & AVI_KEY_FRAME) && !(flags & AVI_KEY_FRAME))
-                            {
-                                if(mismatched == MAX_KEYFRAME_MISMATCH_WARNINGS)
-                                    ADM_warning("Max. number of warnings (%u) reached, suppressing further messages.\n",mismatched++);
-                                else if(mismatched < MAX_KEYFRAME_MISMATCH_WARNINGS)
-                                {
-                                    ADM_warning("Frame %d wrongly marked as keyframe in stss, removing flag.\n",i);
-                                    mismatched++;
-                                }
-                            }
-                        }
-                        setFlag(i,flags);
-                    }else
-                    {
-                        poc = INT_MIN;
+                        printf("[MP4] Video track indexing loaded from \"%s\"\n", _idxName.c_str());
+                        indexLoadedFromDisk = true;
                     }
                 }
-                if(work) delete work;
-                work=NULL;
-                delete [] bfer;
-                bfer=NULL;
+                
+                if (!indexLoadedFromDisk)
+                {
+                    uint32_t nalSize = ADM_getNalSizeH265(VDEO.extraData,VDEO.extraDataSize);
+                    uint8_t *bfer = new uint8_t[MAX_FRAME_LENGTH];
+                    ADMCompressedImage img;
+                    img.data = bfer;
+                    int poc = INT_MIN;
+                    uint32_t i, nb = VDEO.nbIndex, mismatched = 0;
+                    uint64_t processed = 0;
+                    bool cancelled = false;
+                    DIA_processingBase *work = createProcessing(QT_TRANSLATE_NOOP("mp4demuxer","Decoding frame type"),nb);
+                    for(i=0;i<nb;i++)
+                    {
+                        if(work && work->update(1,processed++))
+                        {
+                            cancelled = true;
+                            break; // cancelling frame type decoding is non-fatal
+                        }
+                        if(!getFrame(i,&img))
+                        {
+                            ADM_warning("Could not get frame %u while decoding HEVC frame type.\n",i);
+                            continue;
+                        }
+                        // TODO: Check for VPS/PPS/SPS changing on-the-fly. We are in trouble if this happens.
+                        uint32_t flags;
+                        if(extractH265FrameType(img.data,img.dataLength,nalSize,&info,&flags,&poc))
+                        {
+                            // Report disagreement with stss.
+                            uint32_t originalFlags = 0;
+                            if(getFlags(i,&originalFlags))
+                            {
+#define MAX_KEYFRAME_MISMATCH_WARNINGS 50
+                                if((flags & AVI_KEY_FRAME) && !(originalFlags & AVI_KEY_FRAME))
+                                {
+                                    if(mismatched == MAX_KEYFRAME_MISMATCH_WARNINGS)
+                                        ADM_warning("Max. number of warnings (%u) reached, suppressing further messages.\n",mismatched++);
+                                    else if(mismatched < MAX_KEYFRAME_MISMATCH_WARNINGS)
+                                    {
+                                        ADM_warning("Frame %d not marked as keyframe in stss, fixing.\n",i);
+                                        mismatched++;
+                                    }
+                                }
+                                if((originalFlags & AVI_KEY_FRAME) && !(flags & AVI_KEY_FRAME))
+                                {
+                                    if(mismatched == MAX_KEYFRAME_MISMATCH_WARNINGS)
+                                        ADM_warning("Max. number of warnings (%u) reached, suppressing further messages.\n",mismatched++);
+                                    else if(mismatched < MAX_KEYFRAME_MISMATCH_WARNINGS)
+                                    {
+                                        ADM_warning("Frame %d wrongly marked as keyframe in stss, removing flag.\n",i);
+                                        mismatched++;
+                                    }
+                                }
+                            }
+                            setFlag(i,flags);
+                        }else
+                        {
+                            poc = INT_MIN;
+                        }
+                    }
+                    if(work) delete work;
+                    work=NULL;
+                    delete [] bfer;
+                    bfer=NULL;
+                    if (indexOnDisk && !cancelled)
+                    {
+                        saveIndex(_idxName, fileSize, indexAllowOverwrite);
+                    }
+                }
             }
         }
         /*
