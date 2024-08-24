@@ -65,8 +65,8 @@ check_nvenc()
     cd /tmp/nvenc || return 1
     git clone https://github.com/FFmpeg/nv-codec-headers.git || return 1
     cd nv-codec-headers || return 1
-    # We need at least 12.0
-    git checkout sdk/12.0 || return 1
+    # We need at least 11.1
+    git checkout sdk/11.1 || return 1
     make || return 1
     sudo make install || return 1
 }
@@ -76,7 +76,9 @@ check_aom()
     if (pkg-config --exists aom); then
         echo "aom is present, checking version..."
         AOM_VERSION=$(pkg-config --modversion aom)
-        if [ $(echo "${AOM_VERSION}" | cut -d \. -f 1 - ) -ge "3" ]; then
+        AOM_VERSION_MAJOR=$(echo "${AOM_VERSION}" | cut -d \. -f 1 - )
+        AOM_VERSION_MINOR=$(echo "${AOM_VERSION}" | cut -d \. -f 2 - )
+        if [ "$AOM_VERSION_MAJOR" -gt "3" ] || { [ "$AOM_VERSION_MAJOR" -eq "3" ] && [ $AOM_VERSION_MINOR -ge "6" ]; }; then
             echo "aom version ${AOM_VERSION} is sufficient."
             return 0
         elif [ "x${nodeps}" = "x1" ]; then
@@ -88,8 +90,7 @@ check_aom()
         return 1
     fi
     echo "Minimum required version of aom is missing, will try to install."
-    CUR=$(pwd)
-    if ! [ -d "${CUR}/aom" ]
+    if ! [ -d "aom" ]
     then
         echo "Will clone aom source to current directory"
         git clone https://aomedia.googlesource.com/aom || return 1
@@ -97,14 +98,14 @@ check_aom()
         echo "Trying to re-use existing aom source directory"
         git fetch || fail "Cannot fetch changes"
     fi
-    cd "${CUR}/aom" && git checkout tags/v3.9.1 || return 1
-    cd ..
+    pushd "aom" > /dev/null && git checkout tags/v3.9.1 || return 1
+    popd > /dev/null
     if [ -d "build-aom" ]
     then
         rm -rf "build-aom" || return 1
     fi
     mkdir "build-aom" || return 1
-    cd build-aom || return 1
+    pushd "build-aom" > /dev/null || return 1
     cmake ../aom/ \
     -DENABLE_DOCS=0 \
     -DENABLE_EXAMPLES=0 \
@@ -115,6 +116,7 @@ check_aom()
     -DCMAKE_INSTALL_PREFIX="/usr/local" || return 1
     make -j $(nproc) || return 1
     sudo make install || return 1
+    popd > /dev/null
     return 0
 }
 #
@@ -166,7 +168,7 @@ setup()
         fail "Cannot install NVENC headers."
     fi
     if (check_aom); then
-        echo "libaom >= 3.0.0 found"
+        echo "libaom >= 3.6.0 found"
     elif [ "x${nofail}" = "x1" ]; then
         echo "Cannot install required version of libaom, trying to continue nevertheless."
     else
@@ -214,18 +216,17 @@ if [ "x${nobuild}" = "x1" ]; then
     exit $?
 fi
 
-ORG=$PWD
 RUNTIME="runtime-x86_64"
 RT_DIR="externalBinaries/AppImageKit"
 SHA256SUM="24da8e0e149b7211cbfb00a545189a1101cb18d1f27d4cfc1895837d2c30bc30" # size: 188392 bytes
 TO_CHECK=""
 DO_DOWNLOAD=0
-echo "Current directory: ${ORG}"
-if [ ! -e "${ORG}/${RT_DIR}" ]; then
+echo "Current directory: \"${PWD}\""
+if [ ! -e "${RT_DIR}" ]; then
     mkdir -p "${RT_DIR}" || exit 1
 fi
-cd "${RT_DIR}" || exit 1
-if [ -f "${ORG}/${RT_DIR}/${RUNTIME}" ]; then
+pushd "${RT_DIR}" > /dev/null || exit 1
+if [ -f "${RUNTIME}" ]; then
     TO_CHECK=$(sha256sum "${RUNTIME}" | cut -d ' ' -f 1)
     if [ "${SHA256SUM}" != "${TO_CHECK}" ]; then
         echo "Checksum doesn't match, will try to re-download."
@@ -243,7 +244,7 @@ if [ "x${DO_DOWNLOAD}" = "x1" ]; then
     wget -O "${RUNTIME}" "${URL}" || exit 1
     TO_CHECK=$(sha256sum "${RUNTIME}" | cut -d ' ' -f 1)
 fi
-cd "${ORG}"
+popd > /dev/null
 if [ "${SHA256SUM}" != "${TO_CHECK}" ]; then
     echo "Checksum doesn't match, aborting."
     exit 1
@@ -251,11 +252,11 @@ fi
 
 rm -rf install > /dev/null 2>&1
 
-export CXXFLAGS="$CXXFLAGS -std=c++11"
+SRCTOP=$(cd $(dirname "$0") && pwd)
 logfile="/tmp/log-bootstrap-$(date +%F_%T).log"
-bash bootStrap.bash --with-system-libass --with-system-libmad ${rebuild} 2>&1 | tee ${logfile}
+bash "${SRCTOP}/bootStrap.bash" --with-system-libass --with-system-libmad ${rebuild} 2>&1 | tee ${logfile}
 if [ ${PIPESTATUS[0]} -ne 0 ]; then
     fail "Build failed, please inspect ${logfile} and /tmp/logbuild* files."
 fi
-bash appImage/deployBookwormMinimal.sh "${PWD}/${RT_DIR}/${RUNTIME}"
+bash "${SRCTOP}/appImage/deployBookwormMinimal.sh" "${PWD}/${RT_DIR}/${RUNTIME}"
 exit $?

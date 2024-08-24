@@ -54,17 +54,17 @@ cpyRootx86Lib()
 
 echo " ** Creating AppImage file **"
 
-ORG=$PWD
+APPIMAGE_SCRIPT_DIR=$(cd $(dirname "$0") && pwd)
 RUNTIME="$1"
 if [ ! -f "${RUNTIME}" ]; then
     echo "AppImage runtime \"${RUNTIME}\" not present or not a file, aborting."
     exit 1
 fi
 export APP_NAME="avidemuxLinux_GLIBC_2.36_amd64_$(date +%y%m%d_%H%M).app"
-if [ -e ${APP_NAME} ]; then
-    rm -f $APP_NAME || exit 1
+if [ -e "$APP_NAME" ]; then
+    rm -f "$APP_NAME" || exit 1
 fi
-cd install/usr/bin || exit 1
+pushd install/usr/bin > /dev/null || exit 1
 mkdir -p ../lib/va || exit 1
 mkdir -p ../lib/vdpau || exit 1
 mkdir -p ../lib/qt5/plugins || exit 1
@@ -139,12 +139,12 @@ echo "Prefix=../lib/qt5" >> qt.conf
 
 cd ..
 find . -type f -exec sed -i -e 's|/usr/lib/x86_64-linux-gnu|./././././././././././lib|g' {} \; ; cd ..
-find . -type f -exec sed -i -e 's|/usr/lib|././/lib|g' {} \; ; cd ..
+find . -type f -exec sed -i -e 's|/usr/lib|././/lib|g' {} \;
 #
-cd $ORG
-cp appImage/AppRunBuster install/AppRun
-cp appImage/avidemux.png install
-cp appImage/avidemux.desktop install
+popd > /dev/null
+cp "$APPIMAGE_SCRIPT_DIR"/AppRunBuster install/AppRun
+cp "$APPIMAGE_SCRIPT_DIR"/avidemux.png install
+cp "$APPIMAGE_SCRIPT_DIR"/avidemux.desktop install
 
 FT_PROBE_EXE_NAME="freetype_probe"
 FT_PROBE_LOCATION="buildPluginsCommon/ADM_videoFilters6/ass"
