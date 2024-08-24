@@ -10,12 +10,15 @@ Avidemux is a simple cross-platform video editor for Linux, Windows and macOS.
 
 # Build from source
 
+**Avidemux build directory must be located on a case-sensitive file system.**
+
+Out-of-tree build is supported. If build is conducted in-tree, the source
+directory has to be located on a case-sensitive file system either.
+
 To get Avidemux source code from the main repository and the translations,
-run the following commands in a directory located on a case-sensitive file system:
+run the following command:
 ```
-git clone https://github.com/mean00/avidemux2.git
-cd avidemux2
-git submodule update --init --recursive
+git clone --recursive https://github.com/mean00/avidemux2.git && cd avidemux2
 ```
 
 
@@ -36,14 +39,15 @@ Build Avidemux:
 bash bootStrap.bash --with-system-libass
 ```
 
-The compiled output will be in the `install` subdirectory of `avidemux2`.
+The compiled output will be in the `install` subdirectory of the build directory.
 
 Avidemux can be run without installation by means of a start script derived
 from the template `run_avidemux_template.sh`.
 
 1. Make a copy of this script file.
-2. Only if Avidemux repository has been cloned to a different location than `${HOME}/avidemux2`,
-edit the value of variable `TOPSRCDIR` to point to the *actual* location of the source tree.
+2. If Avidemux has been built in a different location than `${HOME}/avidemux2`,
+edit the value of variable `BUILDTOP` to point to the *actual* build directory.
+Adjust the value of variable `PREFIX` if necessary.
 3. Copy the script to a directory listed in `$PATH` and make it executable.
 
 
