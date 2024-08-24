@@ -75,7 +75,8 @@ On both Apple platforms, the disk image should be generated in the `installer`
 subdirectory of `avidemux2`.
 
 Post-installation (Apple Silicon):  
-Execute the following command to ad-hoc sign the binaries:
+Only if Avidemux has been built on a different Apple Silicon system,
+execute the following command to replace ad-hoc signatures of the binaries:
 ```
 sh avidemux/osxInstaller/macos-adhoc-sign-installed-app.sh
 ```
