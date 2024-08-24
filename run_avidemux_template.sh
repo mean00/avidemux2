@@ -3,9 +3,9 @@
 # Adjust variables appropriately, copy it to a location included in $PATH
 # and make it executable.
 
-# TOPSRCDIR must match the location of the Avidemux source tree,
-# default: ${HOME}/avidemux2
-TOPSRCDIR="${HOME}/avidemux2"
+# BUILDTOP must match the location of the Avidemux build directory,
+# default (in-tree build): ${HOME}/avidemux2
+BUILDTOP="${HOME}/avidemux2"
 
 # PREFIX must match the prefix passed to bootStrap.bash when compiling Avidemux,
 # default when no prefix specified: /usr
@@ -20,7 +20,7 @@ fail()
     echo "$1. Aborting."
     exit 1
 }
-HERE="${TOPSRCDIR}/install${PREFIX}"
+HERE="${BUILDTOP}/install${PREFIX}"
 CORECONFIG="${HERE}/include/avidemux/${MAJOR}.${MINOR}/ADM_coreConfig.h"
 if ! [ -e "${CORECONFIG}" ]; then
     fail "${CORECONFIG} not found, can't determine the relative library directory"
