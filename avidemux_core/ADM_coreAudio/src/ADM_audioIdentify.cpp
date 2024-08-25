@@ -32,93 +32,108 @@ extern void Endian_WavHeader(WAVHeader *w);
 */
 static bool idMP2(int bufferSize,const uint8_t *data,WAVHeader &info,uint32_t &offset)
 {
-    const uint8_t *mp2Buffer=data;
-    const int limit=bufferSize;
     offset=INVALID_OFFSET;
     // Now read buffer until we have 3 correctly decoded packet
     int probeIndex=0;
     int failAttempt=0;
+    int match = 0;
+    MpegAudioInfo mp2info;
 #define MAX_FAIL 20
-    while(probeIndex<limit)
+#define SURE 2
+    while(probeIndex < bufferSize && failAttempt < MAX_FAIL)
     {
-        const uint8_t *ptr=mp2Buffer+probeIndex;
-        int len=limit-probeIndex;
+        match = 0; // reset
+        int len = bufferSize - probeIndex;
         if(len<4)
         {
             ADM_info("No more data.\n");
             return false;
         }
-        uint32_t syncoff,syncoff2;
-        MpegAudioInfo mp2info,confirm;
-        if(!getMpegFrameInfo(ptr,len,&mp2info,NULL,&syncoff))
+        uint32_t syncoff = 0;
+        memset(&mp2info, 0, sizeof(mp2info));
+        if(!getMpegFrameInfo(data + probeIndex, len, &mp2info, NULL, &syncoff))
         {
             ADM_info("No sync\n");
             return false;
         }
+#if 0
+        printf("[idMP2] Initial detection at offset %d: level %d layer %d srate %d br %d size %d\n", probeIndex,
+            mp2info.level, mp2info.layer, mp2info.samplerate, mp2info.bitrate, mp2info.size);
+#endif
         probeIndex+=syncoff;
         if(INVALID_OFFSET==offset || probeIndex>offset)
             offset=probeIndex;
         // Skip this packet
         int next=probeIndex+mp2info.size;
-        len=limit-next;
+        len = bufferSize - next;
         if(len<4)
         {
             ADM_info("Not enough data to confirm detection.\n");
             return false;
         }
-        for(int i=0; i < 2; i++)
+        for(int i=0; i < SURE; i++)
         {
-            if(!getMpegFrameInfo(mp2Buffer+next,len,&confirm,&mp2info,&syncoff2))
+            MpegAudioInfo confirm;
+            syncoff = 0;
+            memset(&confirm, 0, sizeof(confirm));
+            if(!getMpegFrameInfo(data + next, len, &confirm, NULL, &syncoff))
             {
                 ADM_info("No sync to confirm detection.\n");
                 return false;
             }
-            if(syncoff2)
+            if(!syncoff && !confirm.size) // better safe than infinite loop
             {
-                probeIndex=next+syncoff2;
-                if(++failAttempt > MAX_FAIL)
-                {
-                    ADM_warning("Giving up after %d failures to get stable sync.\n",MAX_FAIL);
-                    return false;
-                }
-                ADM_info("Frame size doesn't match, will retry at offset %d\n",probeIndex);
+                ADM_warning("Invalid size.\n");
+                return false;
+            }
+            next += syncoff + confirm.size;
+            len -= syncoff + confirm.size;
+            probeIndex = next;
+            if(confirm.samplerate != mp2info.samplerate)
+            {
+                failAttempt++;
+                ADM_info("Sampling frequency mismatch: want %d, got %d, restarting at offset %d\n",
+                    mp2info.samplerate, confirm.samplerate, probeIndex);
                 break;
             }
-            if(!i)
+            if(syncoff)
             {
-                next+=confirm.size;
-                len-=confirm.size;
-                if(len<4)
-                {
-                    ADM_info("Not enough data to get 3 matches in a row.\n");
-                    return false;
-                }
-                continue;
+                failAttempt++;
+                ADM_info("Frame size doesn't match, restarting at offset %d\n",probeIndex);
+                break;
             }
-            ADM_info("Probably MP2/3 : fq=%u br=%u mode=%u failures=%d\n", mp2info.samplerate, mp2info.bitrate, mp2info.mode, failAttempt);
-            // fill in info
-            info.frequency=mp2info.samplerate;
-            info.byterate=(mp2info.bitrate>>3)*1000;
-            if(mp2info.layer==3)
-                info.encoding=WAV_MP3;
-            else
-                info.encoding=WAV_MP2;
-            switch(mp2info.mode)
-            {
-                case 3: // mono
-                    info.channels=1;
-                    break;
-                case 0: // Stereo
-                case 1: // Joint stereo
-                case 2: // dual channel
-                default:
-                    info.channels=2;
-                    break;
-            }
-            return true;
+            match++;
         }
+        if(match >= SURE)
+            break;
     }
-    return false;
+    if(match < SURE)
+    {
+        ADM_warning("Giving up after %d failures to get stable sync.\n", failAttempt);
+        return false;
+    }
+
+    ADM_info("Probably MP2/3 : fq=%u br=%u mode=%u failures=%d\n", mp2info.samplerate, mp2info.bitrate, mp2info.mode, failAttempt);
+    // fill in info
+    info.frequency=mp2info.samplerate;
+    info.byterate=(mp2info.bitrate>>3)*1000;
+    if(mp2info.layer==3)
+        info.encoding=WAV_MP3;
+    else
+        info.encoding=WAV_MP2;
+    switch(mp2info.mode)
+    {
+        case 3: // mono
+            info.channels=1;
+            break;
+        case 0: // Stereo
+        case 1: // Joint stereo
+        case 2: // dual channel
+        default:
+            info.channels=2;
+            break;
+    }
+    return true;
 }
 /**
  * \fn idWAV
