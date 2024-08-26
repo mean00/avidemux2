@@ -64,8 +64,11 @@ MACRO(checkQt6)
                     ENDIF(Qt6_POSITION_INDEPENDENT_CODE)
 
                     get_target_property(QMAKE_EXECUTABLE Qt6::qmake LOCATION)
-                    execute_process(COMMAND "${QMAKE_EXECUTABLE}" -query QT_INSTALL_PLUGINS RESULT_VARIABLE return_code OUTPUT_VARIABLE QT_PLUGINS_DIR)
-                    MESSAGE(STATUS "plugin dir = ${QT_PLUGINS_DIR}")
+                    execute_process(COMMAND "${QMAKE_EXECUTABLE}" -query QT_INSTALL_PLUGINS
+                        RESULT_VARIABLE return_code
+                        OUTPUT_VARIABLE QT_PLUGINS_DIR
+                        OUTPUT_STRIP_TRAILING_WHITESPACE)
+                    MESSAGE(STATUS "plugin dir = \"${QT_PLUGINS_DIR}\"")
 
                 ELSE(Qt6Core_FOUND AND Qt6Gui_FOUND AND Qt6Widgets_FOUND AND Qt6OpenGLWidgets_FOUND AND Qt6Network_FOUND)
                     MESSAGE(STATUS "Some Qt6 components are missing")
