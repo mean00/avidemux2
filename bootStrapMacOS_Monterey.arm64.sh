@@ -270,6 +270,11 @@ while [ $# != 0 ] ;do
     esac
 shift
 done
+
+# Probe case-sensitivity of the file system where the build directory is located.
+. "${SRCTOP}/checkCaseSensitivity.sh"
+isCaseSensitive || { echo "Error: build directory file system is not case-sensitive." && exit 1; }
+
 validate adm_version "$adm_version" || exit 1
 validate output "$dmg_base" || exit 1
 config
