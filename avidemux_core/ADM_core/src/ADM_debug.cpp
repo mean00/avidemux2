@@ -22,16 +22,20 @@
 
 
 
+#define ADM_INFO_COLOR      ""
+#define ADM_WARNING_COLOR   "\e[31m\e[103m"
+#define ADM_ERROR_COLOR     "\e[97m\e[41m"
+#define ADM_FUNC_COLOR      "\e[36m"
+#define ADM_RESET_COLOR     "\e[m"
 
-#define ADM_COLOR_YELLOW  "\e[33m"
-#define ADM_COLOR_RED     "\e[31m"
-#define ADM_COLOR_GREEN   "\e[32m"
-#define ADM_DEFAULT_COLOR "\e[m"
+#define ADM_INFO_MARK       "   "
+#define ADM_WARNING_MARK    "<!>"
+#define ADM_ERROR_MARK      "###"
 
 extern "C"
 {
 
-static void ADM_prettyPrint(const char *func,const char *color, const char *p)
+static void ADM_prettyPrint(const char *func,const char *color, const char * mark, const char *p)
 {
   // construct time code
   struct timeval pz;
@@ -46,12 +50,12 @@ static void ADM_prettyPrint(const char *func,const char *color, const char *p)
   long int hh=((tvSec)/3600)%24;
 
 #if _WIN32
-      printf("[%s] %02d:%02d:%02d-%03d %s", func, (int)hh,(int)mn,(int)seconds,(int)mseconds,p);
+      printf("%s%02d:%02d:%02d-%03d [%s] %s", mark,(int)hh,(int)mn,(int)seconds,(int)mseconds, func, p);
 #else
     if(isatty(STDOUT_FILENO))
-        printf("%s [%s] %02d:%02d:%02d-%03d  %s%s",color,func,(int)hh,(int)mn,(int)seconds,(int)mseconds,p,ADM_DEFAULT_COLOR);
+        printf("%s%02d:%02d:%02d-%03d%s [%s%s%s] %s", color,(int)hh,(int)mn,(int)seconds,(int)mseconds,ADM_RESET_COLOR, ADM_FUNC_COLOR,func,ADM_RESET_COLOR, p);
     else
-        printf(" [%s] %02d:%02d:%02d-%03d  %s",func,(int)hh,(int)mn,(int)seconds,(int)mseconds,p);
+        printf("%s%02d:%02d:%02d-%03d [%s] %s", mark,(int)hh,(int)mn,(int)seconds,(int)mseconds, func, p);
 #endif
 }
 
@@ -65,7 +69,7 @@ static void ADM_prettyPrint(const char *func,const char *color, const char *p)
         vsnprintf(print_buffer,1023,prf,list);
         va_end(list);
         print_buffer[1023]=0; // ensure the string is terminated
-        ADM_prettyPrint(func,ADM_COLOR_GREEN,print_buffer);
+        ADM_prettyPrint(func,ADM_INFO_COLOR,ADM_INFO_MARK,print_buffer);
 
   }
  void ADM_warning2( const char *func, const char *prf, ...)
@@ -77,7 +81,7 @@ static void ADM_prettyPrint(const char *func,const char *color, const char *p)
         vsnprintf(print_buffer,1023,prf,list);
         va_end(list);
         print_buffer[1023]=0; // ensure the string is terminated
-        ADM_prettyPrint(func,ADM_COLOR_YELLOW,print_buffer);
+        ADM_prettyPrint(func,ADM_WARNING_COLOR,ADM_WARNING_MARK,print_buffer);
 
   }
  void ADM_error2( const char *func, const char *prf, ...)
@@ -89,7 +93,7 @@ static void ADM_prettyPrint(const char *func,const char *color, const char *p)
         vsnprintf(print_buffer,1023,prf,list);
         va_end(list);
         print_buffer[1023]=0; // ensure the string is terminated
-        ADM_prettyPrint(func,ADM_COLOR_RED,print_buffer);
+        ADM_prettyPrint(func,ADM_ERROR_COLOR,ADM_ERROR_MARK,print_buffer);
 
   }
 
