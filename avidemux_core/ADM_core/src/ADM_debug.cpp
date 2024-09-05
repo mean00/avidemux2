@@ -48,6 +48,33 @@ static void ADM_prettyPrint(const char *func,const char *color, const char * mar
   long int seconds=(tvSec)%60;
   long int mn=((tvSec)/60)%60;
   long int hh=((tvSec)/3600)%24;
+  
+#ifdef __GNUC__
+  int start = 0, end = 0;
+  const char * f = func;
+  while (*f)
+  {
+      if (*f == '(')
+      {
+          break;
+      }
+      if (*f == ' ')
+      {
+          start = end+1;
+      }
+      f++;
+      end++;
+  }
+  int len = end - start;
+  if (len > 1000) len = 1000;
+  static char prettyFunctionName[1024];
+  for (int i=0; i<len; i++)
+  {
+      prettyFunctionName[i] = func[start + i];
+  }
+  prettyFunctionName[len] = 0;
+  func = (const char *)prettyFunctionName;
+#endif  
 
 #if _WIN32
       printf("%s%02d:%02d:%02d-%03d [%s] %s", mark,(int)hh,(int)mn,(int)seconds,(int)mseconds, func, p);
