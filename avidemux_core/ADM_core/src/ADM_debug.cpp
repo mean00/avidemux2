@@ -58,7 +58,7 @@ static void ADM_prettyPrint(const char *func,const char *color, const char * mar
       {
           break;
       }
-      if (*f == ' ')
+      if (*f == ' ' || *f == '*')
       {
           start = end+1;
       }
