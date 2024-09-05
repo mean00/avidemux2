@@ -55,9 +55,15 @@ ADM_CORE6_EXPORT void ADM_warning2(const char *f,const char *st, ...) ;
 ADM_CORE6_EXPORT void ADM_info2(const char *f,const char *st, ...) ;
 ADM_CORE6_EXPORT void ADM_error2(const char *f,const char *st, ...) ;
 
-#define ADM_warning(a,...)  ADM_warning2(__FUNCTION__,a, ##__VA_ARGS__)
-#define ADM_info(a,...)     ADM_info2(__FUNCTION__,a,    ##__VA_ARGS__)
-#define ADM_error(a,...)    ADM_error2(__FUNCTION__,a,   ##__VA_ARGS__)
+#ifdef __GNUC__
+ #define ADM_warning(a,...)  ADM_warning2(__PRETTY_FUNCTION__,a, ##__VA_ARGS__)
+ #define ADM_info(a,...)     ADM_info2(__PRETTY_FUNCTION__,a,    ##__VA_ARGS__)
+ #define ADM_error(a,...)    ADM_error2(__PRETTY_FUNCTION__,a,   ##__VA_ARGS__)
+#else
+ #define ADM_warning(a,...)  ADM_warning2(__FUNCTION__,a, ##__VA_ARGS__)
+ #define ADM_info(a,...)     ADM_info2(__FUNCTION__,a,    ##__VA_ARGS__)
+ #define ADM_error(a,...)    ADM_error2(__FUNCTION__,a,   ##__VA_ARGS__)
+#endif
 
 ADM_CORE6_EXPORT const char *ADM_translate(const char *domain, const char *stringToTranslate);
 
