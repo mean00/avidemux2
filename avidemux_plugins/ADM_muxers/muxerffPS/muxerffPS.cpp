@@ -115,9 +115,15 @@ bool muxerffPS::open(const char *file, ADM_videoStream *s,uint32_t nbAudioTrack,
         if(props)
         {
             props->buffer_size = psMuxerConfig.bufferSizekBytes*8*1024;
-            int err = av_stream_add_side_data(video_st, AV_PKT_DATA_CPB_PROPERTIES, (uint8_t *)props, propSize);
-            if(err < 0)
-                ADM_warning("Failed to add side data to video stream, error %d\n", err);
+
+            if(NULL == av_packet_side_data_add(
+                    &video_st->codecpar->coded_side_data,
+                    &video_st->codecpar->nb_coded_side_data,
+                    AV_PKT_DATA_CPB_PROPERTIES, props, propSize, 0))
+            {
+                ADM_warning("Failed to add side data to video stream.\n");
+                av_freep(props);
+            }
         }
         par->bit_rate=psMuxerConfig.videoRatekBits*1000;
 
