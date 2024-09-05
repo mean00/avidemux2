@@ -322,14 +322,24 @@ bool MOVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack,
         }
         if(angle)
         {
-            uint8_t *sideData = av_stream_new_side_data(video_st, AV_PKT_DATA_DISPLAYMATRIX, sizeof(int32_t) * 9);
+            int sdsize = sizeof(int32_t) * 9;
+            void *sdbuf = av_malloc(sdsize);
+            AVPacketSideData *sideData = NULL;
+            if(sdbuf)
+            {
+                sideData = av_packet_side_data_add(
+                    &video_st->codecpar->coded_side_data,
+                    &video_st->codecpar->nb_coded_side_data,
+                    AV_PKT_DATA_DISPLAYMATRIX, sdbuf, sdsize, 0);
+            }
             if (sideData)
             {
                 ADM_info("Setting rotation to %d degrees clockwise\n",angle);
-                av_display_rotation_set((int32_t *)sideData, angle);
+                av_display_rotation_set((int32_t *)(sideData->data), angle);
             } else
             {
                 ADM_warning("Could not allocate display matrix side data\n");
+                av_freep(sdbuf);
             }
         }
         //ADM_assert(avformat_write_header(oc, &dict) >= 0);
