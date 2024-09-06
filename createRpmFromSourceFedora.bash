@@ -10,14 +10,14 @@ echo "Automatic RPM generator for Avidemux, Fedora 40 version"
 # build dependencies
 RELEASEVER=$(cat /etc/fedora-release | cut -d \  -f 3)
 if ! [[ "$RELEASEVER" =~ ^[3-9][0-9]$ ]]; then
-    echo "Fedora release version not recognized, must be between 30 and 99."
-    exit 1
+  echo "Fedora release version not recognized, must be between 30 and 99."
+  exit 1
 else
-    echo "Detected Fedora release version: $RELEASEVER"
+  echo "Detected Fedora release version: $RELEASEVER"
 fi
 ZLIBNAME="zlib-ng-compat"
-if [ $(( $RELEASEVER )) -lt 40 ]; then
-    ZLIBNAME="zlib"
+if [ $(($RELEASEVER)) -lt 40 ]; then
+  ZLIBNAME="zlib"
 fi
 PKGLIST="gcc \
 gcc-c++ \
@@ -56,144 +56,138 @@ xvidcore-devel \
 x264-devel \
 x265-devel"
 #
-usage()
-{
-    echo "Usage: $0 [Options]"
-    echo "***********************"
-    echo "  --help or -h      : Print usage"
-    echo "  --su              : Don't prompt, use su to run commands as root"
-    echo "  --sudo            : Don't prompt, use sudo to run commands as root"
-    echo "  --deps-only       : Just install build dependencies and exit"
-    echo "  --no-install      : Don't install generated RPM packages"
-    echo "  --rebuild         : Preserve existing build directories"
+usage() {
+  echo "Usage: $0 [Options]"
+  echo "***********************"
+  echo "  --help or -h      : Print usage"
+  echo "  --su              : Don't prompt, use su to run commands as root"
+  echo "  --sudo            : Don't prompt, use sudo to run commands as root"
+  echo "  --deps-only       : Just install build dependencies and exit"
+  echo "  --no-install      : Don't install generated RPM packages"
+  echo "  --rebuild         : Preserve existing build directories"
 }
 #
-fail()
-{
-   echo "$1" && exit 1
+fail() {
+  echo "$1" && exit 1
 }
 #
-check_deps()
-{
-    for i in $@; do
-        rpm -q $i > /dev/null
-        notfound=$?;
-        if [ ${notfound} -eq 1 ]; then
-            missing_pkgs+=($i)
-        fi
-    done
+check_deps() {
+  for i in $@; do
+    rpm -q $i >/dev/null
+    notfound=$?
+    if [ ${notfound} -eq 1 ]; then
+      missing_pkgs+=($i)
+    fi
+  done
 }
 #
-get_su_command()
-{
-    if [ "x${sucommand}" != "x" ]; then
-        return 0
-    fi
-    read -p "Shall su or sudo be used to run commands with root privileges? " input
-    if [ "x${input}" = "xsu" ]; then
-        sucommand="su"
-    elif [ "x${input}" = "xsudo" ]; then
-        sucommand="sudo"
-    else
-        echo "Can't parse the input."
-        return 1
-    fi
+get_su_command() {
+  if [ "x${sucommand}" != "x" ]; then
+    return 0
+  fi
+  read -p "Shall su or sudo be used to run commands with root privileges? (type 'su' or 'sudo')" input
+  if [ "x${input}" = "xsu" ]; then
+    sucommand="su"
+  elif [ "x${input}" = "xsudo" ]; then
+    sucommand="sudo"
+  else
+    echo "Can't parse the input, please type 'su' or 'sudo'."
+    return 1
+  fi
 }
 #
-install_deps()
-{
-    check_deps ${PKGLIST}
-    missing_required=(${missing_pkgs[*]})
-    missing_pkgs=()
-    check_deps ${OPTIONAL_PACKAGES}
-    missing_extras=(${missing_pkgs[*]})
-    missing_pkgs=()
-    if [ ${#missing_required[@]} -gt 0 ]; then
-        echo "Missing required development packages:"
-        echo ${missing_required[*]}
-        get_su_command || exit 1
-        message="Failed to install all required packages, aborting."
-        if [ "x${sucommand}" = "xsu" ]; then
-            su -c "/usr/bin/dnf install ${missing_required[*]}" || fail ${message}
-        elif [ "x${sucommand}" = "xsudo" ]; then
-            sudo /usr/bin/dnf install ${missing_required[*]} || fail ${message}
-        fi
-    fi
-    if [ ${#missing_extras[@]} -gt 0 ]; then
-        echo "Some useful optional development packages are missing."
-        echo "RPM Fusion repositories must be already configured and enabled on this system to install them."
-        echo ${missing_extras[*]}
-        read -p "Shall these packages be installed too? Type uppercase Y to install. " input
-        if [ "x${input}" = "xY" ]; then
-            get_su_command || { echo "Skipping optional packages." && return 0; }
-            if [ "x${sucommand}" = "xsu" ]; then
-                su -c "/usr/bin/dnf install ${missing_extras[*]}" || return 0
-            elif [ "x${sucommand}" = "xsudo" ]; then
-                sudo /usr/bin/dnf install ${missing_extras[*]} || return 0
-            fi
-        else
-            echo "Skipped."
-        fi
-    fi
-}
-#
-install_avidemux()
-{
-    echo "Installing Avidemux..."
-    get_su_command || fail "Can't install Avidemux."
-    if $(rpm -qa | grep -q avidemux); then
-        echo "Uninstalling previously installed Avidemux packages."
-        message="Can't remove installed Avidemux packages, aborting."
-        if [ "x${sucommand}" = "xsu" ]; then
-            su -c '/usr/bin/dnf remove "avidemux*"' || fail ${message}
-        elif [ "x${sucommand}" = "xsudo" ]; then
-            sudo /usr/bin/dnf remove "avidemux*" || fail ${message}
-        fi
-    fi
-    cd "$packages_dir" || fail "\"${packages_dir}\" folder not present in the current directory, aborting."
-    message="Installation failed."
+install_deps() {
+  check_deps ${PKGLIST}
+  missing_required=(${missing_pkgs[*]})
+  missing_pkgs=()
+  check_deps ${OPTIONAL_PACKAGES}
+  missing_extras=(${missing_pkgs[*]})
+  missing_pkgs=()
+  if [ ${#missing_required[@]} -gt 0 ]; then
+    echo "Missing required development packages:"
+    echo ${missing_required[*]}
+    get_su_command || exit 1
+    message="Failed to install all required packages, aborting."
     if [ "x${sucommand}" = "xsu" ]; then
-        su -c "/usr/bin/dnf install avidemux*.rpm" || fail ${message}
+      su -c "/usr/bin/dnf install ${missing_required[*]}" || fail ${message}
     elif [ "x${sucommand}" = "xsudo" ]; then
-        sudo /usr/bin/dnf install avidemux*.rpm || fail ${message}
+      sudo /usr/bin/dnf install ${missing_required[*]} || fail ${message}
     fi
+  fi
+  if [ ${#missing_extras[@]} -gt 0 ]; then
+    echo "Some useful optional development packages are missing."
+    echo "RPM Fusion repositories must be already configured and enabled on this system to install them."
+    echo ${missing_extras[*]}
+    read -p "Shall these packages be installed too? Type uppercase Y to install. " input
+    if [ "x${input}" = "xY" ]; then
+      get_su_command || { echo "Skipping optional packages." && return 0; }
+      if [ "x${sucommand}" = "xsu" ]; then
+        su -c "/usr/bin/dnf install ${missing_extras[*]}" || return 0
+      elif [ "x${sucommand}" = "xsudo" ]; then
+        sudo /usr/bin/dnf install ${missing_extras[*]} || return 0
+      fi
+    else
+      echo "Skipped."
+    fi
+  fi
+}
+#
+install_avidemux() {
+  echo "Installing Avidemux..."
+  get_su_command || fail "Can't install Avidemux."
+  if $(rpm -qa | grep -q avidemux); then
+    echo "Uninstalling previously installed Avidemux packages."
+    message="Can't remove installed Avidemux packages, aborting."
+    if [ "x${sucommand}" = "xsu" ]; then
+      su -c '/usr/bin/dnf remove "avidemux*"' || fail ${message}
+    elif [ "x${sucommand}" = "xsudo" ]; then
+      sudo /usr/bin/dnf remove "avidemux*" || fail ${message}
+    fi
+  fi
+  cd "$packages_dir" || fail "\"${packages_dir}\" folder not present in the current directory, aborting."
+  message="Installation failed."
+  if [ "x${sucommand}" = "xsu" ]; then
+    su -c "/usr/bin/dnf install avidemux*.rpm" || fail ${message}
+  elif [ "x${sucommand}" = "xsudo" ]; then
+    sudo /usr/bin/dnf install avidemux*.rpm || fail ${message}
+  fi
 }
 #
 ID=$(id -u)
 if [ "x${ID}" = "x0" ]; then
-    fail "Don't build Avidemux as root, aborting"
+  fail "Don't build Avidemux as root, aborting"
 fi
 #
 while [ $# != 0 ]; do
-    config_option="$1"
-    case "${config_option}" in
-        -h|--help)
-            usage
-            exit 0
-            ;;
-        --deps-only)
-            install_deps
-            exit 0
-            ;;
-        --su)
-            sucommand="su"
-            ;;
-        --sudo)
-            sucommand="sudo"
-            ;;
-        --no-install)
-            install_packages=0
-            ;;
-        --rebuild)
-            rebuild="${config_option}"
-            ;;
-        *)
-            echo "unknown parameter ${config_option}"
-            usage
-            exit 1
-            ;;
-    esac
-    shift
+  config_option="$1"
+  case "${config_option}" in
+  -h | --help)
+    usage
+    exit 0
+    ;;
+  --deps-only)
+    install_deps
+    exit 0
+    ;;
+  --su)
+    sucommand="su"
+    ;;
+  --sudo)
+    sucommand="sudo"
+    ;;
+  --no-install)
+    install_packages=0
+    ;;
+  --rebuild)
+    rebuild="${config_option}"
+    ;;
+  *)
+    echo "unknown parameter ${config_option}"
+    usage
+    exit 1
+    ;;
+  esac
+  shift
 done
 #
 install_deps
@@ -204,13 +198,13 @@ logfile="/tmp/log-bootstrap-$(date +%F_%T).log"
 SRCTOP=$(cd $(dirname "$0") && pwd)
 bash "${SRCTOP}"/bootStrap.bash ${rebuild} --with-system-libass --rpm 2>&1 | tee ${logfile}
 if [ ${PIPESTATUS[0]} -ne 0 ]; then
-    fail "Build failed, please inspect ${logfile} and /tmp/logbuild* files."
+  fail "Build failed, please inspect ${logfile} and /tmp/logbuild* files."
 fi
 #
 echo "Build completed, the RPMs are in the $packages_dir folder."
 #
 if [ ${install_packages} -eq 1 ]; then
-    install_avidemux
+  install_avidemux
 fi
 #
 exit 0
