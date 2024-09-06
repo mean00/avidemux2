@@ -1,0 +1,2 @@
+Checks: '-*,modernize-*,cppcoreguidelines-*,-cppcoreguidelines-pro-bounds-pointer-arithmetic'
+Checks: 'modernize-*,-modernize-avoid-c-arraysi,-modernize-use-trailing-return-type,-modernize-avoid-c-arrays'
