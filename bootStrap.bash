@@ -1,12 +1,13 @@
 #!/bin/bash
 # Bootstrapper to semi-automatically build avidemux deb/rpm from source
-# (c) Mean 2009/2016
+# (c) Mean-Euma  2009/2024
 #
 # By default we use qt5 now
 #
 packages_ext=""
 packages_dir="pkgs"
 rebuild=0
+do_ninja=1
 do_core=1
 do_cli=1
 do_qt=1
@@ -42,11 +43,16 @@ Process() {
   DEBUG=""
   ASAN=""
   BUILD_QUIRKS=""
-  BUILDER="Unix Makefiles"
+  #if [ "x$do_ninja" = "x1"]; then
+  BUILDER="Ninja"
+  MAKER="ninja"
+  #else
+  #BUILDER="Unix Makefiles"
+  #MAKER="make -j $(nproc)"
+  #fi
   if [ "x$debug" = "x1" ]; then
     DEBUG="-DVERBOSE=1 -DCMAKE_BUILD_TYPE=Debug"
     BASE="${BASE}_debug"
-    BUILDER="Unix Makefiles"
   fi
   if [ "x$do_asan" = "x1" ]; then
     BASE="${BASE}_asan"
@@ -54,7 +60,7 @@ Process() {
   fi
   BUILDDIR="${PWD}/${BASE}"
   FAKEROOT="-DFAKEROOT=$FAKEROOT_DIR"
-  echo "Building in \"${BUILDDIR}\" from \"${SOURCEDIR}\" with EXTRA=<$EXTRA>, DEBUG=<$DEBUG>"
+  echo "Building in \"${BUILDDIR}\" from \"${SOURCEDIR}\" with EXTRA=<$EXTRA>, DEBUG=<$DEBUG>, MAKER=<${MAKER}>"
   if [ "x$rebuild" != "x1" ]; then
     rm -Rf "${BUILDDIR}"
   fi
@@ -76,12 +82,12 @@ Process() {
     $DEBUG \
     -G "$BUILDER" \
     "$SOURCEDIR" || fail "cmake"
-  make -j $(nproc) >&/tmp/log$BASE || fail "make, result in /tmp/log$BASE"
+  ${MAKER} >&/tmp/log$BASE || fail "${MAKER}, result in /tmp/log$BASE"
   if [ "x$PKG" != "x" ]; then
-    $FAKEROOT_COMMAND make package DESTDIR="${FAKEROOT_DIR}/tmp" || fail "packaging"
+    DESTDIR="${FAKEROOT_DIR}/tmp" $FAKEROOT_COMMAND ${MAKER} package || fail "packaging"
   fi
   # we need the make install so that other packcges can be built against this one
-  make install DESTDIR="${FAKEROOT_DIR}" || fail "install"
+  DESTDIR="${FAKEROOT_DIR}" ${MAKER} install || fail "install"
   popd >/dev/null
 }
 printModule() {
@@ -118,6 +124,7 @@ usage() {
   echo "  --tgz                 : Create tgz packages"
   echo "  --debug               : Switch debugging on"
   echo "  --rebuild             : Preserve existing build directories"
+  echo "  --with-ninja          : Build with ninja (default is make)"
   echo "  --with-core           : Build core (default)"
   echo "  --without-core        : Don't build core"
   echo "  --with-cli            : Build cli (default)"
@@ -207,6 +214,10 @@ while [ $# != 0 ]; do
     ;;
   --with-clang)
     export COMPILER="-DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang++"
+    ;;
+  --with-ninja)
+    echo "Enabling ninja build"
+    do_ninja=1
     ;;
   --without-qt)
     do_qt=0
