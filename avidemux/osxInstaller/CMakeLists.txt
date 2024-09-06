@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.7)
 project("AvidemuxBundle")
 MESSAGE(STATUS  "* Start *")
 
@@ -13,19 +13,19 @@ include(admDetermineSystem)
 include(admCheckQt)
 
 IF(ENABLE_QT6)
-        MESSAGE(STATUS  "* Checking Qt6 *")
+  MESSAGE(STATUS  "* Checking Qt6 *")
 ELSE(ENABLE_QT6)
-        IF(ENABLE_QT5)
-                MESSAGE(STATUS "* Checking Qt5 *")
-        ELSE(ENABLE_QT5)
-                MESSAGE(FATAL_ERROR "Unsupported Qt version requested")
-        ENDIF(ENABLE_QT5)
+  IF(ENABLE_QT5)
+    MESSAGE(STATUS "* Checking Qt5 *")
+  ELSE(ENABLE_QT5)
+    MESSAGE(FATAL_ERROR "Unsupported Qt version requested")
+  ENDIF(ENABLE_QT5)
 ENDIF(ENABLE_QT6)
 
 checkQt()
 
 IF(NOT QT_FOUND)
-        MESSAGE(FATAL_ERROR "Qt not found")
+  MESSAGE(FATAL_ERROR "Qt not found")
 ENDIF(NOT QT_FOUND)
 
 SET(BUNDLE_NAME "Avidemux-${AVIDEMUX_VERSION}.app")
@@ -38,11 +38,11 @@ FILE(MAKE_DIRECTORY "${BUNDLE}")
 FILE(MAKE_DIRECTORY "${BUNDLE}/Contents")
 FILE(MAKE_DIRECTORY "${BUNDLE}/Contents/MacOS")
 FILE(MAKE_DIRECTORY "${BUNDLE}/Contents/Resources")
-# 
+#
 LIST(APPEND bundleDirs  "${BUNDLE}/Contents/Resources/lib")
 IF(ENABLE_QT6)
-    # A gross hack to work around the failure to resolve @loader_path for libbrotli.
-    LIST(APPEND bundleDirs "/usr/local/lib")
+  # A gross hack to work around the failure to resolve @loader_path for libbrotli.
+  LIST(APPEND bundleDirs "/usr/local/lib")
 ENDIF(ENABLE_QT6)
 #
 
@@ -66,7 +66,7 @@ FILE(COPY "${QT_PLUGINS_DIR}/platforms" DESTINATION "${BUNDLE}/Contents/PlugIns/
     GROUP_WRITE GROUP_READ GROUP_EXECUTE
     WORLD_WRITE WORLD_READ WORLD_EXECUTE)
 IF(EXISTS "${QT_PLUGINS_DIR}/styles")
-    FILE(COPY "${QT_PLUGINS_DIR}/styles" DESTINATION "${BUNDLE}/Contents/PlugIns/" DIRECTORY_PERMISSIONS
+  FILE(COPY "${QT_PLUGINS_DIR}/styles" DESTINATION "${BUNDLE}/Contents/PlugIns/" DIRECTORY_PERMISSIONS
         OWNER_WRITE OWNER_READ OWNER_EXECUTE
         GROUP_WRITE GROUP_READ GROUP_EXECUTE
         WORLD_WRITE WORLD_READ WORLD_EXECUTE)
@@ -76,14 +76,14 @@ ENDIF(EXISTS "${QT_PLUGINS_DIR}/styles")
 file(GLOB  pluginList "${BUNDLE}/Contents/PlugIns/platforms/*.dylib" "${BUNDLE}/Contents/PlugIns/styles/*.dylib")
 MESSAGE(STATUS "List of plugins ${pluginList}")
 FOREACH(plugin ${pluginList})
-        MESSAGE(STATUS "=> ${plugin}")
-        LIST(APPEND myPlugins ${plugin})
+  MESSAGE(STATUS "=> ${plugin}")
+  LIST(APPEND myPlugins ${plugin})
 ENDFOREACH(plugin ${pluginList})
 MESSAGE(STATUS ">>List of plugins to process ${myPlugins}")
 MESSAGE(STATUS " * plugin *")
 #
 # Update avidemux plugins
-# 
+#
 MESSAGE(STATUS "* ADM plugins *")
 #
 MESSAGE(STATUS " * ADMplugin *")
@@ -91,10 +91,10 @@ FILE(COPY "${BUNDLE}/Contents/lib/ADM_plugins6" DESTINATION "${BUNDLE}/Contents/
 file(GLOB  kind "${BUNDLE}/Contents/MacOS/ADM_plugins6/*")
 MESSAGE(STATUS "* -----<${kind}>-----  *")
 FOREACH(k ${kind})
-        MESSAGE(STATUS "* Processing ${k} *")
-        file(GLOB_RECURSE  kind_${k} "${k}/*.dylib")
-        MESSAGE(STATUS "\t ${kind_${k}}")
-        LIST(APPEND all_adm_plugin  ${kind_${k}})
+  MESSAGE(STATUS "* Processing ${k} *")
+  file(GLOB_RECURSE  kind_${k} "${k}/*.dylib")
+  MESSAGE(STATUS "\t ${kind_${k}}")
+  LIST(APPEND all_adm_plugin  ${kind_${k}})
 ENDFOREACH(k ${kind})
 #
 LIST(APPEND all ${myPlugins})
@@ -107,17 +107,17 @@ FILE(WRITE  "${QT_CONF}" "[Paths]\n")
 FILE(APPEND "${QT_CONF}" "Plugins = PlugIns\n")
 
 # Copy fonts, i18n and icons
-FILE(COPY "${ORIGINAL}/Contents/Resources/share" DESTINATION "${RESOURCES}") 
-FILE(COPY "${ORIGINAL}/Contents/Resources/fonts" DESTINATION "${RESOURCES}") 
-FILE(COPY "${ORIGINAL}/Contents/Resources/avidemux.icns" DESTINATION "${RESOURCES}") 
+FILE(COPY "${ORIGINAL}/Contents/Resources/share" DESTINATION "${RESOURCES}")
+FILE(COPY "${ORIGINAL}/Contents/Resources/fonts" DESTINATION "${RESOURCES}")
+FILE(COPY "${ORIGINAL}/Contents/Resources/avidemux.icns" DESTINATION "${RESOURCES}")
 
 # Entice macOS to return correct system language (QTBUG-72491)
 FILE(GLOB ListOfTranslationFiles "${RESOURCES}/share/avidemux6/qt${ADM_QT_VERSION}/i18n/avidemux_*.qm")
 FOREACH(lang ${ListOfTranslationFiles})
-    STRING(REGEX REPLACE ".*avidemux_" "" lang "${lang}")
-    STRING(REPLACE ".qm" "" lang "${lang}")
-    MESSAGE(STATUS "Creating directory ${BUNDLE}/Contents/Resources/${lang}.lproj")
-    FILE(MAKE_DIRECTORY "${BUNDLE}/Contents/Resources/${lang}.lproj")
+  STRING(REGEX REPLACE ".*avidemux_" "" lang "${lang}")
+  STRING(REPLACE ".qm" "" lang "${lang}")
+  MESSAGE(STATUS "Creating directory ${BUNDLE}/Contents/Resources/${lang}.lproj")
+  FILE(MAKE_DIRECTORY "${BUNDLE}/Contents/Resources/${lang}.lproj")
 ENDFOREACH(lang ${ListOfTranslationFiles})
 
 # Fixup bundle
@@ -129,17 +129,17 @@ INSTALL(SCRIPT "${CMAKE_BINARY_DIR}/admFixupBundle.cmake" COMPONENT Runtime)
 MESSAGE(STATUS "* Creating dmg *")
 # Call cpack to create the dmg using the dragndrop installer
 IF(NOT DMG_BASENAME)
-        SET(DMG_BASENAME "Avidemux ${AVIDEMUX_VERSION}")
-        IF(ENABLE_QT6)
-                SET(DMG_BASENAME "${DMG_BASENAME} Qt6")
-        ELSE(ENABLE_QT6)
-                IF(ENABLE_QT5)
-                        SET(DMG_BASENAME "${DMG_BASENAME} Qt5")
-                ENDIF(ENABLE_QT5)
-        ENDIF(ENABLE_QT6)
-        IF(NOT RELEASE AND BUILD_REV)
-                SET(DMG_BASENAME "${DMG_BASENAME} ${BUILD_REV}")
-        ENDIF(NOT RELEASE AND BUILD_REV)
+  SET(DMG_BASENAME "Avidemux ${AVIDEMUX_VERSION}")
+  IF(ENABLE_QT6)
+    SET(DMG_BASENAME "${DMG_BASENAME} Qt6")
+  ELSE(ENABLE_QT6)
+    IF(ENABLE_QT5)
+      SET(DMG_BASENAME "${DMG_BASENAME} Qt5")
+    ENDIF(ENABLE_QT5)
+  ENDIF(ENABLE_QT6)
+  IF(NOT RELEASE AND BUILD_REV)
+    SET(DMG_BASENAME "${DMG_BASENAME} ${BUILD_REV}")
+  ENDIF(NOT RELEASE AND BUILD_REV)
 ENDIF(NOT DMG_BASENAME)
 
 #

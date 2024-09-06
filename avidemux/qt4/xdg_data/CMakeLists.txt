@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.11)
+cmake_minimum_required(VERSION 3.7)
 string(TIMESTAMP BUILD_DATE "%Y-%m-%d")
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/org.avidemux.Avidemux.appdata.xml.in ${CMAKE_CURRENT_SOURCE_DIR}/org.avidemux.Avidemux.appdata.xml)
 
