@@ -242,7 +242,7 @@ create_release_package()
     libgcc_*.dll \
     libglib-*.dll \
     libgobject-*.dll \
-    libharfbuzz-*.dll \
+    libharfbuzz-0.dll \
     libiconv-*.dll \
     icudt*.dll \
     icuin*.dll \
