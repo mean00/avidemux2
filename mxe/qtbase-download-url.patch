@@ -1,9 +1,9 @@
 diff --git a/src/qtbase.mk b/src/qtbase.mk
-index e7400313..5043cf80 100644
+index 07514b5f..bd97be53 100644
 --- a/src/qtbase.mk
 +++ b/src/qtbase.mk
-@@ -8,7 +8,7 @@ $(PKG)_VERSION  := 5.15.14
- $(PKG)_CHECKSUM := 500d3b390048e9538c28b5f523dfea6936f9c2e10d24ab46580ff57d430b98be
+@@ -8,7 +8,7 @@ $(PKG)_VERSION  := 5.15.15
+ $(PKG)_CHECKSUM := e5f941fecf694ecba97c550b45b0634e552166cc6c815bcfdc481edd62796ba1
  $(PKG)_SUBDIR   := $(PKG)-everywhere-src-$($(PKG)_VERSION)
  $(PKG)_FILE     := $(PKG)-everywhere-opensource-src-$($(PKG)_VERSION).tar.xz
 -$(PKG)_URL      := https://download.qt.io/archive/qt/5.15/$($(PKG)_VERSION)/submodules/$($(PKG)_FILE)
