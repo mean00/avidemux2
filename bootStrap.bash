@@ -7,7 +7,7 @@
 packages_ext=""
 packages_dir="pkgs"
 rebuild=0
-do_ninja=1
+do_ninja=0
 do_core=1
 do_cli=1
 do_qt=1
@@ -43,13 +43,13 @@ Process() {
   DEBUG=""
   ASAN=""
   BUILD_QUIRKS=""
-  #if [ "x$do_ninja" = "x1"]; then
-  BUILDER="Ninja"
-  MAKER="ninja"
-  #else
-  #BUILDER="Unix Makefiles"
-  #MAKER="make -j $(nproc)"
-  #fi
+  if [ "x$do_ninja" = "x1" ]; then
+    BUILDER="Ninja"
+    MAKER="ninja"
+  else
+    BUILDER="Unix Makefiles"
+    MAKER="make -j $(nproc)"
+  fi
   if [ "x$debug" = "x1" ]; then
     DEBUG="-DVERBOSE=1 -DCMAKE_BUILD_TYPE=Debug"
     BASE="${BASE}_debug"
