@@ -1670,6 +1670,9 @@ uint8_t MP4Header::parseStsd(adm_atom *tom, MPsampleinfo *info, uint32_t trackTy
                     break;
                 }
 
+                if (channels)
+                    ADIO.channels = channels;
+
                 if(fq != trackScale)
                     ADM_warning("[stsd] Sampling rate in audio sample description doesn't match track scale!\n");
                 if(fq < MIN_SAMPLING_RATE)
