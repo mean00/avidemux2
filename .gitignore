@@ -8,6 +8,7 @@ ffconf
 *.sw*
 build*
 debs
+pkgs
 addons/*
 install/*
 avidemux/qt4/common
