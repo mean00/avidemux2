@@ -18,15 +18,13 @@ static bool translatorLoaded = false;
 
 static int loadTranslation(QTranslator *qTranslator, QString translation)
 {
-    ADM_info("[Locale] Loading language file %s ", translation.toUtf8().constData());
-
     if (qTranslator->load(translation))
     {
         QApplication::installTranslator(qTranslator);
-        ADM_info("succeeded\n");
+        ADM_info("[Locale] Loading language file %s succeeded\n", translation.toUtf8().constData());
         return 1;
     }
-    ADM_warning("FAILED\n");
+    ADM_warning("[Locale] Loading language file %s FAILED\n", translation.toUtf8().constData());
     return 0;
 }
 
