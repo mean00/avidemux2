@@ -1,6 +1,4 @@
 INCLUDE(ve_plugin)
-INCLUDE(admCheckLibVA)
-checkLibVA()
 IF(LIBVA_HEVC_DEC)
     INCLUDE_DIRECTORIES(${ADM_HEADER_DIR}/ADM_coreLibVAEnc)
     SET(ffVaEncHEVC_SRCS

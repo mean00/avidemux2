@@ -1,6 +1,4 @@
 INCLUDE(ve_plugin)
-INCLUDE(admCheckLibVA)
-checkLibVA()
 INCLUDE_DIRECTORIES(${ADM_HEADER_DIR}/ADM_coreLibVAEnc)
 SET(ffVaEncH264_SRCS 
         ffVAEncH264_plugin.cpp
