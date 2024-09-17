@@ -346,15 +346,15 @@ void XvRender::displayAdaptorInfo(int num, XvAdaptorInfo *curai)
         ADM_info("[Xvideo] Adaptor           : %d\n", num);
         ADM_info("[Xvideo] Base ID           : %ld\n", curai->base_id);
         ADM_info("[Xvideo] Nb Port           : %lu\n", curai->num_ports);
-        ADM_info("[Xvideo] Type              : %d ,", curai->type);
-  #define CHECK(x) if(curai->type & x) ADM_info("|"#x);
-        CHECK(XvInputMask);
-        CHECK(XvOutputMask);
-        CHECK(XvVideoMask);
-        CHECK(XvStillMask);
-        CHECK(XvImageMask);
+  #define CHECK(x) (curai->type & x) ? (" | "#x) : ""
+        ADM_info("[Xvideo] Type              : %d%s%s%s%s%s\n", curai->type,
+            CHECK(XvInputMask),
+            CHECK(XvOutputMask),
+            CHECK(XvVideoMask),
+            CHECK(XvStillMask),
+            CHECK(XvImageMask)
+        );
 
-        ADM_info("\n");
         ADM_info("[Xvideo] Name              : %s\n", curai->name);
         ADM_info("[Xvideo] Num Adap          : %lu\n", curai->num_adaptors);
         ADM_info("[Xvideo] Num fmt           : %lu\n", curai->num_formats);
