@@ -1,0 +1,7 @@
+repos:
+-   repo: https://github.com/pocc/pre-commit-hooks
+    rev: v1.3.5
+    hooks:
+    -   id: clang-format
+        args: ["--style=Microsoft", "-i" ]
+fail_fast: false

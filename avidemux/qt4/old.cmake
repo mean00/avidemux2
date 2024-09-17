@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.7)
 SET(AVIDEMUX_API_VERSION 2.7)
 SET(ADM_PROJECT Avidemux_qt4)
 
