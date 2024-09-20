@@ -415,31 +415,40 @@ bool ADM_coreVideoEncoderFFmpeg::setupInternal(const AVCodec *codec)
     int d = info->timeBaseDen & 0x7FFFFFFF;
     ADM_assert(n);
     ADM_assert(d);
+    _context->time_base.num = n;
+    _context->time_base.den = d;
     if(isStdFrameRate(d,n))
     {
-        _context->time_base.num = _context->framerate.den = n;
-        _context->time_base.den = _context->framerate.num = d;
-    }else
+        _context->framerate.den = n;
+        _context->framerate.num = d;
+    } else
     {
         int maxClockFreq = 0x7FFFFFFF;
+        usSecondsToFrac(info->frameIncrement, &(_context->framerate.num), &(_context->framerate.den), maxClockFreq);
         switch(codec->id)
         {
             case AV_CODEC_ID_MPEG4:
                 maxClockFreq = 0xFFFF;
+                if(d > maxClockFreq)
+                {
+                    d = maxClockFreq;
+                    n = 1;
+                }
                 break;
             case AV_CODEC_ID_MPEG2VIDEO:
                 maxClockFreq = 90000;
+                // can we derive a standard frame rate from time increment?
+                usSecondsToFrac(info->frameIncrement, &n, &d, maxClockFreq);
+                if(!isStdFrameRate(d,n))
+                {
+                    ADM_error("Non-standard frame rate %d/%d is not supported for mpeg2video.\n",d,n);
+                    return false;
+                }
                 break;
             default:break;
         }
-        usSecondsToFrac(info->frameIncrement,&n,&d,maxClockFreq);
-        _context->time_base.num = _context->framerate.den = n;
-        _context->time_base.den = _context->framerate.num = d;
-        if(codec->id == AV_CODEC_ID_MPEG2VIDEO && !isStdFrameRate(d,n))
-        {
-            ADM_error("Non-standard frame rate %d/%d is not supported for mpeg2video.\n",d,n);
-            return false;
-        }
+        _context->time_base.num = n;
+        _context->time_base.den = d;
     }
     timeScalerNum=_context->time_base.num;
     timeScalerDen=_context->time_base.den;
