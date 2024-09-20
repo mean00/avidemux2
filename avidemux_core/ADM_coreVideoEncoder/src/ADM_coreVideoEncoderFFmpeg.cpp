@@ -593,21 +593,18 @@ bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
 {
     out->len=size;
 
+    if(queueOfDts.empty())
+        return false;
+
+    out->dts = queueOfDts[0];
+
     // Update PTS/Dts
     if(!_context->max_b_frames)
     {
-            if(mapper.size())
-                mapper.erase(mapper.begin());
-            if(queueOfDts.size())
-            {
-                out->dts=out->pts=queueOfDts[0];
-                queueOfDts.erase(queueOfDts.begin());
-            }else
-            {
-                out->dts=out->pts=lastDts+ source->getInfo()->frameIncrement;
-                return false; // probably empty now
-            }
-
+        if(mapper.size())
+            mapper.erase(mapper.begin());
+        out->pts = out->dts;
+        queueOfDts.erase(queueOfDts.begin());
     } else
     {
         if(lavPtsFromPacket==AV_NOPTS_VALUE)
