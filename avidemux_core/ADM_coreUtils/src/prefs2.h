@@ -91,6 +91,11 @@ struct  {
 	uint32_t avisynth_defaultport;
 	uint32_t avisynth_localport;
 }avisynth;
+struct  {
+	uint32_t ts_ps_indexing;
+	uint32_t mkv_indexing;
+	uint32_t mp4_indexing;
+}indexing;
 bool reset_encoder_on_video_load;
 struct  {
 	bool load_in_reverse_order;
