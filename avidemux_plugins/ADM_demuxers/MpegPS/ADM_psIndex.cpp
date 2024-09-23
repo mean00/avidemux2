@@ -26,6 +26,7 @@
 #include "ADM_vidMisc.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_coreUtils.h"
+#include "prefs.h"
 
 static const char Type[5]={'X','I','P','B','P'};  // Frame type
 static const char Structure[6]={'X','T','B','F','C','S'}; // Invalid, Top, Bottom, Frame, Frame+TFF, Frame+BFF
@@ -197,14 +198,31 @@ uint8_t PsIndexer::run(const char *file)
     char *indexName=(char *)malloc(strlen(file)+6);
     sprintf(indexName,"%s.idx2",file);
 
-    index=qfopen(indexName,"wt",true);
-    if(!index)
+    uint32_t indexingPref = 2;
+    if (!prefs->get(INDEXING_TS_PS_INDEXING, &indexingPref)) indexingPref = 2;
+
+    if (indexingPref == 2)
     {
-        printf("[PsIndex] Cannot create %s\n",indexName);
+        index=qfopen(indexName,"wt",true);
+        if(!index)
+        {
+            printf("[PsIndex] Cannot create %s\n",indexName);
+            mFile = mfopen(indexName,"wt");
+            if (!mFile)
+            {
+                printf("[PsIndex] Cannot create memFile either\n");
+                free(indexName);
+                return 0;
+            }
+        }
+    }
+    else
+    {
+        index = NULL;
         mFile = mfopen(indexName,"wt");
         if (!mFile)
         {
-            printf("[PsIndex] Cannot create memFile either\n");
+            printf("[PsIndex] Cannot create memFile\n");
             free(indexName);
             return 0;
         }

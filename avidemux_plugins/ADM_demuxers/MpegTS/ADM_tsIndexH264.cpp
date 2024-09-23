@@ -14,6 +14,7 @@
 #include "ADM_tsIndex.h"
 #include "DIA_coreToolkit.h"
 #include <algorithm>
+#include "prefs.h"
 
 
 #define ifprintf(...)   do { \
@@ -242,15 +243,31 @@ uint8_t TsIndexerH264::run(const char *file, ADM_TS_TRACK *videoTrac)
     data.picStructure=pictureFrame;
     string indexName=string(file);
     indexName=indexName+string(".idx2");
-    index=qfopen(indexName,(const char*)"wt",true);
+    
+    uint32_t indexingPref = 2;
+    if (!prefs->get(INDEXING_TS_PS_INDEXING, &indexingPref)) indexingPref = 2;
 
-    if(!index)
+    if (indexingPref == 2)
     {
-        ADM_error("[TsIndexerH264] Cannot create %s\n",indexName.c_str());
+        index=qfopen(indexName,(const char*)"wt",true);
+        if(!index)
+        {
+            ADM_error("[TsIndexerH264] Cannot create %s\n",indexName.c_str());
+            mFile=mfopen(indexName,"wt");
+            if (!mFile)
+            {
+                printf("[TsIndexerH264] Cannot create memFile either\n");
+                return 0;
+            }
+        }
+    }
+    else
+    {
+        index = NULL;
         mFile=mfopen(indexName,"wt");
         if (!mFile)
         {
-            printf("[TsIndexerH264] Cannot create memFile either\n");
+            printf("[TsIndexerH264] Cannot create memFile\n");
             return 0;
         }
     }

@@ -16,6 +16,7 @@
 #include "ADM_tsIndex.h"
 #include "ADM_h265_tag.h"
 #include "ADM_vidMisc.h"
+#include "prefs.h"
 
 #if 1
 #define aprintf(...) {}
@@ -313,15 +314,31 @@ uint8_t TsIndexerH265::run(const char *file,ADM_TS_TRACK *videoTrac)
     data.picStructure=pictureFrame;
     string indexName=string(file);
     indexName=indexName+string(".idx2");
-    index=qfopen(indexName,(const char*)"wt",true);
+    
+    uint32_t indexingPref = 2;
+    if (!prefs->get(INDEXING_TS_PS_INDEXING, &indexingPref)) indexingPref = 2;
 
-    if(!index)
+    if (indexingPref == 2)
     {
-        printf("[TsIndexerH265] Cannot create %s\n",indexName.c_str());
+        index=qfopen(indexName,(const char*)"wt",true);
+        if(!index)
+        {
+            printf("[TsIndexerH265] Cannot create %s\n",indexName.c_str());
+            mFile=mfopen(indexName,"wt");
+            if (!mFile)
+            {
+                printf("[TsIndexerH265] Cannot create memFile either\n");
+                return false;
+            }
+        }
+    }
+    else
+    {
+        index = NULL;
         mFile=mfopen(indexName,"wt");
         if (!mFile)
         {
-            printf("[TsIndexerH265] Cannot create memFile either\n");
+            printf("[TsIndexerH265] Cannot create memFile\n");
             return false;
         }
     }

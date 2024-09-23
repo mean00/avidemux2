@@ -12,6 +12,7 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_tsIndex.h"
+#include "prefs.h"
 
 static const uint32_t  VC1_ar[16][2] = {  // From VLC
                         { 0, 0}, { 1, 1}, {12,11}, {10,11}, {16,11}, {40,33},
@@ -52,18 +53,35 @@ dmxPacketInfo info;
     
     string indexName=string(file);
     indexName=indexName+string(".idx2");
-    index=qfopen(indexName,"wt",true);
+    
+    uint32_t indexingPref = 2;
+    if (!prefs->get(INDEXING_TS_PS_INDEXING, &indexingPref)) indexingPref = 2;
 
-    if(!index)
+    if (indexingPref == 2)
     {
-        printf("[TsIndex] Cannot create %s\n",indexName.c_str());
+        index=qfopen(indexName,"wt",true);
+        if(!index)
+        {
+            printf("[TsIndex] Cannot create %s\n",indexName.c_str());
+            mFile=mfopen(indexName,"wt");
+            if (!mFile)
+            {
+                printf("[TsIndex] Cannot create memFile either\n");
+                return false;
+            }
+        }
+    }
+    else
+    {
+        index = NULL;
         mFile=mfopen(indexName,"wt");
         if (!mFile)
         {
-            printf("[TsIndex] Cannot create memFile either\n");
+            printf("[TsIndex] Cannot create memFile\n");
             return false;
         }
     }
+    
     writeSystem(file,false);
     pkt=new tsPacketLinearTracker(videoTrac->trackPid, audioTracks);
     

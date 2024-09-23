@@ -13,6 +13,7 @@
  ***************************************************************************/
 #include "ADM_tsIndex.h"
 #include "DIA_coreToolkit.h"
+#include "prefs.h"
 
 static const uint32_t FPS[16]={
                 0,                      // 0
@@ -71,15 +72,31 @@ uint8_t result=1;
 
     string indexName=string(file);
     indexName=indexName+string(".idx2");
-    index=qfopen(indexName,"wt",true);
+    
+    uint32_t indexingPref = 2;
+    if (!prefs->get(INDEXING_TS_PS_INDEXING, &indexingPref)) indexingPref = 2;
 
-    if(!index)
+    if (indexingPref == 2)
     {
-        printf("[TsIndexerMpeg2] Cannot create %s\n",indexName.c_str());
+        index=qfopen(indexName,"wt",true);
+        if(!index)
+        {
+            printf("[TsIndexerMpeg2] Cannot create %s\n",indexName.c_str());
+            mFile=mfopen(indexName,"wt");
+            if (!mFile)
+            {
+                printf("[TsIndexerMpeg2] Cannot create memFile either\n");
+                return 0;
+            }
+        }
+    }
+    else
+    {
+        index = NULL;
         mFile=mfopen(indexName,"wt");
         if (!mFile)
         {
-            printf("[TsIndexerMpeg2] Cannot create memFile either\n");
+            printf("[TsIndexerMpeg2] Cannot create memFile\n");
             return 0;
         }
     }
