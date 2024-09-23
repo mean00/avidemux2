@@ -26,6 +26,8 @@
 #include "ADM_videoInfoExtractor.h"
 #include "ADM_vidMisc.h"
 #include "ADM_metaToFile.h"
+#include "prefs.h"
+
 #define VIDEO _tracks[0]
 
 #if 0
@@ -762,13 +764,13 @@ uint8_t mkvHeader::indexClusters(ADM_ebml_file *parser)
     const char *ss;
     uint64_t pos;
     uint8_t res=1;
-    bool indexOnDisk = true;
     bool indexAllowOverwrite = false;
 
-    if (NULL != getenv("ADM_NOINDEX_MKV") && !strncmp(getenv("ADM_NOINDEX_MKV"), "1", 1))
-        indexOnDisk = false;
+    uint32_t indexingPref = 1;
+    if (!prefs->get(INDEXING_MKV_INDEXING, &indexingPref)) indexingPref = 1;
 
-    if (indexOnDisk)
+
+    if (indexingPref > 0)
     {
         if (NULL != getenv("ADM_MKV_INDEX_ALLOW_OVERWRITE") && !strncmp(getenv("ADM_MKV_INDEX_ALLOW_OVERWRITE"), "1", 1))
             indexAllowOverwrite = true;
@@ -853,7 +855,7 @@ tryAgain:
     _work = NULL;
     //ADM_info("[MKV] Found %u clusters\n",(int)_clusters.size());
 
-    if (indexOnDisk)
+    if (indexingPref==2)
     {
         if ((res == ADM_OK) && (!!VIDEO.index.size()))
         {
