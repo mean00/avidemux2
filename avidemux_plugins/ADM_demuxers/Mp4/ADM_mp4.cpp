@@ -73,6 +73,7 @@ version 2 media descriptor :
 #include "ADM_mp3info.h"
 #include "ADM_dcainfo.h"
 #include "ADM_audioXiphUtils.h"
+#include "prefs.h"
 
 #if 1
 #define aprintf(...) {}
@@ -382,13 +383,12 @@ uint8_t    MP4Header::open(const char *name)
         
         _idxName = name;
         _idxName += ".idxb";
-        bool indexOnDisk = true;
         bool indexAllowOverwrite = false;
 
-        if (NULL != getenv("ADM_NOINDEX_MP4") && !strncmp(getenv("ADM_NOINDEX_MP4"), "1", 1))
-            indexOnDisk = false;
-
-        if (indexOnDisk)
+        uint32_t indexingPref = 1;
+        if (!prefs->get(INDEXING_MP4_INDEXING, &indexingPref)) indexingPref = 1;
+        
+        if (indexingPref>0)
         {
             if (NULL != getenv("ADM_MP4_INDEX_ALLOW_OVERWRITE") && !strncmp(getenv("ADM_MP4_INDEX_ALLOW_OVERWRITE"), "1", 1))
                 indexAllowOverwrite = true;
@@ -524,7 +524,7 @@ uint8_t    MP4Header::open(const char *name)
             if(extractSPSInfo_mp4Header(VDEO.extraData,VDEO.extraDataSize,&info))
             {
                 bool indexLoadedFromDisk = false;
-                if (indexOnDisk)
+                if (indexingPref>0)
                 {
                     if (loadIndex(_idxName, fileSize))
                     {
@@ -648,7 +648,7 @@ uint8_t    MP4Header::open(const char *name)
                         ADM_info("Field encoded H.264 stream detected, # fields: %u\n",fields);
                     else
                         ADM_info("Probably a frame encoded H.264 stream.\n");
-                    if (indexOnDisk && !cancelled)
+                    if ((indexingPref==2) && !cancelled)
                     {
                         saveIndex(_idxName, fileSize, indexAllowOverwrite);
                     }
@@ -660,7 +660,7 @@ uint8_t    MP4Header::open(const char *name)
             if(extractSPSInfoH265(VDEO.extraData,VDEO.extraDataSize,&info))
             {
                 bool indexLoadedFromDisk = false;
-                if (indexOnDisk)
+                if (indexingPref>0)
                 {
                     if (loadIndex(_idxName, fileSize))
                     {
@@ -732,7 +732,7 @@ uint8_t    MP4Header::open(const char *name)
                     work=NULL;
                     delete [] bfer;
                     bfer=NULL;
-                    if (indexOnDisk && !cancelled)
+                    if ((indexingPref==2) && !cancelled)
                     {
                         saveIndex(_idxName, fileSize, indexAllowOverwrite);
                     }
