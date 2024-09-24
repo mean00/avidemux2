@@ -1,6 +1,15 @@
 # Avidemux
 
-Avidemux is a simple cross-platform video editor for Linux, Windows and macOS.
+Avidemux is a simple, free, cross-platform video editor that is used for simple cutting, filtering, and encoding video tasks. Avidemux supports automated tasks using projects or scripting and is currently suppored on Linux, BSD, MacOS X, and Microsoft Windows.
+
+We currently support the follwing file types:
+* AVI
+* DVD
+* MPEG
+* MP4
+* ASF
+
+[View our website](https://avidemux.sourceforge.net/)
 
 # Download executables
 
@@ -8,7 +17,7 @@ Avidemux is a simple cross-platform video editor for Linux, Windows and macOS.
 
 [Nightly builds](https://www.avidemux.org/nightly/)
 
-# Build from source
+# Installation - Build from source
 
 **Avidemux build directory must be located on a case-sensitive file system.**
 
@@ -86,3 +95,19 @@ of `BUNDLE_CONTENT` variable in the aforementioned file accordingly.
 ## Build for Windows
 
 [Cross-compiling Avidemux on Linux for Windows](https://github.com/mean00/avidemux2/blob/master/cross-compiling.txt)
+
+# Examples - Different Windows
+
+<img width="597" alt="Screenshot 2024-09-24 at 11 18 47 AM" src="https://github.com/user-attachments/assets/5d4648bd-a885-4ab6-a277-7657be405ae2">
+
+# Documentation and Support
+
+[Wiki Docs](https://www.avidemux.org/admWiki/doku.php)
+
+[Forum](https://www.avidemux.org/admForum/)
+
+[News](https://avidemux.sourceforge.net/news.html)
+
+## Contributors
+
+Avidemux was written by Mean but code from other's are always welcome and have been used.
