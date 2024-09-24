@@ -1,6 +1,6 @@
 # Avidemux
 
-Avidemux is a simple, free, cross-platform video editor that is used for simple cutting, filtering, and encoding video tasks. Avidemux supports automated tasks using projects or scripting and is currently supported on Linux, BSD, MacOS X, and Microsoft Windows.
+Avidemux is a simple, free, cross-platform video editor that is used for simple cutting, filtering, and encoding video tasks. Avidemux supports automated tasks using projects or scripting and is currently supported on Linux, BSD, MacOS X, and Microsoft Windows. Avidemux was primarily made with the C and C++ programming languages and was created to act as a desktop based video editing application.
 
 Avidemux currently support the follwing file types:
 * AVI
