@@ -11,6 +11,16 @@ Avidemux currently support the follwing file types:
 
 [View our website](https://avidemux.sourceforge.net/)
 
+# Table of Contents:
+[Why Avidemux](https://github.com/kaimcfarlane/avidemux2/edit/kaimcfarlane-ReadMe_Updates/README.md#why-avidemux)  
+[Main Features](https://github.com/kaimcfarlane/avidemux2/edit/kaimcfarlane-ReadMe_Updates/README.md#main-features)  
+[Download Executables](https://github.com/kaimcfarlane/avidemux2/edit/kaimcfarlane-ReadMe_Updates/README.md#download-executables)  
+[Installation](https://github.com/kaimcfarlane/avidemux2/edit/kaimcfarlane-ReadMe_Updates/README.md#installation---build-from-source)  
+[Examples](https://github.com/kaimcfarlane/avidemux2/edit/kaimcfarlane-ReadMe_Updates/README.md#examples---different-windows)  
+[Documentation](https://github.com/kaimcfarlane/avidemux2/edit/kaimcfarlane-ReadMe_Updates/README.md#documentation-and-support)  
+[Collaborators](https://github.com/kaimcfarlane/avidemux2/edit/kaimcfarlane-ReadMe_Updates/README.md#colloborators)  
+
+
 # Why Avidemux?
 
 Avidemux provides a simple, easy, and free video editor platform that most can quicky setup and use without much video editing experience. Avidemux can run on every major operating system and supports the most widely used video file types.
@@ -120,6 +130,6 @@ of `BUNDLE_CONTENT` variable in the aforementioned file accordingly.
 
 [News](https://avidemux.sourceforge.net/news.html)
 
-## Contributors
+# Collaborators
 
-Avidemux was written by Mean but code from other's are always welcome and have been used.
+Avidemux was written by Mean but code constributions from other's are always welcome and have been used.
