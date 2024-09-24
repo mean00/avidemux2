@@ -12,14 +12,13 @@ Avidemux currently support the follwing file types:
 [View our website](https://avidemux.sourceforge.net/)
 
 # Table of Contents:
-[Why Avidemux](https://github.com/kaimcfarlane/avidemux2/edit/kaimcfarlane-ReadMe_Updates/README.md#why-avidemux)  
-[Main Features](https://github.com/kaimcfarlane/avidemux2/edit/kaimcfarlane-ReadMe_Updates/README.md#main-features)  
-[Download Executables](https://github.com/kaimcfarlane/avidemux2/edit/kaimcfarlane-ReadMe_Updates/README.md#download-executables)  
-[Installation](https://github.com/kaimcfarlane/avidemux2/edit/kaimcfarlane-ReadMe_Updates/README.md#installation---build-from-source)  
-[Examples](https://github.com/kaimcfarlane/avidemux2/edit/kaimcfarlane-ReadMe_Updates/README.md#examples---different-windows)  
-[Documentation](https://github.com/kaimcfarlane/avidemux2/edit/kaimcfarlane-ReadMe_Updates/README.md#documentation-and-support)  
-[Collaborators](https://github.com/kaimcfarlane/avidemux2/edit/kaimcfarlane-ReadMe_Updates/README.md#colloborators)  
-
+[Why Avidemux](https://github.com/kaimcfarlane/avidemux2/kaimcfarlane-ReadMe_Updates/README.md#why-avidemux)  
+[Main Features](https://github.com/kaimcfarlane/avidemux2/kaimcfarlane-ReadMe_Updates/README.md#main-features)  
+[Download Executables](https://github.com/kaimcfarlane/avidemux2/kaimcfarlane-ReadMe_Updates/README.md#download-executables)  
+[Installation](https://github.com/kaimcfarlane/avidemux2/kaimcfarlane-ReadMe_Updates/README.md#installation---build-from-source)  
+[Examples](https://github.com/kaimcfarlane/avidemux2/kaimcfarlane-ReadMe_Updates/README.md#examples---different-windows)  
+[Documentation](https://github.com/kaimcfarlane/avidemux2/kaimcfarlane-ReadMe_Updates/README.md#documentation-and-support)  
+[Collaborators](https://github.com/kaimcfarlane/avidemux2/kaimcfarlane-ReadMe_Updates/README.md#colloborators)  
 
 # Why Avidemux?
 
