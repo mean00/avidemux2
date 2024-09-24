@@ -117,7 +117,26 @@ of `BUNDLE_CONTENT` variable in the aforementioned file accordingly.
 
 # Examples - Different Windows
 
-<img width="597" alt="Screenshot 2024-09-24 at 11 18 47 AM" src="https://github.com/user-attachments/assets/5d4648bd-a885-4ab6-a277-7657be405ae2">
+## Main Window
+Holds general information like project video timeline and main editing options within the top banner.
+
+![avidemux1](https://github.com/user-attachments/assets/e0cffa49-ed3c-4f28-8b8a-7f581cf709bb)
+
+## Filters
+Panel where you can apply different filters to current selected video.
+
+![avidemux2](https://github.com/user-attachments/assets/b25c88b6-4aad-4f0d-982a-630031f1d0a6)
+
+## Video Filter Manager
+Menu where you can add/remove filters to your project.
+
+![avidemux3](https://github.com/user-attachments/assets/57342fb9-c3e8-4cf1-ac36-ee1ef76cf0ba)
+
+## Options
+Settings where you can adjust output and general Avidemux settings.
+
+![avidemux4](https://github.com/user-attachments/assets/5a963cb8-1129-4d50-9f7e-2fe5f333d4bc)
+
 
 # Documentation and Support
 
