@@ -2,7 +2,7 @@
 
 Avidemux is a simple, free, cross-platform video editor that is used for simple cutting, filtering, and encoding video tasks. Avidemux supports automated tasks using projects or scripting and is currently suppored on Linux, BSD, MacOS X, and Microsoft Windows.
 
-We currently support the follwing file types:
+Avidemux currently support the follwing file types:
 * AVI
 * DVD
 * MPEG
@@ -10,6 +10,16 @@ We currently support the follwing file types:
 * ASF
 
 [View our website](https://avidemux.sourceforge.net/)
+
+# Why Avidemux?
+
+Avidemux provides a simple, easy, and free video editor platform that most can quicky setup and use without much video editing knowledge. Avidemux can run on every major operating system and supports the most widely used video file types.
+
+# Main Features
+
+* Video Cuts
+* Video Rotation and Flips
+* Video Filters (tranform, interlacing, colors, noise, shaprness, miscellanious)
 
 # Download executables
 
@@ -105,6 +115,8 @@ of `BUNDLE_CONTENT` variable in the aforementioned file accordingly.
 [Wiki Docs](https://www.avidemux.org/admWiki/doku.php)
 
 [Forum](https://www.avidemux.org/admForum/)
+
+[Reddit Forum](https://www.reddit.com/r/Avidemux/)
 
 [News](https://avidemux.sourceforge.net/news.html)
 
