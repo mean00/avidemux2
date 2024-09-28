@@ -768,6 +768,8 @@ uint8_t mkvHeader::indexClusters(ADM_ebml_file *parser)
 
     uint32_t indexingPref = 1;
     if (!prefs->get(INDEXING_MKV_INDEXING, &indexingPref)) indexingPref = 1;
+    if (NULL != getenv("ADM_FORCE_INDEX_TO_FILE") && !strncmp(getenv("ADM_FORCE_INDEX_TO_FILE"), "1", 1))
+        indexingPref = 2;
 
 
     if (indexingPref > 0)

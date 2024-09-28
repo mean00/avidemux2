@@ -123,6 +123,8 @@ bool indexFile::open(const char *name)
 {
     uint32_t indexingPref = 2;
     if (!prefs->get(INDEXING_TS_PS_INDEXING, &indexingPref)) indexingPref = 2;
+    if (NULL != getenv("ADM_FORCE_INDEX_TO_FILE") && !strncmp(getenv("ADM_FORCE_INDEX_TO_FILE"), "1", 1))
+        indexingPref = 2;
     
     if (indexingPref==0)
     {
