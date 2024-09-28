@@ -44,9 +44,9 @@ if (APPLE AND "$ENV{MACOSX_DEPLOYMENT_TARGET}" VERSION_EQUAL "10.15")
   xadd(--extra-cflags="-fno-stack-check") # see https://trac.ffmpeg.org/ticket/8073
 ENDIF()
 
-#if (NOT APPLE AND NOT ADM_CPU_X86_32)
-#xadd(--enable-lto)
-#endif (NOT APPLE AND NOT ADM_CPU_X86_32)
+if (NOT APPLE AND NOT ADM_CPU_X86_32 AND NOT "${CMAKE_C_COMPILER}" MATCHES ".*[cC]lang.*")
+  xadd(--enable-lto)
+endif (NOT APPLE AND NOT ADM_CPU_X86_32 AND NOT "${CMAKE_C_COMPILER}" MATCHES ".*[cC]lang.*")
 
 #@@
 ADM_FF_ADD_OPTIONS()
