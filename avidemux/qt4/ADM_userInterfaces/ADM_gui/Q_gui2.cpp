@@ -3304,6 +3304,14 @@ void UI_setTotalTime(uint64_t curTime)
     slider->setTotalDuration(curTime);
 }
 /**
+    \fn UI_setCurrentRefInfo
+    \brief Set the current reference PTS and video of the displayed video
+*/
+void UI_setCurrentRefInfo(uint64_t refPts, uint32_t refVideo)
+{
+    //TODO
+}
+/**
     \fn UI_setSegments
     \brief SEt segments boundaries
 */

@@ -120,6 +120,7 @@ static int ignore_change=0;
                 ADM_warning("Scale: Seeking to intra at %" PRIu64" ms failed\n",pts/1000);
             }
             UI_setCurrentTime(pts);
+            UI_setCurrentRefInfo(admPreview::getRefPts(), admPreview::getRefVideo());
             UI_purge();
             ignore_change--;
         }
@@ -159,6 +160,7 @@ static int ignore_change=0;
                 video_body->rewind(); // go to the first frame then
             admPreview::samePicture();
             UI_setCurrentTime(pts);
+            UI_setCurrentRefInfo(admPreview::getRefPts(), admPreview::getRefVideo());
             UI_purge();
             ignore_change--;
         }
@@ -582,6 +584,7 @@ void GUI_setCurrentFrameAndTime(uint64_t offset)
     double len;
    
     UI_setCurrentTime(pts);
+    UI_setCurrentRefInfo(admPreview::getRefPts(), admPreview::getRefVideo());
     len=pts;
     len*=ADM_SCALE_SIZE;
     len/=video_body->getVideoDuration();  
