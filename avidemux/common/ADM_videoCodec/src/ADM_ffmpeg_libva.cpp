@@ -651,6 +651,8 @@ bool     decoderFFLIBVA::readBackBuffer(AVFrame *decodedFrame, ADMCompressedImag
     out->refDescriptor.refMarkUsed=libvaMarkSurfaceUsed;
     out->refDescriptor.refMarkUnused=libvaMarkSurfaceUnused;
     out->refDescriptor.refDownload=libvaRefDownload;
+    out->_width = decodedFrame->width;   // out is ref, we can do this
+    out->_height = decodedFrame->height;
     return true;
 }
 

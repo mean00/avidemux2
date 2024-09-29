@@ -233,6 +233,8 @@ bool decoderAom::uncompress(ADMCompressedImage *in, ADMImage *out)
 
             r->Pts=in->demuxerPts;
             r->flags=in->flags;
+            r->_width = img->w;
+            r->_height = img->h;
             // make sure the output is not marked as a hw image
             int count = 0;
             while(r->refType != ADM_HW_NONE && count < 32 /* arbitrary limit */)

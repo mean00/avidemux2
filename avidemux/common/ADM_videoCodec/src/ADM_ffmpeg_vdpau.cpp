@@ -482,6 +482,8 @@ bool     decoderFFVDPAU::readBackBuffer(AVFrame *decodedFrame, ADMCompressedImag
     out->Pts = decodedFrame->pts;
     out->flags=admFrameTypeFromLav(decodedFrame);
     out->_range=(decodedFrame->color_range==AVCOL_RANGE_JPEG)? ADM_COL_RANGE_JPEG : ADM_COL_RANGE_MPEG;
+    out->_width = decodedFrame->width;   // out is ref, we can do this
+    out->_height = decodedFrame->height;
     return true;
 }
 

@@ -221,6 +221,8 @@ uint8_t decoderFF::cloneColorInfo(const AVFrame *src, ADMImage *out)
             default: break;
         }
     }
+    out->_width = src->width;   // out is ref, we can do this
+    out->_height = src->height;
 
     return 1;
 }

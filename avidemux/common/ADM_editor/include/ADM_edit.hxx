@@ -164,6 +164,9 @@ protected:
                     ADM_PP      *_pp;             // Postprocessing settings
                     ADMToneMapperConfig    *_hdrConfig;
                     ADMImage	*_imageBuffer;   // Temp buffer used for decoding
+                    ADMColorScalerFull *_rescueScaler;
+                    int         _rescueScalerWidth, _rescueScalerHeight;
+                    ADM_pixelFormat _rescueScalerPixFmt;
                     uint64_t    _currentPts;        // Current image PTS
                     uint32_t    _currentSegment;    // Current video segment
                     int64_t     _nextFrameDts;      // COPYMODE Used in copy mode to fill the missing timestamp
