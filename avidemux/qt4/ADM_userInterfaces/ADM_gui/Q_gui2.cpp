@@ -1520,7 +1520,7 @@ void MainWindow::updateActionShortcuts(void)
         q = findAction(&myMenuGo, ACT_NextCutPoint);
         if(q)
             q->setShortcut(Qt::SHIFT | (swpud ? Qt::Key_Down : Qt::Key_Up));
-        
+
         q = findAction(&myMenuGo, ACT_Back1Mn);
         if(q)
             q->setShortcut(Qt::CTRL | (swpud ? Qt::Key_Up : Qt::Key_Down));
@@ -1702,7 +1702,13 @@ void MainWindow::widgetsUpdateTooltips(void)
     tt += SHORTCUT(ACT_NextCutPoint,Go)
     ui.toolButtonNextCutPoint->setToolTip(tt);
 
-    // go to black frame tooltips are static, the actions don't have shortcuts
+    tt = QString(QT_TRANSLATE_NOOP("qgui2","Search previous black frame"));
+    tt += SHORTCUT(ACT_PrevBlackFrame,Go)
+    ui.toolButtonPreviousBlackFrame->setToolTip(tt);
+
+    tt = QString(QT_TRANSLATE_NOOP("qgui2","Search next black frame"));
+    tt += SHORTCUT(ACT_NextBlackFrame,Go)
+    ui.toolButtonNextBlackFrame->setToolTip(tt);
 
     tt = QT_TRANSLATE_NOOP("qgui2","Go to first frame");
     tt += SHORTCUT(ACT_Begin,Go)
@@ -2075,7 +2081,14 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
                 switch (keyEvent->key())
                 {
                     case Qt::Key_Left:
-                        if ((keyEvent->modifiers() & Qt::ShiftModifier) && (keyEvent->modifiers() & Qt::ControlModifier))
+                        if (keyEvent->modifiers() & Qt::AltModifier)
+                        {
+                            if (keyEvent->modifiers() & Qt::ShiftModifier)
+                                sendAction(ACT_PrevBlackFrame);
+                            else
+                                sendAction(ACT_PrevSceneChange);
+                        }
+                        else if ((keyEvent->modifiers() & Qt::ShiftModifier) && (keyEvent->modifiers() & Qt::ControlModifier))
                             sendAction(ACT_Back4Seconds);
                         else if (keyEvent->modifiers() & Qt::ShiftModifier)
                             sendAction(ACT_Back1Second);
@@ -2086,7 +2099,14 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
 
                         return true;
                     case Qt::Key_Right:
-                        if ((keyEvent->modifiers() & Qt::ShiftModifier) && (keyEvent->modifiers() & Qt::ControlModifier))
+                        if (keyEvent->modifiers() & Qt::AltModifier)
+                        {
+                            if (keyEvent->modifiers() & Qt::ShiftModifier)
+                                sendAction(ACT_NextBlackFrame);
+                            else
+                                sendAction(ACT_NextSceneChange);
+                        }
+                        else if ((keyEvent->modifiers() & Qt::ShiftModifier) && (keyEvent->modifiers() & Qt::ControlModifier))
                             sendAction(ACT_Forward4Seconds);
                         else if (keyEvent->modifiers() & Qt::ShiftModifier)
                             sendAction(ACT_Forward1Second);
