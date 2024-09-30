@@ -725,25 +725,9 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     connect(ui.checkBox_TimeShift,SIGNAL(stateChanged(int)),this,SLOT(checkChanged(int)));
     connect(ui.spinBox_TimeValue,SIGNAL(valueChanged(int)),this,SLOT(timeChanged(int)));
     connect(ui.spinBox_TimeValue, SIGNAL(editingFinished()), this, SLOT(timeChangeFinished()));
-#if 0 /* it is read-only */
-    QRegExp timeRegExp("^[0-9]{2}:[0-5][0-9]:[0-5][0-9]\\.[0-9]{3}$");
-    QRegExpValidator *timeValidator = new QRegExpValidator(timeRegExp, this);
-    ui.currentTime->setValidator(timeValidator);
-    ui.currentTime->setInputMask("99:99:99.999");
-#endif
-    // set the size of the current time display to fit the content
-    QString text = "00:00:00.000"; // Don't translate this.
-#ifdef USE_CUSTOM_TIME_DISPLAY_FONT
-    ui.currentTime->setFont(QFont("ADM7SEG"));
-#endif
-    ui.currentTime->setText(text); // Override ui translations to make sure we use point as decimal separator.
-    QRect ctrect = ui.currentTime->fontMetrics().boundingRect(text);
-    ui.currentTime->setFixedSize(1.15 * ctrect.width(), ui.currentTime->height());
-
-    text = QString("/ ") + text;
-    ui.totalTime->setText(text); // Override ui translations here too.
-
-    //connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
+    
+    
+    timeDisplayInit();
 
     // Build file,... menu
     addScriptEnginesToFileMenu(myMenuFile);
@@ -1980,6 +1964,89 @@ void MainWindow::setDarkThemeSlot(bool b)
         qset = NULL;
     }
 }
+
+void MainWindow::timeDisplaySetCurrentPts(uint64_t t)
+{
+    timeDisplayCurrentPts = t;
+    if (timeDisplayMode == 0)
+        timeDisplayUpdate();
+}
+
+void MainWindow::timeDisplaySetTotalTime(uint64_t t)
+{
+    timeDisplayTotalTime = t;
+    if (t == 0) timeDisplayMode = 0;
+    if (timeDisplayMode == 0)
+        timeDisplayUpdate();
+}
+
+void MainWindow::timeDisplaySetRefInfo(uint64_t t, uint64_t v)
+{
+    timeDisplayRefPts = t;
+    timeDisplayRefVideo = v;
+    if (timeDisplayMode == 1)
+        timeDisplayUpdate();
+}
+
+void MainWindow::timeDisplayUpdate(void)
+{
+    char text[80];
+    uint32_t mm,hh,ss,ms,  shorty;
+    
+    switch(timeDisplayMode)
+    {
+        case 1: 
+            {
+                shorty=(uint32_t)(timeDisplayRefPts/1000);
+                ms2time(shorty,&hh,&mm,&ss,&ms);
+                sprintf(text, "%02d:%02d:%02d.%03d", hh, mm, ss, ms);
+                ui.currentTime->setText(text);
+                
+                QString s = QString(QT_TRANSLATE_NOOP("qgui2","/ Ref %1")).arg(timeDisplayRefVideo);
+                ui.totalTime->setText(s);
+            }
+            break;
+        default:
+            {
+                shorty=(uint32_t)(timeDisplayCurrentPts/1000);
+                ms2time(shorty,&hh,&mm,&ss,&ms);
+                sprintf(text, "%02d:%02d:%02d.%03d", hh, mm, ss, ms);
+                ui.currentTime->setText(text);
+                
+                shorty=(uint32_t)(timeDisplayTotalTime/1000);
+                ms2time(shorty,&hh,&mm,&ss,&ms);
+                sprintf(text, "/ %02d:%02d:%02d.%03d", hh, mm, ss, ms);
+                ui.totalTime->setText(text);
+            }
+            break;
+    }
+}
+
+void MainWindow::timeDisplayInit(void)
+{
+    timeDisplayMode = 0;
+    
+#if 0 /* it is read-only */
+    QRegExp timeRegExp("^[0-9]{2}:[0-5][0-9]:[0-5][0-9]\\.[0-9]{3}$");
+    QRegExpValidator *timeValidator = new QRegExpValidator(timeRegExp, this);
+    ui.currentTime->setValidator(timeValidator);
+    ui.currentTime->setInputMask("99:99:99.999");
+#endif
+    // set the size of the current time display to fit the content
+    QString text = "00:00:00.000"; // Don't translate this.
+#ifdef USE_CUSTOM_TIME_DISPLAY_FONT
+    ui.currentTime->setFont(QFont("ADM7SEG"));
+#endif
+    ui.currentTime->setText(text); // Override ui translations to make sure we use point as decimal separator.
+    QRect ctrect = ui.currentTime->fontMetrics().boundingRect(text);
+    ui.currentTime->setFixedSize(1.15 * ctrect.width(), ui.currentTime->height());
+
+    text = QString("/ ") + text;
+    ui.totalTime->setText(text); // Override ui translations here too.    
+    
+    //connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
+}
+
 
 /**
  * \fn checkChanged
@@ -3278,14 +3345,7 @@ admUITaskBarProgress *UI_getTaskBarProgress()
 */
 void UI_setCurrentTime(uint64_t curTime)
 {
-  char text[80];
- uint32_t mm,hh,ss,ms;
- uint32_t shorty=(uint32_t)(curTime/1000);
-
-    ms2time(shorty,&hh,&mm,&ss,&ms);
-      sprintf(text, "%02d:%02d:%02d.%03d", hh, mm, ss, ms);
-    WIDGET(currentTime)->setText(text);
-
+    ((MainWindow *)QuiMainWindows)->timeDisplaySetCurrentPts(curTime);
 }
 
 /**
@@ -3294,14 +3354,8 @@ void UI_setCurrentTime(uint64_t curTime)
 */
 void UI_setTotalTime(uint64_t curTime)
 {
-  char text[80];
- uint32_t mm,hh,ss,ms;
- uint32_t shorty=(uint32_t)(curTime/1000);
-
-    ms2time(shorty,&hh,&mm,&ss,&ms);
-      sprintf(text, "/ %02d:%02d:%02d.%03d", hh, mm, ss, ms);
-    WIDGET(totalTime)->setText(text);
     slider->setTotalDuration(curTime);
+    ((MainWindow *)QuiMainWindows)->timeDisplaySetTotalTime(curTime);
 }
 /**
     \fn UI_setCurrentRefInfo
@@ -3309,7 +3363,7 @@ void UI_setTotalTime(uint64_t curTime)
 */
 void UI_setCurrentRefInfo(uint64_t refPts, uint32_t refVideo)
 {
-    //TODO
+    ((MainWindow *)QuiMainWindows)->timeDisplaySetRefInfo(refPts, refVideo);
 }
 /**
     \fn UI_setSegments
