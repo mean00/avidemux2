@@ -233,6 +233,7 @@ protected:
     uint64_t timeDisplayCurrentPts, timeDisplayTotalTime, timeDisplayRefPts, timeDisplayRefVideo;
     void timeDisplayInit(void);
     void timeDisplayUpdate(void);
+    void timeDisplayContextMenu(QPoint pos);
 
 private slots:
     void timeChanged(int);

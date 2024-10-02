@@ -798,8 +798,6 @@ MainWindow::MainWindow(const vector<IScriptEngine*>& scriptEngines) : _scriptEng
     this->installEventFilter(this);
     slider->installEventFilter(this);
 
-    //ui.currentTime->installEventFilter(this);
-
     this->setFocus(Qt::OtherFocusReason);
 
     setAcceptDrops(true);
@@ -2045,8 +2043,46 @@ void MainWindow::timeDisplayInit(void)
     ui.totalTime->setText(text); // Override ui translations here too.    
     
     //connect(ui.currentTime, SIGNAL(editingFinished()), this, SLOT(currentTimeChanged()));
+    
+    ui.currentTime->installEventFilter(this);
 }
 
+void MainWindow::timeDisplayContextMenu(QPoint pos)
+{
+    if (!avifileinfo) return;
+    
+    QMenu * menu = new QMenu();
+    QAction * selectEditorTimeAction = menu->addAction(QT_TRANSLATE_NOOP("qgui2","Editor time"));
+    selectEditorTimeAction->setCheckable(true);
+    selectEditorTimeAction->setChecked(timeDisplayMode==0);
+    QAction * selectRefTimeAction = menu->addAction(QT_TRANSLATE_NOOP("qgui2","Source time"));
+    selectRefTimeAction->setCheckable(true);
+    selectRefTimeAction->setChecked(timeDisplayMode==1);
+    menu->addSeparator();
+    QAction * copyTimestampAction = menu->addAction(QT_TRANSLATE_NOOP("qgui2","Copy timestamp"));
+    
+    QAction* choosedAction = menu->exec(pos);   
+
+    if (choosedAction)
+    {
+        if (choosedAction == selectEditorTimeAction)
+        {
+            timeDisplayMode = 0;
+            timeDisplayUpdate();    
+        } else
+        if (choosedAction == selectRefTimeAction)
+        {
+            timeDisplayMode = 1;
+            timeDisplayUpdate();    
+        } else
+        if (choosedAction == copyTimestampAction)
+        {
+            currentTimeToClipboard();
+        }
+    }
+    
+    delete menu;
+}
 
 /**
  * \fn checkChanged
@@ -2293,6 +2329,14 @@ bool MainWindow::eventFilter(QObject* watched, QEvent* event)
                     navigateByTimeButtonsState %= 4;
                     updateActionShortcuts();
                 }
+            }
+            break;
+        case QEvent::ContextMenu:
+            if (watched == ui.currentTime)
+            {
+                const QContextMenuEvent* const contextMenuEvent = static_cast<const QContextMenuEvent*>( event );
+                timeDisplayContextMenu(contextMenuEvent->globalPos());
+                return true;
             }
             break;
         default:
