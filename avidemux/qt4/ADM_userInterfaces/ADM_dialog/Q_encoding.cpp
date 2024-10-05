@@ -152,6 +152,8 @@ DIA_encodingQt4::DIA_encodingQt4(uint64_t duration) : DIA_encodingBase(duration)
         qtRegisterDialog(this);
         show();
         tray=NULL;
+        ADM_usleep(30*1000);
+        QCoreApplication::processEvents();
 }
 /**
     \fn setFps(uint32_t fps)
