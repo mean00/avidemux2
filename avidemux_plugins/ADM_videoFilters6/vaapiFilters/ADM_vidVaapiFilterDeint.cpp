@@ -363,7 +363,7 @@ bool vaapiVideoFilterDeint::updateInfo(bool status)
         info.frameIncrement /= 2;
         if(info.timeBaseNum && info.timeBaseDen)
         {
-            if(info.timeBaseDen <= 30000 || (info.timeBaseNum & 1))
+            if(info.timeBaseNum & 1)
                 info.timeBaseDen *= 2;
             else
                 info.timeBaseNum /= 2;
