@@ -85,7 +85,14 @@ AVDMVideoSeparateField::AVDMVideoSeparateField(  ADM_coreVideoFilter *in,CONFcou
         : ADM_coreVideoFilterCached(4,in,setup)
 {
     info.height>>=1;
-    info.frameIncrement/=2;    
+    info.frameIncrement/=2;
+    if(info.timeBaseNum && info.timeBaseDen)
+    {
+        if(info.timeBaseNum & 1)
+            info.timeBaseDen *= 2;
+        else
+            info.timeBaseNum /= 2;
+    }
 }
 /**
     \fn AVDMVideoSeparateField
