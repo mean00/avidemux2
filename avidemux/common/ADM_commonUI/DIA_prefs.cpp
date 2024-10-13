@@ -119,6 +119,10 @@ uint32_t refreshCapValue=100;
 bool     askPortAvisynth=false;
 uint32_t defaultPortAvisynth = 9999;
 
+uint32_t indexingTSPSfiles=2;
+uint32_t indexingMKVfiles=1;
+uint32_t indexingMP4files=1;
+
 uint32_t toneMappingHDR = 1;
 uint32_t outOfGamutHDR = 0;
 float    targetLumHDR = DEFAULT_TARGET_LUMINANCE_HDR;
@@ -186,6 +190,20 @@ std::string currentSdlDriver=getSdlDriverName();
                         defaultPortAvisynth=9999;
     	}
     	ADM_info("Avisynth port: %d\n",defaultPortAvisynth);
+        
+        //Indexing
+        if(!prefs->get(INDEXING_TS_PS_INDEXING, &indexingTSPSfiles))
+        {
+            indexingTSPSfiles = 2;
+        }
+        if(!prefs->get(INDEXING_MKV_INDEXING, &indexingMKVfiles))
+        {
+            indexingMKVfiles = 1;
+        }
+        if(!prefs->get(INDEXING_MP4_INDEXING, &indexingMP4files))
+        {
+            indexingMP4files = 1;
+        }
 
     	// HDR
     	if (!prefs->get(HDR_TONEMAPPING,&toneMappingHDR)) toneMappingHDR=1;
@@ -433,6 +451,21 @@ std::string currentSdlDriver=getSdlDriverName();
         diaElemUInteger uintDefaultPortAvisynth(&defaultPortAvisynth,QT_TRANSLATE_NOOP("adm","Default port to use"),1024,65535);
         frameAvisynth.swallow(&togAskAvisynthPort);
         frameAvisynth.swallow(&uintDefaultPortAvisynth);
+        
+        // Indexing
+        diaElemFrame frameIndexing(QT_TRANSLATE_NOOP("adm","Indexing to file"));
+        diaMenuEntry indexingEntries[] = {
+            {0, QT_TRANSLATE_NOOP("adm","Disabled"), NULL },
+            {1, QT_TRANSLATE_NOOP("adm","Read only"), NULL },
+            {2, QT_TRANSLATE_NOOP("adm","Enabled"), NULL }
+        };
+        diaElemMenu menuIndexingTsPs(&indexingTSPSfiles, QT_TRANSLATE_NOOP("adm","TS and PS files:"), NB_ITEMS(indexingEntries), indexingEntries);
+        diaElemMenu menuIndexingMKV(&indexingMKVfiles, QT_TRANSLATE_NOOP("adm","MKV files:"), NB_ITEMS(indexingEntries), indexingEntries);
+        diaElemMenu menuIndexingMP4(&indexingMP4files, QT_TRANSLATE_NOOP("adm","MP4 files:"), NB_ITEMS(indexingEntries), indexingEntries);
+        
+        frameIndexing.swallow(&menuIndexingTsPs);
+        frameIndexing.swallow(&menuIndexingMKV);
+        frameIndexing.swallow(&menuIndexingMP4);
 
         // Editor cache
         diaElemFrame frameCache(QT_TRANSLATE_NOOP("adm","Caching of decoded pictures"));
@@ -571,7 +604,7 @@ std::string currentSdlDriver=getSdlDriverName();
          /* Automation */
 
         /* Import */
-        diaElem *diaImport[]={&frameMultiLoad, &framePics, &frameAvisynth};
+        diaElem *diaImport[]={&frameMultiLoad, &framePics, &frameAvisynth, &frameIndexing};
         diaElemTabs tabImport(QT_TRANSLATE_NOOP("adm","Import"),NB_ELEM(diaImport),diaImport);
 
         /* Output */
@@ -906,7 +939,12 @@ std::string currentSdlDriver=getSdlDriverName();
             // Avisynth
             prefs->set(AVISYNTH_AVISYNTH_DEFAULTPORT,defaultPortAvisynth);
             prefs->set(AVISYNTH_AVISYNTH_ALWAYS_ASK, askPortAvisynth);
-
+            
+            // Indexing
+            prefs->set(INDEXING_TS_PS_INDEXING, indexingTSPSfiles);
+            prefs->set(INDEXING_MKV_INDEXING, indexingMKVfiles);
+            prefs->set(INDEXING_MP4_INDEXING, indexingMP4files);            
+            
             // HDR
             prefs->set(HDR_TONEMAPPING, toneMappingHDR);
             targetLumHDR = dTargetLumHDR;
