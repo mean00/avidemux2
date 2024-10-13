@@ -201,9 +201,15 @@ bool XvRender::lowLevelXvInit(GUI_WindowInfo * window, uint32_t w, uint32_t h)
           if (lookupYV12(WDN, k + curai->base_id, &xv_format))
           {
               port = k + curai->base_id;
-              break;
+              if (Success == XvGrabPort(WDN, port, 0))
+              {
+                ADM_info("[Xvideo] Xv YV12 found at port :%d, format : %" PRIi32"\n", port, xv_format);
+                break;
+              }
+              port = 0;
           }
         }
+        if (port) break;
         curai++;
     }
     //
@@ -212,12 +218,7 @@ bool XvRender::lowLevelXvInit(GUI_WindowInfo * window, uint32_t w, uint32_t h)
       ADM_info("[Xvideo] no port found\n");
       return false;
     }
-    ADM_info("[Xvideo] Xv YV12 found at port :%d, format : %" PRIi32"\n", port, xv_format);
-    if (Success != XvGrabPort(WDN, port, 0))
-    {
-        ADM_warning("Grabbing port failed\n");
-        return false;
-    }
+    
     {
     xv_port = port;
 
