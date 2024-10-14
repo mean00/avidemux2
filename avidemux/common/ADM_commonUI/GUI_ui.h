@@ -7,6 +7,7 @@ void UI_setFrameCount(uint32_t curFrame,uint32_t total);
 
 void UI_setCurrentTime(uint64_t pts);
 void UI_setTotalTime(uint64_t curTime);
+void UI_setCurrentRefInfo(uint64_t refPts, uint32_t refVideo);
 void UI_setSegments(uint32_t numOfSegs, uint64_t * segPts);
 double 	UI_readScale( void );
 void 	UI_setScale( double  val );

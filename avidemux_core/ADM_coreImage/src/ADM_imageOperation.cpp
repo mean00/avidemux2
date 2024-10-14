@@ -113,6 +113,8 @@ bool ADMImage::copyInfo(ADMImage *src)
     flags=src->flags;
     _aspect=src->_aspect;
     Pts=src->Pts;
+    refPts=src->refPts;
+    refVideo=src->refVideo;
     _range=src->_range;
     _colorPrim=src->_colorPrim;
     _colorTrc=src->_colorTrc;

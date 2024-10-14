@@ -74,6 +74,8 @@ int64_t t=(int64_t)*time;
 */
 bool ADM_Composer::updateImageTiming(_SEGMENT *seg,ADMImage *image)
 {
+    image->refPts = image->Pts;
+    image->refVideo = seg->_reference;
     recalibrate(&(image->Pts),seg);
 //    recalibrate(&(image->Dts),seg);
     return true;

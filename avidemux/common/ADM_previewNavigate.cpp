@@ -58,6 +58,24 @@ uint64_t admPreview::getCurrentPts(void)
         return 0LL;
 }
 /**
+    \fn getRefPts
+    \brief returns the reference PTS in us of the last displayed frame
+*/
+uint64_t admPreview::getRefPts(void)
+{
+        if(rdrImage) return rdrImage->refPts;
+        return 0LL;
+}
+/**
+    \fn getRefVideo
+    \brief returns the reference Video of the last displayed frame
+*/
+uint32_t admPreview::getRefVideo(void)
+{
+        if(rdrImage) return rdrImage->refVideo;
+        return 0LL;
+}
+/**
       \fn admPreview::seekToTime
       \brief Seek to any given frame
       

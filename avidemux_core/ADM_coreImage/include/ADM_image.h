@@ -127,6 +127,8 @@ public:
         uint32_t	    _Qp;    /// Average quantizer for this image
         uint32_t	    flags;		/// Flags for this image (AVI_KEY_FRAME/AVI_B_FRAME)
         uint64_t        Pts;        /// Presentation time in us
+        uint64_t        refPts;
+        uint32_t        refVideo;
         ADM_IMAGE_TYPE  _imageType;     /// Plain image or reference or vdpau wrapper
         ADM_pixelFormat  _pixfrmt;    /// Pixel format we are moving, default is YV12
         ADM_colorRange  _range;     /// MPEG or JPEG

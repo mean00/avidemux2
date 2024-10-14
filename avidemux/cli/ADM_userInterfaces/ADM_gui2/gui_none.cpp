@@ -164,6 +164,9 @@ void UI_setMarkers(uint64_t a,uint64_t b)
 void UI_setTotalTime(uint64_t t)
 {
 }
+void UI_setCurrentRefInfo(uint64_t refPts, uint32_t refVideo)
+{
+}
 void UI_setSegments(uint32_t numOfSegs, uint64_t * segPts)
 {
 }
