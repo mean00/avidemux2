@@ -261,6 +261,7 @@ void ADMVideoDelogoHQ::DelogoHQProcess_C(ADMImage *img, int w, int h, int * mask
                             if (mask[(y+ry)*w+(x+rx)] < currLevel)
                             {
                                 sY = *(s+(x+rx)*4+0);
+                                if (sY == 0) sY = 1;
                                 sU = *(s+(x+rx)*4+1);
                                 sV = *(s+(x+rx)*4+2);
                                 sumY += sY * (currLevel-mask[(y+ry)*w+(x+rx)]);
