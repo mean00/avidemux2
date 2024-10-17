@@ -66,6 +66,7 @@
 #include "DIA_defaultAskAvisynthPort.hxx"
 #include "ADM_systemTrayProgress.h"
 #include "../../ADM_update/include/ADM_update.h"
+#include "A_functions.h"
 using namespace std;
 
 #define ADM_SLIDER_REFRESH_PERIOD 500
@@ -2418,6 +2419,29 @@ void MainWindow::setZoomToFit(void)
 void MainWindow::openFiles(QList<QUrl> urlList)
 {
     QFileInfo info;
+    
+    if (urlList.size() == 1 && !avifileinfo)
+    {
+        QString fileName = urlList[0].toLocalFile();
+        QFileInfo info(fileName);
+        if (info.isFile())
+        {
+            QString fileExt = info.suffix();
+
+            for(uint32_t engineIdx = 0; engineIdx < _scriptEngines.size(); engineIdx++)
+            {
+                if (fileExt == this->_scriptEngines[engineIdx]->defaultFileExtension().c_str())
+                {
+                    QByteArray fileNameBA = fileName.toLocal8Bit();
+                    if (A_parseScript(this->_scriptEngines[engineIdx], fileNameBA.constData()))
+                    {
+                        A_Resync();
+                        return;
+                    }
+                }
+            }
+        }
+    }
 
     for (int fileIndex = 0; fileIndex < urlList.size(); fileIndex++)
     {
