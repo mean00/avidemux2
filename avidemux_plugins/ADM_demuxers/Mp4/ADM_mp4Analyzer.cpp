@@ -1693,6 +1693,13 @@ uint8_t MP4Header::parseStsd(adm_atom *tom, MPsampleinfo *info, uint32_t trackTy
                     case MKFCCR('e','c','-','3'):
                         audioCodec(EAC3)
                         break;
+                    case MKFCCR('d','t','s','c'):
+                    case MKFCCR('d','t','s','h'):
+                    case MKFCCR('d','t','s','l'):
+                    case MKFCCR('d','t','s','e'):
+                    case MKFCCR('D','T','S',' '):
+                        audioCodec(DTS)
+                        break;
                     case MKFCCR('l','p','c','m'):
                         ADIO.byterate=ADIO.frequency*ADIO.bitspersample*ADIO.channels/8;
                         ADIO.encoding = (lpcmFlags & 2)? WAV_LPCM : WAV_PCM;
