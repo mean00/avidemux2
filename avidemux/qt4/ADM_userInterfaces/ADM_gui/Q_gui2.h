@@ -135,6 +135,11 @@ public:
 
     void setLightTheme(void);
     void setDarkTheme(void);
+    
+    void timeDisplaySetCurrentPts(uint64_t t);
+    void timeDisplaySetTotalTime(uint64_t t);
+    void timeDisplaySetRefInfo(uint64_t t, uint64_t v);
+    
 
     static void updateCheckDone(int version, const std::string &date, const std::string &downloadLink);
     static MainWindow *mainWindowSingleton;
@@ -223,6 +228,12 @@ protected:
     QLabel * statusBarMessage;
     int statusBarInfo_Zoom;
     QString statusBarInfo_Display, statusBarInfo_Decoder;
+    
+    int      timeDisplayMode;
+    uint64_t timeDisplayCurrentPts, timeDisplayTotalTime, timeDisplayRefPts, timeDisplayRefVideo;
+    void timeDisplayInit(void);
+    void timeDisplayUpdate(void);
+    void timeDisplayContextMenu(QPoint pos);
 
 private slots:
     void timeChanged(int);

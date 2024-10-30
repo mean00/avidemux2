@@ -81,6 +81,8 @@ ADMImage::ADMImage(uint32_t width, uint32_t height,ADM_IMAGE_TYPE type)
         _colorTrc=ADM_COL_TRC_BT709;
         _colorSpace=ADM_COL_SPC_BT709;
         Pts=0;
+        refPts=0;
+        refVideo=0;
         _imageType=type;
         quant=NULL;
         _qStride=0;
