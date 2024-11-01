@@ -221,6 +221,7 @@ protected:
           uint8_t                       parseStbl(adm_atom *tom, uint32_t trackType, uint32_t trackScale);
           uint8_t                       parseStsd(adm_atom *tom, MPsampleinfo *info, uint32_t trackType, uint32_t trackScale);
           uint8_t                       decodeEsds(adm_atom *tom, uint32_t trackType);
+          uint8_t                       decodeDdts(adm_atom *tom);
           uint8_t                       updateCtts(MPsampleinfo *info );
           std::string                   _idxName;
 #ifdef DERIVE_TB_FROM_MINIMUM_DELTA

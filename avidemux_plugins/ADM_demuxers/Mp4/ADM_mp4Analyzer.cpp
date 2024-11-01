@@ -24,6 +24,7 @@
 #include "ADM_mp4.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_coreUtils.h"
+#include "ADM_getbits.h"
 #include "ADM_videoInfoExtractor.h"
 #include "ADM_mp4Tree.h"
 #include "ADM_vidMisc.h"
@@ -1870,6 +1871,9 @@ uint8_t MP4Header::parseStsd(adm_atom *tom, MPsampleinfo *info, uint32_t trackTy
                                     esdsDecoded = true;
                                 }
                                 break;
+                            case MKFCCR('d','d','t','s'):
+                                decodeDdts(&wave);
+                                break;
                             default:
                                 printf("UNHANDLED ATOM (2) : %s\n",fourCC::tostringBE(wave.getFCC()));
                                 break;
@@ -2195,6 +2199,131 @@ uint8_t MP4Header::decodeEsds(adm_atom *tom, uint32_t trackType)
     } // while
 
     tom->skipAtom();
+    return 1;
+}
+/**
+    \fn decodeDdts
+    \brief Decode ddts atom (DTS specific config)
+*/
+uint8_t MP4Header::decodeDdts(adm_atom *tom)
+{
+#define DDTS_MINIMUM_SIZE 20 /* 4+4+4+1+(2+5+1+6+14+1+3+16+1+1+1+5)/8 */
+    int64_t size = tom->getRemainingSize();
+    if (size < DDTS_MINIMUM_SIZE)
+    {
+        ADM_warning("DTS specific box size %" PRId64" too small, must be at least %d bytes\n", size, DDTS_MINIMUM_SIZE);
+        return 0;
+    }
+    if (ADIO.encoding != WAV_DTS)
+        ADM_warning("Track codec not set to DTS, but ddts atom present.\n");
+
+    uint32_t dfq = tom->read32();
+
+    switch(dfq)
+    {
+        case 16000:
+        case 22050:
+        case 24000:
+        case 32000:
+        case 44100:
+        case 48000:
+        case 64000:
+        case 88200:
+        case 96000:
+        case 128000:
+        case 176400:
+        case 192000:
+            break;
+        default:
+            ADM_warning("Invalid DTS audio sampling frequency %" PRIu32"\n", dfq);
+            return 0;
+    }
+    ADM_info("DTS audio sampling frequency: %" PRIu32"\n", dfq);
+    ADM_info("DTS audio max bitrate: %" PRIu32"\n", tom->read32());
+    ADM_info("DTS audio avg bitrate: %" PRIu32"\n", tom->read32());
+
+    uint8_t depth = tom->read();
+
+    switch(depth)
+    {
+        case 16:
+        case 24:
+            break;
+        default:
+            ADM_warning("Invalid DTS audio bit depth %d\n", depth);
+            return 0;
+    }
+    ADM_info("DTS audio bit depth: %d\n", depth);
+    ADIO.encoding = WAV_DTS;
+    ADIO.frequency = dfq;
+    ADIO.bitspersample = depth;
+    // We ignore remaining data for now
+#if 0
+    uint8_t buf[6+64];
+    memset(buf, 0, 6+64);
+    if (!tom->readPayload(buf, 6))
+        return 0;
+    getBits bits(6, buf);
+    bits.skip(2+5);
+    uint16_t chan = bits.get(1); // core LFE
+    uint8_t coreLayout = bits.get(6);
+    ADM_info("Core LFE: %s, layout: %d\n", chan ? "yes" : "no", coreLayout);
+    switch(coreLayout)
+    {
+        case 0:
+            chan += 1;
+            break;
+        case 2:
+        case 4:
+            chan += 2;
+            break;
+        case 5:
+        case 6:
+            chan += 3;
+            break;
+        case 7:
+        case 8:
+            chan += 4;
+            break;
+        case 9:
+            chan += 5;
+            break;
+        case 31:
+            ADM_info("Trying to use channel layout code\n");
+            break;
+        default:
+            ADM_warning("Unknown coreLayout value %d\n", coreLayout);
+            return 1;
+            break;
+    }
+    if (coreLayout == 31)
+    {
+        bits.skip(14+1+3);
+        uint16_t code = bits.get(16);
+        if (code > 0xFF)
+            ADM_warning("Unsupported DTS channel layout code 0x%x\n", code);
+        else
+            ADM_info("Channel layout code: 0x%x\n", code);
+        chan = (code & 0x1) ? 1 : 0; // front center
+        chan += (code & 0x2) ? 2 : 0; // front left + right
+        chan += (code & 0x4) ? 2 : 0; // rear side surround left + right
+        chan += (code & 0x8) ? 1 : 0; // LFE
+        chan += (code & 0x10) ? 1 : 0; // rear center
+        chan += (code & 0x20) ? 2 : 0; // front height left + right
+        chan += (code & 0x40) ? 2 : 0; // rear left + right
+        chan += (code & 0x80) ? 1 : 0; // front center height
+        chan += (code & 0x100) ? 1 : 0; // over the head
+        chan += (code & 0x200) ? 2 : 0; // front center left + right
+        chan += (code & 0x400) ? 2 : 0; // front side left + right
+        chan += (code & 0x800) ? 2 : 0; // side surround left + right
+        chan += (code & 0x1000) ? 1 : 0; // second LFE
+        chan += (code & 0x2000) ? 2 : 0; // side height left + right
+        chan += (code & 0x4000) ? 1 : 0; // rear center height
+        chan += (code & 0x8000) ? 2 : 0; // read height left + right
+    }
+    if (chan != ADIO.channels)
+        ADM_warning("# channels from sound sample properties and ddts disagree: %d vs %d\n", ADIO.channels, chan);
+#endif
     return 1;
 }
 /**
