@@ -15,6 +15,7 @@
 #cmakedefine ADM_CPU_X86
 #cmakedefine ADM_CPU_X86_32
 #cmakedefine ADM_CPU_X86_64
+#cmakedefine ADM_CPU_LOONGARCH64
 
 // GCC - Operating System
 #cmakedefine ADM_BSD_FAMILY
