@@ -203,40 +203,76 @@ again:
         }
     }
     //
-      x265_nal          *nal;
-      uint32_t          nbNal = 0;
-      x265_picture      pic_out;
-      api->picture_init(&param,&pic_out);
-      out->flags = 0;
-      
-        int er;
-        if(false==gotFrame)     
+    x265_nal *nal;
+    uint32_t nbNal = 0;
+#if (X265_BUILD > 209) && (X265_BUILD < 213)
+    x265_picture layers_out[MAX_SCALABLE_LAYERS];
+    x265_picture *layers_outptr[MAX_SCALABLE_LAYERS];
+    for (int i=0; i < MAX_SCALABLE_LAYERS; i++)
+        layers_outptr[i] = &layers_out[i];
+#else
+    x265_picture pic_out;
+    api->picture_init(&param,&pic_out); // not needed?
+#endif
+    out->flags = 0;
+
+    int er;
+    if(false==gotFrame)
+    {
+        ADM_info("Flushing delayed frames\n");
+        er = api->encoder_encode(
+            handle,
+            &nal,
+            &nbNal,
+            NULL,
+#if (X265_BUILD > 209) && (X265_BUILD < 213)
+            layers_outptr
+#else
+            &pic_out
+#endif
+        );
+        if(er<=0)
         {
-            ADM_info("Flushing delayed frames\n");
-            er = api->encoder_encode(handle, &nal, &nbNal, NULL, &pic_out);
-            if(er<=0)
-            {
-                ADM_info ("End of flush\n");
-                return false;
-            }
-        }else 
-        {
-            er = api->encoder_encode(handle, &nal, &nbNal, &pic, &pic_out);
-            if(er<0)
-            {
-              ADM_error ("[x265] Error encoding %d\n",er);
-              return false;
-            }
+            ADM_info ("End of flush\n");
+            return false;
         }
-        if(!nbNal)
+    }else
+    {
+        er = api->encoder_encode(
+            handle,
+            &nal,
+            &nbNal,
+            &pic,
+#if (X265_BUILD > 209) && (X265_BUILD < 213)
+            layers_outptr
+#else
+            &pic_out
+#endif
+        );
+        if(er<0)
         {
-            ADM_info("[x265] Null frame\n");
-            goto again;
+            ADM_error ("[x265] Error encoding %d\n",er);
+            return false;
         }
+    }
+    if(!nbNal)
+    {
+        ADM_info("[x265] Null frame\n");
+        goto again;
+    }
 
 
     // 3-encode
-    if(false==postAmble(out,nbNal,nal,&pic_out))
+    if(false == postAmble(
+        out,
+        nbNal,
+        nal,
+#if (X265_BUILD > 209) && (X265_BUILD < 213)
+        layers_outptr[0]
+#else
+        &pic_out
+#endif
+    ))
     {
         ADM_warning("[x265] postAmble failed\n");
         return false;     
