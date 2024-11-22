@@ -23,8 +23,7 @@ ELSE(APPLE OR WIN32)
     ADM_QT_ADD_RESOURCES(resource jobs_linux.qrc)
 ENDIF(APPLE OR WIN32)
 ADM_QT_WRAP_UI(ADM_JOBS_headers ${UI})
-ADM_QT_WRAP_CPP(ADM_JOBS_source ${headers}
-                ADM_jobControl.cpp)
+ADM_QT_WRAP_CPP(ADM_JOBS_source ${headers})
 SET(ADM_JOB_SRCS 
                 ADM_jobs.cpp
                 ADM_jobControl.cpp
