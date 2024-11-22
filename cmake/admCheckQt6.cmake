@@ -43,18 +43,6 @@ MACRO(checkQt6)
                     MARK_AS_ADVANCED(QT_MKSPECS_DIR)
                     MARK_AS_ADVANCED(QT_QMAKE_EXECUTABLE)
 
-                    MACRO(ADM_QT_WRAP_UI a)
-                        qt_wrap_ui(${a} ${ARGN})
-                    ENDMACRO(ADM_QT_WRAP_UI a)
-
-                    MACRO(ADM_QT_WRAP_CPP a)
-                        qt_wrap_cpp(${a} ${ARGN})
-                    ENDMACRO(ADM_QT_WRAP_CPP a)
-
-                    MACRO(ADM_QT_ADD_RESOURCES a)
-                        qt_add_resources(${a} ${ARGN})
-                    ENDMACRO(ADM_QT_ADD_RESOURCES a)
-
                     SET(QT_EXTENSION qt6)
                     SET(QT_LIBRARY_EXTENSION QT6)
                     SET(ADM_QT_VERSION 6)
