@@ -218,4 +218,7 @@ void UI_notifyPlaybackLag(uint32_t lag, int updateTimeMs)
 
 void UI_tweaks(const char * op, char * paramS, int paramN)
 {}
+
+void UI_CopyImageToClipboard(void * image)
+{}
 // EOF

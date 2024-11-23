@@ -188,6 +188,11 @@ void HandleAction_Save(Action action)
         GUI_FileSelWriteExtension (QT_TRANSLATE_NOOP("adm","Select PNG to Save"),defaultExtension,(SELFILE_CB *)A_savePng);
     }
         break;
+    case ACT_SAVE_IMAGE_TO_CLIPBOARD:
+    {
+        A_saveImageToClipboard();
+    }
+        break;
 //----------------------test-----------------------
     case ACT_SAVE_VIDEO:
     {
@@ -648,6 +653,32 @@ bool A_saveImg (const char *name)
     return result;
 }
 
+
+/**
+      \fn A_saveImageToClipboard
+      \brief Save current displayed image to clibboard
+*/
+void A_saveImageToClipboard(void)
+{
+    bool fromDisplayBuffer=false;
+    if(ADM_PREVIEW_NONE == admPreview::getPreviewMode())
+        fromDisplayBuffer=true;
+    ADMImage *image;
+    image=NULL;
+    if(fromDisplayBuffer)
+        image=admPreview::getBuffer();
+    else
+        image=getCurrentFilteredImage();
+    if(image)
+    {
+        UI_CopyImageToClipboard((void*)image);
+    }
+    if(!fromDisplayBuffer)
+    {
+        delete image;
+        image=NULL;
+    }    
+}
 /**
     \fn A_SaveWrapper
 
