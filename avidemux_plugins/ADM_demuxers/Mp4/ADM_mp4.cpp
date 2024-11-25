@@ -659,6 +659,16 @@ uint8_t    MP4Header::open(const char *name)
             ADM_SPSinfoH265 info;
             if(extractSPSInfoH265(VDEO.extraData,VDEO.extraDataSize,&info))
             {
+                if ((info.width > 0) && (info.width != _mainaviheader.dwWidth))
+                {
+                    ADM_warning("Width from container and codec disagree: %d vs %d, believing codec.\n", _mainaviheader.dwWidth, info.width);
+                    _video_bih.biWidth = _mainaviheader.dwWidth = info.width;
+                }
+                if ((info.height > 0) && (info.height != _mainaviheader.dwHeight))
+                {
+                    ADM_warning("Height from container and codec disagree: %d vs %d, believing codec.\n", _mainaviheader.dwHeight, info.height);
+                    _video_bih.biHeight = _mainaviheader.dwHeight = info.height;
+                }
                 bool indexLoadedFromDisk = false;
                 if (indexOnDisk)
                 {
