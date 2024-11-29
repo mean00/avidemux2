@@ -130,9 +130,8 @@ bool AVDMVideoMergeField::getNextFrame(uint32_t *fn,ADMImage *image)
         }
         if(!next)
         {
-            image->duplicateFull(cur);
-            vidCache->unlockAll();
-            return true;
+            ADM_warning("Last field missing, duplicating the previous one.\n");
+            next = cur;
         }
         
         for(int i=0;i<3;i++)
