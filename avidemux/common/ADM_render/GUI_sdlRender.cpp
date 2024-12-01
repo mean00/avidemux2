@@ -51,7 +51,7 @@ static std::vector<sdlDriverInfo>listOfSDLDrivers;
 class sdlRenderImpl: public VideoRenderBase
 {
   protected:
-              GUI_WindowInfo info;
+              GUI_WindowInfo winfo;
               bool     useYV12;
               int      accel;
   public:
@@ -66,6 +66,7 @@ class sdlRenderImpl: public VideoRenderBase
                         const char *getName();
 protected:
                         bool cleanup(void);
+                        void rescaleDisplay(void);
                         bool sdl_running;
                         SDL_Window   *sdl_window;
                         SDL_Renderer *sdl_renderer;
@@ -86,7 +87,7 @@ VideoRenderBase *spawnSdlRender()
  */
 static void SDL_Logger(void *userdata, int category, SDL_LogPriority priority, const char *message)
 {
-    ADM_info("[SDKL] %s\n",message);
+    ADM_info("[SDL] %s\n",message);
 }
 /**
  * 
@@ -104,12 +105,12 @@ static bool initDrivers()
         sdlDriverInfo sdlInfo;
         sdlInfo.index=i;
         if(info.name)
-            sdlInfo.driverName=std::string(info.name);
+            sdlInfo.driverName = info.name;
         else
-            sdlInfo.driverName=std::string("Invalid driver");
+            sdlInfo.driverName = "Invalid driver";
         sdlInfo.flags=info.flags;
         listOfSDLDrivers.push_back(sdlInfo);
-        printf("[SDK]Found driver [%d] %s, with flags=%x\n",i,sdlInfo.driverName.c_str(),info.flags);
+        ADM_info("[SDL] Found driver [%d] %s with flags = 0x%x\n", i, sdlInfo.driverName.c_str(), info.flags);
         if(info.flags & SDL_RENDERER_SOFTWARE) // by default we peek the software one
             sdlSoftwareDriverIndex=i;
     }
@@ -140,7 +141,7 @@ bool  setSdlDriverByName(const std::string &name)
     {
         if(!listOfSDLDrivers[i].driverName.compare(name))
         {
-            ADM_info("[SDL] Got it, selecting driver <%s>\n",listOfSDLDrivers[i].driverName.c_str());
+            ADM_info("[SDL] Got it, selecting driver %d <%s>\n", i, listOfSDLDrivers[i].driverName.c_str());
             sdlDriverIndex=i;
             return true;
         }
@@ -260,11 +261,13 @@ sdlRenderImpl::sdlRenderImpl( void)
 {
         useYV12=true;
         sdl_running=false;
-        ADM_info("[SDL] Init rendered\n");
+        ADM_info("Creating.\n");
         sdl_window=NULL;
         sdl_renderer=NULL;
         sdl_texture=NULL;
         accel = -1;
+        memset(&winfo, 0, sizeof(GUI_WindowInfo));
+        winfo.scalingFactor = 1.;
 }
 /**
  * 
@@ -291,6 +294,20 @@ bool sdlRenderImpl::stop( void)
         return true;
 }
 /**
+    \fn rescaleDisplay
+*/
+void sdlRenderImpl::rescaleDisplay(void)
+{
+    double dw, dh;
+
+    dw = displayWidth;
+    dh = displayHeight;
+    dw *= winfo.scalingFactor;
+    dh *= winfo.scalingFactor;
+    displayWidth = (uint32_t)(dw + 0.5);
+    displayHeight = (uint32_t)(dh + 0.5);
+}
+/**
     \fn init
 */
 bool sdlRenderImpl::init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float zoom)
@@ -299,22 +316,20 @@ bool sdlRenderImpl::init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float 
 
     int bpp;
     int flags;
-    info=*window;
+    winfo=*window;
     baseInit(w,h,zoom);
-    displayWidth*=info.scalingFactor;
-    displayHeight*=info.scalingFactor;
+    rescaleDisplay();
 
     if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
     {
-        ADM_warning("[SDL] FAILED initialising video subsystem\n");
-        ADM_warning("[SDL] ERROR: %s\n", SDL_GetError());
+        ADM_warning("[SDL] Video subsystem init failed, error: %s\n", SDL_GetError());
         return false;
     }
     ADM_info("[SDL] Video subsystem init ok\n");
 
     sdl_running=true;
-    ADM_info("[SDL] Creating window (at %x,%d)\n",window->x,window->y);
-    
+    ADM_info("[SDL] Creating window at (%d, %d)\n",window->x,window->y);
+
     int nbDriver=listOfSDLDrivers.size();
     if(!nbDriver)
     {
@@ -326,32 +341,38 @@ bool sdlRenderImpl::init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float 
         ADM_warning("[SDL] No available driver found\n");
         return false;
     }
-    
+
+    SDL_SetHint(SDL_HINT_VIDEO_FOREIGN_WINDOW_OPENGL, "1");
+
 #if 0
     sdl_window = SDL_CreateWindow("avidemux_sdl2",
-                          SDL_WINDOWPOS_UNDEFINED,
-                          SDL_WINDOWPOS_UNDEFINED,
-                          w, h,
-                          SDL_WINDOW_BORDERLESS | SDL_WINDOW_FOREIGN*1);    
-    SDL_SetWindowPosition(sdl_window,window->x,window->y);
+                          winfo.x,
+                          winfo.y,
+                          displayWidth, displayHeight,
+                          SDL_WINDOW_BORDERLESS | SDL_WINDOW_FOREIGN);
+    //SDL_SetWindowPosition(sdl_window,window->x,window->y);
 #else
     sdl_window=SDL_CreateWindowFrom((void*)window->systemWindowId);
 #endif    
     
     if(!sdl_window)
     {
-        ADM_info("[SDL] Creating window failed!\n");
-        ADM_warning("[SDL] ERROR: %s\n", SDL_GetError());
+        ADM_warning("[SDL] Creating window failed, error: %s\n", SDL_GetError());
         cleanup();
         return false;
     }
-    
+
+    ADM_info("Trying to create SDL renderer with driver %s\n", listOfSDLDrivers[sdlDriverIndex].driverName.c_str());
+
     sdl_renderer = SDL_CreateRenderer(sdl_window, sdlDriverIndex, SDL_RENDERER_ACCELERATED |  SDL_RENDERER_PRESENTVSYNC);
     if(!sdl_renderer)
-        sdl_renderer = SDL_CreateRenderer(sdl_window, sdlDriverIndex, 0);
+    {
+        ADM_warning("[SDL] Failed to create an accelerated renderer, error: %s\n", SDL_GetError());
+        sdl_renderer = SDL_CreateRenderer(sdl_window, -1, 0);
+    }
     if(!sdl_renderer)
     {
-        ADM_warning("[SDL] FAILED to create a renderer\n");
+        ADM_warning("[SDL] Failed to create a renderer, error: %s\n", SDL_GetError());
         cleanup();
         return false;
     }
@@ -359,7 +380,7 @@ bool sdlRenderImpl::init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float 
     SDL_RendererInfo renderer_info;
     if (SDL_GetRendererInfo(sdl_renderer, &renderer_info) == 0)
     {
-        ADM_info("[SDL] use %s render\n", renderer_info.name);
+        ADM_info("[SDL] Using %s renderer\n", renderer_info.name);
         accel = (( renderer_info.flags & SDL_RENDERER_ACCELERATED ) ? 1:0);
     }
     
@@ -468,8 +489,7 @@ bool sdlRenderImpl::changeZoom(float newZoom)
 {
         ADM_info("[SDL]changing zoom, sdl render.\n");
         calcDisplayFromZoom(newZoom);
-        displayWidth*=info.scalingFactor;
-        displayHeight*=info.scalingFactor;
+        rescaleDisplay();
         currentZoom=newZoom;
         if(sdl_renderer)
         {
@@ -497,7 +517,7 @@ const char * sdlRenderImpl::getName()
 */
 bool initSdl(const std::string &sdlDriverName)
 {
-    printf("\n[SDL] System Wide:  Initializing SDL\n");
+    ADM_info("[SDL] System-wide:  Initializing SDL\n");
     SDL_version version;
     SDL_version *ver=&version;
     
@@ -509,22 +529,30 @@ bool initSdl(const std::string &sdlDriverName)
 
     uint32_t sdlInitFlags;
     sdlInitFlags = SDL_INIT_AUDIO |SDL_INIT_VIDEO ;
-    ADM_info("[SDL] Initialisation ");
 
     if (SDL_Init(sdlInitFlags))
     {
-            ADM_info("\tFAILED\n");
-            ADM_info("[SDL] ERROR: %s\n", SDL_GetError());
+            ADM_warning("[SDL] Init failed, error: %s\n", SDL_GetError());
             return false;
     }
-    ADM_info("\tsucceeded\n");
-    
-    const char *driverName=SDL_GetVideoDriver(0);
-    if(driverName)
+    ADM_info("[SDL] Initialisation succeeded.\n");
+
+    int nbDrivers = SDL_GetNumVideoDrivers();
+
+    if (nbDrivers < 1)
     {
-            ADM_info("[SDL] Video Driver: %s\n", driverName);
+        ADM_warning("No SDL video drivers available.\n");
+        return false;
     }
-    ADM_info("[SDL] Video drivers initialization\n");
+
+    for (int i = 0; i < nbDrivers; i++)
+    {
+        const char *driverName = SDL_GetVideoDriver(i);
+        if (driverName)
+            ADM_info("[SDL] Video driver %d / %d: %s\n", i, nbDrivers, driverName);
+    }
+
+    ADM_info("[SDL] Render drivers initialization\n");
     initDrivers();
     setSdlDriverByName(sdlDriverName);
     ADM_info("[SDL] initSDL done successfully.\n");
