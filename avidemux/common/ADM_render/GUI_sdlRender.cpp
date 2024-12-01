@@ -363,6 +363,8 @@ bool sdlRenderImpl::init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float 
         accel = (( renderer_info.flags & SDL_RENDERER_ACCELERATED ) ? 1:0);
     }
     
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "best");
+    
     sdl_texture = SDL_CreateTexture(sdl_renderer,
                                SDL_PIXELFORMAT_YV12,
                                SDL_TEXTUREACCESS_STREAMING,
