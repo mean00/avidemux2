@@ -917,7 +917,7 @@ std::string currentSdlDriver=getSdlDriverName();
 #ifdef USE_SDL
             std::string driverName=listOfSdl[sdlMenuIndex].driverName;
             setSdlDriverByName(driverName);
-            prefs->set(FEATURES_SDLDRIVER,driverName.c_str());
+            prefs->set(FEATURES_SDLDRIVER,driverName);
 #endif
             dialogAccepted=1;
         }

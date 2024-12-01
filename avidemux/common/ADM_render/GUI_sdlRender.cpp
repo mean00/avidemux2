@@ -51,7 +51,9 @@ static std::vector<sdlDriverInfo>listOfSDLDrivers;
 class sdlRenderImpl: public VideoRenderBase
 {
   protected:
+              GUI_WindowInfo info;
               bool     useYV12;
+              int      accel;
   public:
                              sdlRenderImpl( void ) ;
               virtual        ~sdlRenderImpl();
@@ -61,7 +63,7 @@ class sdlRenderImpl: public VideoRenderBase
               virtual   bool changeZoom(float newZoom);
               virtual   bool usingUIRedraw(void) {return false;};
               virtual   bool refresh(void) ;
-                        const char *getName() {return "SDL2i";}
+                        const char *getName();
 protected:
                         bool cleanup(void);
                         bool sdl_running;
@@ -175,6 +177,14 @@ sdlRender::~sdlRender()
     }
         
 }
+const char * sdlRender::getName()
+{
+    if(impl)
+    {
+        return ((sdlRenderImpl *)impl)->getName();
+    }
+    return "SDL2";
+}
 /**
  * 
  * @param window
@@ -254,6 +264,7 @@ sdlRenderImpl::sdlRenderImpl( void)
         sdl_window=NULL;
         sdl_renderer=NULL;
         sdl_texture=NULL;
+        accel = -1;
 }
 /**
  * 
@@ -288,7 +299,10 @@ bool sdlRenderImpl::init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float 
 
     int bpp;
     int flags;
+    info=*window;
     baseInit(w,h,zoom);
+    displayWidth*=info.scalingFactor;
+    displayHeight*=info.scalingFactor;
 
     if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
     {
@@ -340,6 +354,13 @@ bool sdlRenderImpl::init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float 
         ADM_warning("[SDL] FAILED to create a renderer\n");
         cleanup();
         return false;
+    }
+    
+    SDL_RendererInfo renderer_info;
+    if (SDL_GetRendererInfo(sdl_renderer, &renderer_info) == 0)
+    {
+        ADM_info("[SDL] use %s render\n", renderer_info.name);
+        accel = (( renderer_info.flags & SDL_RENDERER_ACCELERATED ) ? 1:0);
     }
     
     sdl_texture = SDL_CreateTexture(sdl_renderer,
@@ -445,6 +466,8 @@ bool sdlRenderImpl::changeZoom(float newZoom)
 {
         ADM_info("[SDL]changing zoom, sdl render.\n");
         calcDisplayFromZoom(newZoom);
+        displayWidth*=info.scalingFactor;
+        displayHeight*=info.scalingFactor;
         currentZoom=newZoom;
         if(sdl_renderer)
         {
@@ -456,6 +479,17 @@ bool sdlRenderImpl::changeZoom(float newZoom)
         }
         return true;
 }
+const char * sdlRenderImpl::getName()
+{
+    switch(accel)
+    {
+        case 0: return "SDL2-SW";
+        case 1: return "SDL2-HW";
+        default: break;
+    }
+    return "SDL2-??";
+}
+
 /**
     \fn initSdl
 */
