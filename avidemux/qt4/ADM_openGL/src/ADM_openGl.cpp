@@ -410,7 +410,18 @@ void QtGlAccelWidget::initializeGL()
         ADM_info("[GL Render] Binding FAILED\n");
         return;
     }
-
+#if QT_VERSION >= QT_VERSION_CHECK(6,4,0)
+    if (pixelFormat == ADM_PIXFRMT_RGB32A)
+    {
+        glProgram->setUniformValue("texRgb", 0);
+    } else
+    {
+        glProgram->setUniformValue("texY", 0);
+        glProgram->setUniformValue("texU", 2);
+        glProgram->setUniformValue("texV", 1);
+    }
+    checkGlError("setUniformValue");
+#endif
     ADM_info("[GL Render] Init successful\n");
     operational = true;
 }
@@ -423,7 +434,7 @@ void QtGlAccelWidget::updateTexture(ADMImage *pic)
         return;
 
     uploadAllPlanes(pic);
-
+#if QT_VERSION < QT_VERSION_CHECK(6,4,0)
     if (pixelFormat == ADM_PIXFRMT_RGB32A)
     {
         glProgram->setUniformValue("texRgb", 0);
@@ -436,6 +447,7 @@ void QtGlAccelWidget::updateTexture(ADMImage *pic)
     glProgram->setUniformValue("height", (float)imageHeight);
 
     checkGlError("setUniformValue");
+#endif
 }
 /**
     \fn paintGL
@@ -444,6 +456,13 @@ void QtGlAccelWidget::paintGL()
 {
     if(!draw) return;
 
+#if QT_VERSION >= QT_VERSION_CHECK(6,4,0)
+    if(!glProgram->bind())
+        return;
+
+    glProgram->setUniformValue("height", (float)imageHeight);
+    checkGlError("setUniformValue");
+#endif
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glBegin(GL_QUADS);
     glTexCoord2i(0, 0);
