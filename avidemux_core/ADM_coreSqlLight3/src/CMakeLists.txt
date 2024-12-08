@@ -1,24 +1,22 @@
-SET(ADM_coreSqlLight3_SRCS 
-        Database.cpp
-        Query.cpp
-        StderrLog.cpp
-        SysLog.cpp
+SET(ADM_coreSqlLight3_SRCS
+  Database.cpp
+  Query.cpp
+  StderrLog.cpp
+  SysLog.cpp
 )
 
 ADM_ADD_SHARED_LIBRARY(ADM_coreSqlLight3 ${ADM_coreSqlLight3_SRCS})
 
-IF (APPLE)
-    IF (ADM_CPU_X86)
-        TARGET_LINK_LIBRARIES(ADM_coreSqlLight3 -Wl)
-    ELSE (ADM_CPU_X86)
-        TARGET_LINK_LIBRARIES(ADM_coreSqlLight3 -Wl,-read_only_relocs,suppress)
-    ENDIF (ADM_CPU_X86)
-ELSE (APPLE)
-    IF (UNIX)
-        TARGET_LINK_LIBRARIES(ADM_coreSqlLight3 dl)
-    ENDIF (UNIX)
-ENDIF (APPLE)
+IF(APPLE)
+  IF(ADM_CPU_X86)
+    TARGET_LINK_LIBRARIES(ADM_coreSqlLight3 PRIVATE -Wl)
+  ENDIF()
+ELSE()
+  IF(UNIX)
+    TARGET_LINK_LIBRARIES(ADM_coreSqlLight3 PRIVATE dl)
+  ENDIF()
+ENDIF()
 
-INCLUDE_DIRECTORIES(../include)
-TARGET_LINK_LIBRARIES(ADM_coreSqlLight3 ADM_core6 ${SQLITE3_LDFLAGS})
+TARGET_INCLUDE_DIRECTORIES(ADM_coreSqlLight3 PUBLIC ../include)
+TARGET_LINK_LIBRARIES(ADM_coreSqlLight3 PUBLIC ADM_core6 ${SQLITE3_LDFLAGS})
 ADM_INSTALL_LIB(ADM_coreSqlLight3)

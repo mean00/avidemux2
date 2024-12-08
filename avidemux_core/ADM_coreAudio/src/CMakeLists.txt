@@ -17,10 +17,10 @@ ADM_audioAccessFile.cpp
 ADM_audioAccessFileAACADTS.cpp
 ADM_audioClock.cpp
 ADM_audioXiphUtils.cpp
-)	
+)
 
 ADM_ADD_SHARED_LIBRARY(ADM_coreAudio6 ${ADMaudioCore_SRCS})
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/avidemux/ADM_coreAudio/include)
-TARGET_LINK_LIBRARIES(ADM_coreAudio6 ADM_core6 ADM_coreUI6 ADM_audioParser6)
+TARGET_INCLUDE_DIRECTORIES(ADM_coreAudio6 PRIVATE ${CMAKE_SOURCE_DIR}/avidemux/ADM_coreAudio/include)
+TARGET_LINK_LIBRARIES(ADM_coreAudio6 PRIVATE ADM_core6 ADM_coreUI6 ADM_audioParser6)
 
 ADM_INSTALL_LIB(ADM_coreAudio6)
