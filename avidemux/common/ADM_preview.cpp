@@ -1,24 +1,24 @@
 /***************************************************************************
-    
+
     Handle preview mode
-    
+
     It is displayed in 3 layers
-    
-    
+
+
     Engine : Call setPreviewMode and amdPreview depending on the actions
             previewMode is the **current** preview mode
-    
-    admPreview : 
+
+    admPreview :
           Allocate/desallocate ressources
           Build preview window
           Call display properly to display it
-          
+
     GUI_PreviewXXXX
           UI toolkit to actually display the window
           See GUI_ui.h to see them
-                 
-    
-    
+
+
+
     copyright            : (C) 2007 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
@@ -31,30 +31,28 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "config.h"
 #include "ADM_cpp.h"
+#include "config.h"
 
+#include "ADM_commonUI/GUI_ui.h"
 #include "ADM_default.h"
 #include "ADM_edit.hxx"
-#include "ADM_render/GUI_render.h"
-#include "ADM_commonUI/GUI_ui.h"
 #include "ADM_preview.h"
+#include "ADM_render/GUI_render.h"
 #include "DIA_coreToolkit.h"
 
-extern uint8_t              UI_getPhysicalScreenSize(void* window, uint32_t *w,uint32_t *h);
-//static void                 previewBlit(ADMImage *from,ADMImage *to,uint32_t startx,uint32_t starty);
-static ADM_PREVIEW_MODE     previewMode=ADM_PREVIEW_NONE;
+extern uint8_t UI_getPhysicalScreenSize(void *window, uint32_t *w, uint32_t *h);
+// static void                 previewBlit(ADMImage *from,ADMImage *to,uint32_t startx,uint32_t starty);
+static ADM_PREVIEW_MODE previewMode = ADM_PREVIEW_NONE;
 
-static bool                 defered_display=false;  /* When 1, it means we are in playback mode */
-static float                zoom=ZOOM_1_1;
+static bool defered_display = false; /* When 1, it means we are in playback mode */
+static float zoom = ZOOM_1_1;
 
 /*************************************/
-ADMImage *admPreview::rdrImage=NULL; /* Unprocessed image */
+ADMImage *admPreview::rdrImage = NULL; /* Unprocessed image */
 
-static uint32_t  rdrPhysicalW=0;  /* W*H of the INPUT window */
-static uint32_t  rdrPhysicalH=0;
-
-
+static uint32_t rdrPhysicalW = 0; /* W*H of the INPUT window */
+static uint32_t rdrPhysicalH = 0;
 
 /*************************************/
 extern ADM_Composer *video_body;
@@ -82,19 +80,19 @@ ADM_HW_IMAGE admPreview::getPreferedHwImageFormat(void)
 void admPreview::setMainDimension(uint32_t w, uint32_t h, float nzoom)
 {
     destroy();
-    if(!w || !h)
+    if (!w || !h)
     {
-        renderDisplayResize(0,0,ZOOM_1_1);
+        renderDisplayResize(0, 0, ZOOM_1_1);
         UI_setDisplayName("XXXX");
         return;
     }
 
-  rdrImage=new ADMImageDefault(w,h);
-  rdrPhysicalW=w;
-  rdrPhysicalH=h;
-  if(nzoom==ZOOM_AUTO)
-  {
-        uint32_t phyW,phyH;
+    rdrImage = new ADMImageDefault(w, h);
+    rdrPhysicalW = w;
+    rdrPhysicalH = h;
+    if (nzoom == ZOOM_AUTO)
+    {
+        uint32_t phyW, phyH;
         UI_getMaximumPreviewSize(&phyW, &phyH);
         /*if(phyW*2 < w || phyH*2 < h)
             nzoom=ZOOM_1_4;
@@ -102,7 +100,7 @@ void admPreview::setMainDimension(uint32_t w, uint32_t h, float nzoom)
             nzoom=ZOOM_1_2;
         else
             nzoom=ZOOM_1_1;*/
-        if(phyW < w || phyH < h)
+        if (phyW < w || phyH < h)
         {
             float widthRatio = (float)phyW / (float)w;
             float heightRatio = (float)phyH / (float)h;
@@ -110,15 +108,15 @@ void admPreview::setMainDimension(uint32_t w, uint32_t h, float nzoom)
         }
         else
             nzoom = ZOOM_1_1;
-  }
-  zoom=nzoom;
-  renderDisplayResize(rdrPhysicalW,rdrPhysicalH,zoom);
- // Install our hook, we will do it more than needed
- // but it does not really harm
-  renderHookRefreshRequest(admPreview::updateImage);
-  std::string rendererName;
-  renderGetName(rendererName);
-  UI_setDisplayName(rendererName.c_str());
+    }
+    zoom = nzoom;
+    renderDisplayResize(rdrPhysicalW, rdrPhysicalH, zoom);
+    // Install our hook, we will do it more than needed
+    // but it does not really harm
+    renderHookRefreshRequest(admPreview::updateImage);
+    std::string rendererName;
+    renderGetName(rendererName);
+    UI_setDisplayName(rendererName.c_str());
 }
 /**
     \fn getCurrentZoom
@@ -136,7 +134,7 @@ float admPreview::getCurrentZoom(void)
 */
 ADM_PREVIEW_MODE admPreview::getPreviewMode(void)
 {
-  return previewMode; 
+    return previewMode;
 }
 /**
     \fn changePreviewZoom
@@ -144,9 +142,9 @@ ADM_PREVIEW_MODE admPreview::getPreviewMode(void)
 void admPreview::changePreviewZoom(float nzoom)
 {
     admPreview::stop();
-    ADM_info("Preview :: Change zoom %.4f->%.4f\n",zoom,nzoom);
-    zoom=nzoom;
-    renderDisplayResize(rdrPhysicalW,rdrPhysicalH,zoom);
+    ADM_info("Preview :: Change zoom %.4f->%.4f\n", zoom, nzoom);
+    zoom = nzoom;
+    renderDisplayResize(rdrPhysicalW, rdrPhysicalH, zoom);
     UI_displayZoomLevel();
     admPreview::start();
 }
@@ -159,8 +157,8 @@ void admPreview::changePreviewZoom(float nzoom)
 */
 void admPreview::setPreviewMode(ADM_PREVIEW_MODE mode)
 {
-  previewMode=mode; 
-  UI_setCurrentPreview( (int)mode);
+    previewMode = mode;
+    UI_setCurrentPreview((int)mode);
 }
 /**
       \fn deferDisplay
@@ -169,17 +167,17 @@ void admPreview::setPreviewMode(ADM_PREVIEW_MODE mode)
 */
 void admPreview::deferDisplay(bool onoff)
 {
-      
-      if(true==onoff)
-      {
+
+    if (true == onoff)
+    {
         renderStartPlaying();
-        defered_display=1;
-      }
-      else
-      {
+        defered_display = 1;
+    }
+    else
+    {
         renderStopPlaying();
-        defered_display=0;
-      }
+        defered_display = 0;
+    }
 }
 /**
       \fn admPreview::start
@@ -187,32 +185,32 @@ void admPreview::deferDisplay(bool onoff)
 
 */
 
-void 	admPreview::start( void )
+void admPreview::start(void)
 {
-            ADM_info("admPreview,starting\n");
+    ADM_info("admPreview,starting\n");
 }
 /**
       \fn admPreview::stop
       \brief kill preview  and associated datas
 */
 
-void admPreview::stop( void )
+void admPreview::stop(void)
 {
-      renderLock();
-     
-      renderUnlock();
+    renderLock();
+
+    renderUnlock();
 }
 
 /**
       \fn previewBlit(ADMImage *from,ADMImage *to,uint32_t startx,uint32_t starty)
       \brief Blit "from" to "to" at position startx,starty
-
-void previewBlit(ADMImage *from,ADMImage *to,uint32_t startx,uint32_t starty)
+*/
+void previewBlit(ADMImage *from, ADMImage *to, uint32_t startx, uint32_t starty)
 {
-  
-  from->copyTo(to,startx,starty);
-  
+
+    from->copyTo(to, startx, starty);
 }
+
 /**
       \fn     displayNow
       \brief  display on screen immediately. The image has been calculated previously by update
@@ -220,13 +218,15 @@ void previewBlit(ADMImage *from,ADMImage *to,uint32_t startx,uint32_t starty)
 
 void admPreview::displayNow(void)
 {
-    switch(previewMode)
+    switch (previewMode)
     {
-      case ADM_PREVIEW_NONE:
-      case ADM_PREVIEW_OUTPUT:     
+    case ADM_PREVIEW_NONE:
+    case ADM_PREVIEW_OUTPUT:
         renderUpdateImage(rdrImage);
         break;
-      default: ADM_assert(0);break;
+    default:
+        ADM_assert(0);
+        break;
     }
 }
 /**
@@ -235,9 +235,9 @@ void admPreview::displayNow(void)
 */
 void admPreview::cleanUp(void)
 {
-	admPreview::stop();
+    admPreview::stop();
 
-	destroy();
+    destroy();
 }
 /**
     \fn cleanUp
@@ -246,27 +246,27 @@ void admPreview::cleanUp(void)
 void admPreview::destroy(void)
 {
     ADM_info("Destroying preview\n");
-	if(rdrImage)
-	{
-		delete rdrImage;
-		rdrImage = NULL;
-	}
+    if (rdrImage)
+    {
+        delete rdrImage;
+        rdrImage = NULL;
+    }
 }
 /**
     \fn updateImage
 */
 bool admPreview::updateImage(void)
 {
-    if(defered_display)
+    if (defered_display)
         return true;
-    UI_setFrameType(  rdrImage->flags,rdrImage->_Qp);
+    UI_setFrameType(rdrImage->flags, rdrImage->_Qp);
     renderUpdateImage(rdrImage);
     return true;
 }
 
 void admPreview::getFrameFlags(uint32_t *flags, uint32_t *quantiser)
 {
-	*flags = rdrImage->flags;
-	*quantiser = rdrImage->_Qp;
+    *flags = rdrImage->flags;
+    *quantiser = rdrImage->_Qp;
 }
 // EOF
