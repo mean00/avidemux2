@@ -1148,6 +1148,7 @@ void MainWindow::buildActionLists(void)
     PUSH_LOADED(File, ACT_SAVE_PNG)
     PUSH_LOADED(File, ACT_SAVE_JPG)
     PUSH_LOADED(File, ACT_SAVE_BUNCH_OF_JPG)
+    PUSH_LOADED(File, ACT_SAVE_IMAGE_TO_CLIPBOARD)
 
     for(uint32_t engineIdx = 0; engineIdx < _scriptEngines.size(); engineIdx++)
         PUSH_LOADED(File, (Action)(ACT_SCRIPT_ENGINE_FIRST + (engineIdx * 3) + 2))
@@ -3803,6 +3804,31 @@ void UI_tweaks(const char * op, const char * paramS, int paramN)
     QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
 }
 
+/**
+ * \fn UI_CopyImageToClipboard
+ */
+void UI_CopyImageToClipboard(void * image)
+{
+    if (!image) return;
+    ADMImage * img = (ADMImage *)image;
+    QClipboard *clipboard = QApplication::clipboard();
+    if (clipboard)
+    {
+        int w,h;
+        w = img->_width;
+        h = img->_height;
+        uint32_t size = ADM_IMAGE_ALIGN(w*4) * h;
+        uint8_t * rgbBuffer=new uint8_t[size];
+        ADMColorScalerFull scaler(ADM_CS_BICUBIC,w,h,w,h,img->_pixfrmt,ADM_PIXFRMT_BGR32A);
+        scaler.convertImage(img,rgbBuffer);
+        QImage rgbImage = QImage(rgbBuffer,w,h,ADM_IMAGE_ALIGN(w*4),QImage::Format_RGB32).copy(0,0,w,h);
+        
+        clipboard->setImage(rgbImage);
+        
+        rgbImage = QImage();    // detach rgbBuffer
+        delete [] rgbBuffer;
+    }
+}
 
 /**
  * \fn dtor

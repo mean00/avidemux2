@@ -71,4 +71,6 @@ bool UI_askAvisynthPort(uint32_t &port);
 bool UI_reset(void);
 
 void UI_tweaks(const char * op, const char * paramS, int paramN);
+
+void UI_CopyImageToClipboard(void * image);
 // EOF

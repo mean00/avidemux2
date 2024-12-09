@@ -45,6 +45,7 @@ bool A_saveJpg (const char *name);
 int  A_saveBunchJpg(const char *name);
 bool A_saveImg (const char *name);
 bool A_savePng(const char *name);
+void A_saveImageToClipboard(void);
 int  ADM_saveRaw (const char *name);
 int  A_audioSave(const char *name);
 int  A_SaveWrapper(const char *name);
