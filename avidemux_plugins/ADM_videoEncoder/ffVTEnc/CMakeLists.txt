@@ -2,17 +2,17 @@ INCLUDE(ve_plugin)
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
 
 MACRO(DEFINE_VID_ENCODER codec)
-    SET(family ffVTEenc)
-    SET(outName ADM_ve_${family}${codec})
-    SET(${family}${codec}_SRCS
+  SET(family ffVTEenc)
+  SET(outName ADM_ve_${family}${codec})
+  SET(${family}${codec}_SRCS
         ffVTEncPlugin.cpp
         ADM_ffVTEnc.cpp)
-    ADD_VIDEO_ENCODER(${outName} ${${family}${codec}_SRCS})
-    IF("${codec}" STREQUAL "HEVC")
-        TARGET_COMPILE_DEFINITIONS(${outName} PUBLIC H265_ENCODER)
-    ENDIF("${codec}" STREQUAL "HEVC")
-    INSTALL_VIDEO_ENCODER(${outName})
-    TARGET_LINK_LIBRARIES(${outName} ADM_libavcodec ADM_libavutil)
+  ADD_VIDEO_ENCODER(${outName} ${${family}${codec}_SRCS})
+  IF("${codec}" STREQUAL "HEVC")
+    TARGET_COMPILE_DEFINITIONS(${outName} PUBLIC H265_ENCODER)
+  ENDIF("${codec}" STREQUAL "HEVC")
+  INSTALL_VIDEO_ENCODER(${outName})
+  TARGET_LINK_LIBRARIES(${outName} PRIVATE ADM_libavcodec ADM_libavutil)
 ENDMACRO(DEFINE_VID_ENCODER codec)
 
 #INCLUDE_DIRECTORIES("${AVIDEMUX_SOURCE_DIR}/avidemux/")

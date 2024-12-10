@@ -1,6 +1,6 @@
 INCLUDE(ve_plugin)
 
-SET(ffMpeg4_SRCS 
+SET(ffMpeg4_SRCS
         ffMpeg4Plugin.cpp
         ADM_ffMpeg4.cpp
 )
@@ -10,5 +10,5 @@ ADD_VIDEO_ENCODER(ADM_ve_ffMpeg4  ${ffMpeg4_SRCS})
 
 INIT_VIDEO_ENCODER(ADM_ve_ffMpeg4)
 INSTALL_VIDEO_ENCODER(ADM_ve_ffMpeg4)
-TARGET_LINK_LIBRARIES(ADM_ve_ffMpeg4 ADM_libavcodec ADM_libavutil)
+TARGET_LINK_LIBRARIES(ADM_ve_ffMpeg4 PRIVATE ADM_libavcodec ADM_libavutil)
 INCLUDE_DIRECTORIES("${AVIDEMUX_SOURCE_DIR}/avidemux/")

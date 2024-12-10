@@ -1,6 +1,6 @@
 INCLUDE(ve_plugin)
 
-SET(ffFlv1_SRCS 
+SET(ffFlv1_SRCS
         ffFlv1Plugin.cpp
         ADM_ffFlv1.cpp
 )
@@ -10,5 +10,5 @@ ADD_VIDEO_ENCODER(ADM_ve_ffFlv1  ${ffFlv1_SRCS})
 
 INIT_VIDEO_ENCODER(ADM_ve_ffFlv1)
 INSTALL_VIDEO_ENCODER(ADM_ve_ffFlv1)
-TARGET_LINK_LIBRARIES(ADM_ve_ffFlv1 ADM_libavcodec ADM_libavutil)
+TARGET_LINK_LIBRARIES(ADM_ve_ffFlv1 PRIVATE ADM_libavcodec ADM_libavutil)
 INCLUDE_DIRECTORIES("${AVIDEMUX_SOURCE_DIR}/avidemux/")

@@ -1,19 +1,19 @@
 include(dm_plugin)
 IF(NOT MSVC)
-    ADD_DEFINITIONS("-std=c++11")
+  ADD_DEFINITIONS("-std=c++11")
 ENDIF(NOT MSVC)
-SET(ADM_ts_SRCS 
-	ADM_ts.cpp
-	ADM_tsPlugin.cpp
-	ADM_tsIndex.cpp
-	ADM_tsIndexH264.cpp
-	ADM_tsIndexH265.cpp
+SET(ADM_ts_SRCS
+ ADM_ts.cpp
+ ADM_tsPlugin.cpp
+ ADM_tsIndex.cpp
+ ADM_tsIndexH264.cpp
+ ADM_tsIndexH265.cpp
         ADM_tsIndexVC1.cpp
         ADM_tsIndexMpeg2.cpp
-	ADM_tsReadIndex.cpp
-	ADM_tsAudio.cpp
-	ADM_tsAudioProbe.cpp
-	ADM_tsAudioProbe.h
+ ADM_tsReadIndex.cpp
+ ADM_tsAudio.cpp
+ ADM_tsAudioProbe.cpp
+ ADM_tsAudioProbe.h
         ADM_tsComputeTimeStamp.cpp
         dmxTSPacket.cpp
         ADM_tsPatPmt.cpp
@@ -22,11 +22,11 @@ SET(ADM_ts_SRCS
 )
 
 ADD_DEMUXER(ADM_dm_ts ${ADM_ts_SRCS})
-TARGET_LINK_LIBRARIES(ADM_dm_ts ADM_coreDemuxerMpeg6 ADM_audioParser6  ADM_libavutil ADM_libavcodec ADM_libavformat)
+TARGET_LINK_LIBRARIES(ADM_dm_ts PRIVATE ADM_coreDemuxerMpeg6 ADM_audioParser6  ADM_libavutil ADM_libavcodec ADM_libavformat)
 
 # For ffmpeg includes
-INCLUDE_DIRECTORIES("${AVIDEMUX_SOURCE_DIR}/avidemux/") 
-INCLUDE_DIRECTORIES("${AVIDEMUX_SOURCE_DIR}/avidemux/ADM_libraries") 
+INCLUDE_DIRECTORIES("${AVIDEMUX_SOURCE_DIR}/avidemux/")
+INCLUDE_DIRECTORIES("${AVIDEMUX_SOURCE_DIR}/avidemux/ADM_libraries")
 INCLUDE_DIRECTORIES("${AVIDEMUX_SOURCE_DIR}/avidemux/ADM_coreDemuxerMpeg/include")
 
 INIT_DEMUXER(ADM_dm_ts)
