@@ -1,12 +1,12 @@
 SET(ADM_LIB ADM_commonUI6)
 
 SET(${ADM_LIB}_SRCS
-DIA_audioFilter.cpp   
-DIA_gototime.cpp    
-DIA_postproc.cpp  
+DIA_audioFilter.cpp
+DIA_gototime.cpp
+DIA_postproc.cpp
 #DIA_bitrateHisto.cpp
-DIA_prefs.cpp     
-DIA_builtin.cpp       
+DIA_prefs.cpp
+DIA_builtin.cpp
 DIA_jobs_save.cpp
 DIA_plugins.cpp
 DIA_HDRConfig.cpp
@@ -14,4 +14,10 @@ DIA_HDRConfig.cpp
 
 
 ADD_LIBRARY(${ADM_LIB} STATIC ${${ADM_LIB}_SRCS})
+TARGET_INCLUDE_DIRECTORIES(${ADM_LIB} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
+ADD_LIBRARY(${ADM_LIB}_interface INTERFACE)
+TARGET_INCLUDE_DIRECTORIES(${ADM_LIB}_interface INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+
+TARGET_LINK_LIBRARIES(${ADM_LIB}  PRIVATE ADM_editor6_interface)
 

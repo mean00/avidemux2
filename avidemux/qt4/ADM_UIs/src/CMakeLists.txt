@@ -73,7 +73,7 @@ TARGET_LINK_LIBRARIES(${ADM_LIB} PRIVATE
     ADM_coreUI6
     ${QT_QTGUI_LIBRARY}
     ${QT_QTCORE_LIBRARY}
-    ADM_render6_${QT_LIBRARY_EXTENSION}
+    ADM_render6
     ADM_coreVideoFilter6
     ${GL_LIBS}
 )
