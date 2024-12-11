@@ -16,6 +16,6 @@ MACRO(ADD_AUDIO_DEVICE name)
         IF(NOT MSVC) 
                 SET(EXTRALIB "m")
         ENDIF(NOT MSVC) 
-        TARGET_LINK_LIBRARIES( ${name} ADM_coreAudioDevice6 ADM_core6 ${EXTRALIB})
+        TARGET_LINK_LIBRARIES( ${name} PRIVATE ADM_coreAudioDevice6 ADM_core6 ${EXTRALIB})
 ENDMACRO(ADD_AUDIO_DEVICE name)
 
