@@ -12,7 +12,7 @@ SET(ADM_codecs_SRCS
 
 ADM_ADD_SHARED_LIBRARY(ADM_coreVideoCodec6 ${ADM_codecs_SRCS})
 IF(${ADM_DEBUG})
-  TARGET_ADD_DEFINITIONS(ADM_coreVideoCode6 PRIVATE "-DADM_DEBUG")
+  TARGET_COMPILE_DEFINITIONS(ADM_coreVideoCodec6 PRIVATE "ADM_DEBUG")
 ENDIF()
 TARGET_LINK_LIBRARIES(ADM_coreVideoCodec6 PUBLIC
                                           ADM_core6
