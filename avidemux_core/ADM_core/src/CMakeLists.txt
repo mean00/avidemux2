@@ -42,6 +42,7 @@ YASMIFY(asmFiles cpuid adm_emms)
 MESSAGE(STATUS "List of asm files ${asmFiles}")
 ADM_ADD_SHARED_LIBRARY(ADM_core6 ${ADM_core_SRCS} ${asmFiles})
 TARGET_INCLUDE_DIRECTORIES(ADM_core6 PUBLIC "${PTHREAD_INCLUDE_DIR}")
+ADM_LINK_THREAD(ADM_core6)
 
 IF(WIN32)
   TARGET_LINK_LIBRARIES(ADM_core6 PRIVATE imagehlp ws2_32 powrprof)
