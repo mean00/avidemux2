@@ -40,15 +40,6 @@ const char *i2state(int a)
         return "????";
         break;
     }
-    if (a == AUDIO_DEVICE_STARTED)
-        return "DeviceStarted";
-    if (a == AUDIO_DEVICE_STOPPED)
-        return "DeviceStopped";
-    if (a == AUDIO_DEVICE_STOP_REQ)
-        return "DeviceStop_Requested";
-    if (a == AUDIO_DEVICE_STOP_GR)
-        return "DeviceStop_Granted";
-    return "?????";
 }
 #define CHANGE_STATE(x)                                                                                                \
     {                                                                                                                  \
