@@ -1,9 +1,10 @@
 
-SET(ADMaudioCoreEncoder_SRCS
-  audioencoder.cpp
-)
 
-ADM_ADD_SHARED_LIBRARY(ADM_coreAudioEncoder6 ${ADMaudioCoreEncoder_SRCS})
-TARGET_LINK_LIBRARIES(ADM_coreAudioEncoder6 PUBLIC ADM_core6 ADM_coreAudio6 ADM_coreAudioFilterAPI6 ADM_coreUI6)
+SET(ADM_LIB ADM_coreAudioEncoder6)
+ADM_ADD_SHARED_LIBRARY(${ADM_LIB})
+TARGET_SOURCES(${ADM_LIB} PRIVATE audioencoder.cpp)
 
-ADM_INSTALL_LIB(ADM_coreAudioEncoder6)
+TARGET_LINK_LIBRARIES(${ADM_LIB} PUBLIC ADM_core6 ADM_coreAudio6 ADM_coreAudioFilterAPI6 ADM_coreUI6)
+TARGET_INCLUDE_DIRECTORIES(${ADM_LIB} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/..include)
+
+ADM_INSTALL_LIB(${ADM_LIB})
