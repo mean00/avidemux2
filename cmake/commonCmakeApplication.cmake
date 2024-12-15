@@ -1,6 +1,6 @@
-# # # # # # # # # # # # # # # # # # ######################
+# # # # # # # # # # # # # # # # # # # # ####################
 # Definitions and Includes
-# # # # # # # # # # # # # # # # # # ######################
+# # # # # # # # # # # # # # # # # # # # ####################
 
 # Common definitions...
 SET(CMAKE_MODULE_PATH "${ADM_CMAKE_DIR}/cmake_win32_rc" "${CMAKE_MODULE_PATH}")
@@ -9,18 +9,18 @@ INCLUDE(admPluginLocation)
 INCLUDE(admConfigSummary)
 INITIALISE_SUMMARY_LISTS()
 
-# # # # # # # # # # # # # # # # # # ######################
+# # # # # # # # # # # # # # # # # # # # ####################
 # Shared cmake part
-# # # # # # # # # # # # # # # # # # ######################
+# # # # # # # # # # # # # # # # # # # # ####################
 ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64 -D_LARGE_FILES)
 INCLUDE(admMainChecks)
 
 UNSET(CMAKE_CXX_VISIBILITY_PRESET)
 UNSET(CMAKE_VISIBILITY_INLINES_HIDDEN)
 
-# # # # # # # # # # # # # # # # # # ######################
+# # # # # # # # # # # # # # # # # # # # ####################
 # Add include dirs
-# # # # # # # # # # # # # # # # # # ######################
+# # # # # # # # # # # # # # # # # # # # ####################
 INCLUDE(admCoreIncludes)
 # Add ffmpeg to resolve ADM_libavcodec to the actual name, needed for vdpau
 INCLUDE(admFFmpegUtil)
@@ -54,14 +54,14 @@ SET(ADM_EXE_SRCS
   ${CMAKE_CURRENT_SOURCE_DIR}/../common/ADM_slave.cpp
 )
 
-# # # # # # # # # # # # # # # # # # ######################
+# # # # # # # # # # # # # # # # # # # # ####################
 # FFmpeg
-# # # # # # # # # # # # # # # # # # ######################
+# # # # # # # # # # # # # # # # # # # # ####################
 INCLUDE_DIRECTORIES("${ADM_HEADER_DIR}/ffmpeg")
 
-# # # # # # # # # # # # # # # # # # ###########################
+# # # # # # # # # # # # # # # # # # # # #########################
 # Add core libs
-# # # # # # # # # # # # # # # # # # ###########################
+# # # # # # # # # # # # # # # # # # # # #########################
 SET(coreLibs
   ADM_core6
   ADM_audioParser6
@@ -79,15 +79,15 @@ SET(coreLibs
   ADM_coreVideoFilter6
 )
 
-# # # # # # # # # # # # # # # # # # ###########################
+# # # # # # # # # # # # # # # # # # # # #########################
 # Add common libs
-# # # # # # # # # # # # # # # # # # ###########################
+# # # # # # # # # # # # # # # # # # # # #########################
 SET(commonLibs1
   ADM_muxerGate6
   ADM_audioFilter6
   ADM_editor6
   ADM_audiocodec6
-  ADM_videocodec6
+  ADM_videoCodec6
   ADM_coreVideoCodec6
   ADM_commonUI6
 )

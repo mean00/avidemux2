@@ -71,6 +71,8 @@ ENDIF()
 
 REMOVE_DEFINITIONS(-DHAVE_CONFIG_H)
 
-TARGET_LINK_LIBRARIES(ADM_core6  PUBLIC ADM_libavutil) # To get the CPU functions of libavutil
+# To get the CPU functions of libavutil
+TARGET_LINK_LIBRARIES(ADM_core6 PUBLIC ADM_libavutil)
+TARGET_LINK_LIBRARIES(ADM_core6 PUBLIC adm_gettext)
 ADM_LINK_THREAD(ADM_core6)
 ADM_INSTALL_LIB(ADM_core6)
