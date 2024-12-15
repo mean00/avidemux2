@@ -1,4 +1,5 @@
-SET(ADM_codecs_SRCS
+ADM_ADD_SHARED_LIBRARY(ADM_coreVideoCodec6)
+TARGET_SOURCES(ADM_coreVideoCodec6 PRIVATE
   ADM_codecs.cpp
   ADM_ffmp43.cpp
   ADM_codecFFsimple.cpp
@@ -10,7 +11,6 @@ SET(ADM_codecs_SRCS
   ADM_ffVp9.cpp
 )
 
-ADM_ADD_SHARED_LIBRARY(ADM_coreVideoCodec6 ${ADM_codecs_SRCS})
 IF(${ADM_DEBUG})
   TARGET_COMPILE_DEFINITIONS(ADM_coreVideoCodec6 PRIVATE "ADM_DEBUG")
 ENDIF()
@@ -19,9 +19,11 @@ TARGET_LINK_LIBRARIES(ADM_coreVideoCodec6 PUBLIC
                                           ADM_coreImage6
                                           ADM_coreUI6
                                           ADM_coreUtils6
+                                          ADM_coreImage6
                                           ADM_libavcodec
                                           ADM_libavformat
-                                          ADM_libavutil)
+                                          ADM_libavutil
+)
 
 ADM_INSTALL_LIB(ADM_coreVideoCodec6)
 
