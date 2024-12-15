@@ -1,9 +1,9 @@
-cmake_minimum_required(VERSION 3.7)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.7)
 
 PROJECT(Avidemux_CLI)
 
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/../../cmake" "${CMAKE_MODULE_PATH}")
-include(avidemuxVersion)
+SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/../../cmake" "${CMAKE_MODULE_PATH}")
+INCLUDE(avidemuxVersion)
 
 MESSAGE("")
 MESSAGE("#########################################")
@@ -15,39 +15,44 @@ MESSAGE(STATUS "Checking for avidemux development files ..")
 
 IF(NOT FAKEROOT)
   SET(AVIDEMUX_FAKEROOT "")
-else(NOT FAKEROOT)
+ELSE()
   SET(AVIDEMUX_FAKEROOT "${FAKEROOT}")
-endif()
+ENDIF()
 
 SET(ADM_HEADER_DIR ${AVIDEMUX_FAKEROOT}${CMAKE_INSTALL_PREFIX}/include/avidemux/${AVIDEMUX_API_VERSION})
 SET(ADM_CMAKE_DIR  ${ADM_HEADER_DIR}/cmake)
 # Common definitions...
 SET(CMAKE_MODULE_PATH "${ADM_CMAKE_DIR}" "${CMAKE_MODULE_PATH}")
 MESSAGE(STATUS  "Checking for avidemux include folder (i.e. CMAKE_INSTALL_PREFIX/include/avidemux/${AVIDEMUX_API_VERSION}")
-if(NOT EXISTS "${ADM_HEADER_DIR}")
+IF(NOT EXISTS "${ADM_HEADER_DIR}")
   MESSAGE(STATUS  "Make sure you installed all the files.\n i cannot find avidemux include folder.cmake .\nSet CMAKE_INSTALL_PREFIX to the install folder, current value is ${CMAKE_INSTALL_PREFIX}")
   MESSAGE(FATAL_ERROR  "Aborting")
-endif()
+ENDIF()
 
 MESSAGE(STATUS "Found avidemux include folder. good.")
 MESSAGE(STATUS "Checking for cmake subfolder")
 
-if(NOT EXISTS "${ADM_CMAKE_DIR}/commonCmakeApplication.cmake")
+IF(NOT EXISTS "${ADM_CMAKE_DIR}/commonCmakeApplication.cmake")
   MESSAGE(STATUS  "Make sure you installed all the files.\n I cannot find content of the cmake subfolder .\n")
   MESSAGE(STATUS  "Set CMAKE_INSTALL_PREFIX to the install folder, current value is ${CMAKE_INSTALL_PREFIX}")
   MESSAGE(STATUS  "I was looking for commonCmakeApplication.cmake in  ${ADM_CMAKE_DIR}")
   MESSAGE(FATAL_ERROR  "Aborting")
-endif()
+ENDIF()
 MESSAGE(STATUS "Found cmake subfolder.good.")
 
 
-include(commonCmakeApplication)
+INCLUDE(commonCmakeApplication)
 INCLUDE(admWindRes)
-
-# # # # # # # # # # ################################
+#
+#
+#
+#
+ADD_EXECUTABLE(avidemux3_cli)
+TARGET_LINK_LIBRARIES(avidemux3_cli PRIVATE adm_gettext)
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #########
 # Config
-# # # # # # # # # # ################################
-ADD_DEFINITIONS(-DADM_UI_TYPE_BUILD=ADM_UI_CLI)
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #########
+TARGET_COMPILE_DEFINITIONS(avidemux3_cli PRIVATE ADM_UI_TYPE_BUILD=ADM_UI_CLI)
 SET(CONFIG_HEADER_TYPE ADM_BUILD_CLI)
 SET(UI_SUFFIX cli)
 
@@ -56,99 +61,88 @@ MESSAGE(STATUS "CLI config.h generated")
 
 INCLUDE_DIRECTORIES(BEFORE "${CMAKE_BINARY_DIR}/config/cli/")
 
-# # # # # # # # # # ##############################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #######
 # Add subdirectories
-# # # # # # # # # # ##############################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #######
 ADD_SUBDIRECTORY(../common ./common)
 ADD_SUBDIRECTORY(ADM_UIs ./ADM_UIsCli)
 ADD_SUBDIRECTORY(ADM_userInterfaces ./ADM_userInterfacesCli)
 
 SDLify(../common/main.cpp)
-if (ADM_SUBVERSION)
+IF(ADM_SUBVERSION)
   ADD_SOURCE_CFLAGS(../common/main.cpp "-DADM_SUBVERSION=\"${ADM_SUBVERSION}\"")
-endif (ADM_SUBVERSION)
+ENDIF()
 ADD_SOURCE_CFLAGS(../common/main.cpp "-DADM_VERSION=\"${AVIDEMUX_VERSION}\"")
 
-# # # # # # # # # # #################################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ##########
 # Version Info
-# # # # # # # # # # #################################
-if (WIN32)
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ##########
+IF(WIN32)
   WINDRESIFY(mainCLI  "${CMAKE_CURRENT_SOURCE_DIR}/../common/xpm/adm.ico" src "avidemux_cli" "Avidemux Video Editor, CLI Version")
-  SET(ADM_EXE_SRCS ${ADM_EXE_SRCS} ${src})
-endif (WIN32)
+  TARGET_SOURCES(avidemux3_cli PRIVATE ${src})
+ENDIF()
 
-# # # # # # # # # # #################################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ##########
 # Executable
-# # # # # # # # # # #################################
-include_directories("${PTHREAD_INCLUDE_DIR}")
-ADD_EXECUTABLE(avidemux3_cli ${ADM_EXE_SRCS})
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ##########
 
-# # # # # # # # # # #################################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ##########
 # Construct common libraries
-# # # # # # # # # # #################################
-FOREACH (_libName ${commonLibs1})
-  TARGET_LINK_LIBRARIES(avidemux3_cli PRIVATE ${_libName})
-ENDFOREACH()
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ##########
 
+MACRO(LINKBUNCH lst)
+  FOREACH(_li ${lst})
+    TARGET_LINK_LIBRARIES(avidemux3_cli PRIVATE ${_li})
+  ENDFOREACH()
+ENDMACRO()
+
+LINKBUNCH(commonLibs1)
 TARGET_LINK_LIBRARIES(avidemux3_cli PRIVATE ADM_filtersCli6)
+LINKBUNCH(commonLibs2)
+LINKBUNCH(coreLibs)
 
-FOREACH (_libName ${commonLibs2})
-  TARGET_LINK_LIBRARIES(avidemux3_cli PRIVATE ${_libName})
-ENDFOREACH()
-
-FOREACH (_libName ${coreLibs})
-  TARGET_LINK_LIBRARIES(avidemux3_cli PRIVATE ${_libName})
-ENDFOREACH()
-
-# # # # # # # # # # ###################################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ############
 # Add gtk specific libs
-# # # # # # # # # # ###################################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ############
 TARGET_LINK_LIBRARIES(avidemux3_cli PRIVATE
- ADM_UI_Cli6
- ADM_dialogCli6
- ADM_toolkit6
- ADM_coreAudio6
- ADM_coreUtils6
- ADM_gui2Cli6
- ADM_toolkitCli6
- ADM_shellCli
- ADM_render6
+  ADM_UI_Cli6
+  ADM_dialogCli6
+  ADM_toolkit6
+  ADM_coreAudio6
+  ADM_coreUtils6
+  ADM_gui2Cli6
+  ADM_toolkitCli6
+  ADM_shellCli
+  ADM_render6
 )
 
-# # # # # # # # # # #################################
-# External libs
-# # # # # # # # # # #################################
-# gettext
-TARGET_LINK_LIBRARIES(avidemux3_cli PRIVATE adm_gettext )
-
-
 # SDL
-IF (USE_SDL)
+IF(USE_SDL)
   TARGET_LINK_LIBRARIES(avidemux3_cli PRIVATE ${SDL2_LIBRARY} ${SDL2_MAIN})
-ENDIF (USE_SDL)
+ENDIF()
 
-# # # # # # # # # # #################################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ##########
 # OS Specific
-# # # # # # # # # # #################################
-if (WIN32 OR APPLE)
-  set_property(TARGET avidemux3_cli PROPERTY OUTPUT_NAME avidemux_cli)
-endif (WIN32 OR APPLE)
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ##########
+IF(WIN32 OR APPLE)
+  SET_PROPERTY(TARGET avidemux3_cli PROPERTY OUTPUT_NAME avidemux_cli)
+ENDIF()
 
-IF (MINGW)
-  target_link_libraries(avidemux3_cli PRIVATE winmm -mwindows -Wl,-subsystem,console -Wl,--export-all-symbols)
-ENDIF (MINGW)
+IF(MINGW)
+  TARGET_LINK_LIBRARIES(avidemux3_cli PRIVATE winmm -mwindows -Wl,-subsystem,console -Wl,--export-all-symbols)
+ENDIF()
 
 # Needed by RubberBand
-if (APPLE)
+IF(APPLE)
   #target_link_libraries(avidemux3_cli "-framework Accelerate")
   # Silence missing nullability specifier warnings on macOS
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-nullability-completeness")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-nullability-completeness")
-endif (APPLE)
+  SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-nullability-completeness")
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-nullability-completeness")
+ENDIF()
 
-# # # # # # # # # # #################################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ##########
 # Install
-# # # # # # # # # # #################################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ##########
 ADM_LINK_THREAD(avidemux3_cli)
 ADM_INSTALL_BIN(avidemux3_cli)
 
