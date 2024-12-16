@@ -1,5 +1,7 @@
-ADM_ADD_SHARED_LIBRARY(ADM_coreVideoCodec6)
-TARGET_SOURCES(ADM_coreVideoCodec6 PRIVATE
+
+SET(ADM_LIB ADM_coreVideoCodec6)
+ADM_ADD_SHARED_LIBRARY(${ADM_LIB})
+TARGET_SOURCES(${ADM_LIB} PRIVATE
   ADM_codecs.cpp
   ADM_ffmp43.cpp
   ADM_codecFFsimple.cpp
@@ -11,9 +13,6 @@ TARGET_SOURCES(ADM_coreVideoCodec6 PRIVATE
   ADM_ffVp9.cpp
 )
 
-IF(${ADM_DEBUG})
-  TARGET_COMPILE_DEFINITIONS(ADM_coreVideoCodec6 PRIVATE "ADM_DEBUG")
-ENDIF()
 TARGET_LINK_LIBRARIES(ADM_coreVideoCodec6 PUBLIC
                                           ADM_core6
                                           ADM_coreImage6
@@ -25,6 +24,12 @@ TARGET_LINK_LIBRARIES(ADM_coreVideoCodec6 PUBLIC
                                           ADM_libavutil
 )
 
-ADM_INSTALL_LIB(ADM_coreVideoCodec6)
+TARGET_INCLUDE_DIRECTORIES(${ADM_LIB} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+
+ADM_INSTALL_LIB(${ADM_LIB})
+
+IF(${ADM_DEBUG})
+  TARGET_COMPILE_DEFINITIONS(ADM_coreVideoCodec6 PRIVATE "ADM_DEBUG")
+ENDIF()
 
 REMOVE_DEFINITIONS(-DHAVE_CONFIG_H)
