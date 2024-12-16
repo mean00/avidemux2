@@ -10,35 +10,63 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include "config.h"
 #include "ADM_default.h"
 #include "DIA_coreToolkit.h"
+#include "GUI_accelRender.h"
 #include "GUI_render.h"
 #include "GUI_renderInternal.h"
-#include "GUI_accelRender.h"
+#include "config.h"
 
-class simpleRender: public VideoRenderBase
+class simpleRender : public VideoRenderBase
 {
-      protected:
-      public:
-                             simpleRender( void ) ;
-                             ~simpleRender();
-              virtual	bool init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float zoom);
-              virtual	bool stop(void);				
-              virtual   bool displayImage(ADMImage *pic);
-              virtual   bool changeZoom(float newZoom);
-              virtual   bool refresh(void);
-              virtual   bool usingUIRedraw(void) {return false;};
-                  const char *getName() {return "Dummy";}
+  protected:
+  public:
+    simpleRender(void);
+    ~simpleRender();
+    virtual bool init(GUI_WindowInfo *window, uint32_t w, uint32_t h, float zoom);
+    virtual bool stop(void);
+    virtual bool displayImage(ADMImage *pic);
+    virtual bool changeZoom(float newZoom);
+    virtual bool refresh(void);
+    virtual bool usingUIRedraw(void)
+    {
+        return false;
+    };
+    const char *getName()
+    {
+        return "Dummy";
+    }
 };
-
-
-
+/**
+ */
+extern VideoRenderBase *spawnXvRender()
+{
+    return NULL;
+}
+/**
+ */
+extern VideoRenderBase *spawnSdlRender()
+{
+    return NULL;
+}
+/**
+ */
+extern VideoRenderBase *spawnVDPAURender()
+{
+    return NULL;
+}
+/**
+ */
+extern VideoRenderBase *spawnLIBVARender()
+{
+    return NULL;
+}
+/**
+ */
 VideoRenderBase *spawnSimpleRender()
 {
     return new simpleRender();
 }
-
 
 /**
     \fn simpleRender
@@ -68,28 +96,27 @@ bool simpleRender::stop(void)
 */
 bool simpleRender::refresh(void)
 {
-     return true;
+    return true;
 }
 /**
     \fn displayImage
 */
 bool simpleRender::displayImage(ADMImage *pic)
 {
-        return true;
+    return true;
 }
 /**
     \fn changeZoom
 */
 bool simpleRender::changeZoom(float newZoom)
 {
-        return true;
+    return true;
 }
 /**
     \fn changeZoom
 */
-bool simpleRender::init( GUI_WindowInfo *window, uint32_t w, uint32_t h, float zoom)
+bool simpleRender::init(GUI_WindowInfo *window, uint32_t w, uint32_t h, float zoom)
 {
-    ADM_info("init, simple render. w=%d, h=%d, zoom=%.4f\n",(int)w,(int)h,zoom);
+    ADM_info("init, simple render. w=%d, h=%d, zoom=%.4f\n", (int)w, (int)h, zoom);
     return true;
 }
-
