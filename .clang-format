@@ -5,5 +5,5 @@ Standard: Auto
 UseTab: Never
 SortIncludes: Never
 IncludeBlocks: Preserve
-
+ColumnLimit: 120
 ...
