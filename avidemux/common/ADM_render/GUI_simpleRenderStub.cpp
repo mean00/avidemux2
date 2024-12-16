@@ -10,13 +10,16 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include "config.h"
+//
 #include "ADM_default.h"
 #include "DIA_coreToolkit.h"
-#include "GUI_accelRender.h"
 #include "GUI_render.h"
 #include "GUI_renderInternal.h"
-#include "config.h"
-
+//
+#include "GUI_accelRender.h"
+//
+//
 class simpleRender : public VideoRenderBase
 {
   protected:
