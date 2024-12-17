@@ -1,10 +1,14 @@
-INCLUDE_DIRECTORIES(../include)
-SET(ADM_audiocodec_SRCS
-ADM_8bits.cpp  
+SET(ADM_LIB ADM_audiocodec6)
+ADD_LIBRARY(${ADM_LIB} STATIC)
+TARGET_SOURCES(${ADM_LIB} PRIVATE
+ADM_8bits.cpp
 ADM_lpcm.cpp
-ADM_audiocodec.cpp  
-ADM_codecpcm16.cpp  
-ADM_codecpcmfloat.cpp  
+ADM_audiocodec.cpp
+ADM_codecpcm16.cpp
+ADM_codecpcmfloat.cpp
 ADM_pluginLoad.cpp)
 
-ADD_LIBRARY(ADM_audiocodec6 STATIC ${ADM_audiocodec_SRCS})
+TARGET_INCLUDE_DIRECTORIES(${ADM_LIB} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+TARGET_LINK_LIBRARIES(${ADM_LIB} PUBLIC ADM_core6 ADM_coreUtils6)
+#
+
