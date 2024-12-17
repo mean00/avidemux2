@@ -45,30 +45,30 @@ endif(NOT EXISTS "${ADM_CMAKE_DIR}/commonCmakeApplication.cmake")
 MESSAGE(STATUS "Found cmake subfolder.good.")
 
 
-# #######################################
+# # # # ####################################
 # Where is the top dir ?
-# #######################################
+# # # # ####################################
 
 # Common definitions...
 include(commonCmakeApplication)
 
-# #######################################
+# # # # ####################################
 # Add include dirs
-# #######################################
+# # # # ####################################
 SET(AVIDEMUX_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}")
 MARK_AS_ADVANCED(AVIDEMUX_INSTALL_DIR)
 include(admInstallDir)
 
-# ########################################
+# # # # #####################################
 # Get regular stuff from main app
-# ########################################
+# # # # #####################################
 include(admCoreIncludes)
 LINK_DIRECTORIES("${AVIDEMUX_SEARCH_LIB_DIR}")
 INCLUDE_DIRECTORIES("${AVIDEMUX_SEARCH_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}")
 
-# ########################################
+# # # # #####################################
 # Unbundle some libraries here
-# ########################################
+# # # # #####################################
 OPTION(USE_EXTERNAL_LIBASS "Use system installed libass library." OFF)
 OPTION(USE_EXTERNAL_LIBMAD "Use system installed libmad library." OFF)
 OPTION(USE_EXTERNAL_LIBA52 "Use system installed liba52 library." OFF)
@@ -106,19 +106,19 @@ ENDIF()
 IF (FRESH_BUILD)
   MESSAGE("")
 ENDIF (FRESH_BUILD)
-# #######################################
+# # # # ####################################
 # retrieve core config, needed to get USE_VDPAU and friends
-# #######################################
+# # # # ####################################
 include(ADM_coreConfig)
 
-# #######################################
+# # # # ####################################
 # Global options
-# #######################################
+# # # # ####################################
 OPTION(VERBOSE "" OFF)
 
-# #######################################
+# # # # ####################################
 # Select our UI
-# #######################################
+# # # # ####################################
 SET(DO_GTK    0)
 SET(DO_QT4    0)
 SET(DO_COMMON 0)
@@ -160,9 +160,9 @@ endif(PLUGIN_UI MATCHES "SETTINGS")
 MESSAGE(STATUS "Plugin UI : ${PLUGIN_UI}")
 MESSAGE("")
 
-# #######################################
+# # # # ####################################
 # Check for UI libraries
-# #######################################
+# # # # ####################################
 MACRO(CHECK_ADM_CONFIG_H flavor result)
   MESSAGE(STATUS "Checking for avidemux/${flavor} includes and lib...")
   MESSAGE(STATUS "It should be ${AVIDEMUX_SEARCH_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/${flavor}/config.h")
@@ -180,14 +180,15 @@ ENDMACRO(CHECK_ADM_CONFIG_H flavor result)
 
 APPEND_SUMMARY_LIST("User Interface" "Common" "${DO_COMMON}")
 
+INCLUDE(admCheckGettext)
+checkGettext()
+
 #*****
 # GTK
 #*****
 if(DO_GTK)
   INCLUDE(admCheckGtk)
-  INCLUDE(admCheckGettext)
   checkGtk()
-  checkGettext()
   IF (GTK_FOUND AND GTHREAD_FOUND)
     MESSAGE(STATUS "Gtk and gthread found, good")
     CHECK_ADM_CONFIG_H(gtk ADM_INC)
@@ -250,9 +251,9 @@ endif(DO_CLI)
 
 APPEND_SUMMARY_LIST("User Interface" "CLI" "${DO_CLI}")
 
-# #######################################
+# # # # ####################################
 # Actual work to do..
-# #######################################
+# # # # ####################################
 IF(DO_COMMON)
   ADD_SUBDIRECTORY(ADM_audioDecoders)
   ADD_SUBDIRECTORY(ADM_audioDevices)
@@ -287,9 +288,9 @@ IF(DO_QT4)
   #ENDIF(USE_OPENGL AND NOT WIN32)
 ENDIF(DO_QT4)
 
-# #######################################
+# # # # ####################################
 # Config Summary
-# #######################################
+# # # # ####################################
 DISPLAY_SUMMARY_LIST()
 
 include(admPackager)
