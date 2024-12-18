@@ -35,35 +35,30 @@ INCLUDE(admCheckLibVA)
 INCLUDE(admCheckVideoToolbox)
 INCLUDE(admCheckSqlLite)
 
-# ########################################
+# # #######################################
 # Debug Summary
-# #######################################
+# # ######################################
 IF (VERBOSE)
   INCLUDE(adm_log)
   MESSAGE("")
 ENDIF (VERBOSE)
 
-# #######################################
+# # ######################################
 # Checking if we should use ftello
 # or ftello64 (win32)
-# #######################################
+# # ######################################
 checkFtello()
 
-# #######################################
+# # ######################################
 # sqllite
-# #######################################
-MESSAGE(STATUS "Checking for sqlite")
-MESSAGE(STATUS "*******************")
-
+# # ######################################
 checkSqlite3()
-PRINT_LIBRARY_INFO("SQLite" SQLITE3_FOUND "${SQLITE3_INCLUDEDIR}" "${SQLITE3_LINK_LIBRARIES}" FATAL_ERROR)
-MESSAGE("")
 
-# ###########################################"
+# # ##########################################"
 # Check for DXVA2
 # We do it here, cmake messes things up when
 # we use try_compile later on, so do it once here
-# ###########################################"
+# # ##########################################"
 
 IF(WIN32) # AND NOT MSVC)
   INCLUDE(admCheckDxva2)
@@ -82,27 +77,27 @@ IF(APPLE)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-nullability-completeness")
 ENDIF(APPLE)
 
-# #######################################
+# # ######################################
 # Generate config.h
-# #######################################
+# # ######################################
 CONFIGURE_FILE("${AVIDEMUX_TOP_SOURCE_DIR}/cmake/ADM_coreConfig.h.cmake" "${CMAKE_BINARY_DIR}/config/ADM_coreConfig.h")
 include_directories( "${CMAKE_BINARY_DIR}/config")
 MESSAGE(STATUS "ADM_coreConfig.h generated")
 MESSAGE("")
 
-# #######################################
+# # ######################################
 # Add include dirs
-# #######################################
+# # ######################################
 set(EXCLUDE_ADM_INCLUDE TRUE)
 include(admCoreIncludes)
-# #######################################
+# # ######################################
 # Build FFmpeg
-# #######################################
+# # ######################################
 include(admFFmpegBuild)
 
-# #######################################
+# # ######################################
 # Directories to build
-# #######################################
+# # ######################################
 SET(SUBFOLDERS
     ADM_core
     ADM_coreAudioParser
@@ -139,9 +134,9 @@ IF(WIN32)
   FILE(APPEND  ${NSI_FILE} "!define SVN_VERSION \"${date}\"\n")
 ENDIF(WIN32)
 
-# #######################################
+# # ######################################
 # Config Summary
-# #######################################
+# # ######################################
 DISPLAY_SUMMARY_LIST()
 
 include(admPackager)

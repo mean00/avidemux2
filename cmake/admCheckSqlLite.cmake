@@ -3,25 +3,22 @@
 #   SQLITE3_LINK_LIBRARIES
 
 MACRO(checkSqlite3)
-    IF (NOT SQLITE3_CHECKED)
+  IF(NOT SQLITE3_CHECKED)
 
-        MESSAGE(STATUS "Checking for Sqlite3")
-        MESSAGE(STATUS "********************")
+    MESSAGE(STATUS "Checking for Sqlite3")
+    MESSAGE(STATUS "********************")
+    FIND_PACKAGE(SQLite3)
+    IF(SQLite3_FOUND)
+      PRINT_LIBRARY_INFO("Sqlite3" SQLite3_FOUND "${SQLite3_INCLUDE_DIRS}" "${SQLite3_LIBRARIES}")
 
-        PKG_CHECK_MODULES(SQLITE3 REQUIRED sqlite3)
-        PRINT_LIBRARY_INFO("Sqlite3" SQLITE3_FOUND "${SQLITE3_INCLUDEDIR}" "${SQLITE3_LDFLAGS}")
-
-#       IF (SQLITE3_FOUND)
-#            ADM_CHECK_FUNCTION_EXISTS(sqlite3_close "${SQLITE3_LDFLAGS}" SQLITE3_CLOSE_FUNCTION_FOUND "" -I"${SQLITE3_INCLUDEDIR}")
-            #IF (SQLITE3_CLOSE_FUNCTION_FOUND)
-#                   SET(SQLITE3_FOUND 1)
-            #ELSE()
-                #MESSAGE(FATAL_ERROR "Working SQLITE3 library not found")
-            #ENDIF (SQLITE3_CLOSE_FUNCTION_FOUND)
-#       ENDIF (SQLITE3_FOUND)
-
-        SET(SQLITE3_CHECKED 1)
-        MESSAGE("")
-    ENDIF (NOT SQLITE3_CHECKED)
+      SET(SQLITE3_CHECKED 1)
+      MESSAGE("")
+      ADD_LIBRARY(adm_sqlite3 INTERFACE)
+      TARGET_INCLUDE_DIRECTORIES(adm_sqlite3 INTERFACE ${SQLite3_INCLUDE_DIRS})
+      TARGET_LINK_LIBRARIES(adm_sqlite3 INTERFACE ${SQLite3_LIBRARIES})
+    ELSE()
+      MESSAGE(STATUS "SQLite3 not found")
+    ENDIF()
+  ENDIF()
 
 ENDMACRO(checkSqlite3)
