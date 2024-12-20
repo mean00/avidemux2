@@ -3,9 +3,9 @@ INCLUDE(vf_plugin)
 #SET(RUBBER_HINT 1)
 
 MACRO(addDeps tgt)
-        TARGET_LINK_LIBRARIES(${tgt} ADM_libswscale)
-        TARGET_LINK_LIBRARIES(${tgt} ADM_libavcodec)
-        TARGET_LINK_LIBRARIES(${tgt} ADM_libavutil)
+  TARGET_LINK_LIBRARIES(${tgt} PRIVATE ADM_libswscale)
+  TARGET_LINK_LIBRARIES(${tgt} PRIVATE ADM_libavcodec)
+  TARGET_LINK_LIBRARIES(${tgt} PRIVATE ADM_libavutil)
 ENDMACRO(addDeps tgt)
 
 IF(DO_QT4)

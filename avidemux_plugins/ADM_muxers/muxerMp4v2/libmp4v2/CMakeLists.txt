@@ -106,10 +106,8 @@ endif(WIN32)
 
 SET(PLATFORM ${PLATFORM}
 
-			libplatform/io/File_posix.cpp
-			libplatform/io/FileSystem_posix.cpp
-
-
+	libplatform/io/File_posix.cpp
+	libplatform/io/FileSystem_posix.cpp
 	libplatform/io/File.cpp
 	libplatform/io/FileSystem.cpp
 	libplatform/prog/option.cpp
@@ -119,9 +117,8 @@ SET(PLATFORM ${PLATFORM}
 
 
 ADD_LIBRARY(${ADM_LIB} STATIC ${${ADM_LIB}_SRCS} ${PLATFORM})
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/include)
-
+TARGET_INCLUDE_DIRECTORIES(${ADM_LIB} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+TARGET_INCLUDE_DIRECTORIES(${ADM_LIB} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 IF (UNIX)
 	ADD_TARGET_CFLAGS(${ADM_LIB} -fPIC)

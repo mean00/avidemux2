@@ -15,5 +15,5 @@ ADD_LIBRARY(ADM_videoFilter6_interface INTERFACE)
 TARGET_INCLUDE_DIRECTORIES(ADM_videoFilter6_interface INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 
 ADD_LIBRARY(ADM_internalVideoFilter6 STATIC ${ADM_internalVideoFilter_SRCS})
-TARGET_LINK_LIBRARIES(ADM_internalVideoFilter6 PRIVATE ADM_editor6_interface ADM_videoFilter6_interface)
+TARGET_LINK_LIBRARIES(ADM_internalVideoFilter6 PRIVATE ADM_editor6_interface ADM_videoFilter6_interface adm_gettext)
 
