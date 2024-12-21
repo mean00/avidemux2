@@ -55,7 +55,7 @@ TARGET_LINK_LIBRARIES(avidemux3_cli PRIVATE adm_gettext)
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Config
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-TARGET_COMPILE_DEFINITIONS(avidemux3_cli PRIVATE ADM_UI_TYPE_BUILD=ADM_UI_CLI)
+ADD_DEFINITIONS(-DADM_UI_TYPE_BUILD=ADM_UI_CLI)
 SET(CONFIG_HEADER_TYPE ADM_BUILD_CLI)
 SET(UI_SUFFIX cli)
 

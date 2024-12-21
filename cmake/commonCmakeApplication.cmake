@@ -12,6 +12,10 @@ INITIALISE_SUMMARY_LISTS()
 # # # # # # # # # # # # # # # # # # # # ####################
 # Shared cmake part
 # # # # # # # # # # # # # # # # # # # # ####################
+#
+SET(CMAKE_CXX_STANDARD 17)
+SET(CMAKE_CXX_EXTENSIONS OFF)
+#
 ADD_DEFINITIONS(-D_FILE_OFFSET_BITS=64 -D_LARGE_FILES)
 INCLUDE(admMainChecks)
 
