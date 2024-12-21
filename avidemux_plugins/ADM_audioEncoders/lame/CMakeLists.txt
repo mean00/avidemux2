@@ -1,12 +1,12 @@
-	INCLUDE(ae_plugin)
+INCLUDE(ae_plugin)
 
-	SET(ADM_ae_lame_SRCS audioencoder_lame.cpp )
+SET(ADM_ae_lame_SRCS audioencoder_lame.cpp )
 
-	ADD_AUDIO_ENCODER(ADM_ae_lame ${ADM_ae_lame_SRCS})
+ADD_AUDIO_ENCODER(ADM_ae_lame ${ADM_ae_lame_SRCS})
 
-	TARGET_LINK_LIBRARIES(ADM_ae_lame ${LAME_LIBRARY_DIR})
+TARGET_LINK_LIBRARIES(ADM_ae_lame PRIVATE ${LAME_LIBRARY_DIR})
 
-	ADD_TARGET_CFLAGS(ADM_ae_lame "-I${LAME_INCLUDE_DIR}")
+ADD_TARGET_CFLAGS(ADM_ae_lame "-I${LAME_INCLUDE_DIR}")
 
-	INIT_AUDIO_ENCODER(ADM_ae_lame)
-	INSTALL_AUDIOENCODER(ADM_ae_lame)
+INIT_AUDIO_ENCODER(ADM_ae_lame)
+INSTALL_AUDIOENCODER(ADM_ae_lame)
