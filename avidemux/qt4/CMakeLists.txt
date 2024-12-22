@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 3.7)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.20)
+SET(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 PROJECT(Avidemux_Qt)
-SET(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 SET(UI_TYPE ADM_UI_QT4)
 ADD_DEFINITIONS(-DADM_UI_TYPE_BUILD=ADM_UI_QT4)
 SET(ORIGINAL_CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}")
@@ -86,9 +86,9 @@ ADD_DEFINITIONS(${QT_DEFINITIONS})
 #--
 
 #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ####
 # Config
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ####
 SET(CONFIG_HEADER_TYPE ADM_BUILD_QT4)
 SET(UI_SUFFIX ${QT_EXTENSION})
 
@@ -100,25 +100,25 @@ INCLUDE_DIRECTORIES(BEFORE "${CMAKE_BINARY_DIR}/config/${QT_EXTENSION}/")
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../common)
 
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ######
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
 # Add job control
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ######
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
 ADD_SUBDIRECTORY(ADM_jobs)
 ADD_SUBDIRECTORY(ADM_update)
 IF(USE_OPENGL)
   ADD_SUBDIRECTORY(ADM_openGL)
 ENDIF()
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ######
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
 # Custom fixed width font for time display
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ######
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
 if(NOT WIN32)
   SET(USE_CUSTOM_TIME_DISPLAY_FONT 1)
 endif()
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ##
 # Add common as a symlink or directly
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ##
 INCLUDE_DIRECTORIES(ADM_UIs/include/)
 
 IF(WIN32 AND NOT CROSS)
@@ -147,24 +147,24 @@ endif()
 ADD_SOURCE_CFLAGS(../common/main.cpp "-DADM_VERSION=\"${AVIDEMUX_VERSION}\"")
 ADD_SOURCE_CFLAGS(../common/main.cpp "-DQT_FLAVOR=\"${QT_EXTENSION}\"")
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ######
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
 # Icon for windows
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ######
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
 if(WIN32 )
   WINDRESIFY(mainQt  "${CMAKE_CURRENT_SOURCE_DIR}/../common/xpm/adm.ico" src "avidemux" "Avidemux Video Editor")
   SET(ADM_EXE_SRCS ${ADM_EXE_SRCS} ${src})
 endif()
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ######
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
 # Executable
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ######
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
 INCLUDE_DIRECTORIES("${PTHREAD_INCLUDE_DIR}")
 
 ADM_MAIN_APP()
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ######
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
 # Construct common libraries
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ######
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
 FOREACH(_libName ${commonLibs1})
   TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE ${_libName})
 ENDFOREACH()
@@ -179,9 +179,9 @@ ENDFOREACH()
 
 
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ########
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #######
 # Add qt specific libs
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ########
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #######
 TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE
    ADM_gui${QT_LIBRARY_EXTENSION}
    ADM_filters${QT_LIBRARY_EXTENSION}
@@ -201,9 +201,9 @@ TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE
    ADM_osSupport6
 )
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ######
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
 # External libs
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ######
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
 # gettext
 TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE adm_gettext )
 
@@ -214,9 +214,9 @@ if(USE_SDL)
 ENDIF()
 
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ######
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
 # UI Specific
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ######
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
 TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE ADM_render6 ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${PTHREAD_LIBRARIES})
 
 TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE ${PlatformLibs})
@@ -226,9 +226,9 @@ TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE ${PlatformLibs})
 #
 ADD_SUBDIRECTORY(i18n)
 ADM_LINK_THREAD(avidemux3_${QT_EXTENSION})
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ######
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
 # Install
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ######
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
 
 DISPLAY_SUMMARY_LIST()
 
