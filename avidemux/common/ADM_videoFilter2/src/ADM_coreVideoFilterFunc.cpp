@@ -1,7 +1,9 @@
+// clang-format off
+#include "ADM_default.h"
 #include "ADM_coreVideoFilterFunc.h"
 #include "ADM_coreVideoFilter.h"
-#include "ADM_default.h"
 #include "ADM_videoFilterBridge.h"
+// clang-format on
 
 ADM_coreVideoFilter *bridge = NULL;
 

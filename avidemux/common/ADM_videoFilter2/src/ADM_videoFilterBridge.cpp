@@ -15,11 +15,12 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
-#include "ADM_videoFilterBridge.h"
-#include "ADM_cpp.h"
+// clang-format off
 #include "ADM_default.h"
+#include "ADM_cpp.h"
 #include "ADM_vidMisc.h"
+#include "ADM_videoFilterBridge.h"
+// clang-format on
 
 /**
     \fn ADM_videoFilterBridge
