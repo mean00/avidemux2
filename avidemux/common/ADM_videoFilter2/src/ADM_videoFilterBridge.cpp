@@ -16,18 +16,19 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "ADM_videoFilterBridge.h"
 #include "ADM_cpp.h"
 #include "ADM_default.h"
-#include "ADM_videoFilterBridge.h"
 #include "ADM_vidMisc.h"
 
 /**
     \fn ADM_videoFilterBridge
 
 */
-ADM_videoFilterBridge::ADM_videoFilterBridge(IEditor *editor, uint64_t startTime, uint64_t endTime) : ADM_coreVideoFilter(NULL, NULL)
+ADM_videoFilterBridge::ADM_videoFilterBridge(IEditor *editor, uint64_t startTime, uint64_t endTime)
+    : ADM_coreVideoFilter(NULL, NULL)
 {
-    ADM_info("Creating instance at %p\n",this);
+    ADM_info("Creating instance at %p\n", this);
     ADM_assert(editor);
 
     this->editor = editor;
@@ -45,13 +46,14 @@ void ADM_videoFilterBridge::updateBridge(uint64_t startTime, uint64_t endTime)
     if (endTime == ADM_NO_PTS)
     {
         endTime = editor->getVideoDuration();
-        if(endTime < startTime) startTime = endTime;
+        if (endTime < startTime)
+            startTime = endTime;
     }
     this->startTime = startTime;
     this->endTime = endTime;
 
     char *str = ADM_strdup(ADM_us2plain(this->startTime));
-    ADM_info("Using time range from %s to %s\n",str,ADM_us2plain(this->endTime));
+    ADM_info("Using time range from %s to %s\n", str, ADM_us2plain(this->endTime));
     ADM_dealloc(str);
     str = NULL;
 
@@ -70,7 +72,7 @@ void ADM_videoFilterBridge::updateBridge(uint64_t startTime, uint64_t endTime)
     \fn     getNextFrameBase
     \brief
 */
-bool         ADM_videoFilterBridge::getNextFrameBase(uint32_t *frameNumber, ADMImage *image)
+bool ADM_videoFilterBridge::getNextFrameBase(uint32_t *frameNumber, ADMImage *image)
 {
 again:
     bool r = false;
@@ -84,7 +86,7 @@ again:
     }
     else
     {
-        r =   editor->nextPicture(image);
+        r = editor->nextPicture(image);
         nextFrame++;
         *frameNumber = nextFrame;
         lastSentImage++;
@@ -100,13 +102,13 @@ again:
 
     if (pts >= endTime)
     {
-        ADM_warning("[VideoBridge] This frame is too late (%" PRId64" vs %" PRIu64")\n", pts, endTime);
+        ADM_warning("[VideoBridge] This frame is too late (%" PRId64 " vs %" PRIu64 ")\n", pts, endTime);
         return false;
     }
 
     if (pts < startTime)
     {
-        ADM_warning("[VideoBridge] This frame is too early (%" PRId64" vs %" PRIu64")\n", pts, startTime);
+        ADM_warning("[VideoBridge] This frame is too early (%" PRId64 " vs %" PRIu64 ")\n", pts, startTime);
         goto again;
     }
 
@@ -130,13 +132,13 @@ bool ADM_videoFilterBridge::rewind(void)
 */
 ADM_videoFilterBridge::~ADM_videoFilterBridge()
 {
-    printf("[VideoFilterBridge] Destroying instance at %p\n",this);
+    printf("[VideoFilterBridge] Destroying instance at %p\n", this);
 }
 /**
     \fn getNextFrame
     \brief
 */
-bool         ADM_videoFilterBridge::getNextFrame(uint32_t *frameNumber, ADMImage *image)
+bool ADM_videoFilterBridge::getNextFrame(uint32_t *frameNumber, ADMImage *image)
 {
     return getNextFrameAs(ADM_HW_NONE, frameNumber, image);
 }
@@ -145,7 +147,7 @@ bool         ADM_videoFilterBridge::getNextFrame(uint32_t *frameNumber, ADMImage
     \fn getNextFrameAs
     \brief
 */
-bool         ADM_videoFilterBridge::getNextFrameAs(ADM_HW_IMAGE type, uint32_t *frameNumber, ADMImage *image)
+bool ADM_videoFilterBridge::getNextFrameAs(ADM_HW_IMAGE type, uint32_t *frameNumber, ADMImage *image)
 {
     if (false == getNextFrameBase(frameNumber, image))
     {
@@ -171,7 +173,7 @@ bool         ADM_videoFilterBridge::getNextFrameAs(ADM_HW_IMAGE type, uint32_t *
     \fn ADM_videoFilterBridge
 
 */
-FilterInfo  *ADM_videoFilterBridge::getInfo(void)
+FilterInfo *ADM_videoFilterBridge::getInfo(void)
 {
     return &bridgeInfo;
 }
@@ -179,7 +181,7 @@ FilterInfo  *ADM_videoFilterBridge::getInfo(void)
 /**
     \fn goToTime
 */
-bool         ADM_videoFilterBridge::goToTime(uint64_t usSeek, bool fineSeek)
+bool ADM_videoFilterBridge::goToTime(uint64_t usSeek, bool fineSeek)
 {
     if (!usSeek)
     {
@@ -194,13 +196,15 @@ bool         ADM_videoFilterBridge::goToTime(uint64_t usSeek, bool fineSeek)
             // substitute it with the closest marker as filters which modify
             // timing may introduce loss of precision. Marker A has priority.
 #define MAGNETIC_RANGE 100
-            uint64_t markerDiff = (usSeek > bridgeInfo.markerA)? usSeek - bridgeInfo.markerA : bridgeInfo.markerA - usSeek;
+            uint64_t markerDiff =
+                (usSeek > bridgeInfo.markerA) ? usSeek - bridgeInfo.markerA : bridgeInfo.markerA - usSeek;
             if (markerDiff < MAGNETIC_RANGE)
             {
                 usSeek = bridgeInfo.markerA;
-            } else
+            }
+            else
             {
-                markerDiff = (usSeek > bridgeInfo.markerB)? usSeek - bridgeInfo.markerB : bridgeInfo.markerB - usSeek;
+                markerDiff = (usSeek > bridgeInfo.markerB) ? usSeek - bridgeInfo.markerB : bridgeInfo.markerB - usSeek;
                 if (markerDiff < MAGNETIC_RANGE)
                     usSeek = bridgeInfo.markerB;
             }

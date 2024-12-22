@@ -1,7 +1,7 @@
-#include "ADM_default.h"
 #include "ADM_coreVideoFilterFunc.h"
-#include "ADM_videoFilterBridge.h"
 #include "ADM_coreVideoFilter.h"
+#include "ADM_default.h"
+#include "ADM_videoFilterBridge.h"
 
 ADM_coreVideoFilter *bridge = NULL;
 
@@ -23,10 +23,10 @@ bool ADM_vf_clearFilters(void)
 
     ADM_VideoFilters.clear();
     // delete bridge also...
-    if(bridge)
+    if (bridge)
     {
         delete bridge;
-        bridge=NULL;
+        bridge = NULL;
     }
 
     return true;
@@ -51,7 +51,7 @@ ADM_vf_plugin *ADM_vf_getPluginFromTag(uint32_t tag)
         }
     }
 
-    ADM_error("Cannot get video filter from tag %" PRIu32"\n", tag);
+    ADM_error("Cannot get video filter from tag %" PRIu32 "\n", tag);
     ADM_assert(0);
 
     return NULL;
@@ -66,19 +66,20 @@ bool ADM_vf_duplicateFilterAtIndex(IEditor *editor, int index)
     ADM_info("Duplicate video filter at index %d\n", index);
 
     ADM_assert(index < ADM_VideoFilters.size());
-    
+
     ADM_VideoFilterElement *e = &(ADM_VideoFilters[index]);
-    CONFcouple *conf=NULL;
-    if(!e->instance->getCoupledConf (&conf))
+    CONFcouple *conf = NULL;
+    if (!e->instance->getCoupledConf(&conf))
     {
         ADM_warning("Cannot get configuration\n");
         return false;
     }
-    
+
     ADM_coreVideoFilter *last = ADM_vf_getLastVideoFilter(editor);
     ADM_coreVideoFilter *nw = ADM_vf_createFromTag(e->tag, last, conf);
 
-    if (!nw) return false;
+    if (!nw)
+        return false;
 
     ADM_VideoFilterElement ne;
     ne.tag = e->tag;
@@ -120,7 +121,7 @@ bool ADM_vf_toggleFilterEnabledAtIndex(int index)
     ADM_VideoFilterElement *e = &(ADM_VideoFilters[index]);
     e->enabled = !e->enabled;
 
-    return  ADM_vf_recreateChain();
+    return ADM_vf_recreateChain();
 }
 /**
     \fn ADM_vf_recreateChain
@@ -131,7 +132,7 @@ bool ADM_vf_recreateChain(void)
     ADM_assert(bridge);
 
     ADM_coreVideoFilter *f = bridge;
-    BVector <ADM_coreVideoFilter *> bin;
+    BVector<ADM_coreVideoFilter *> bin;
 
     for (int i = 0; i < ADM_VideoFilters.size(); i++)
     {
@@ -154,7 +155,8 @@ bool ADM_vf_recreateChain(void)
             delete c;
         }
 
-        if (enabled) f = nw;
+        if (enabled)
+            f = nw;
     }
 
     // Now delete bin
@@ -183,18 +185,19 @@ ADM_coreVideoFilter *ADM_vf_createFromTag(uint32_t tag, ADM_coreVideoFilter *las
         \fn ADM_vf_addFilterFromTag
         \brief Add a new video filter (identified by tag) at the end of the activate filter list
 */
-ADM_VideoFilterElement* ADM_vf_addFilterFromTag(IEditor *editor, uint32_t tag, CONFcouple *c, bool configure)
+ADM_VideoFilterElement *ADM_vf_addFilterFromTag(IEditor *editor, uint32_t tag, CONFcouple *c, bool configure)
 {
     if (tag == VF_INVALID_FILTER)
         return NULL;
 
-    ADM_info("Creating video filter using tag %" PRIu32" \n", tag);
+    ADM_info("Creating video filter using tag %" PRIu32 " \n", tag);
     // Fetch the descriptor...
 
     ADM_coreVideoFilter *last = ADM_vf_getLastVideoFilter(editor);
     ADM_coreVideoFilter *nw = ADM_vf_createFromTag(tag, last, c);
 
-    if (!nw) return NULL;
+    if (!nw)
+        return NULL;
 
     if (configure && nw->configure() == false)
     {
@@ -212,15 +215,16 @@ ADM_VideoFilterElement* ADM_vf_addFilterFromTag(IEditor *editor, uint32_t tag, C
     return &ADM_VideoFilters[ADM_VideoFilters.size() - 1];
 }
 
-ADM_VideoFilterElement* ADM_vf_insertFilterFromTag(IEditor *editor, uint32_t tag, CONFcouple *c, int index)
+ADM_VideoFilterElement *ADM_vf_insertFilterFromTag(IEditor *editor, uint32_t tag, CONFcouple *c, int index)
 {
-    ADM_info("Creating video filter using tag %" PRIu32" \n", tag);
+    ADM_info("Creating video filter using tag %" PRIu32 " \n", tag);
     // Fetch the descriptor...
 
     ADM_coreVideoFilter *last = ADM_vf_getLastVideoFilter(editor);
     ADM_coreVideoFilter *nw = ADM_vf_createFromTag(tag, last, c);
 
-    if (!nw) return NULL;
+    if (!nw)
+        return NULL;
 
     ADM_VideoFilterElement e;
 
@@ -255,7 +259,7 @@ ADM_coreVideoFilter *ADM_vf_getLastVideoFilter(IEditor *editor)
     else
     {
         last = bridge;
-        for (int i=(ADM_VideoFilters.size() - 1); i>=0; i--)
+        for (int i = (ADM_VideoFilters.size() - 1); i >= 0; i--)
         {
             if (ADM_VideoFilters[i].enabled)
             {

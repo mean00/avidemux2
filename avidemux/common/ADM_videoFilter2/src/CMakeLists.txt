@@ -5,6 +5,8 @@ TARGET_SOURCES(${ADM_LIB} PRIVATE
   ADM_videoFilters.cpp
   ADM_filterThread.cpp
   ADM_vidPartial.cpp
+  ADM_coreVideoFilterFunc.cpp
+  ADM_videoFilterBridge.cpp
 )
 
 TARGET_INCLUDE_DIRECTORIES(${ADM_LIB} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../include)

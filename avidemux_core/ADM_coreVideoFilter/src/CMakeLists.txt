@@ -2,15 +2,9 @@
 SET(ADM_LIB ADM_coreVideoFilter6)
 ADM_ADD_SHARED_LIBRARY(${ADM_LIB})
 TARGET_SOURCES(${ADM_LIB} PRIVATE
-  ADM_videoFilterBridge.cpp
   ADM_coreVideoFilter.cpp
-  ADM_coreVideoFilterFunc.cpp
   ADM_videoFilterCache.cpp
 )
-
-# Temporary hack
-TARGET_INCLUDE_DIRECTORIES(${ADM_LIB} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../../../avidemux/common/)
-
 
 TARGET_LINK_LIBRARIES(${ADM_LIB} PUBLIC ADM_core6 ADM_coreImage6)
 TARGET_INCLUDE_DIRECTORIES(${ADM_LIB} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../include)
