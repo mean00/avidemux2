@@ -1,0 +1,2 @@
+brew install make cmake yasm  pkg-config bzip2 zlib patchutils  sqlite3 libogg libvorbis opus libopusenc lame two-lame
+brew install aom libvpx libass x264 x265 qt faac faad2 xvid
