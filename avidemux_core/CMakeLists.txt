@@ -10,12 +10,12 @@ MESSAGE("#########################################")
 MESSAGE("")
 
 # need for shared cmake script between avidemux & plugins
-SET(AVIDEMUX_SOURCE_DIR ${CMAKE_SOURCE_DIR})
-SET(AVIDEMUX_TOP_SOURCE_DIR ${CMAKE_SOURCE_DIR}/..)
+SET(AVIDEMUX_CORE_SOURCE_DIR ${CMAKE_SOURCE_DIR})
+SET(AVIDEMUX_TOP_SOURCE_DIR ${CMAKE_SOURCE_DIR})
 SET(AVIDEMUX_CORE_BUILD_DIR ${CMAKE_BINARY_DIR})
 SET(AVIDEMUX_THIS_IS_CORE True)
-SET(CMAKE_MODULE_PATH "${AVIDEMUX_TOP_SOURCE_DIR}/cmake" "${CMAKE_MODULE_PATH}")
-SET(CMAKE_MODULE_PATH "${AVIDEMUX_TOP_SOURCE_DIR}/cmake/cmake_win32_rc" "${CMAKE_MODULE_PATH}")
+LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_win32_rc")
 
 IF(WIN32)
   SET(ADM_PLUGIN_DIR "plugins")
@@ -36,30 +36,30 @@ INCLUDE(admCheckLibVA)
 INCLUDE(admCheckVideoToolbox)
 INCLUDE(admCheckSqlLite)
 
-# # # # # # # # # # # # # # # # # # # # #####################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ############
 # Debug Summary
-# # # # # # # # # # # # # # # # # # # # ####################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###########
 IF(VERBOSE)
   INCLUDE(adm_log)
   MESSAGE("")
 ENDIF()
 
-# # # # # # # # # # # # # # # # # # # # ####################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###########
 # Checking if we should use ftello
 # or ftello64 (win32)
-# # # # # # # # # # # # # # # # # # # # ####################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###########
 checkFtello()
 
-# # # # # # # # # # # # # # # # # # # # ####################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###########
 # sqllite
-# # # # # # # # # # # # # # # # # # # # ####################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###########
 checkSqlite3()
 
-# # # # # # # # # # # # # # # # # # # # ########################"
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###############"
 # Check for DXVA2
 # We do it here, cmake messes things up when
 # we use try_compile later on, so do it once here
-# # # # # # # # # # # # # # # # # # # # ########################"
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###############"
 
 IF(WIN32) # AND NOT MSVC)
   INCLUDE(admCheckDxva2)
@@ -78,27 +78,27 @@ IF(APPLE)
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-nullability-completeness")
 ENDIF()
 
-# # # # # # # # # # # # # # # # # # # # ####################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###########
 # Generate config.h
-# # # # # # # # # # # # # # # # # # # # ####################
-CONFIGURE_FILE("${AVIDEMUX_TOP_SOURCE_DIR}/cmake/ADM_coreConfig.h.cmake" "${CMAKE_BINARY_DIR}/config/ADM_coreConfig.h")
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###########
+CONFIGURE_FILE("${AVIDEMUX_CORE_SOURCE_DIR}/cmake/ADM_coreConfig.h.cmake" "${CMAKE_BINARY_DIR}/config/ADM_coreConfig.h")
 INCLUDE_DIRECTORIES("${CMAKE_BINARY_DIR}/config")
 MESSAGE(STATUS "ADM_coreConfig.h generated")
 MESSAGE("")
 
-# # # # # # # # # # # # # # # # # # # # ####################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###########
 # Add include dirs
-# # # # # # # # # # # # # # # # # # # # ####################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###########
 SET(EXCLUDE_ADM_INCLUDE TRUE)
 INCLUDE(admCoreIncludes)
-# # # # # # # # # # # # # # # # # # # # ####################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###########
 # Build FFmpeg
-# # # # # # # # # # # # # # # # # # # # ####################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###########
 INCLUDE(admFFmpegBuild)
 
-# # # # # # # # # # # # # # # # # # # # ####################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###########
 # Directories to build
-# # # # # # # # # # # # # # # # # # # # ####################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###########
 SET(SUBFOLDERS
     ADM_core
     ADM_coreAudioParser
@@ -136,9 +136,9 @@ IF(WIN32)
   FILE(APPEND  ${NSI_FILE} "!define SVN_VERSION \"${date}\"\n")
 ENDIF()
 
-# # # # # # # # # # # # # # # # # # # # ####################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###########
 # Config Summary
-# # # # # # # # # # # # # # # # # # # # ####################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###########
 DISPLAY_SUMMARY_LIST()
 
 INCLUDE(admPackager)
@@ -165,9 +165,9 @@ ENDIF()
 
 SET(CMAKE_TOP_SOURCE_DIR "${CMAKE_SOURCE_DIR}/../cmake")
 
-ADM_INSTALL_CMAKE_FOLDER("${CMAKE_TOP_SOURCE_DIR}/" cmake)
-ADM_INSTALL_CMAKE_HELPER_FOLDER("${CMAKE_TOP_SOURCE_DIR}/cmake_compile_check/" cmake_compile_check)
-ADM_INSTALL_CMAKE_HELPER_FOLDER("${CMAKE_TOP_SOURCE_DIR}/cmake_win32_rc/" cmake_win32_rc)
+ADM_INSTALL_CMAKE_FOLDER("${CMAKE_CURRENT_SOURCE_DIR}/" cmake)
+ADM_INSTALL_CMAKE_HELPER_FOLDER("${CMAKE_CURRENT_SOURCE_DIR}/cmake_compile_check/" cmake_compile_check)
+ADM_INSTALL_CMAKE_HELPER_FOLDER("${CMAKE_CURRENT_SOURCE_DIR}/cmake_win32_rc/" cmake_win32_rc)
 #
 
 INSTALL(FILES ${CMAKE_BINARY_DIR}/config/ADM_coreConfig.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}" COMPONENT dev)

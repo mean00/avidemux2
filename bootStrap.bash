@@ -18,7 +18,7 @@ default_install_prefix="/usr"
 qt_ext=Qt5
 QT_FLAVOR="-DENABLE_QT5=True"
 COMPILER=""
-export QT_SELECT=5 # default for ubuntu, harmless for others
+export QT_SELECT=6 # default for ubuntu, harmless for others
 install_prefix="$default_install_prefix"
 # -lc is required to build libADM_ae_lav* audio encoder plugins on 32 bit ubuntu
 need_ae_lav_build_quirk=""
@@ -29,6 +29,7 @@ external_libass=0
 external_liba52=0
 external_libmad=0
 external_libmp4v2=0
+#test -f $HOME/myCC && export COMPILER="-DCMAKE_C_COMPILER=$HOME/myCC -DCMAKE_CXX_COMPILER=$HOME/myC++"
 
 fail() {
   echo "** Failed at $1 **"
