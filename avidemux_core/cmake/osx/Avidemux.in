@@ -1,0 +1,4 @@
+#!/bin/sh
+DIR=`dirname $0`
+export FONTCONFIG_FILE=$DIR/../Resources/fonts/fonts.conf
+cd "$DIR/../Resources/bin/" && ./avidemux "$@"

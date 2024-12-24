@@ -1,0 +1,22 @@
+include(admAsNeeded)
+include(plugin_cli)
+include(admPluginLocation)
+MACRO(INIT_VIDEO_FILTER_CLI  lib  _srcsGtk )
+
+  IF(DO_CLI)
+    ADM_ADD_CLI_INCLUDE_DIR(ADM_UIs)
+    IF(GETTEXT_FOUND)
+      TARGET_COMPILE_DEFINITIONS(${lib} PRIVATE "HAVE_GETTEXT")
+    ENDIF()
+
+    ADM_ADD_SHARED_LIBRARY(${lib} ${ARGN} ${_srcsGtk})
+    TARGET_LINK_LIBRARIES(${lib} PRIVATE adm_gettext)
+    AS_NEEDED(${lib})
+    ADM_TARGET_NO_EXCEPTION(${lib})
+    TARGET_LINK_LIBRARIES( ${lib} PRIVATE ADM_UI_Cli6 ADM_render6_cli)
+
+    TARGET_COMPILE_DEFINITIONS(${lib} PRIVATE "ADM_UI_TYPE_BUILD=1")
+    INIT_VIDEO_FILTER_INTERNAL(${lib})
+    INSTALL_VIDEO_FILTER_INTERNAL(${lib} "cli")
+  ENDIF()
+ENDMACRO()
