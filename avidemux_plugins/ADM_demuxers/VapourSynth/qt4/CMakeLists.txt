@@ -1,76 +1,66 @@
-##########################################
+# # # # # # # # # # # # # # # # # # # # # # # # # #################
 # Config
-##########################################
-IF(ENABLE_QT6)
-    ADD_DEFINITIONS("-std=c++17")
-ELSE(ENABLE_QT6)
-    IF(NOT MSVC)
-        ADD_DEFINITIONS("-std=c++11")
-    ENDIF(NOT MSVC)
-ENDIF(ENABLE_QT6)
-ADD_DEFINITIONS(${VAPOURSYNTHSCRIPT_CFLAGS})
+# # # # # # # # # # # # # # # # # # # # # # # # # #################
+SET(ADM_vsPROXY_SRCS
+  ../ADM_vsProxy.cpp
+  ../ADM_vsProxy.h
+  vsProxy_qt4.h
+  vsProxy_qt4.cpp
+)
+SET(EXE vsProxy_gui_${QT_EXTENSION})
+ADD_EXECUTABLE(${EXE} ${ADM_vsPROXY_SRCS})
+TARGET_COMPILE_OPTIONS(${EXE} PRIVATE ${VAPOURSYNTHSCRIPT_CFLAGS})
 #
 IF(MSVC)
-		ADD_DEFINITIONS("-DNO_WINSOCK2") # else double include on windows	
-ENDIF(MSVC)
+  TARGET_COMPILE_DEFINITIONS(${EXE} PRIVATE "NO_WINSOCK2") # else double include on windows
+ENDIF()
 #
-ADD_DEFINITIONS(-DADM_UI_TYPE_BUILD=ADM_UI_QT4)
+TARGET_COMPILE_DEFINITIONS(${EXE} PRIVATE ADM_UI_TYPE_BUILD=ADM_UI_QT4)
 SET(CONFIG_HEADER_TYPE ADM_BUILD_QT4)
 SET(UI_SUFFIX qt4)
-include_directories(./ ${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR})
+TARGET_INCLUDE_DIRECTORIES(${EXE} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR})
 INCLUDE(admWindRes)
-###########################################
+# # # # # # # # # # # # # # # # # # # # # # # # # ##################
 # Executable
-###########################################
+# # # # # # # # # # # # # # # # # # # # # # # # # ##################
 #
-SET(UI vs.ui )
+SET(UI vs.ui)
 SET(srcs vsProxy_qt4.h)
 #ADM_QT_ADD_RESOURCES(resource  jobs.rsc)
 ADM_QT_WRAP_UI(VS_PROXY_headers ${UI})
-ADM_QT_WRAP_CPP(VS_PROXY_source ${srcs}  vsProxy_qt4.h )
-SET(ADM_vsPROXY_SRCS 
-                ${srcs}
-                ../ADM_vsProxy.cpp
-                ../ADM_vsProxy.h
-               	#${resource} 
-                ${VS_PROXY_headers}
-                ${VS_PROXY_source}
-                vsProxy_qt4.cpp
-        )
+ADM_QT_WRAP_CPP(VS_PROXY_source ${srcs}  vsProxy_qt4.h)
+TARGET_SOURCES(${EXE} PRIVATE ${VS_PROXY_headers} ${VS_PROXY_source})
 
-
-###########################################
+# # # # # # # # # # # # # # # # # # # # # # # # # ##################
 # Executable
-###########################################
-ADD_EXECUTABLE(vsProxy_gui_${QT_EXTENSION} ${ADM_vsPROXY_SRCS})
+# # # # # # # # # # # # # # # # # # # # # # # # # ##################
 #
-GET_PROPERTY(OLD 
-                        TARGET vsProxy_gui_${QT_EXTENSION}
+GET_PROPERTY(OLD
+                        TARGET ${EXE}
                         PROPERTY LINK_FLAGS)
 IF("${OLD}" MATCHES ".*NOT.*FOUND")
-   SET(OLD "")
-ENDIF("${OLD}" MATCHES ".*NOT.*FOUND")
+  SET(OLD "")
+ENDIF()
 # Keep -L, discard everything else
 
+SET_TARGET_PROPERTIES(${EXE}  PROPERTIES LINK_FLAGS "${OLD}")
 
-SET_TARGET_PROPERTIES(vsProxy_gui_${QT_EXTENSION}  PROPERTIES LINK_FLAGS "${OLD}")
+# # # # # # # # # # # # # # # # # # # # # # # # # ##################
+TARGET_LINK_LIBRARIES(${EXE} PRIVATE  ADM_core6 ADM_coreSocket6 ADM_coreUtils6)
+TARGET_LINK_LIBRARIES(${EXE} PRIVATE  ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY})
+TARGET_LINK_LIBRARIES(${EXE} PRIVATE  ${LIBS_TO_LINK})
 
-###########################################
-TARGET_LINK_LIBRARIES(vsProxy_gui_${QT_EXTENSION} ADM_core6 ADM_coreSocket6 ADM_coreUtils6)
-TARGET_LINK_LIBRARIES(vsProxy_gui_${QT_EXTENSION} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY})
-TARGET_LINK_LIBRARIES(vsProxy_gui_${QT_EXTENSION} ${LIBS_TO_LINK} )
+INCLUDE(admCheckThreads)
+ADM_LINK_THREAD(${EXE})
 
-include(admCheckThreads)
-ADM_LINK_THREAD(vsProxy_gui_${QT_EXTENSION})
-
-IF (MINGW)
-	target_link_libraries(vsProxy_gui_${QT_EXTENSION} -lwsock32 winmm -mwindows )
-	target_link_libraries(vsProxy_gui_${QT_EXTENSION} ${LIBS_TO_LINK} "-lm -lstdc++")
-ENDIF (MINGW)
+IF(MINGW)
+  TARGET_LINK_LIBRARIES(${EXE} PRIVATE -lwsock32 winmm -mwindows)
+  TARGET_LINK_LIBRARIES(${EXE} PRIVATE ${LIBS_TO_LINK} "-lm -lstdc++")
+ENDIF()
 IF(MSVC)
-		set_target_properties(vsProxy_gui_${QT_EXTENSION} PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:WINDOWS")
-		set_target_properties(vsProxy_gui_${QT_EXTENSION} PROPERTIES WIN32_EXECUTABLE True)
-		TARGET_LINK_LIBRARIES(vsProxy_gui_${QT_EXTENSION} ws2_32.lib  winmm -mwindows  )
-ENDIF(MSVC)
-TARGET_LINK_LIBRARIES(vsProxy_gui_${QT_EXTENSION} "${VS_SYSTEM_LIBS}")
-ADM_INSTALL_BIN(vsProxy_gui_${QT_EXTENSION})
+  SET_TARGET_PROPERTIES(${EXE} PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:WINDOWS")
+  SET_TARGET_PROPERTIES(${EXE} PROPERTIES WIN32_EXECUTABLE True)
+  TARGET_LINK_LIBRARIES(${EXE} PRIVATE ws2_32.lib  winmm -mwindows)
+ENDIF()
+TARGET_LINK_LIBRARIES(${EXE} PRIVATE "${VS_SYSTEM_LIBS}")
+ADM_INSTALL_BIN(${EXE})
