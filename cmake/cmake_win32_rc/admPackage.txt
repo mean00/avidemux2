@@ -1,5 +1,0 @@
-Name    : CMakeHelpers
-URL     : https://github.com/halex2005/CMakeHelpers.git
-License : MIT
-Version : commit 0814803829022ce3f326b14348971ff556a1dee3 / March 23, 2020
-Patch   : language_utf8.patch

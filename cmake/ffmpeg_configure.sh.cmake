@@ -1,2 +1,0 @@
-export PATH=${FF_ENV_PATH}:$PATH
-${FFMPEG_SOURCE_DIR}/configure ${FFMPEG_FLAGS}
