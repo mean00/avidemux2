@@ -4,6 +4,11 @@
 #
 # By default we use qt5 now
 #
+#
+RED="\e[31m"
+GREEN="\e[32m"
+ENDCOLOR="\e[0m"
+#
 packages_ext=""
 packages_dir="pkgs"
 rebuild=0
@@ -32,7 +37,7 @@ external_libmp4v2=0
 #test -f $HOME/myCC && export COMPILER="-DCMAKE_C_COMPILER=$HOME/myCC -DCMAKE_CXX_COMPILER=$HOME/myC++"
 
 fail() {
-  echo "** Failed at $1 **"
+  echo -e "${RED}** Failed at $1 **${ENDCOLOR}"
   exit 1
 }
 
@@ -61,7 +66,9 @@ Process() {
   fi
   BUILDDIR="${PWD}/${BASE}"
   FAKEROOT="-DFAKEROOT=$FAKEROOT_DIR"
-  echo "Building in \"${BUILDDIR}\" from \"${SOURCEDIR}\" with EXTRA=<$EXTRA>, DEBUG=<$DEBUG>, MAKER=<${MAKER}>"
+  echo -e "${GREEN}${BASE}: Building in \"${BUILDDIR}\" from \"${SOURCEDIR}\" with EXTRA=<$EXTRA>, DEBUG=<$DEBUG>, MAKER=<${MAKER}> ${ENDCOLOR}"
+  echo "   $BASE:Cmake started..."
+  $ADATE
   if [ "x$rebuild" != "x1" ]; then
     rm -Rf "${BUILDDIR}"
   fi
@@ -82,14 +89,20 @@ Process() {
     $ASAN \
     $DEBUG \
     -G "$BUILDER" \
-    "$SOURCEDIR" || fail "cmake"
+    "$SOURCEDIR" >&/tmp/logCmake$BASE || fail "cmake,result in /tmp/logCmake$BASE"
+  $ADATE
+  echo "   $BASE:Build started..."
   ${MAKER} >&/tmp/log$BASE || fail "${MAKER}, result in /tmp/log$BASE"
   if [ "x$PKG" != "x" ]; then
     DESTDIR="${FAKEROOT_DIR}/tmp" $FAKEROOT_COMMAND ${MAKER} package || fail "packaging"
   fi
+  $ADATE
+  echo "   $BASE:Install started..."
   # we need the make install so that other packcges can be built against this one
-  DESTDIR="${FAKEROOT_DIR}" ${MAKER} install || fail "install"
+  DESTDIR="${FAKEROOT_DIR}" ${MAKER} install >&/tmp/logInstall$BASE || fail "install faied, see /tmp/logInstall$BASE"
   popd >/dev/null
+  $ADATE
+  echo "   Done "
 }
 printModule() {
   value=$1
@@ -349,7 +362,7 @@ cd "${BUILDTOP}"
 if [ "x$packages_ext" = "x" ]; then
   echo "No packaging"
 else
-  echo "Preparing packages"
+  echo -e "${GREEN}Preparing packages${ENDCOLOR}"
   rm -Rf "${packages_dir}"
   mkdir "${packages_dir}"
   find . -name "*.$packages_ext" | grep -vi cpa | xargs cp -t "${packages_dir}"
