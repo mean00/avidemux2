@@ -108,9 +108,9 @@ ENDMACRO()
 #
 # Macro to install cmake folder
 #
-MACRO(ADM_INSTALL_CMAKE_HELPER_FOLDER folder)
-  INSTALL(DIRECTORY ${folder}
-    DESTINATION ${AVIDEMUX_INSTALL_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/cmake/
+MACRO(ADM_INSTALL_CMAKE_HELPER_FOLDER root foldername)
+  INSTALL(DIRECTORY ${root}/${foldername}
+    DESTINATION ${AVIDEMUX_INSTALL_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/cmake/${foldername}
     COMPONENT dev
     FILES_MATCHING PATTERN "*.[cir]*"
   )

@@ -17,13 +17,15 @@ IF(NOT FAKEROOT)
 ELSE()
   SET(AVIDEMUX_FAKEROOT "${FAKEROOT}")
 ENDIF()
+INCLUDE(avidemux_qt_api)
 SET(ADM_HEADER_DIR ${AVIDEMUX_FAKEROOT}${CMAKE_INSTALL_PREFIX}/include/avidemux/${AVIDEMUX_API_VERSION})
 SET(ADM_CMAKE_DIR  ${ADM_HEADER_DIR}/cmake)
 LIST(APPEND CMAKE_MODULE_PATH ${ADM_CMAKE_DIR})
 #
 # Sanity check
 #
-MESSAGE(STATUS  "Checking for avidemux include folder (i.e. CMAKE_INSTALL_PREFIX/include/avidemux/${AVIDEMUX_API_VERSION}, looking in ${ADM_HEADER_DIR}")
+MESSAGE(STATUS  "Checking if avidemux include folder exists as  ${ADM_HEADER_DIR}")
+MESSAGE(STATUS  "  ( CMAKE_INSTALL_PREFIX/include/avidemux/${AVIDEMUX_API_VERSION}")
 IF(NOT EXISTS "${ADM_HEADER_DIR}")
   MESSAGE(STATUS  "Make sure you installed all the files.\n i cannot find avidemux include folder.cmake .\nSet CMAKE_INSTALL_PREFIX to the install folder, current value is ${CMAKE_INSTALL_PREFIX}")
   MESSAGE(FATAL_ERROR  "Aborting")
@@ -38,14 +40,13 @@ IF(NOT EXISTS "${ADM_CMAKE_DIR}/commonCmakeApplication.cmake")
   MESSAGE(STATUS  "I was looking for commonCmakeApplication.cmake in  ${ADM_CMAKE_DIR}")
   MESSAGE(FATAL_ERROR  "Aborting")
 ENDIF()
-MESSAGE(STATUS "Found cmake subfolder.good.")
+MESSAGE(STATUS "Found cmake subfolder. good.")
 
 #
 # Go
 #
 INCLUDE(avidemuxVersion)
-
-
+MESSAGE(STATUS "Building agains version ${AVIDEMUX_VERSION}.")
 
 IF(WIN32)
   IF(MSVC)
@@ -184,9 +185,9 @@ ENDFOREACH()
 
 
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Add qt specific libs
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE
    ADM_gui${QT_LIBRARY_EXTENSION}
    ADM_filters${QT_LIBRARY_EXTENSION}

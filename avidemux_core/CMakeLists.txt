@@ -55,11 +55,11 @@ checkFtello()
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 checkSqlite3()
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###"
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #"
 # Check for DXVA2
 # We do it here, cmake messes things up when
 # we use try_compile later on, so do it once here
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###"
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #"
 
 IF(WIN32) # AND NOT MSVC)
   INCLUDE(admCheckDxva2)
@@ -163,8 +163,8 @@ IF(USE_VIDEOTOOLBOX)
 ENDIF()
 
 ADM_INSTALL_CMAKE_FOLDER("${AVIDEMUX_CORE_SOURCE_DIR}/cmake")
-ADM_INSTALL_CMAKE_HELPER_FOLDER("${CMAKE_CURRENT_SOURCE_DIR}/cmake_compile_check/")
-ADM_INSTALL_CMAKE_HELPER_FOLDER("${CMAKE_CURRENT_SOURCE_DIR}/cmake_win32_rc/")
+ADM_INSTALL_CMAKE_HELPER_FOLDER("${AVIDEMUX_CORE_SOURCE_DIR}/cmake/" "cmake_compile_check/")
+ADM_INSTALL_CMAKE_HELPER_FOLDER("${AVIDEMUX_CORE_SOURCE_DIR}}/cmake/" "cmake_win32_rc/")
 #
 
 INSTALL(FILES ${CMAKE_BINARY_DIR}/config/ADM_coreConfig.h DESTINATION "${AVIDEMUX_INSTALL_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}" COMPONENT dev)
