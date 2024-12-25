@@ -37,13 +37,14 @@ extern "C"
 }
 #endif
 #endif
-
+// clang format-off
 #include "ADM_assert.h"
 #include "DIA_coreToolkit.h"
-#include "GUI_accelRender.h"
-#include "GUI_render.h"
 #include "GUI_ui.h"
+#include "GUI_render.h"
+#include "GUI_accelRender.h"
 #include "T_preview.h"
+// clang format-on
 
 void UI_QT4VideoWidget(QFrame *host);
 extern QWidget *QuiMainWindows;

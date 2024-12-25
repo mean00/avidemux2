@@ -17,15 +17,16 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
-#include "GUI_render.h"
+// clang-format off
 #include "ADM_default.h"
+#include "config.h"
+#include "GUI_render.h"
 #include "DIA_coreToolkit.h"
 #include "GUI_accelRender.h"
 #include "GUI_nullRender.h"
 #include "GUI_renderInternal.h"
-#include "config.h"
 #include "prefs.h"
+// clang-format on
 
 extern VideoRenderBase *spawnSimpleRender();
 

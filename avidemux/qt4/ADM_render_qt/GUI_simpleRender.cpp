@@ -15,14 +15,18 @@
 
 #include <QPaintEngine>
 #include <QPainter>
+// clang format-off
+#include "ADM_default.h"
+#include "config.h"
 
 #include "ADM_default.h"
 #include "DIA_coreToolkit.h"
+//
+#include "GUI_renderInternal.h"
 #include "GUI_accelRender.h"
 #include "GUI_render.h"
-#include "GUI_renderInternal.h"
 #include "GUI_simpleRender.h"
-#include "config.h"
+// clang format-on
 
 #define SIMPLE_RENDER_SWSCALE_RESIZE
 #define SIMPLE_RENDER_TARGET_SIZE_IN_DEVICE_PIXELS
