@@ -104,8 +104,9 @@ MESSAGE(STATUS "${QT_EXTENSION} config.h generated")
 
 INCLUDE_DIRECTORIES(BEFORE "${CMAKE_BINARY_DIR}/config/${QT_EXTENSION}/")
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../common)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/ADM_render_qt)
 
-
+ADD_SUBDIRECTORY(ADM_render_qt)
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Add job control
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -118,9 +119,9 @@ ENDIF()
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Custom fixed width font for time display
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-if(NOT WIN32)
+IF(NOT WIN32)
   SET(USE_CUSTOM_TIME_DISPLAY_FONT 1)
-endif()
+ENDIF()
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Add common as a symlink or directly
@@ -134,9 +135,9 @@ ELSE()
   # Not needed for plain build
   MESSAGE(STATUS "Creating common symlink in ${CMAKE_CURRENT_SOURCE_DIR}")
 
-  execute_process(COMMAND rm -f common
+  EXECUTE_PROCESS(COMMAND rm -f common
                                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
-  execute_process(COMMAND ln -s ../common .
+  EXECUTE_PROCESS(COMMAND ln -s ../common .
                                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
   ADD_SUBDIRECTORY(common ./commonQt4)
@@ -147,19 +148,19 @@ ADD_SUBDIRECTORY(ADM_UIs ./ADM_UIsQt4)
 ADD_SUBDIRECTORY(ADM_userInterfaces ./ADM_userInterfaces${QT_LIBRARY_EXTENSION})
 
 SDLify(../common/main.cpp)
-if(ADM_SUBVERSION)
+IF(ADM_SUBVERSION)
   ADD_SOURCE_CFLAGS(../common/main.cpp "-DADM_SUBVERSION=\"${ADM_SUBVERSION}\"")
-endif()
+ENDIF()
 ADD_SOURCE_CFLAGS(../common/main.cpp "-DADM_VERSION=\"${AVIDEMUX_VERSION}\"")
 ADD_SOURCE_CFLAGS(../common/main.cpp "-DQT_FLAVOR=\"${QT_EXTENSION}\"")
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Icon for windows
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-if(WIN32 )
+IF(WIN32)
   WINDRESIFY(mainQt  "${CMAKE_CURRENT_SOURCE_DIR}/../common/xpm/adm.ico" src "avidemux" "Avidemux Video Editor")
   SET(ADM_EXE_SRCS ${ADM_EXE_SRCS} ${src})
-endif()
+ENDIF()
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Executable
