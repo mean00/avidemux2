@@ -6,8 +6,8 @@ MACRO(xadd opt)
     SET(FFMPEG_FLAGS "${FFMPEG_FLAGS} ${opt}=\"${arg}\"")
   ENDIF()
 ENDMACRO()
-include(admFFmpegVersion)
-option(FF_INHERIT_BUILD_ENV "" ON)
+INCLUDE(admFFmpegVersion)
+OPTION(FF_INHERIT_BUILD_ENV "" ON)
 FIND_PACKAGE(Patch)
 
 SET(FFMPEG_ROOT_DIR "${AVIDEMUX_CORE_SOURCE_DIR}/ffmpeg_package")
@@ -56,14 +56,14 @@ MACRO(ADM_FF_SET_DEFAULT)
   xadd(--prefix ${CMAKE_INSTALL_PREFIX})
 
   # Clean FFmpeg
-  set_directory_properties(${CMAKE_CURRENT_BINARY_DIR} ADDITIONAL_MAKE_CLEAN_FILES "${FFMPEG_BASE_DIR}")
+  SET_DIRECTORY_PROPERTIES(${CMAKE_CURRENT_BINARY_DIR} ADDITIONAL_MAKE_CLEAN_FILES "${FFMPEG_BASE_DIR}")
 
   # Prepare FFmpeg source
-  include(admFFmpegUtil)
-  include(admFFmpegPrepareTar)
+  INCLUDE(admFFmpegUtil)
+  INCLUDE(admFFmpegPrepareTar)
 
   IF(NOT FFMPEG_PREPARED)
-    include(admFFmpegPrepareGit)
+    INCLUDE(admFFmpegPrepareGit)
   ENDIF()
 
 ENDMACRO()
@@ -75,20 +75,20 @@ ENDMACRO()
 MACRO(ADM_FF_PATCH_IF_NEEDED)
   IF(FFMPEG_PERFORM_PATCH)
     # my patches
-    file(GLOB patchFiles "${FFMPEG_PATCH_DIR}/*.patch")
+    FILE(GLOB patchFiles "${FFMPEG_PATCH_DIR}/*.patch")
 
     FOREACH(patchFile ${patchFiles})
-      get_filename_component(short ${patchFile}  NAME)
+      GET_FILENAME_COMPONENT(short ${patchFile}  NAME)
       MESSAGE(STATUS "-- Mine, Applying patch <${short}> --")
-      patch_file("${FFMPEG_SOURCE_DIR}" "${patchFile}")
+      PATCH_FILE("${FFMPEG_SOURCE_DIR}" "${patchFile}")
     ENDFOREACH(patchFile)
 
     MESSAGE("")
 
     # upstream patches
-    file(GLOB patchFiles "${FFMPEG_PATCH_DIR}/upstream/*.patch")
+    FILE(GLOB patchFiles "${FFMPEG_PATCH_DIR}/upstream/*.patch")
     FOREACH(patchFile ${patchFiles})
-      get_filename_component(short ${patchFile}  NAME)
+      GET_FILENAME_COMPONENT(short ${patchFile}  NAME)
       MESSAGE(STATUS "-- Upstream, applying patch <${short}> --")
       patch_file_p1("${FFMPEG_SOURCE_DIR}" "${patchFile}")
     ENDFOREACH(patchFile)
@@ -108,8 +108,8 @@ MACRO(ADM_FF_SPLIT flags type)
     MESSAGE(STATUS "Separating args <${sep_flags}>")
     FOREACH(i ${sep_flags})
       MESSAGE(STATUS "   ${i}")
-      string(REGEX REPLACE "^/" "//" flags2 ${i})
-      string(REGEX REPLACE " /" "//" flags3 ${flags2})
+      STRING(REGEX REPLACE "^/" "//" flags2 ${i})
+      STRING(REGEX REPLACE " /" "//" flags3 ${flags2})
       SET(foo "${foo} ${flags3}")
     ENDFOREACH(i ${sep_flags})
   ELSE()
@@ -166,8 +166,9 @@ ENDMACRO()
 MACRO(ADM_FF_INSTALL_LIBS_AND_HEADERS)
 
   # Add and INSTALL libraries
-  include_directories("${FFMPEG_SOURCE_DIR}")
-  include_directories("${FFMPEG_BINARY_DIR}")
+  INCLUDE_DIRECTORIES("${FFMPEG_SOURCE_DIR}")
+  INCLUDE_DIRECTORIES("${FFMPEG_BINARY_DIR}")
+  SET(FF_SHORT_INSTALL_DIR ${AVIDEMUX_INSTALL_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR})
 
   ADM_INSTALL_LIB_FILES("${FFMPEG_BINARY_DIR}/libswscale/${LIBSWSCALE_LIB}")
   ADM_INSTALL_LIB_FILES("${FFMPEG_BINARY_DIR}/libpostproc/${LIBPOSTPROC_LIB}")
@@ -175,7 +176,9 @@ MACRO(ADM_FF_INSTALL_LIBS_AND_HEADERS)
   ADM_INSTALL_LIB_FILES("${FFMPEG_BINARY_DIR}/libavcodec/${LIBAVCODEC_LIB}")
   ADM_INSTALL_LIB_FILES("${FFMPEG_BINARY_DIR}/libavformat/${LIBAVFORMAT_LIB}")
 
-  INSTALL(FILES "${FFMPEG_BINARY_DIR}/libavutil/avconfig.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libavutil" COMPONENT dev)
+  INSTALL(FILES "${FFMPEG_BINARY_DIR}/libavutil/avconfig.h"
+            DESTINATION "${FF_SHORT_INSTALL_DIR}/libavutil"
+            COMPONENT dev)
 
   INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libavcodec/avcodec.h"
             "${FFMPEG_SOURCE_DIR}/libavcodec/bsf.h"
@@ -189,17 +192,26 @@ MACRO(ADM_FF_INSTALL_LIBS_AND_HEADERS)
             "${FFMPEG_SOURCE_DIR}/libavcodec/videotoolbox.h"
             "${FFMPEG_SOURCE_DIR}/libavcodec/version.h"
             "${FFMPEG_SOURCE_DIR}/libavcodec/version_major.h"
-            DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libavcodec" COMPONENT dev)
+            DESTINATION "${FF_SHORT_INSTALL_DIR}/libavcodec"
+            COMPONENT dev)
   INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libavformat/avformat.h" "${FFMPEG_SOURCE_DIR}/libavformat/avio.h"
             "${FFMPEG_SOURCE_DIR}/libavformat/version.h"
             "${FFMPEG_SOURCE_DIR}/libavformat/version_major.h"
-            "${FFMPEG_SOURCE_DIR}/libavformat/flv.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libavformat" COMPONENT dev)
-  INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libavutil/attributes.h" "${FFMPEG_SOURCE_DIR}/libavutil/avutil.h"
+            "${FFMPEG_SOURCE_DIR}/libavformat/flv.h"
+            DESTINATION "${FF_SHORT_INSTALL_DIR}/libavformat"
+            COMPONENT dev)
+  INSTALL(FILES
+            "${FFMPEG_SOURCE_DIR}/libavutil/attributes.h"
+            "${FFMPEG_SOURCE_DIR}/libavutil/avutil.h"
             "${FFMPEG_SOURCE_DIR}/libavutil/buffer.h"
-            "${FFMPEG_SOURCE_DIR}/libavutil/bswap.h" "${FFMPEG_SOURCE_DIR}/libavutil/common.h"
-            "${FFMPEG_SOURCE_DIR}/libavutil/cpu.h" "${FFMPEG_SOURCE_DIR}/libavutil/frame.h"
-            "${FFMPEG_SOURCE_DIR}/libavutil/log.h" "${FFMPEG_SOURCE_DIR}/libavutil/mathematics.h"
-            "${FFMPEG_SOURCE_DIR}/libavutil/mem.h" "${FFMPEG_SOURCE_DIR}/libavutil/pixfmt.h"
+            "${FFMPEG_SOURCE_DIR}/libavutil/bswap.h"
+            "${FFMPEG_SOURCE_DIR}/libavutil/common.h"
+            "${FFMPEG_SOURCE_DIR}/libavutil/cpu.h"
+            "${FFMPEG_SOURCE_DIR}/libavutil/frame.h"
+            "${FFMPEG_SOURCE_DIR}/libavutil/log.h"
+            "${FFMPEG_SOURCE_DIR}/libavutil/mathematics.h"
+            "${FFMPEG_SOURCE_DIR}/libavutil/mem.h"
+            "${FFMPEG_SOURCE_DIR}/libavutil/pixfmt.h"
             "${FFMPEG_SOURCE_DIR}/libavutil/pixdesc.h"
             "${FFMPEG_SOURCE_DIR}/libavutil/channel_layout.h"
             "${FFMPEG_SOURCE_DIR}/libavutil/error.h"
@@ -217,15 +229,16 @@ MACRO(ADM_FF_INSTALL_LIBS_AND_HEADERS)
             "${FFMPEG_SOURCE_DIR}/libavutil/hwcontext_dxva2.h"
             "${FFMPEG_SOURCE_DIR}/libavutil/mastering_display_metadata.h"
             "${FFMPEG_SOURCE_DIR}/libavutil/hdr_dynamic_metadata.h"
+            "${FFMPEG_SOURCE_DIR}/libavutil/rational.h"
+            DESTINATION "${FF_SHORT_INSTALL_DIR}/libavutil"
+            COMPONENT dev)
 
-            "${FFMPEG_SOURCE_DIR}/libavutil/rational.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libavutil" COMPONENT dev)
-
-  INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libpostproc/postprocess.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libpostproc" COMPONENT dev)
-  INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libpostproc/version.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libpostproc" COMPONENT dev)
-  INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libpostproc/version_major.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libpostproc" COMPONENT dev)
-  INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libswscale/swscale.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libswscale" COMPONENT dev)
-  INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libswscale/version.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libswscale" COMPONENT dev)
-  INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libswscale/version_major.h" DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/libswscale" COMPONENT dev)
+  INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libpostproc/postprocess.h"   DESTINATION "${FF_SHORT_INSTALL_DIR}/libpostproc" COMPONENT dev)
+  INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libpostproc/version.h"       DESTINATION "${FF_SHORT_INSTALL_DIR}/libpostproc" COMPONENT dev)
+  INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libpostproc/version_major.h" DESTINATION "${FF_SHORT_INSTALL_DIR}/libpostproc" COMPONENT dev)
+  INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libswscale/swscale.h"        DESTINATION "${FF_SHORT_INSTALL_DIR}/libswscale" COMPONENT dev)
+  INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libswscale/version.h"        DESTINATION "${FF_SHORT_INSTALL_DIR}/libswscale" COMPONENT dev)
+  INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libswscale/version_major.h"  DESTINATION "${FF_SHORT_INSTALL_DIR}/libswscale" COMPONENT dev)
 ENDMACRO()
 #
 #
@@ -281,14 +294,14 @@ MACRO(ADM_FF_BUILD_UNIX_STYLE)
   MESSAGE(STATUS "Configuring FFmpeg")
   SET(LAST_FFMPEG_FLAGS "${FFMPEG_FLAGS}" CACHE STRING "" FORCE)
 
-  file(MAKE_DIRECTORY "${FFMPEG_BINARY_DIR}")
-  file(REMOVE "${FFMPEG_BINARY_DIR}/ffmpeg${CMAKE_EXECUTABLE_SUFFIX}")
-  file(REMOVE "${FFMPEG_BINARY_DIR}/ffmpeg_g${CMAKE_EXECUTABLE_SUFFIX}")
+  FILE(MAKE_DIRECTORY "${FFMPEG_BINARY_DIR}")
+  FILE(REMOVE "${FFMPEG_BINARY_DIR}/ffmpeg${CMAKE_EXECUTABLE_SUFFIX}")
+  FILE(REMOVE "${FFMPEG_BINARY_DIR}/ffmpeg_g${CMAKE_EXECUTABLE_SUFFIX}")
 
   SET(ffmpeg_bash_directory ${BASH_EXECUTABLE})
   convertPathToUnix(ffmpeg_bash_directory ${BASH_EXECUTABLE})
   get_filename_component(ffmpeg_bash_directory ${ffmpeg_bash_directory} PATH)
-  configure_file("${AVIDEMUX_CORE_SOURCE_DIR}/cmake/ffmpeg_configure.sh.cmake" "${FFMPEG_BINARY_DIR}/ffmpeg_configure.sh")
+  configure_FILE("${AVIDEMUX_CORE_SOURCE_DIR}/cmake/ffmpeg_configure.sh.cmake" "${FFMPEG_BINARY_DIR}/ffmpeg_configure.sh")
 
   execute_process(COMMAND ${BASH_EXECUTABLE} ffmpeg_configure.sh WORKING_DIRECTORY "${FFMPEG_BINARY_DIR}"
                     OUTPUT_VARIABLE FFMPEG_CONFIGURE_OUTPUT RESULT_VARIABLE FFMPEG_CONFIGURE_RESULT)
@@ -302,8 +315,8 @@ MACRO(ADM_FF_BUILD_UNIX_STYLE)
   MESSAGE(STATUS "Configuring done, processing")
 
   IF(ADM_CPU_X86)
-    file(READ ${FFMPEG_BINARY_DIR}/config.h FF_CONFIG_H)
-    string(REGEX MATCH "#define[ ]+HAVE_X86ASM[ ]+1" FF_YASM "${FF_CONFIG_H}")
+    FILE(READ ${FFMPEG_BINARY_DIR}/config.h FF_CONFIG_H)
+    STRING(REGEX MATCH "#define[ ]+HAVE_X86ASM[ ]+1" FF_YASM "${FF_CONFIG_H}")
 
     IF(NOT FF_YASM)
       MESSAGE(FATAL_ERROR "Yasm was not found.")
@@ -324,7 +337,7 @@ MACRO(ADM_FF_BUILD_UNIX_STYLE)
 
   SET(ffmpeg_gnumake_executable ${GNUMAKE_EXECUTABLE})
   convertPathToUnix(ffmpeg_gnumake_executable ${BASH_EXECUTABLE})
-  configure_file("${AVIDEMUX_CORE_SOURCE_DIR}/cmake/ffmpeg_make.sh.cmake" "${FFMPEG_BINARY_DIR}/ffmpeg_make.sh")
+  CONFIGURE_FILE("${AVIDEMUX_CORE_SOURCE_DIR}/cmake/ffmpeg_make.sh.cmake" "${FFMPEG_BINARY_DIR}/ffmpeg_make.sh")
   registerFFmpeg("${FFMPEG_SOURCE_DIR}" "${FFMPEG_BINARY_DIR}" 0)
 ENDMACRO()
 #
@@ -332,15 +345,15 @@ ENDMACRO()
 #
 MACRO(ADM_FF_ADD_DUMMY_TARGET)
   #SET(PARRALLEL "-j1")
-  if(NOT MSVC)
-    include(ProcessorCount)
+  IF(NOT MSVC)
+    INCLUDE(ProcessorCount)
     ProcessorCount(NPROC)
-    if(NOT NPROC EQUAL 0)
+    IF(NOT NPROC EQUAL 0)
       SET(PARRALLEL "-j${NPROC}")
     ENDIF()
   ENDIF()
-  add_custom_target(         libavutil_dummy ALL
-                                       COMMAND ${GNUMAKE_EXECUTABLE} ${PARRALLEL}
-                                       WORKING_DIRECTORY "${FFMPEG_BINARY_DIR}"
-                                       COMMENT "Compiling FFmpeg")
+  ADD_CUSTOM_TARGET(libavutil_dummy ALL
+                    COMMAND ${GNUMAKE_EXECUTABLE} ${PARRALLEL}
+                    WORKING_DIRECTORY "${FFMPEG_BINARY_DIR}"
+                    COMMENT "Compiling FFmpeg")
 ENDMACRO()

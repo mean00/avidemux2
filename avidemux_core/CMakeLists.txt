@@ -36,69 +36,66 @@ INCLUDE(admCheckLibVA)
 INCLUDE(admCheckVideoToolbox)
 INCLUDE(admCheckSqlLite)
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ############
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Debug Summary
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###########
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 IF(VERBOSE)
   INCLUDE(adm_log)
   MESSAGE("")
 ENDIF()
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###########
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Checking if we should use ftello
 # or ftello64 (win32)
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###########
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 checkFtello()
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###########
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # sqllite
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###########
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 checkSqlite3()
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###############"
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###"
 # Check for DXVA2
 # We do it here, cmake messes things up when
 # we use try_compile later on, so do it once here
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###############"
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###"
 
 IF(WIN32) # AND NOT MSVC)
   INCLUDE(admCheckDxva2)
-ELSE(WIN32)
-  IF(UNIX AND NOT APPLE)
+ELSE()
+  IF(UNIX AND NOT APPLE)  # linux /bsd/...
     checkVDPAU()
     checkLibVA()
-  ELSE(UNIX AND NOT APPLE)
+  ELSE() # Apple
     checkVideoToolbox()
+    # Silence missing nullability specifier warnings on macOS
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-nullability-completeness")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-nullability-completeness")
   ENDIF()
 ENDIF()
 
-IF(APPLE)
-  # Silence missing nullability specifier warnings on macOS
-  SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-nullability-completeness")
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-nullability-completeness")
-ENDIF()
-
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###########
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Generate config.h
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###########
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 CONFIGURE_FILE("${AVIDEMUX_CORE_SOURCE_DIR}/cmake/ADM_coreConfig.h.cmake" "${CMAKE_BINARY_DIR}/config/ADM_coreConfig.h")
 INCLUDE_DIRECTORIES("${CMAKE_BINARY_DIR}/config")
 MESSAGE(STATUS "ADM_coreConfig.h generated")
 MESSAGE("")
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###########
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Add include dirs
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###########
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 SET(EXCLUDE_ADM_INCLUDE TRUE)
 INCLUDE(admCoreIncludes)
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###########
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Build FFmpeg
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###########
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 INCLUDE(admFFmpegBuild)
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###########
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Directories to build
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###########
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 SET(SUBFOLDERS
     ADM_core
     ADM_coreAudioParser
@@ -136,13 +133,15 @@ IF(WIN32)
   FILE(APPEND  ${NSI_FILE} "!define SVN_VERSION \"${date}\"\n")
 ENDIF()
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###########
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Config Summary
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###########
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 DISPLAY_SUMMARY_LIST()
 
 INCLUDE(admPackager)
 admPackager(corePackage)
+
+SET(HW_ACCEL_FOLDER "${CMAKE_CURRENT_SOURCE_DIR}/ADM_coreVideoCodec/ADM_hwAccel/")
 
 # install headers
 FOREACH(subfolder ${SUBFOLDERS} ADM_coreAudioCodec ADM_coreVideoCodec ADM_coreVideoEncoder)
@@ -150,28 +149,26 @@ FOREACH(subfolder ${SUBFOLDERS} ADM_coreAudioCodec ADM_coreVideoCodec ADM_coreVi
 ENDFOREACH()
 
 IF(USE_VDPAU)
-  ADM_INSTALL_INCLUDE_FOLDER("${CMAKE_CURRENT_SOURCE_DIR}/ADM_coreVideoCodec/ADM_hwAccel/ADM_coreVdpau/include/" ADM_coreVdpau )
+  ADM_INSTALL_INCLUDE_FOLDER("${HW_ACCEL_FOLDER}/ADM_coreVdpau/include/" ADM_coreVdpau)
 ENDIF()
 IF(USE_LIBVA)
-  ADM_INSTALL_INCLUDE_FOLDER("${CMAKE_CURRENT_SOURCE_DIR}/ADM_coreVideoCodec/ADM_hwAccel/ADM_coreLibVA/include/" ADM_coreLibVA )
+  ADM_INSTALL_INCLUDE_FOLDER("${HW_ACCEL_FOLDER}/ADM_coreLibVA/include/" ADM_coreLibVA)
   ADM_INSTALL_INCLUDE_FOLDER("${CMAKE_CURRENT_SOURCE_DIR}/ADM_coreVideoEncoder/ADM_hwAccelEncoder/ADM_coreLibVAEnc/include/" ADM_coreLibVAEnc )
 ENDIF()
 IF(USE_DXVA2)
-  ADM_INSTALL_INCLUDE_FOLDER("${CMAKE_CURRENT_SOURCE_DIR}/ADM_coreVideoCodec/ADM_hwAccel/ADM_coreDxva2/include/" ADM_coreDxva2 )
+  ADM_INSTALL_INCLUDE_FOLDER("${HW_ACCEL_FOLDER}/ADM_coreDxva2/include/" ADM_coreDxva2)
 ENDIF()
 IF(USE_VIDEOTOOLBOX)
-  ADM_INSTALL_INCLUDE_FOLDER("${CMAKE_CURRENT_SOURCE_DIR}/ADM_coreVideoCodec/ADM_hwAccel/ADM_coreVideoToolbox/include/" ADM_coreVideoToolbox)
+  ADM_INSTALL_INCLUDE_FOLDER("${HW_ACCEL_FOLDER}/ADM_coreVideoToolbox/include/" ADM_coreVideoToolbox)
 ENDIF()
 
-SET(CMAKE_TOP_SOURCE_DIR "${CMAKE_SOURCE_DIR}/../cmake")
-
-ADM_INSTALL_CMAKE_FOLDER("${CMAKE_CURRENT_SOURCE_DIR}/" cmake)
-ADM_INSTALL_CMAKE_HELPER_FOLDER("${CMAKE_CURRENT_SOURCE_DIR}/cmake_compile_check/" cmake_compile_check)
-ADM_INSTALL_CMAKE_HELPER_FOLDER("${CMAKE_CURRENT_SOURCE_DIR}/cmake_win32_rc/" cmake_win32_rc)
+ADM_INSTALL_CMAKE_FOLDER("${AVIDEMUX_CORE_SOURCE_DIR}/cmake")
+ADM_INSTALL_CMAKE_HELPER_FOLDER("${CMAKE_CURRENT_SOURCE_DIR}/cmake_compile_check/")
+ADM_INSTALL_CMAKE_HELPER_FOLDER("${CMAKE_CURRENT_SOURCE_DIR}/cmake_win32_rc/")
 #
 
-INSTALL(FILES ${CMAKE_BINARY_DIR}/config/ADM_coreConfig.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}" COMPONENT dev)
-INSTALL(FILES ${CMAKE_BINARY_DIR}/config/ADM_coreConfig.cmake DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/cmake/" COMPONENT dev)
+INSTALL(FILES ${CMAKE_BINARY_DIR}/config/ADM_coreConfig.h DESTINATION "${AVIDEMUX_INSTALL_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}" COMPONENT dev)
+INSTALL(FILES ${CMAKE_BINARY_DIR}/config/ADM_coreConfig.cmake DESTINATION "${AVIDEMUX_INSTALL_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/cmake/" COMPONENT dev)
 
 IF(MSVC)
   SET(FOREIGN_MSVC ${CMAKE_SOURCE_DIR}/../foreignBuilds/msvc/include/)
@@ -179,7 +176,7 @@ IF(MSVC)
     ${FOREIGN_MSVC}/stdint.h
     ${FOREIGN_MSVC}/inttypes.h
     ${FOREIGN_MSVC}/GL/glext.h
-  DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/GL" COMPONENT dev)
+  DESTINATION "${AVIDEMUX_INSTALL_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/GL" COMPONENT dev)
   # install runtimes also
   SET(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION ${AVIDEMUX_BIN_DIR})
   INCLUDE(InstallRequiredSystemLibraries)

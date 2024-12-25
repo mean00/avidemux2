@@ -3,11 +3,6 @@ SET(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 PROJECT(Avidemux_Qt)
 SET(UI_TYPE ADM_UI_QT4)
-ADD_DEFINITIONS(-DADM_UI_TYPE_BUILD=ADM_UI_QT4)
-SET(ORIGINAL_CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}")
-SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/../../cmake" "${CMAKE_MODULE_PATH}")
-INCLUDE(avidemuxVersion)
-
 MESSAGE("")
 MESSAGE("#########################################")
 MESSAGE("Configure for Avidemux Qt Started")
@@ -15,11 +10,41 @@ MESSAGE("#########################################")
 MESSAGE("")
 MESSAGE(STATUS "Checking for avidemux development files ..")
 
+ADD_DEFINITIONS(-DADM_UI_TYPE_BUILD=ADM_UI_QT4)
+LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 IF(NOT FAKEROOT)
   SET(AVIDEMUX_FAKEROOT "")
 ELSE()
   SET(AVIDEMUX_FAKEROOT "${FAKEROOT}")
 ENDIF()
+SET(ADM_HEADER_DIR ${AVIDEMUX_FAKEROOT}${CMAKE_INSTALL_PREFIX}/include/avidemux/${AVIDEMUX_API_VERSION})
+SET(ADM_CMAKE_DIR  ${ADM_HEADER_DIR}/cmake)
+LIST(APPEND CMAKE_MODULE_PATH ${ADM_CMAKE_DIR})
+#
+# Sanity check
+#
+MESSAGE(STATUS  "Checking for avidemux include folder (i.e. CMAKE_INSTALL_PREFIX/include/avidemux/${AVIDEMUX_API_VERSION}, looking in ${ADM_HEADER_DIR}")
+IF(NOT EXISTS "${ADM_HEADER_DIR}")
+  MESSAGE(STATUS  "Make sure you installed all the files.\n i cannot find avidemux include folder.cmake .\nSet CMAKE_INSTALL_PREFIX to the install folder, current value is ${CMAKE_INSTALL_PREFIX}")
+  MESSAGE(FATAL_ERROR  "Aborting")
+ENDIF()
+
+MESSAGE(STATUS "Found avidemux include folder. good.")
+MESSAGE(STATUS "Checking for cmake subfolder")
+
+IF(NOT EXISTS "${ADM_CMAKE_DIR}/commonCmakeApplication.cmake")
+  MESSAGE(STATUS  "Make sure you installed all the files.\n I cannot find content of the cmake subfolder .\n")
+  MESSAGE(STATUS  "Set CMAKE_INSTALL_PREFIX to the install folder, current value is ${CMAKE_INSTALL_PREFIX}")
+  MESSAGE(STATUS  "I was looking for commonCmakeApplication.cmake in  ${ADM_CMAKE_DIR}")
+  MESSAGE(FATAL_ERROR  "Aborting")
+ENDIF()
+MESSAGE(STATUS "Found cmake subfolder.good.")
+
+#
+# Go
+#
+INCLUDE(avidemuxVersion)
+
 
 
 IF(WIN32)
@@ -44,26 +69,6 @@ ENDIF()
 ADM_PREBUILD()
 
 # Locate commonCmakeApplication.cmake
-SET(ADM_HEADER_DIR ${AVIDEMUX_FAKEROOT}${CMAKE_INSTALL_PREFIX}/include/avidemux/${AVIDEMUX_API_VERSION})
-SET(ADM_CMAKE_DIR  ${ADM_HEADER_DIR}/cmake)
-SET(CMAKE_MODULE_PATH "${ADM_CMAKE_DIR}" "${ORIGINAL_CMAKE_MODULE_PATH}")
-MESSAGE(STATUS  "Checking for avidemux include folder (i.e. CMAKE_INSTALL_PREFIX/include/avidemux/${AVIDEMUX_API_VERSION}, looking in ${ADM_HEADER_DIR}")
-IF(NOT EXISTS "${ADM_HEADER_DIR}")
-  MESSAGE(STATUS  "Make sure you installed all the files.\n i cannot find avidemux include folder.cmake .\nSet CMAKE_INSTALL_PREFIX to the install folder, current value is ${CMAKE_INSTALL_PREFIX}")
-  MESSAGE(FATAL_ERROR  "Aborting")
-ENDIF()
-
-MESSAGE(STATUS "Found avidemux include folder. good.")
-MESSAGE(STATUS "Checking for cmake subfolder")
-
-IF(NOT EXISTS "${ADM_CMAKE_DIR}/commonCmakeApplication.cmake")
-  MESSAGE(STATUS  "Make sure you installed all the files.\n I cannot find content of the cmake subfolder .\n")
-  MESSAGE(STATUS  "Set CMAKE_INSTALL_PREFIX to the install folder, current value is ${CMAKE_INSTALL_PREFIX}")
-  MESSAGE(STATUS  "I was looking for commonCmakeApplication.cmake in  ${ADM_CMAKE_DIR}")
-  MESSAGE(FATAL_ERROR  "Aborting")
-ENDIF()
-MESSAGE(STATUS "Found cmake subfolder.good.")
-
 INCLUDE(commonCmakeApplication)
 INCLUDE(../admAppSettings.cmake)
 INCLUDE(admCheckQt)
@@ -86,9 +91,9 @@ ADD_DEFINITIONS(${QT_DEFINITIONS})
 #--
 
 #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ####
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Config
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ####
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 SET(CONFIG_HEADER_TYPE ADM_BUILD_QT4)
 SET(UI_SUFFIX ${QT_EXTENSION})
 
@@ -100,25 +105,25 @@ INCLUDE_DIRECTORIES(BEFORE "${CMAKE_BINARY_DIR}/config/${QT_EXTENSION}/")
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../common)
 
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Add job control
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 ADD_SUBDIRECTORY(ADM_jobs)
 ADD_SUBDIRECTORY(ADM_update)
 IF(USE_OPENGL)
   ADD_SUBDIRECTORY(ADM_openGL)
 ENDIF()
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Custom fixed width font for time display
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 if(NOT WIN32)
   SET(USE_CUSTOM_TIME_DISPLAY_FONT 1)
 endif()
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ##
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Add common as a symlink or directly
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ##
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 INCLUDE_DIRECTORIES(ADM_UIs/include/)
 
 IF(WIN32 AND NOT CROSS)
@@ -147,24 +152,24 @@ endif()
 ADD_SOURCE_CFLAGS(../common/main.cpp "-DADM_VERSION=\"${AVIDEMUX_VERSION}\"")
 ADD_SOURCE_CFLAGS(../common/main.cpp "-DQT_FLAVOR=\"${QT_EXTENSION}\"")
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Icon for windows
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 if(WIN32 )
   WINDRESIFY(mainQt  "${CMAKE_CURRENT_SOURCE_DIR}/../common/xpm/adm.ico" src "avidemux" "Avidemux Video Editor")
   SET(ADM_EXE_SRCS ${ADM_EXE_SRCS} ${src})
 endif()
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Executable
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 INCLUDE_DIRECTORIES("${PTHREAD_INCLUDE_DIR}")
 
 ADM_MAIN_APP()
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Construct common libraries
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 FOREACH(_libName ${commonLibs1})
   TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE ${_libName})
 ENDFOREACH()
@@ -179,9 +184,9 @@ ENDFOREACH()
 
 
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #######
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###
 # Add qt specific libs
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #######
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ###
 TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE
    ADM_gui${QT_LIBRARY_EXTENSION}
    ADM_filters${QT_LIBRARY_EXTENSION}
@@ -201,9 +206,9 @@ TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE
    ADM_osSupport6
 )
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # External libs
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # gettext
 TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE adm_gettext )
 
@@ -214,9 +219,9 @@ if(USE_SDL)
 ENDIF()
 
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # UI Specific
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE ADM_render6 ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${PTHREAD_LIBRARIES})
 
 TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE ${PlatformLibs})
@@ -226,16 +231,16 @@ TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE ${PlatformLibs})
 #
 ADD_SUBDIRECTORY(i18n)
 ADM_LINK_THREAD(avidemux3_${QT_EXTENSION})
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Install
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #####
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 DISPLAY_SUMMARY_LIST()
 
 ADM_POSTBUILD()
 INCLUDE(admPackager)
 admPackager(qt4Package)
-INSTALL(FILES ${CMAKE_BINARY_DIR}/config/${QT_EXTENSION}/config.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_API_VERSION}/${QT_EXTENSION}" COMPONENT dev)
+INSTALL(FILES ${CMAKE_BINARY_DIR}/config/${QT_EXTENSION}/config.h DESTINATION "${AVIDEMUX_INSTALL_INCLUDE_DIR}/avidemux/${AVIDEMUX_API_VERSION}/${QT_EXTENSION}" COMPONENT dev)
 
 
 # install headers
