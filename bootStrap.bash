@@ -29,6 +29,7 @@ external_libass=0
 external_liba52=0
 external_libmad=0
 external_libmp4v2=0
+#test -f $HOME/myCC && export COMPILER="-DCMAKE_C_COMPILER=$HOME/myCC -DCMAKE_CXX_COMPILER=$HOME/myC++"
 
 fail() {
   echo "** Failed at $1 **"

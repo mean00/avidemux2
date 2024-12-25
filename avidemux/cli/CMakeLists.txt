@@ -1,31 +1,31 @@
+
 CMAKE_MINIMUM_REQUIRED(VERSION 3.20)
 SET(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 PROJECT(Avidemux_CLI)
-
 SET(UI_TYPE ADM_UI_CLI)
-SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/../../cmake" "${CMAKE_MODULE_PATH}")
-INCLUDE(avidemuxVersion)
-
 MESSAGE("")
 MESSAGE("#########################################")
-MESSAGE("Configure for avidemux Cli Started")
+MESSAGE("Configure for Avidemux CLI Started")
 MESSAGE("#########################################")
 MESSAGE("")
-
 MESSAGE(STATUS "Checking for avidemux development files ..")
 
+LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 IF(NOT FAKEROOT)
   SET(AVIDEMUX_FAKEROOT "")
 ELSE()
   SET(AVIDEMUX_FAKEROOT "${FAKEROOT}")
 ENDIF()
-
+INCLUDE(avidemux_cli_api)
 SET(ADM_HEADER_DIR ${AVIDEMUX_FAKEROOT}${CMAKE_INSTALL_PREFIX}/include/avidemux/${AVIDEMUX_API_VERSION})
 SET(ADM_CMAKE_DIR  ${ADM_HEADER_DIR}/cmake)
-# Common definitions...
-SET(CMAKE_MODULE_PATH "${ADM_CMAKE_DIR}" "${CMAKE_MODULE_PATH}")
-MESSAGE(STATUS  "Checking for avidemux include folder (i.e. CMAKE_INSTALL_PREFIX/include/avidemux/${AVIDEMUX_API_VERSION}")
+LIST(APPEND CMAKE_MODULE_PATH ${ADM_CMAKE_DIR})
+#
+# Sanity check
+#
+MESSAGE(STATUS  "Checking if avidemux include folder exists as  ${ADM_HEADER_DIR}")
+MESSAGE(STATUS  "  ( CMAKE_INSTALL_PREFIX/include/avidemux/${AVIDEMUX_API_VERSION}")
 IF(NOT EXISTS "${ADM_HEADER_DIR}")
   MESSAGE(STATUS  "Make sure you installed all the files.\n i cannot find avidemux include folder.cmake .\nSet CMAKE_INSTALL_PREFIX to the install folder, current value is ${CMAKE_INSTALL_PREFIX}")
   MESSAGE(FATAL_ERROR  "Aborting")
@@ -40,14 +40,38 @@ IF(NOT EXISTS "${ADM_CMAKE_DIR}/commonCmakeApplication.cmake")
   MESSAGE(STATUS  "I was looking for commonCmakeApplication.cmake in  ${ADM_CMAKE_DIR}")
   MESSAGE(FATAL_ERROR  "Aborting")
 ENDIF()
-MESSAGE(STATUS "Found cmake subfolder.good.")
+MESSAGE(STATUS "Found cmake subfolder. good.")
 
+#
+# Go
+#
+INCLUDE(avidemuxVersion)
+MESSAGE(STATUS "Building agains version ${AVIDEMUX_VERSION}.")
+
+IF(WIN32)
+  IF(MSVC)
+    INCLUDE(adm_win32_vs.cmake)
+  ELSE()
+    INCLUDE(adm_win32_mingw.cmake)
+  ENDIF()
+ELSE()
+  IF(APPLE)
+    # Silence missing nullability specifier warnings on macOS
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-nullability-completeness")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-nullability-completeness")
+    INCLUDE(adm_osx.cmake)
+  ELSE()
+    INCLUDE(adm_default.cmake)
+  ENDIF()
+ENDIF()
+#-----------------------------------
+# Set extra libs, system dependant
+#-----------------------------------
+ADM_PREBUILD()
+#______________________________________
 
 INCLUDE(commonCmakeApplication)
 INCLUDE(admWindRes)
-#
-#
-#
 #
 ADD_EXECUTABLE(avidemux3_cli)
 TARGET_SOURCES(avidemux3_cli PRIVATE ${ADM_EXE_SRCS})
@@ -63,6 +87,7 @@ CONFIGURE_FILE("${ADM_CMAKE_DIR}/config.h.cmake" "${CMAKE_BINARY_DIR}/config/cli
 MESSAGE(STATUS "CLI config.h generated")
 
 INCLUDE_DIRECTORIES(BEFORE "${CMAKE_BINARY_DIR}/config/cli/")
+INCLUDE_DIRECTORIES(ADM_render_cli)
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Add subdirectories
@@ -96,7 +121,7 @@ ENDIF()
 MACRO(LINKBUNCH lst)
   TARGET_LINK_LIBRARIES(avidemux3_cli PRIVATE ${lst} ${ARGN})
 ENDMACRO()
-
+ADD_SUBDIRECTORY(ADM_render_cli)
 TARGET_LINK_LIBRARIES(avidemux3_cli PRIVATE ADM_editor6_interface ADM_videoEncoder6_interface ADM_videoFilter6_interface ADM_commonUI6_interface)
 LINKBUNCH(${commonLibs1})
 TARGET_LINK_LIBRARIES(avidemux3_cli PRIVATE ADM_filtersCli6)
@@ -115,7 +140,7 @@ TARGET_LINK_LIBRARIES(avidemux3_cli PRIVATE
   ADM_gui2Cli6
   ADM_toolkitCli6
   ADM_shellCli
-  ADM_render6
+  ADM_render6_cli
   ADM_coreVideoFilter6
 )
 
@@ -151,7 +176,7 @@ ADM_INSTALL_BIN(avidemux3_cli)
 
 DISPLAY_SUMMARY_LIST()
 
-include(admPackager)
+INCLUDE(admPackager)
 admPackager(cliPackage)
 INSTALL(FILES ${CMAKE_BINARY_DIR}/config/cli/config.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_API_VERSION}/cli" COMPONENT dev)
 INSTALL(FILES ${CMAKE_SOURCE_DIR}/ADM_UIs/include/ADM_UI_Cli6_export.h DESTINATION "${AVIDEMUX_INCLUDE_DIR}/avidemux/${AVIDEMUX_API_VERSION}/cli/ADM_UIs" COMPONENT dev)

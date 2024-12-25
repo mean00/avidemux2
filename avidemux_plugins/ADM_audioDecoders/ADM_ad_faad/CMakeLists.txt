@@ -1,12 +1,12 @@
 INCLUDE(admCheckFaad)
 checkFaad()
 
-IF (USE_FAAD)
+IF(USE_FAAD)
   INCLUDE(ad_plugin)
 
   SET(ADM_ad_faad_SRCS ADM_ad_faad.cpp)
 
-  ADD_AUDIO_DECODER( ADM_ad_faad ${ADM_ad_faad_SRCS})
+  ADD_AUDIO_DECODER(ADM_ad_faad ${ADM_ad_faad_SRCS})
   TARGET_LINK_LIBRARIES(ADM_ad_faad PRIVATE ${FAAD_LIBRARY_DIR})
 
   ADD_TARGET_CFLAGS(ADM_ad_faad "-I${FAAD_INCLUDE_DIR}")
@@ -14,4 +14,4 @@ IF (USE_FAAD)
 
   INIT_AUDIO_PLUGIN(ADM_ad_faad)
   INSTALL_AUDIODECODER(ADM_ad_faad)
-ENDIF (USE_FAAD)
+ENDIF()

@@ -1,31 +1,30 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.7)
-
-PROJECT(AdmPlugins)
-
-SET(ORIGINAL_CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}")
-SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/../cmake" "${CMAKE_MODULE_PATH}")
-INCLUDE(avidemuxVersion)
-
+CMAKE_MINIMUM_REQUIRED(VERSION 3.20)
+SET(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 SET(PLUGINS TRUE)
 
+PROJECT(Avidemux_Plugins)
 MESSAGE("")
-MESSAGE("#####################################")
-MESSAGE("Plugins Configure Started")
-MESSAGE("#####################################")
+MESSAGE("#########################################")
+MESSAGE("Configure for Avidemux Plugins Started")
+MESSAGE("#########################################")
 MESSAGE("")
 MESSAGE(STATUS "Checking for avidemux development files ..")
 
+LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 IF(NOT FAKEROOT)
   SET(AVIDEMUX_FAKEROOT "")
 ELSE()
   SET(AVIDEMUX_FAKEROOT "${FAKEROOT}")
 ENDIF()
-
-# Locate commonCmakeApplication.cmake
+INCLUDE(avidemux_plugin_api)
 SET(ADM_HEADER_DIR ${AVIDEMUX_FAKEROOT}${CMAKE_INSTALL_PREFIX}/include/avidemux/${AVIDEMUX_API_VERSION})
 SET(ADM_CMAKE_DIR  ${ADM_HEADER_DIR}/cmake)
-SET(CMAKE_MODULE_PATH "${ADM_CMAKE_DIR}" "${ORIGINAL_CMAKE_MODULE_PATH}")
-MESSAGE(STATUS  "Checking for avidemux include folder (i.e. CMAKE_INSTALL_PREFIX/include/avidemux/${AVIDEMUX_API_VERSION}, looking in ${ADM_HEADER_DIR}")
+LIST(APPEND CMAKE_MODULE_PATH ${ADM_CMAKE_DIR})
+#
+# Sanity check
+#
+MESSAGE(STATUS  "Checking if avidemux include folder exists as  ${ADM_HEADER_DIR}")
+MESSAGE(STATUS  "  ( CMAKE_INSTALL_PREFIX/include/avidemux/${AVIDEMUX_API_VERSION}")
 IF(NOT EXISTS "${ADM_HEADER_DIR}")
   MESSAGE(STATUS  "Make sure you installed all the files.\n i cannot find avidemux include folder.cmake .\nSet CMAKE_INSTALL_PREFIX to the install folder, current value is ${CMAKE_INSTALL_PREFIX}")
   MESSAGE(FATAL_ERROR  "Aborting")
@@ -40,33 +39,55 @@ IF(NOT EXISTS "${ADM_CMAKE_DIR}/commonCmakeApplication.cmake")
   MESSAGE(STATUS  "I was looking for commonCmakeApplication.cmake in  ${ADM_CMAKE_DIR}")
   MESSAGE(FATAL_ERROR  "Aborting")
 ENDIF()
-MESSAGE(STATUS "Found cmake subfolder.good.")
+MESSAGE(STATUS "Found cmake subfolder. good.")
 
+#
+# Go
+#
+INCLUDE(avidemuxVersion)
+MESSAGE(STATUS "Building agains version ${AVIDEMUX_VERSION}.")
 
-# # # # # # # # # # # # # # # # # # # # # ###################
+IF(WIN32)
+  IF(MSVC)
+    INCLUDE(adm_win32_vs.cmake)
+  ELSE()
+    INCLUDE(adm_win32_mingw.cmake)
+  ENDIF()
+ELSE()
+  IF(APPLE)
+    # Silence missing nullability specifier warnings on macOS
+    SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-nullability-completeness")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-nullability-completeness")
+    INCLUDE(adm_osx.cmake)
+  ELSE()
+    INCLUDE(adm_default)
+  ENDIF()
+ENDIF()
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # ##############
 # Where is the top dir ?
-# # # # # # # # # # # # # # # # # # # # # ###################
+# # # # # # # # # # # # # # # # # # # # # # # # # # ##############
 
 # Common definitions...
 INCLUDE(commonCmakeApplication)
 
-# # # # # # # # # # # # # # # # # # # # # ###################
+# # # # # # # # # # # # # # # # # # # # # # # # # # ##############
 # Add include dirs
-# # # # # # # # # # # # # # # # # # # # # ###################
+# # # # # # # # # # # # # # # # # # # # # # # # # # ##############
 SET(AVIDEMUX_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}")
 MARK_AS_ADVANCED(AVIDEMUX_INSTALL_DIR)
 INCLUDE(admInstallDir)
 
-# # # # # # # # # # # # # # # # # # # # # ####################
+# # # # # # # # # # # # # # # # # # # # # # # # # # ###############
 # Get regular stuff from main app
-# # # # # # # # # # # # # # # # # # # # # ####################
+# # # # # # # # # # # # # # # # # # # # # # # # # # ###############
 INCLUDE(admCoreIncludes)
 LINK_DIRECTORIES("${AVIDEMUX_SEARCH_LIB_DIR}")
 INCLUDE_DIRECTORIES("${AVIDEMUX_SEARCH_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}")
 
-# # # # # # # # # # # # # # # # # # # # # ####################
+# # # # # # # # # # # # # # # # # # # # # # # # # # ###############
 # Unbundle some libraries here
-# # # # # # # # # # # # # # # # # # # # # ####################
+# # # # # # # # # # # # # # # # # # # # # # # # # # ###############
 OPTION(USE_EXTERNAL_LIBASS "Use system installed libass library." OFF)
 OPTION(USE_EXTERNAL_LIBMAD "Use system installed libmad library." OFF)
 OPTION(USE_EXTERNAL_LIBA52 "Use system installed liba52 library." OFF)
@@ -96,27 +117,27 @@ ENDIF()
 
 # libmp4v2
 #IF(USE_EXTERNAL_MP4V2)
-  #FIND_PATH(MP4V2_INCLUDE_DIR mp4v2/mp4v2.h)
-  #FIND_LIBRARY(MP4V2_LIBRARIES mp4v2)
-  #INCLUDE_DIRECTORIES(SYSTEM ${MP4V2_INCLUDE_DIR})
+#FIND_PATH(MP4V2_INCLUDE_DIR mp4v2/mp4v2.h)
+#FIND_LIBRARY(MP4V2_LIBRARIES mp4v2)
+#INCLUDE_DIRECTORIES(SYSTEM ${MP4V2_INCLUDE_DIR})
 #ENDIF()
 
 IF(FRESH_BUILD)
   MESSAGE("")
 ENDIF()
-# # # # # # # # # # # # # # # # # # # # # ###################
+# # # # # # # # # # # # # # # # # # # # # # # # # # ##############
 # retrieve core config, needed to get USE_VDPAU and friends
-# # # # # # # # # # # # # # # # # # # # # ###################
+# # # # # # # # # # # # # # # # # # # # # # # # # # ##############
 INCLUDE(ADM_coreConfig)
 
-# # # # # # # # # # # # # # # # # # # # # ###################
+# # # # # # # # # # # # # # # # # # # # # # # # # # ##############
 # Global options
-# # # # # # # # # # # # # # # # # # # # # ###################
+# # # # # # # # # # # # # # # # # # # # # # # # # # ##############
 OPTION(VERBOSE "" OFF)
 
-# # # # # # # # # # # # # # # # # # # # # ###################
+# # # # # # # # # # # # # # # # # # # # # # # # # # ##############
 # Select our UI
-# # # # # # # # # # # # # # # # # # # # # ###################
+# # # # # # # # # # # # # # # # # # # # # # # # # # ##############
 SET(DO_GTK    0)
 SET(DO_QT4    0)
 SET(DO_COMMON 0)
@@ -158,9 +179,9 @@ ENDIF()
 MESSAGE(STATUS "Plugin UI : ${PLUGIN_UI}")
 MESSAGE("")
 
-# # # # # # # # # # # # # # # # # # # # # ###################
+# # # # # # # # # # # # # # # # # # # # # # # # # # ##############
 # Check for UI libraries
-# # # # # # # # # # # # # # # # # # # # # ###################
+# # # # # # # # # # # # # # # # # # # # # # # # # # ##############
 MACRO(CHECK_ADM_CONFIG_H flavor result)
   MESSAGE(STATUS "Checking for avidemux/${flavor} includes and lib...")
   MESSAGE(STATUS "It should be ${AVIDEMUX_SEARCH_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/${flavor}/config.h")
@@ -249,9 +270,9 @@ ENDIF()
 
 APPEND_SUMMARY_LIST("User Interface" "CLI" "${DO_CLI}")
 
-# # # # # # # # # # # # # # # # # # # # # ###################
+# # # # # # # # # # # # # # # # # # # # # # # # # # ##############
 # Actual work to do..
-# # # # # # # # # # # # # # # # # # # # # ###################
+# # # # # # # # # # # # # # # # # # # # # # # # # # ##############
 IF(DO_COMMON)
   ADD_SUBDIRECTORY(ADM_audioDecoders)
   ADD_SUBDIRECTORY(ADM_audioDevices)
@@ -286,9 +307,9 @@ IF(DO_QT4)
   #ENDIF()
 ENDIF()
 
-# # # # # # # # # # # # # # # # # # # # # ###################
+# # # # # # # # # # # # # # # # # # # # # # # # # # ##############
 # Config Summary
-# # # # # # # # # # # # # # # # # # # # # ###################
+# # # # # # # # # # # # # # # # # # # # # # # # # # ##############
 DISPLAY_SUMMARY_LIST()
 
 INCLUDE(admPackager)

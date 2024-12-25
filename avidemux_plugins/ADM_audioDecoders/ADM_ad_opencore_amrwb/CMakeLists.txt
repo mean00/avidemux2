@@ -2,7 +2,7 @@
 INCLUDE(admCheckOpencore)
 checkOpencoreAmrwb()
 
-IF (OPENCORE_AMRWB_FOUND)
+IF(OPENCORE_AMRWB_FOUND)
   INCLUDE(ad_plugin)
 
   SET(ADM_ad_opencore_amrwb_SRCS ADM_ad_opencore_amrwb.cpp)
@@ -14,4 +14,4 @@ IF (OPENCORE_AMRWB_FOUND)
 
   INIT_AUDIO_PLUGIN(ADM_ad_opencore_amrwb)
   INSTALL_AUDIODECODER(ADM_ad_opencore_amrwb)
-ENDIF (OPENCORE_AMRWB_FOUND)
+ENDIF()
