@@ -38,8 +38,8 @@
 #include "ADM_default.h"
 #include "ADM_edit.hxx"
 #include "ADM_preview.h"
-#include "ADM_render/GUI_render.h"
 #include "DIA_coreToolkit.h"
+#include "GUI_render.h"
 
 extern uint8_t UI_getPhysicalScreenSize(void *window, uint32_t *w, uint32_t *h);
 // static void                 previewBlit(ADMImage *from,ADMImage *to,uint32_t startx,uint32_t starty);

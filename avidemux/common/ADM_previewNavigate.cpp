@@ -1,24 +1,24 @@
 /***************************************************************************
-    
+
     Handle preview mode
-    
+
     It is displayed in 3 layers
-    
-    
+
+
     Engine : Call setPreviewMode and amdPreview depending on the actions
             previewMode is the **current** preview mode
-    
-    admPreview : 
+
+    admPreview :
           Allocate/desallocate ressources
           Build preview window
           Call display properly to display it
-          
+
     GUI_PreviewXXXX
           UI toolkit to actually display the window
           See GUI_ui.h to see them
-                 
-    
-    
+
+
+
     copyright            : (C) 2007 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
@@ -36,14 +36,14 @@
 
 #include "ADM_default.h"
 #include "ADM_edit.hxx"
-#include "ADM_render/GUI_render.h"
+#include "GUI_render.h"
 
 #include "ADM_commonUI/GUI_ui.h"
 #include "ADM_preview.h"
 
 #include "DIA_coreToolkit.h"
 
-#define MAX(a,b) ( (a)>(b) ? (a) : (b) )
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 /*************************************/
 /*************************************/
@@ -54,21 +54,22 @@ extern ADM_Composer *video_body;
 */
 uint64_t admPreview::getCurrentPts(void)
 {
-        if(rdrImage) return rdrImage->Pts;
-        return 0LL;
+    if (rdrImage)
+        return rdrImage->Pts;
+    return 0LL;
 }
 /**
       \fn admPreview::seekToTime
       \brief Seek to any given frame
-      
-      @param timeframe Time of the image 
+
+      @param timeframe Time of the image
 */
 
 bool admPreview::seekToTime(uint64_t timeframe)
 {
-    if(!video_body->goToTimeVideo(timeframe)) 
+    if (!video_body->goToTimeVideo(timeframe))
     {
-        ADM_warning(" seeking for frame at %" PRIu64" ms failed\n",timeframe/1000LL);
+        ADM_warning(" seeking for frame at %" PRIu64 " ms failed\n", timeframe / 1000LL);
         return false;
     }
     return samePicture();
@@ -76,18 +77,18 @@ bool admPreview::seekToTime(uint64_t timeframe)
 /**
       \fn admPreview::seekToIntraPts
       \brief Seek to intra at PTS given as arg
-      
-      @param timeframe Time of the image 
+
+      @param timeframe Time of the image
 */
 
 bool admPreview::seekToIntraPts(uint64_t timeframe)
 {
-    uint64_t pts=getCurrentPts();
-    if(timeframe==pts)
+    uint64_t pts = getCurrentPts();
+    if (timeframe == pts)
         return true;
-    if(!video_body->goToIntraTimeVideo(timeframe)) 
+    if (!video_body->goToIntraTimeVideo(timeframe))
     {
-        ADM_warning(" seeking for frame at %" PRIu64" ms failed\n",timeframe/1000LL);
+        ADM_warning(" seeking for frame at %" PRIu64 " ms failed\n", timeframe / 1000LL);
         return false;
     }
     return samePicture();
@@ -97,7 +98,8 @@ bool admPreview::seekToIntraPts(uint64_t timeframe)
 */
 uint8_t admPreview::samePicture(void)
 {
-    if(!video_body->samePicture(rdrImage)) return false;
+    if (!video_body->samePicture(rdrImage))
+        return false;
     return updateImage();
 }
 /**
@@ -109,9 +111,10 @@ uint8_t admPreview::samePicture(void)
 
 uint8_t admPreview::nextPicture(void)
 {
-   
-   if(!video_body->nextPicture(rdrImage)) return 0;
-   return updateImage();
+
+    if (!video_body->nextPicture(rdrImage))
+        return 0;
+    return updateImage();
 }
 
 /**
@@ -123,7 +126,8 @@ uint8_t admPreview::nextPicture(void)
 
 uint8_t admPreview::previousPicture(void)
 {
-    if(!video_body->previousPicture(rdrImage)) return 0;
+    if (!video_body->previousPicture(rdrImage))
+        return 0;
     return updateImage();
 }
 /**
@@ -132,14 +136,14 @@ uint8_t admPreview::previousPicture(void)
 */
 bool admPreview::nextKeyFrame(void)
 {
-    uint64_t pts=getCurrentPts();
-    ADM_info("Current PTS :%" PRId64" ms\n",pts/1000LL);
-    if(false==video_body->getNKFramePTS(&pts))
+    uint64_t pts = getCurrentPts();
+    ADM_info("Current PTS :%" PRId64 " ms\n", pts / 1000LL);
+    if (false == video_body->getNKFramePTS(&pts))
     {
         ADM_warning("Cannot find next keyframe\n");
         return false;
     }
-    ADM_info("next kf PTS :%" PRId64" ms\n",pts/1000LL);
+    ADM_info("next kf PTS :%" PRId64 " ms\n", pts / 1000LL);
     return seekToIntraPts(pts);
 }
 /**
@@ -148,14 +152,14 @@ bool admPreview::nextKeyFrame(void)
 */
 bool admPreview::previousKeyFrame(void)
 {
-    uint64_t pts=getCurrentPts();
-    ADM_info("Current PTS :%" PRId64" ms\n",pts/1000LL);
-    if(false==video_body->getPKFramePTS(&pts))
+    uint64_t pts = getCurrentPts();
+    ADM_info("Current PTS :%" PRId64 " ms\n", pts / 1000LL);
+    if (false == video_body->getPKFramePTS(&pts))
     {
         ADM_warning("Cannot find previous keyframe\n");
         return false;
     }
-    ADM_info("next kf PTS :%" PRId64" ms\n",pts/1000LL);
+    ADM_info("next kf PTS :%" PRId64 " ms\n", pts / 1000LL);
     return seekToIntraPts(pts);
 }
 // EOF
