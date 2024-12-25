@@ -18,7 +18,7 @@ default_install_prefix="/usr"
 qt_ext=Qt5
 QT_FLAVOR="-DENABLE_QT5=True"
 COMPILER=""
-export QT_SELECT=6 # default for ubuntu, harmless for others
+export QT_SELECT=5 # default for ubuntu, harmless for others
 install_prefix="$default_install_prefix"
 # -lc is required to build libADM_ae_lav* audio encoder plugins on 32 bit ubuntu
 need_ae_lav_build_quirk=""
