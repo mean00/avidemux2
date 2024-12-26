@@ -12,6 +12,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
+#include "config.h"
+//
 #include "ADM_coreDemuxer.h"
 #include "ADM_coreVideoFilterFunc.h"
 #include "ADM_crashdump.h"
@@ -25,7 +27,6 @@
 #include "ADM_threads.h"
 #include "ADM_win32.h"
 #include "DIA_uiTypes.h"
-#include "config.h"
 
 #define __DECLARE__
 #include "avi_vars.h"
