@@ -78,7 +78,7 @@ MACRO(ADM_INSTALL_INCLUDE_FOLDER folder targetName)
     DESTINATION ${AVIDEMUX_INSTALL_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/${targetName}
     COMPONENT dev
     FILES_MATCHING PATTERN "*.h*"
-             PATTERN  "*.asm"
+    PATTERN  "*.asm"
   )
 ENDMACRO()
 # #

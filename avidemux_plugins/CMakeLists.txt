@@ -64,30 +64,30 @@ ELSE()
   ENDIF()
 ENDIF()
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # ##############
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Where is the top dir ?
-# # # # # # # # # # # # # # # # # # # # # # # # # # ##############
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # Common definitions...
 INCLUDE(commonCmakeApplication)
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # ##############
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Add include dirs
-# # # # # # # # # # # # # # # # # # # # # # # # # # ##############
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 SET(AVIDEMUX_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}")
 MARK_AS_ADVANCED(AVIDEMUX_INSTALL_DIR)
 INCLUDE(admInstallDir)
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # ###############
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Get regular stuff from main app
-# # # # # # # # # # # # # # # # # # # # # # # # # # ###############
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 INCLUDE(admCoreIncludes)
 LINK_DIRECTORIES("${AVIDEMUX_SEARCH_LIB_DIR}")
 INCLUDE_DIRECTORIES("${AVIDEMUX_SEARCH_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}")
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # ###############
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Unbundle some libraries here
-# # # # # # # # # # # # # # # # # # # # # # # # # # ###############
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 OPTION(USE_EXTERNAL_LIBASS "Use system installed libass library." OFF)
 OPTION(USE_EXTERNAL_LIBMAD "Use system installed libmad library." OFF)
 OPTION(USE_EXTERNAL_LIBA52 "Use system installed liba52 library." OFF)
@@ -125,19 +125,19 @@ ENDIF()
 IF(FRESH_BUILD)
   MESSAGE("")
 ENDIF()
-# # # # # # # # # # # # # # # # # # # # # # # # # # ##############
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # retrieve core config, needed to get USE_VDPAU and friends
-# # # # # # # # # # # # # # # # # # # # # # # # # # ##############
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 INCLUDE(ADM_coreConfig)
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # ##############
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Global options
-# # # # # # # # # # # # # # # # # # # # # # # # # # ##############
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 OPTION(VERBOSE "" OFF)
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # ##############
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Select our UI
-# # # # # # # # # # # # # # # # # # # # # # # # # # ##############
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 SET(DO_GTK    0)
 SET(DO_QT4    0)
 SET(DO_COMMON 0)
@@ -179,9 +179,9 @@ ENDIF()
 MESSAGE(STATUS "Plugin UI : ${PLUGIN_UI}")
 MESSAGE("")
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # ##############
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Check for UI libraries
-# # # # # # # # # # # # # # # # # # # # # # # # # # ##############
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 MACRO(CHECK_ADM_CONFIG_H flavor result)
   MESSAGE(STATUS "Checking for avidemux/${flavor} includes and lib...")
   MESSAGE(STATUS "It should be ${AVIDEMUX_SEARCH_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/${flavor}/config.h")
@@ -267,12 +267,12 @@ IF(DO_CLI)
 
   MESSAGE("")
 ENDIF()
-
+#
 APPEND_SUMMARY_LIST("User Interface" "CLI" "${DO_CLI}")
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # ##############
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Actual work to do..
-# # # # # # # # # # # # # # # # # # # # # # # # # # ##############
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 IF(DO_COMMON)
   ADD_SUBDIRECTORY(ADM_audioDecoders)
   ADD_SUBDIRECTORY(ADM_audioDevices)
@@ -307,11 +307,26 @@ IF(DO_QT4)
   #ENDIF()
 ENDIF()
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # ##############
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Config Summary
-# # # # # # # # # # # # # # # # # # # # # # # # # # ##############
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 DISPLAY_SUMMARY_LIST()
-
+MACRO(ADD_DUMMY condt flder)
+  IF(${${condt}})  # # Do a dummy install in case there is nothing...
+    MESSAGE(STATUS "Adding dummy install file (${condt}:${${condt}})")
+    INSTALL(FILES cmake/FindAlsa.cmake
+    DESTINATION ${AVIDEMUX_INSTALL_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR}/dummy_${flder}
+    COMPONENT runtime
+  )
+  ENDIF()
+ENDMACRO()
+#
+MESSAGE(STATUS "Adding dummy installation files")
+ADD_DUMMY(DO_CLI cli)
+ADD_DUMMY(DO_GTK gtk)
+ADD_DUMMY(DO_QT4 qt4)
+ADD_DUMMY(DO_SETTING settings)
+#
 INCLUDE(admPackager)
 admPackager(pluginsPackage)
 MESSAGE("")
