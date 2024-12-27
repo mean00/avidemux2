@@ -1,8 +1,5 @@
 #
-#include(BundleUtilities)
-
 #
-SET(bundle avidemux3_${QT_EXTENSION})
 #
 MACRO(ADM_PREBUILD)
   LIST(APPEND PlatformLibs   "-lm -lstdc++")

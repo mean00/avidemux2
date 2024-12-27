@@ -12,7 +12,7 @@ ENDIF()
 # To get icons etc..
 LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_CURRENT_SOURCE_DIR}/../qt4/cmake )
 #probably not needed
-LIST(APPEND CMAKE_MODULE_PATH ${AVIDEMUX_FAKEROOT}${CMAKE_INSTALL_PREFIX}/include/avidemux/${AVIDEMUX_API_VERSION}/cmake)
+LIST(APPEND CMAKE_MODULE_PATH ${AVIDEMUX_FAKEROOT}${CMAKE_INSTALL_PREFIX}/include/avidemux/${AVIDEMUX_API_VERSION}/cmake ${ADM_CMAKE_DIR})
 #
 # Can we instead propagate vars set during the build?
 INCLUDE(admConfigHelper)
@@ -56,12 +56,15 @@ ENDIF()
 
 #
 MESSAGE(STATUS "* Creating Skeleton *")
-FILE(COPY  "${ORIGINAL}/Contents/MacOS/Avidemux${AVIDEMUX_MAJOR_MINOR}" DESTINATION "${BUNDLE}/Contents/MacOS/")
+# Quick Hack...
+FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/../qt4/ADM_userInterfaces/ADM_gui/pics/avidemux.icns"
+  DESTINATION "${ORIGINAL}/Contents/Resources/avidemux.icns")
+FILE(COPY "${ORIGINAL}/Contents/MacOS/Avidemux${AVIDEMUX_MAJOR_MINOR}" DESTINATION "${BUNDLE}/Contents/MacOS/")
 # Copy jobs and cli too
-FILE(COPY  "${ORIGINAL}/Contents/Resources/bin/avidemux_cli"          DESTINATION "${BUNDLE}/Contents/MacOS/")
-FILE(COPY  "${ORIGINAL}/Contents/Resources/bin/avidemux_jobs"         DESTINATION "${BUNDLE}/Contents/MacOS/")
-FILE(COPY  "${ORIGINAL}/Contents/Info.plist"                          DESTINATION "${BUNDLE}/Contents/")
-FILE(COPY  "${ORIGINAL}/Contents/Resources/lib"                       DESTINATION "${BUNDLE}/Contents/Resources/")
+FILE(COPY "${ORIGINAL}/Contents/Resources/bin/avidemux_cli"          DESTINATION "${BUNDLE}/Contents/MacOS/")
+FILE(COPY "${ORIGINAL}/Contents/Resources/bin/avidemux_jobs"         DESTINATION "${BUNDLE}/Contents/MacOS/")
+FILE(COPY "${ORIGINAL}/Contents/Info.plist"                          DESTINATION "${BUNDLE}/Contents/")
+FILE(COPY "${ORIGINAL}/Contents/Resources/lib"                       DESTINATION "${BUNDLE}/Contents/Resources/")
 
 INCLUDE(linkMacro)
 

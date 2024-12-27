@@ -59,9 +59,9 @@ ELSE()
     # Silence missing nullability specifier warnings on macOS
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-nullability-completeness")
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-nullability-completeness")
-    INCLUDE(adm_osx.cmake)
+    INCLUDE(adm_osx_qt)
   ELSE()
-    INCLUDE(adm_default.cmake)
+    INCLUDE(adm_default)
   ENDIF()
 ENDIF()
 #-----------------------------------

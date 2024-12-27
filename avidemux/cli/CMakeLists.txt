@@ -21,11 +21,12 @@ INCLUDE(avidemux_cli_api)
 SET(ADM_HEADER_DIR ${AVIDEMUX_FAKEROOT}${CMAKE_INSTALL_PREFIX}/include/avidemux/${AVIDEMUX_API_VERSION})
 SET(ADM_CMAKE_DIR  ${ADM_HEADER_DIR}/cmake)
 LIST(APPEND CMAKE_MODULE_PATH ${ADM_CMAKE_DIR})
+MESSAGE(STATUS  "Cmake search folder : ${CMAKE_MODULE_PATH}")
 #
 # Sanity check
 #
 MESSAGE(STATUS  "Checking if avidemux include folder exists as  ${ADM_HEADER_DIR}")
-MESSAGE(STATUS  "  ( CMAKE_INSTALL_PREFIX/include/avidemux/${AVIDEMUX_API_VERSION}")
+MESSAGE(STATUS  "  ( CMAKE_INSTALL_PREFIX/include/avidemux/${AVIDEMUX_API_VERSION})")
 IF(NOT EXISTS "${ADM_HEADER_DIR}")
   MESSAGE(STATUS  "Make sure you installed all the files.\n i cannot find avidemux include folder.cmake .\nSet CMAKE_INSTALL_PREFIX to the install folder, current value is ${CMAKE_INSTALL_PREFIX}")
   MESSAGE(FATAL_ERROR  "Aborting")
@@ -59,9 +60,9 @@ ELSE()
     # Silence missing nullability specifier warnings on macOS
     SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-nullability-completeness")
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-nullability-completeness")
-    INCLUDE(adm_osx.cmake)
+    INCLUDE(adm_osx)
   ELSE()
-    INCLUDE(adm_default.cmake)
+    INCLUDE(adm_default)
   ENDIF()
 ENDIF()
 #-----------------------------------
