@@ -88,7 +88,7 @@ MACRO(convertPathToUnix pathVariableName bashExecutable)
     GET_FILENAME_COMPONENT(directory ${${pathVariableName}} PATH)
     GET_FILENAME_COMPONENT(fileName ${${pathVariableName}} NAME)
 
-    EXECUTE_PROCESS(command ${bashExecutable} -c "echo $PWD" WORKING_DIRECTORY "${directory}"
+    EXECUTE_PROCESS(COMMAND ${bashExecutable} -c "echo $PWD" WORKING_DIRECTORY "${directory}"
             OUTPUT_VARIABLE ${pathVariableName})
 
     STRING(REGEX REPLACE "(\r?\n)+$" "" ${pathVariableName} "${${pathVariableName}}")

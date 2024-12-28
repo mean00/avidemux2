@@ -6,13 +6,10 @@ SET(ADM_LIB ADM_core6)
 ADM_ADD_SHARED_LIBRARY(ADM_core6)
 
 # This should be the only place we directly link/include pthread
-find_package(Threads REQUIRED)
-TARGET_LINK_LIBRARIES(${ADM_LIB} PUBLIC Threads::Threads)
-
-TARGET_INCLUDE_DIRECTORIES(ADM_core6 PUBLIC "${PTHREAD_INCLUDE_DIR}")
-ADM_LINK_THREAD(ADM_core6)
+INCLUDE(admCheckThreads) # half baked workaround for VC++
 TARGET_LINK_LIBRARIES(ADM_core6 PUBLIC ADM_libavutil)
 TARGET_LINK_LIBRARIES(ADM_core6 PUBLIC adm_gettext)
+TARGET_LINK_LIBRARIES(ADM_core6 PUBLIC adm_pthread)
 
 TARGET_SOURCES(${ADM_LIB} PRIVATE
   ADM_cpuCap.cpp  ADM_memsupport.cpp  ADM_threads.cpp
@@ -84,5 +81,4 @@ ENDIF()
 REMOVE_DEFINITIONS(-DHAVE_CONFIG_H)
 
 # To get the CPU functions of libavutil
-ADM_LINK_THREAD(ADM_core6)
 ADM_INSTALL_LIB(ADM_core6)

@@ -165,7 +165,6 @@ ENDIF()
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Executable
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-INCLUDE_DIRECTORIES("${PTHREAD_INCLUDE_DIR}")
 
 ADM_MAIN_APP()
 
@@ -206,6 +205,7 @@ TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE
    ADM_coreAudioDevice6
    ADM_coreVideoEncoder6
    ADM_osSupport6
+   adm_pthread
 )
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
