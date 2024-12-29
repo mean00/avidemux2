@@ -42,8 +42,8 @@ IF(WIN32)
     LINK_DIRECTORIES(${VS_ROOT}/lib)
     LINK_DIRECTORIES(${VS_ROOT}/bin)
     # Add prefix and suffix so that libraries xxx.dll.a can be found
-    SET(CMAKE_FIND_LIBRARY_PREFIXES lib)
-    SET(CMAKE_FIND_LIBRARY_SUFFIXES .lib .dll.a .a)
+    LIST(APPEND CMAKE_FIND_LIBRARY_PREFIXES "" lib)
+    LIST(APPEND CMAKE_FIND_LIBRARY_SUFFIXES .lib .dll.a .a)
   ENDIF()
 ENDIF()
 
@@ -54,9 +54,9 @@ IF(FRESH_BUILD)
   MESSAGE("")
 ENDIF()
 
-# # # # # # # #################################
+# # # # # # # # # ###############################
 # Global options
-# # # # # # # #################################
+# # # # # # # # # ###############################
 OPTION(VERBOSE "" OFF)
 
 IF(NOT CMAKE_BUILD_TYPE)
@@ -66,9 +66,9 @@ ENDIF()
 SET(CMAKE_CXX_VISIBILITY_PRESET hidden)
 SET(CMAKE_VISIBILITY_INLINES_HIDDEN True)
 
-# # # # # # # #################################
+# # # # # # # # # ###############################
 # Avidemux system specific tweaks
-# # # # # # # #################################
+# # # # # # # # # ###############################
 INCLUDE(admDetermineSystem)
 
 # Address sanitizer only works with llvm/clang
@@ -125,9 +125,9 @@ IF(APPLE)
   SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE) # Needed for Qt built with rpath like Qt6 from Homebrew.
 ENDIF()
 
-# # # # # # # #################################
+# # # # # # # # # ###############################
 # Standard Avidemux defines
-# # # # # # # #################################
+# # # # # # # # # ###############################
 # Define internal flags for GTK+ and Qt4 builds.  These are turned off
 # if a showstopper is found.  CLI is automatically assumed as possible
 # since it uses the minimum set of required libraries and CMake will
@@ -140,9 +140,9 @@ INCLUDE(admInstallDir)
 IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
   SET(ADM_DEBUG 1)
 ENDIF()
-# # # # # # # #################################
+# # # # # # # # # ###############################
 # Subversion
-# # # # # # # #################################
+# # # # # # # # # ###############################
 
 MESSAGE("")
 MESSAGE(STATUS "Checking for SCM")
@@ -156,9 +156,9 @@ MESSAGE("")
 INCLUDE(avidemuxVersion)
 
 
-# # # # # # # #################################
+# # # # # # # # # ###############################
 # Check for libraries
-# # # # # # # #################################
+# # # # # # # # # ###############################
 SET(MSG_DISABLE_OPTION "Disabled per request")
 INCLUDE(admCheckRequiredLibs)
 IF(NOT PLUGINS)
@@ -172,9 +172,9 @@ IF(NOT PLUGINS)
   #checkXvba()
 ENDIF()
 
-# # # # # # # #################################
+# # # # # # # # # ###############################
 # Check functions and includes
-# # # # # # # #################################
+# # # # # # # # # ###############################
 IF(NOT SYSTEM_HEADERS_CHECKED)
   MESSAGE(STATUS "Checking system headers")
   MESSAGE(STATUS "***********************")

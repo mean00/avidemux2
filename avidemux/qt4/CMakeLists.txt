@@ -224,7 +224,7 @@ ENDIF()
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # UI Specific
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE ADM_render6 ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${PTHREAD_LIBRARIES})
+TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE ADM_render6 ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY})
 
 TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE ${PlatformLibs})
 
@@ -232,7 +232,6 @@ TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE ${PlatformLibs})
 # i18n
 #
 ADD_SUBDIRECTORY(i18n)
-ADM_LINK_THREAD(avidemux3_${QT_EXTENSION})
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Install
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
