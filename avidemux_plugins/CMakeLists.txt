@@ -2,6 +2,13 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.20)
 SET(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 SET(PLUGINS TRUE)
 
+# for MSVC we use vcpk, it is complicated way of detecting it
+# because we have to do it before PROJECT(...)
+IF(EXISTS "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
+  SET(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
+  MESSAGE(STATUS "Using MSVC VCPKG setup <${CMAKE_TOOLCHAIN_FILE}>")
+ENDIF()
+
 PROJECT(Avidemux_Plugins)
 MESSAGE("")
 MESSAGE("#########################################")
