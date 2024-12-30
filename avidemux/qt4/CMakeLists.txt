@@ -11,6 +11,8 @@ ENDIF()
 
 PROJECT(Avidemux_Qt)
 SET(UI_TYPE ADM_UI_QT4)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 MESSAGE("")
 MESSAGE("#########################################")
 MESSAGE("Configure for Avidemux Qt Started")
@@ -19,6 +21,12 @@ MESSAGE("")
 MESSAGE(STATUS "Checking for avidemux development files ..")
 
 ADD_DEFINITIONS(-DADM_UI_TYPE_BUILD=ADM_UI_QT4)
+
+IF(MSVC)
+  MESSAGE(STATUS "Temporary hack")
+  ADD_COMPILE_OPTIONS(/std:c++17 /Zc:__cplusplus  /permissive- )
+ENDIF()
+
 LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 IF(NOT FAKEROOT)
   SET(AVIDEMUX_FAKEROOT "")
@@ -149,7 +157,7 @@ ELSE()
                                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
   ADD_SUBDIRECTORY(common ./commonQt4)
-endif()
+ENDIF()
 
 # Add misc subdirs
 ADD_SUBDIRECTORY(ADM_UIs ./ADM_UIsQt4)
@@ -209,6 +217,8 @@ TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE
    ADM_shell${QT_LIBRARY_EXTENSION}
    ADM_editor6_interface
    ADM_toolkit6
+   ADM_coreVideoFilter6
+   ADM_internalVideoFilter6
    ADM_coreAudio6
    ADM_coreAudioDevice6
    ADM_coreVideoEncoder6

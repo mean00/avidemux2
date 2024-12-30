@@ -1,7 +1,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.20)
 SET(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 SET(PLUGINS TRUE)
-
+CMAKE_POLICY(SET CMP0177 OLD) 
 # for MSVC we use vcpk, it is complicated way of detecting it
 # because we have to do it before PROJECT(...)
 IF(EXISTS "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
@@ -55,11 +55,11 @@ INCLUDE(avidemuxVersion)
 MESSAGE(STATUS "Building agains version ${AVIDEMUX_VERSION}.")
 
 IF(WIN32)
-  IF(MSVC)
-    INCLUDE(adm_win32_vs.cmake)
-  ELSE()
-    INCLUDE(adm_win32_mingw.cmake)
-  ENDIF()
+  #IF(MSVC)
+  #  INCLUDE(adm_win32_vs.cmake)
+  #ELSE()
+  #  INCLUDE(adm_win32_mingw.cmake)
+  #ENDIF()
 ELSE()
   IF(APPLE)
     # Silence missing nullability specifier warnings on macOS

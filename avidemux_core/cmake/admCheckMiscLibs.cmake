@@ -17,7 +17,7 @@ OPTION(SDL "" ON)
 MESSAGE(STATUS "Checking for SDL>=2 (only for windows)")
 MESSAGE(STATUS "**************************************")
 
-IF(SDL AND WIN32)
+IF(SDL AND WIN32 AND NOT MSVC)
 	FIND_PACKAGE(SDL2)
 	PRINT_LIBRARY_INFO("SDL2" SDL2_FOUND "${SDL2_INCLUDE_DIR}" "${SDL2_LIBRARY}")
 

@@ -26,7 +26,7 @@
     \brief Class that transform Editor API to coreVideoFilter API
 
 */
-class ADM_COREVIDEOFILTER6_EXPORT ADM_videoFilterBridge : public ADM_coreVideoFilter
+class ADM_videoFilterBridge : public ADM_coreVideoFilter
 {
   protected:
     uint64_t startTime, endTime;

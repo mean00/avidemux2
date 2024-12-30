@@ -1,36 +1,37 @@
 #
 MACRO(ADM_PREBUILD)
-      	LIST(APPEND PlatformLibs  Qt5::WinMain)
-ENDMACRO(ADM_PREBUILD)
+  #  LIST(APPEND PlatformLibs  Qt6::WinMain)
+ENDMACRO()
 #
 MACRO(ADM_MAIN_APP)
-        ADD_EXECUTABLE(avidemux3_${QT_EXTENSION} WIN32 ${ADM_EXE_SRCS})
-        set_target_properties(avidemux3_${QT_EXTENSION} PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:WINDOWS /STACK:4000000")
-	set_target_properties(avidemux3_${QT_EXTENSION} PROPERTIES WIN32_EXECUTABLE True)
-        set_property(TARGET avidemux3_${QT_EXTENSION} PROPERTY OUTPUT_NAME avidemux)
-ENDMACRO(ADM_MAIN_APP)
+  ADD_EXECUTABLE(avidemux3_${QT_EXTENSION} WIN32 ${ADM_EXE_SRCS})
+  SET_TARGET_PROPERTIES(avidemux3_${QT_EXTENSION} PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:WINDOWS /STACK:4000000")
+  SET_TARGET_PROPERTIES(avidemux3_${QT_EXTENSION} PROPERTIES WIN32_EXECUTABLE True)
+  SET_PROPERTY(TARGET avidemux3_${QT_EXTENSION} PROPERTY OUTPUT_NAME avidemux)
+ENDMACRO()
 #
 MACRO(ADM_POSTBUILD)
-	ADM_INSTALL_BIN(avidemux3_${QT_EXTENSION})
-        include(./installMsvcRunTime.cmake)
-        include(FindBourne)
-        IF(RELEASE)
-                configure_file(
-                                ${CMAKE_CURRENT_SOURCE_DIR}/../winInstaller/ChangeLog.release 
-                                ${CMAKE_CURRENT_SOURCE_DIR}/../winInstaller/ChangeLog.html
-                                COPYONLY)
-                configure_file(
-                                ${CMAKE_CURRENT_SOURCE_DIR}/../winInstaller/change.css.release
-                                ${CMAKE_CURRENT_SOURCE_DIR}/../winInstaller/change.css
-                                COPYONLY)
-        ELSE(RELEASE)
-                execute_process(
-                        COMMAND ${BASH_EXECUTABLE} genlog.sh
-                        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../winInstaller/
-                        )
-                configure_file(
-                                ${CMAKE_CURRENT_SOURCE_DIR}/../winInstaller/change.css.devbuild
-                                ${CMAKE_CURRENT_SOURCE_DIR}/../winInstaller/change.css
-                                COPYONLY)
-        ENDIF(RELEASE)
-ENDMACRO(ADM_POSTBUILD)
+  ADM_INSTALL_BIN(avidemux3_${QT_EXTENSION})
+  INCLUDE(./installMsvcRunTime.cmake)
+  INCLUDE(FindBourne)
+  SET(SOURCE_FOLDER ${CMAKE_CURRENT_SOURCE_DIR}/../winInstaller/)
+  IF(RELEASE)
+    CONFIGURE_FILE(
+    ${SOURE_FOLDER}/ChangeLog.release
+    ${SOURE_FOLDER}/ChangeLog.html
+    COPYONLY)
+    CONFIGURE_FILE(
+    ${SOURCE_FOLDER}/change.css.release
+    ${SOURCE_FOLDER}/change.css
+    COPYONLY)
+  ELSE()
+    EXECUTE_PROCESS(
+    COMMAND ${BASH_EXECUTABLE} genlog.sh
+    WORKING_DIRECTORY ${SOURCE_FOLDER}
+    )
+    CONFIGURE_FILE(
+    ${SOURCE_FOLDER}/change.css.devbuild
+    ${SOURCE_FOLDER}/change.css
+    COPYONLY)
+  ENDIF()
+ENDMACRO()

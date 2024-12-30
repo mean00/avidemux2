@@ -13,10 +13,10 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************///
+// clang-format off
 #include "config.h"
 
 #if defined(USE_SDL)
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -35,11 +35,14 @@ extern "C"
 #include "SDL2/SDL_syswm.h"
 #endif
 }
-#include "ADM_colorspace.h"
+
 #include "ADM_default.h"
-#include "GUI_accelRender.h"
+
+#include "ADM_colorspace.h"
 #include "GUI_render.h"
+#include "GUI_accelRender.h"
 #include "GUI_sdlRender.h"
+// clang-format on
 
 static int sdlDriverIndex = -1;
 static int sdlSoftwareDriverIndex = 0;

@@ -18,28 +18,29 @@
  ***************************************************************************/
 #include "ADM_default.h"
 #include "BVector.h"
-
+// clang-format off
 extern "C"
 {
 #include "libavcodec/avcodec.h"
-#include "libavutil/hwcontext_dxva2.h"
-#include "libavutil/pixdesc.h"
 #include "libavutil/pixfmt.h"
+#include "libavutil/pixdesc.h"
+#include "libavutil/hwcontext_dxva2.h"
 #define CONFIG_DXVA2 1
 // #include "libavcodec/dxva2_internal.h"
 #include "libavcodec/dxva2.h"
 }
 
-#include "../private_inc/ADM_codecDxva2.h"
 #include "ADM_codec.h"
-#include "ADM_coreDxva2.h"
-#include "ADM_dynamicLoading.h"
 #include "ADM_ffmp43.h"
-#include "ADM_vidMisc.h"
 #include "DIA_coreToolkit.h"
+#include "ADM_dynamicLoading.h"
 #include "GUI_render.h"
 #include "prefs.h"
+#include "ADM_coreDxva2.h"
+#include "../private_inc/ADM_codecDxva2.h"
+#include "ADM_vidMisc.h"
 
+// clang-format on
 static bool dxva2Working = false;
 static int totalSurfaces = 0;
 static int ADM_DXVA2getBuffer(AVCodecContext *avctx, AVFrame *pic, int flags);

@@ -13,24 +13,25 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
-#include "../../qt4/ADM_userInterfaces/ADM_gui/T_preview.h"
+// clang-format off
 #include "ADM_inttype.h" /* must be included prior to Qt headers for VC++ */
+#include "../../qt4/ADM_userInterfaces/ADM_gui/T_preview.h"
 
 #include "ADM_coreD3DApi.h"
+#include "config.h"
 #include "ADM_default.h"
-#include "ADM_threads.h"
 #include "DIA_coreToolkit.h"
-#include "GUI_accelRender.h"
 #include "GUI_render.h"
 #include "GUI_renderInternal.h"
-#include "config.h"
+#include "GUI_accelRender.h"
 
+#include "ADM_threads.h"
 #include "ADM_coreD3D.h"
-#include "ADM_coreDxva2.h"
 #include <d3d9types.h>
 #include <dxva2api.h>
+#include "ADM_coreDxva2.h"
 
+// clang-format on
 #if 0
 #define aprintf printf
 #else
