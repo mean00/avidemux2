@@ -2818,7 +2818,7 @@ int UI_Init(int nargc, char **nargv)
     // Fix video shown as solid black color with OpenGL display and Qt6.
     QApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
 #endif
-#if defined(_WIN32) && ((QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)) && (QT_VERSION <= QT_VERSION_CHECK(6, 0, 0))) : q
+#if defined(_WIN32) && ((QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)) && (QT_VERSION <= QT_VERSION_CHECK(6, 0, 0)))
 
     // Hide unhelpful context help buttons on Windows.
     QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);

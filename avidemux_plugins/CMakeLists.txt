@@ -1,7 +1,9 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.20)
 SET(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 SET(PLUGINS TRUE)
-CMAKE_POLICY(SET CMP0177 OLD) 
+IF(POLICY CMP0177)
+  CMAKE_POLICY(SET CMP0177 OLD)
+ENDIF()
 # for MSVC we use vcpk, it is complicated way of detecting it
 # because we have to do it before PROJECT(...)
 IF(EXISTS "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")

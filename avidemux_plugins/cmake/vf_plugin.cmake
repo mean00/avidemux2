@@ -22,7 +22,7 @@ MACRO(INSTALL_VIDEO_FILTER_INTERNAL _lib _extra)
   IF(NOT MSVC)
     SET(EXTRALIB "m")
   ENDIF()
-  TARGET_LINK_LIBRARIES(${_lib} PRIVATE ADM_core6 ADM_coreUI6 ADM_coreVideoFilter6 ADM_coreImage6 ADM_coreUtils6 ${EXTRALIB})
+  TARGET_LINK_LIBRARIES(${_lib} PRIVATE ADM_core6 ADM_coreUI6 ADM_coreVideoFilter6 ADM_coreImage6 ADM_coreUtils6 adm_pthread ${EXTRALIB})
 ENDMACRO()
 
 # # # # # ######### INSTALL_VIDEO_FILTER ###################"
