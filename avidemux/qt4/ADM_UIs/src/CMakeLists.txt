@@ -76,5 +76,6 @@ TARGET_LINK_LIBRARIES(${ADM_LIB} PRIVATE
     ADM_render6
     ADM_coreVideoFilter6
     ${GL_LIBS}
+	 adm_pthread
 )
 ADM_INSTALL_LIB(${ADM_LIB})
