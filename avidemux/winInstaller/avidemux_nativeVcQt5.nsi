@@ -60,7 +60,7 @@ Section "Avidemux Core" SecCore
     ${File} ${BINARY_FOLDER}\platforms\qminimal.dll  
     ${File} ${BINARY_FOLDER}\platforms\qwindows.dll
     SetOutPath $INSTDIR\styles
-    ${File} ${BINARY_FOLDER}\styles\qwindowsvistastyle.dll
+    #${File} ${BINARY_FOLDER}\styles\qwindowsvistastyle.dll
 
     SetOutPath $INSTDIR
 # adm

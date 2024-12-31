@@ -24,7 +24,7 @@ COPY_QT6_DLL(Network)
 
 # Need the platform one too => TODO
 # Copy vista style too
-INSTALL(FILES "${QT_PLUGINS_DIR}/styles/qwindowsvistastyle.dll" DESTINATION "${AVIDEMUX_BIN_DIR}/styles")
+#INSTALL(FILES "${QT_PLUGINS_DIR}/styles/qwindowsvistastyle.dll" DESTINATION "${AVIDEMUX_BIN_DIR}/styles")
 #
 INSTALL(FILES "${QT_PLUGINS_DIR}/platforms/qminimal.dll" DESTINATION "${AVIDEMUX_BIN_DIR}/platforms")
 INSTALL(FILES "${QT_PLUGINS_DIR}/platforms/qwindows.dll" DESTINATION "${AVIDEMUX_BIN_DIR}/platforms")
