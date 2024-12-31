@@ -21,6 +21,7 @@
 #include "ADM_indexFile.h"
 #include "ADM_ts.h"
 #include "ADM_videoInfoExtractor.h"
+#include "prefs.h"
 
 #define MY_CLASS tsHeader
 #include "ADM_coreDemuxerMpegTemplate.cpp.h"
@@ -36,10 +37,14 @@ uint8_t tsHeader::open(const char *name)
 {
     char *idxName=(char *)malloc(strlen(name)+6);
     uint8_t r=1;
-
+    uint32_t indexingPref = 2;
+    if (!prefs->get(INDEXING_TS_PS_INDEXING, &indexingPref)) indexingPref = 2;
+    if (NULL != getenv("ADM_FORCE_INDEX_TO_FILE") && !strncmp(getenv("ADM_FORCE_INDEX_TO_FILE"), "1", 1))
+        indexingPref = 2;
+    
     sprintf(idxName,"%s.idx2",name);
     ListOfIndexFiles.push_back(idxName);
-    if(!ADM_fileExist(idxName))
+    if(!ADM_fileExist(idxName) || (indexingPref==0))
         r=tsIndexer(name);
     if(r!=ADM_OK)
     {

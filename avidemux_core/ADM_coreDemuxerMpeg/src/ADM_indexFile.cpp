@@ -17,6 +17,7 @@
 #include "ADM_default.h"
 #include "ADM_indexFile.h"
 #include "ctype.h"
+#include "prefs.h"
 /**
 
 */
@@ -120,6 +121,21 @@ dmxToken        *indexFile::searchToken(const char *name)
 
 bool indexFile::open(const char *name)
 {
+    uint32_t indexingPref = 2;
+    if (!prefs->get(INDEXING_TS_PS_INDEXING, &indexingPref)) indexingPref = 2;
+    if (NULL != getenv("ADM_FORCE_INDEX_TO_FILE") && !strncmp(getenv("ADM_FORCE_INDEX_TO_FILE"), "1", 1))
+        indexingPref = 2;
+    
+    if (indexingPref==0)
+    {
+        mFile = mfopen(name,"rt");
+        if(!mFile)
+        {
+            return false;
+        }
+        return true;
+    }
+    
     file=ADM_fopen(name,"rt");
     if(!file)
     {
