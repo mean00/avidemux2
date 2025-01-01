@@ -19,6 +19,7 @@ IF(USE_FREETYPE AND USE_FRIBIDI)
       MESSAGE(FATAL_ERROR "Cant locate libass ! cancelling")
     ENDIF()
     TARGET_LINK_LIBRARIES(ADM_vf_ssa PRIVATE ${LIBASS_LIBRARIES} adm_freetype adm_fontconfig adm_fribidi  ADM_coreSubtitles6)
+    TARGET_LINK_DIRECTORIES(ADM_vf_ssa PRIVATE ${LIBASS_LIBRARY_DIR} ${LIBASS_LIBRARY_DIRS})
     # We force the use of fontconfig
     TARGET_COMPILE_DEFINITIONS(ADM_vf_ssa PRIVATE "USE_FONTCONFIG")
     # Add a simple probe program, only on linux/bsd/...
