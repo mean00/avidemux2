@@ -1,6 +1,4 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.7)
-PROJECT(QTIFW)
-#
 IF(MSVC)
   IF(EXISTS "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
     SET(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
@@ -8,10 +6,18 @@ IF(MSVC)
   ELSE()
     MESSAGE(FATAL_ERROR "VCPKG not setup properly")
   ENDIF()
-  SET(VCPKG_BIN_DIR $ENV{VCPKG_ROOT}/installed/x64-windows/bin)
+ENDIF()
+#
+#
+#
+PROJECT(QTIFW)
+#
+IF(MSVC)
+  SET(VCPKG_BIN_DIR "$ENV{VCPKG_ROOT}/installed/x64-windows/bin")
   # Copy vcpkg runtime dll
   FILE(GLOB dlls   ${VCPKG_BIN_DIR}/*.dll)
-  INSTALL(FILES ${dlls} DESTINATION ${CMAKE_INSTALL_PREFIX})
+  MESSAGE(STATUS "Copying VCPKG files")
+  INSTALL(FILES ${dlls} DESTINATION ${CMAKE_BINARY_DIR}/packages/org.avidemux.run/data)
 ENDIF()
 INCLUDE(../../qt4/cmake/avidemux_qt_api.cmake)
 
@@ -66,8 +72,9 @@ ELSE()
   SET(PREFIX_CMD "wine64")
   SET(ACTUAL_CMD "/opt/QtIFW-3.0.6/bin/binarycreator.exe")
 ENDIF()
+MESSAGE(STATUS "Exec CODE execute_process (COMMAND ${PREFIX_CMD} ${ACTUAL_CMD} -c config/config.xml  -p packages Avidemux_${ADM_VERSION} ${ADM_FLAVOR} ${ADM_EXTRA}RESULT_VARIABLE result ERROR_VARIABLE error_var)")
 
 INSTALL(CODE "MESSAGE(STATUS \"Creating qt installer\")"
-        CODE "execute_process (COMMAND ${PREFIX_CMD} ${ACTUAL_CMD} -c config/config.xml  -p packages \"Avidemux_${ADM_VERSION} ${ADM_FLAVOR} ${ADM_EXTRA}\"
-                            RESULT_VARIABLE result ERROR_VARIABLE error_var)"
+        CODE "execute_process (COMMAND ${PREFIX_CMD} ${ACTUAL_CMD} -c config/config.xml  -p packages \"Avidemux_${ADM_VERSION} ${ADM_FLAVOR} ${ADM_EXTRA}\" RESULT_VARIABLE result ERROR_VARIABLE error_var)"
     )
+MESSAGE(STATUS "Output <${result}> Error  <${error_var}>")
