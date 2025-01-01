@@ -23,7 +23,7 @@ default_install_prefix="/usr"
 qt_ext=Qt6
 QT_FLAVOR="-DENABLE_QT6=True"
 COMPILER=""
-export QT_SELECT=6 # default for ubuntu, harmless for others
+export QT_SELECT=qt6 # default for ubuntu, harmless for others
 install_prefix="$default_install_prefix"
 # -lc is required to build libADM_ae_lav* audio encoder plugins on 32 bit ubuntu
 need_ae_lav_build_quirk=""
@@ -148,7 +148,7 @@ usage() {
   echo "  --with-plugins        : Build plugins (default)"
   echo "  --without-plugins     : Don't build plugins"
   echo "  --enable-qt4          : Try to use Qt4 instead of Qt5"
-  echo "  --enable-qt6          : Try to use Qt6 instead of Qt5"
+  echo "  --enable-qt5          : Try to use Qt5 instead of Qt6"
   echo "  --enable-asan         : Enable Clang/llvm address sanitizer"
   echo "  --with-clang          : Use clang/clang++ as compiler"
   echo "  --with-system-libass  : Use system libass instead of the bundled one"
@@ -250,10 +250,10 @@ while [ $# != 0 ]; do
     export QT_SELECT=4
     qt_ext=Qt4
     ;;
-  --enable-qt6)
-    QT_FLAVOR="-DENABLE_QT6=True"
-    export QT_SELECT=6
-    qt_ext=Qt6
+  --enable-qt5)
+    QT_FLAVOR="-DENABLE_QT5=True"
+    export QT_SELECT=5
+    qt_ext=Qt5
     ;;
   --enable-asan)
     do_asan=1

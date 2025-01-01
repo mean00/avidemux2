@@ -6,9 +6,9 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
-#include "ADM_coreVideoFilter.h"
+// clang-format off
 #include "ADM_default.h"
+#include "ADM_coreVideoFilter.h"
 #include "ADM_vidMisc.h"
 #include "DIA_coreToolkit.h"
 #include "DIA_factory.h"
@@ -16,6 +16,7 @@
 #include "blend_desc.cpp"
 #include <math.h>
 #include <string>
+// clang-format on
 /**
         \class AVDM_BlendFrames
  *      \brief fade video plugin
