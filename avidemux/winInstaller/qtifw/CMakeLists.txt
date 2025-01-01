@@ -66,7 +66,7 @@ CONFIGURE_FILE(${META_DEV}/installscript.qs ${PKG}.dev/meta/installscript.qs  CO
 CONFIGURE_FILE(${META_DEV}/package.xml.in   ${PKG}.dev/meta/package.xml @ONLY)
 #
 IF(MSVC)
-  SET(PREFIX_CMD "binarycreator.exe")
+  SET(PREFIX_CMD "f:/QTIFW/bin/binarycreator.exe")
   SET(ACTUAL_CMD "")
 ELSE()
   SET(PREFIX_CMD "wine64")
