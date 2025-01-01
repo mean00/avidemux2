@@ -32,7 +32,8 @@ Process() {
   SOURCEDIR=$2
   EXTRA="$3"
   DEBUG=""
-  BUILDER="Unix Makefiles"
+  #BUILDER="Unix Makefiles"
+  BUILDER="Ninja"
   echo "**************** $1 *******************"
   if [ "x$debug" = "x1" ]; then
     DEBUG="-DVERBOSE=1 -DCMAKE_BUILD_TYPE=Debug"
@@ -63,13 +64,13 @@ Process() {
     $DEBUG \
     -G "$BUILDER" \
     "$SOURCEDIR" || fail cmakeZ
-  make >/tmp/log${BASE} || fail make
+  ninja >/tmp/log${BASE} || fail make
   if [ -n "$FAKEROOT_DIR" ]; then
     echo "** installing to $FAKEROOT_DIR **"
   else
     echo "** installing to $PREFIX **"
   fi
-  DESTDIR="$FAKEROOT_DIR" make install || fail install
+  DESTDIR="$FAKEROOT_DIR" ninja install || fail install
   popd >/dev/null
 }
 printModule() {
@@ -418,7 +419,7 @@ if [ "x$create_app_bundle" = "x1" ]; then
       $FLAVOR \
       "${SRCTOP}/avidemux/osxInstaller" || fail "cmake"
     echo "** Preparing packaging **"
-    make package
+    ninja package
   fi
 fi
 echo "** ALL DONE **"
