@@ -1,15 +1,15 @@
 ////////////////////////////////////////////////////////////////////////////////
 ///
-/// MMX optimized routines. All MMX optimized functions have been gathered into 
-/// this single source code file, regardless to their class or original source 
-/// code file, in order to ease porting the library to other compiler and 
+/// MMX optimized routines. All MMX optimized functions have been gathered into
+/// this single source code file, regardless to their class or original source
+/// code file, in order to ease porting the library to other compiler and
 /// processor platforms.
 ///
 /// The MMX-optimizations are programmed using MMX compiler intrinsics that
 /// are supported both by Microsoft Visual C++ and GCC compilers, so this file
 /// should compile with both toolsets.
 ///
-/// NOTICE: If using Visual Studio 6.0, you'll need to install the "Visual C++ 
+/// NOTICE: If using Visual Studio 6.0, you'll need to install the "Visual C++
 /// 6.0 processor pack" update to support compiler intrinsic syntax. The update
 /// is available for download at Microsoft Developers Network, see here:
 /// http://msdn.microsoft.com/en-us/vstudio/aa718349.aspx
@@ -55,10 +55,9 @@ using namespace soundtouch;
 //////////////////////////////////////////////////////////////////////////////
 
 #include "TDStretch.h"
-#include <mmintrin.h>
 #include <limits.h>
 #include <math.h>
-
+#include <mmintrin.h>
 
 // Calculates cross correlation of two buffers
 double TDStretchMMX::calcCrossCorr(const short *pV1, const short *pV2, double &dnorm)
@@ -68,16 +67,16 @@ double TDStretchMMX::calcCrossCorr(const short *pV1, const short *pV2, double &d
     __m64 accu, normaccu;
     long corr, norm;
     int i;
-   
-    pVec1 = (__m64*)pV1;
-    pVec2 = (__m64*)pV2;
+
+    pVec1 = (__m64 *)pV1;
+    pVec2 = (__m64 *)pV2;
 
     shifter = _m_from_int(overlapDividerBitsNorm);
     normaccu = accu = _mm_setzero_si64();
 
-    // Process 4 parallel sets of 2 * stereo samples or 4 * mono samples 
+    // Process 4 parallel sets of 2 * stereo samples or 4 * mono samples
     // during each round for improved CPU-level parallellization.
-    for (i = 0; i < channels * overlapLength / 16; i ++)
+    for (i = 0; i < channels * overlapLength / 16; i++)
     {
         __m64 temp, temp2;
 
@@ -89,14 +88,14 @@ double TDStretchMMX::calcCrossCorr(const short *pV1, const short *pV2, double &d
         temp = _mm_add_pi32(_mm_sra_pi32(_mm_madd_pi16(pVec1[0], pVec2[0]), shifter),
                             _mm_sra_pi32(_mm_madd_pi16(pVec1[1], pVec2[1]), shifter));
         temp2 = _mm_add_pi32(_mm_sra_pi32(_mm_madd_pi16(pVec1[0], pVec1[0]), shifter),
-                            _mm_sra_pi32(_mm_madd_pi16(pVec1[1], pVec1[1]), shifter));
+                             _mm_sra_pi32(_mm_madd_pi16(pVec1[1], pVec1[1]), shifter));
         accu = _mm_add_pi32(accu, temp);
         normaccu = _mm_add_pi32(normaccu, temp2);
 
         temp = _mm_add_pi32(_mm_sra_pi32(_mm_madd_pi16(pVec1[2], pVec2[2]), shifter),
                             _mm_sra_pi32(_mm_madd_pi16(pVec1[3], pVec2[3]), shifter));
         temp2 = _mm_add_pi32(_mm_sra_pi32(_mm_madd_pi16(pVec1[2], pVec1[2]), shifter),
-                            _mm_sra_pi32(_mm_madd_pi16(pVec1[3], pVec1[3]), shifter));
+                             _mm_sra_pi32(_mm_madd_pi16(pVec1[3], pVec1[3]), shifter));
         accu = _mm_add_pi32(accu, temp);
         normaccu = _mm_add_pi32(normaccu, temp2);
 
@@ -118,15 +117,15 @@ double TDStretchMMX::calcCrossCorr(const short *pV1, const short *pV2, double &d
 
     if (norm > (long)maxnorm)
     {
-        // modify 'maxnorm' inside critical section to avoid multi-access conflict if in OpenMP mode
-        #pragma omp critical
+// modify 'maxnorm' inside critical section to avoid multi-access conflict if in OpenMP mode
+#pragma omp critical
         if (norm > (long)maxnorm)
         {
             maxnorm = norm;
         }
     }
 
-    // Normalize result by dividing by sqrt(norm) - this step is easiest 
+    // Normalize result by dividing by sqrt(norm) - this step is easiest
     // done using floating point operation
     dnorm = (double)norm;
 
@@ -134,7 +133,6 @@ double TDStretchMMX::calcCrossCorr(const short *pV1, const short *pV2, double &d
     // Note: Warning about the missing EMMS instruction is harmless
     // as it'll be called elsewhere.
 }
-
 
 /// Update cross-correlation by accumulating "norm" coefficient by previously calculated value
 double TDStretchMMX::calcCrossCorrAccumulate(const short *pV1, const short *pV2, double &dnorm)
@@ -144,23 +142,23 @@ double TDStretchMMX::calcCrossCorrAccumulate(const short *pV1, const short *pV2,
     __m64 accu;
     long corr, lnorm;
     int i;
-   
+
     // cancel first normalizer tap from previous round
     lnorm = 0;
-    for (i = 1; i <= channels; i ++)
+    for (i = 1; i <= channels; i++)
     {
         lnorm -= (pV1[-i] * pV1[-i]) >> overlapDividerBitsNorm;
     }
 
-    pVec1 = (__m64*)pV1;
-    pVec2 = (__m64*)pV2;
+    pVec1 = (__m64 *)pV1;
+    pVec2 = (__m64 *)pV2;
 
     shifter = _m_from_int(overlapDividerBitsNorm);
     accu = _mm_setzero_si64();
 
-    // Process 4 parallel sets of 2 * stereo samples or 4 * mono samples 
+    // Process 4 parallel sets of 2 * stereo samples or 4 * mono samples
     // during each round for improved CPU-level parallellization.
-    for (i = 0; i < channels * overlapLength / 16; i ++)
+    for (i = 0; i < channels * overlapLength / 16; i++)
     {
         __m64 temp;
 
@@ -192,7 +190,7 @@ double TDStretchMMX::calcCrossCorrAccumulate(const short *pV1, const short *pV2,
 
     // update normalizer with last samples of this round
     pV1 = (short *)pVec1;
-    for (int j = 1; j <= channels; j ++)
+    for (int j = 1; j <= channels; j++)
     {
         lnorm += (pV1[-j] * pV1[-j]) >> overlapDividerBitsNorm;
     }
@@ -203,11 +201,10 @@ double TDStretchMMX::calcCrossCorrAccumulate(const short *pV1, const short *pV2,
         maxnorm = lnorm;
     }
 
-    // Normalize result by dividing by sqrt(norm) - this step is easiest 
+    // Normalize result by dividing by sqrt(norm) - this step is easiest
     // done using floating point operation
     return (double)corr / sqrt((dnorm < 1e-9) ? 1.0 : dnorm);
 }
-
 
 void TDStretchMMX::clearCrossCorrState()
 {
@@ -215,7 +212,6 @@ void TDStretchMMX::clearCrossCorrState()
     _m_empty();
     //_asm EMMS;
 }
-
 
 // MMX-optimized version of the function overlapStereo
 void TDStretchMMX::overlapStereo(short *output, const short *input) const
@@ -225,30 +221,30 @@ void TDStretchMMX::overlapStereo(short *output, const short *input) const
     __m64 mix1, mix2, adder, shifter;
     int i;
 
-    pVinput  = (const __m64*)input;
-    pVMidBuf = (const __m64*)pMidBuffer;
-    pVdest   = (__m64*)output;
+    pVinput = (const __m64 *)input;
+    pVMidBuf = (const __m64 *)pMidBuffer;
+    pVdest = (__m64 *)output;
 
     // mix1  = mixer values for 1st stereo sample
     // mix1  = mixer values for 2nd stereo sample
     // adder = adder for updating mixer values after each round
-    
-    mix1  = _mm_set_pi16(0, overlapLength,   0, overlapLength);
+
+    mix1 = _mm_set_pi16(0, overlapLength, 0, overlapLength);
     adder = _mm_set_pi16(1, -1, 1, -1);
-    mix2  = _mm_add_pi16(mix1, adder);
+    mix2 = _mm_add_pi16(mix1, adder);
     adder = _mm_add_pi16(adder, adder);
 
     // Overlaplength-division by shifter. "+1" is to account for "-1" deduced in
     // overlapDividerBits calculation earlier.
     shifter = _m_from_int(overlapDividerBitsPure + 1);
 
-    for (i = 0; i < overlapLength / 4; i ++)
+    for (i = 0; i < overlapLength / 4; i++)
     {
         __m64 temp1, temp2;
-                
+
         // load & shuffle data so that input & mixbuffer data samples are paired
-        temp1 = _mm_unpacklo_pi16(pVMidBuf[0], pVinput[0]);     // = i0l m0l i0r m0r
-        temp2 = _mm_unpackhi_pi16(pVMidBuf[0], pVinput[0]);     // = i1l m1l i1r m1r
+        temp1 = _mm_unpacklo_pi16(pVMidBuf[0], pVinput[0]); // = i0l m0l i0r m0r
+        temp2 = _mm_unpackhi_pi16(pVMidBuf[0], pVinput[0]); // = i1l m1l i1r m1r
 
         // temp = (temp .* mix) >> shifter
         temp1 = _mm_sra_pi32(_mm_madd_pi16(temp1, mix1), shifter);
@@ -262,8 +258,8 @@ void TDStretchMMX::overlapStereo(short *output, const short *input) const
         // --- second round begins here ---
 
         // load & shuffle data so that input & mixbuffer data samples are paired
-        temp1 = _mm_unpacklo_pi16(pVMidBuf[1], pVinput[1]);       // = i2l m2l i2r m2r
-        temp2 = _mm_unpackhi_pi16(pVMidBuf[1], pVinput[1]);       // = i3l m3l i3r m3r
+        temp1 = _mm_unpacklo_pi16(pVMidBuf[1], pVinput[1]); // = i2l m2l i2r m2r
+        temp2 = _mm_unpackhi_pi16(pVMidBuf[1], pVinput[1]); // = i3l m3l i3r m3r
 
         // temp = (temp .* mix) >> shifter
         temp1 = _mm_sra_pi32(_mm_madd_pi16(temp1, mix1), shifter);
@@ -274,14 +270,13 @@ void TDStretchMMX::overlapStereo(short *output, const short *input) const
         mix1 = _mm_add_pi16(mix1, adder);
         mix2 = _mm_add_pi16(mix2, adder);
 
-        pVinput  += 2;
+        pVinput += 2;
         pVMidBuf += 2;
-        pVdest   += 2;
+        pVdest += 2;
     }
 
     _m_empty(); // clear MMS state
 }
-
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -291,19 +286,16 @@ void TDStretchMMX::overlapStereo(short *output, const short *input) const
 
 #include "FIRFilter.h"
 
-
 FIRFilterMMX::FIRFilterMMX() : FIRFilter()
 {
     filterCoeffsAlign = NULL;
     filterCoeffsUnalign = NULL;
 }
 
-
 FIRFilterMMX::~FIRFilterMMX()
 {
     delete[] filterCoeffsUnalign;
 }
-
 
 // (overloaded) Calculates filter coefficients for MMX routine
 void FIRFilterMMX::setCoefficients(const short *coeffs, uint newLength, uint uResultDivFactor)
@@ -316,8 +308,8 @@ void FIRFilterMMX::setCoefficients(const short *coeffs, uint newLength, uint uRe
     filterCoeffsUnalign = new short[2 * newLength + 8];
     filterCoeffsAlign = (short *)SOUNDTOUCH_ALIGN_POINTER_16(filterCoeffsUnalign);
 
-    // rearrange the filter coefficients for mmx routines 
-    for (i = 0;i < length; i += 4) 
+    // rearrange the filter coefficients for mmx routines
+    for (i = 0; i < length; i += 4)
     {
         filterCoeffsAlign[2 * i + 0] = coeffs[i + 0];
         filterCoeffsAlign[2 * i + 1] = coeffs[i + 2];
@@ -331,38 +323,38 @@ void FIRFilterMMX::setCoefficients(const short *coeffs, uint newLength, uint uRe
     }
 }
 
-
 // mmx-optimized version of the filter routine for stereo sound
 uint FIRFilterMMX::evaluateFilterStereo(short *dest, const short *src, uint numSamples) const
 {
     // Create stack copies of the needed member variables for asm routines :
     uint i, j;
-    __m64 *pVdest = (__m64*)dest;
+    __m64 *pVdest = (__m64 *)dest;
 
-    if (length < 2) return 0;
+    if (length < 2)
+        return 0;
 
-    for (i = 0; i < (numSamples - length) / 2; i ++)
+    for (i = 0; i < (numSamples - length) / 2; i++)
     {
         __m64 accu1;
         __m64 accu2;
-        const __m64 *pVsrc = (const __m64*)src;
-        const __m64 *pVfilter = (const __m64*)filterCoeffsAlign;
+        const __m64 *pVsrc = (const __m64 *)src;
+        const __m64 *pVfilter = (const __m64 *)filterCoeffsAlign;
 
         accu1 = accu2 = _mm_setzero_si64();
-        for (j = 0; j < lengthDiv8 * 2; j ++)
+        for (j = 0; j < lengthDiv8 * 2; j++)
         {
             __m64 temp1, temp2;
 
-            temp1 = _mm_unpacklo_pi16(pVsrc[0], pVsrc[1]);  // = l2 l0 r2 r0
-            temp2 = _mm_unpackhi_pi16(pVsrc[0], pVsrc[1]);  // = l3 l1 r3 r1
+            temp1 = _mm_unpacklo_pi16(pVsrc[0], pVsrc[1]); // = l2 l0 r2 r0
+            temp2 = _mm_unpackhi_pi16(pVsrc[0], pVsrc[1]); // = l3 l1 r3 r1
 
-            accu1 = _mm_add_pi32(accu1, _mm_madd_pi16(temp1, pVfilter[0]));  // += l2*f2+l0*f0 r2*f2+r0*f0
-            accu1 = _mm_add_pi32(accu1, _mm_madd_pi16(temp2, pVfilter[1]));  // += l3*f3+l1*f1 r3*f3+r1*f1
+            accu1 = _mm_add_pi32(accu1, _mm_madd_pi16(temp1, pVfilter[0])); // += l2*f2+l0*f0 r2*f2+r0*f0
+            accu1 = _mm_add_pi32(accu1, _mm_madd_pi16(temp2, pVfilter[1])); // += l3*f3+l1*f1 r3*f3+r1*f1
 
-            temp1 = _mm_unpacklo_pi16(pVsrc[1], pVsrc[2]);  // = l4 l2 r4 r2
+            temp1 = _mm_unpacklo_pi16(pVsrc[1], pVsrc[2]); // = l4 l2 r4 r2
 
-            accu2 = _mm_add_pi32(accu2, _mm_madd_pi16(temp2, pVfilter[0]));  // += l3*f2+l1*f0 r3*f2+r1*f0
-            accu2 = _mm_add_pi32(accu2, _mm_madd_pi16(temp1, pVfilter[1]));  // += l4*f3+l2*f1 r4*f3+r2*f1
+            accu2 = _mm_add_pi32(accu2, _mm_madd_pi16(temp2, pVfilter[0])); // += l3*f2+l1*f0 r3*f2+r1*f0
+            accu2 = _mm_add_pi32(accu2, _mm_madd_pi16(temp1, pVfilter[1])); // += l4*f3+l2*f1 r4*f3+r2*f1
 
             // accu1 += l2*f2+l0*f0 r2*f2+r0*f0
             //       += l3*f3+l1*f1 r3*f3+r1*f1
@@ -380,10 +372,10 @@ uint FIRFilterMMX::evaluateFilterStereo(short *dest, const short *src, uint numS
         // pack 2*2*32bits => 4*16 bits
         pVdest[0] = _mm_packs_pi32(accu1, accu2);
         src += 4;
-        pVdest ++;
+        pVdest++;
     }
 
-   _m_empty();  // clear emms state
+    _m_empty(); // clear emms state
 
     return (numSamples & 0xfffffffe) - length;
 }
@@ -393,4 +385,4 @@ uint FIRFilterMMX::evaluateFilterStereo(short *dest, const short *src, uint numS
 // workaround to not complain about empty module
 bool _dontcomplain_mmx_empty;
 
-#endif  // SOUNDTOUCH_ALLOW_MMX
+#endif // SOUNDTOUCH_ALLOW_MMX

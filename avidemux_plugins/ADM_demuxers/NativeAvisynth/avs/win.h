@@ -36,19 +36,19 @@
 
 // WWUUT? We require XP now?
 #if !defined(NTDDI_VERSION) && !defined(_WIN32_WINNT)
-  #define NTDDI_VERSION 0x05020000
-  #define _WIN32_WINNT  0x0502
+#define NTDDI_VERSION 0x05020000
+#define _WIN32_WINNT 0x0502
 #endif
 
 #define WIN32_LEAN_AND_MEAN
 #define STRICT
 #if !defined(NOMINMAX)
-    #define NOMINMAX
+#define NOMINMAX
 #endif
 
 #include <windows.h>
 
 // Provision for UTF-8 max 4 bytes per code point
-#define AVS_MAX_PATH MAX_PATH*4
+#define AVS_MAX_PATH MAX_PATH * 4
 
 #endif // AVSCORE_WIN_H

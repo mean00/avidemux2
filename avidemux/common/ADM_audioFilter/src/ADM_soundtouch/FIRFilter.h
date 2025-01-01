@@ -1,8 +1,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 ///
-/// General FIR digital filter routines with MMX optimization. 
+/// General FIR digital filter routines with MMX optimization.
 ///
-/// Note : MMX optimized functions reside in a separate, platform-specific file, 
+/// Note : MMX optimized functions reside in a separate, platform-specific file,
 /// e.g. 'mmx_win.cpp' or 'mmx_gcc.cpp'
 ///
 /// Author        : Copyright (c) Olli Parviainen
@@ -35,17 +35,17 @@
 #ifndef FIRFilter_H
 #define FIRFilter_H
 
-#include <stddef.h>
 #include "STTypes.h"
+#include <stddef.h>
 
 namespace soundtouch
 {
 
-class FIRFilter 
+class FIRFilter
 {
-protected:
+  protected:
     // Number of FIR filter taps
-    uint length;    
+    uint length;
     // Number of FIR filter taps divided by 8
     uint lengthDiv8;
 
@@ -59,82 +59,73 @@ protected:
     SAMPLETYPE *filterCoeffs;
     SAMPLETYPE *filterCoeffsStereo;
 
-    virtual uint evaluateFilterStereo(SAMPLETYPE *dest, 
-                                      const SAMPLETYPE *src, 
-                                      uint numSamples) const;
-    virtual uint evaluateFilterMono(SAMPLETYPE *dest, 
-                                    const SAMPLETYPE *src, 
-                                    uint numSamples) const;
+    virtual uint evaluateFilterStereo(SAMPLETYPE *dest, const SAMPLETYPE *src, uint numSamples) const;
+    virtual uint evaluateFilterMono(SAMPLETYPE *dest, const SAMPLETYPE *src, uint numSamples) const;
     virtual uint evaluateFilterMulti(SAMPLETYPE *dest, const SAMPLETYPE *src, uint numSamples, uint numChannels);
 
-public:
+  public:
     FIRFilter();
     virtual ~FIRFilter();
 
-    /// Operator 'new' is overloaded so that it automatically creates a suitable instance 
+    /// Operator 'new' is overloaded so that it automatically creates a suitable instance
     /// depending on if we've a MMX-capable CPU available or not.
-    static void * operator new(size_t s);
+    static void *operator new(size_t s);
 
     static FIRFilter *newInstance();
 
-    /// Applies the filter to the given sequence of samples. 
-    /// Note : The amount of outputted samples is by value of 'filter_length' 
+    /// Applies the filter to the given sequence of samples.
+    /// Note : The amount of outputted samples is by value of 'filter_length'
     /// smaller than the amount of input samples.
     ///
     /// \return Number of samples copied to 'dest'.
-    uint evaluate(SAMPLETYPE *dest, 
-                  const SAMPLETYPE *src, 
-                  uint numSamples, 
-                  uint numChannels);
+    uint evaluate(SAMPLETYPE *dest, const SAMPLETYPE *src, uint numSamples, uint numChannels);
 
     uint getLength() const;
 
-    virtual void setCoefficients(const SAMPLETYPE *coeffs, 
-                                 uint newLength, 
-                                 uint uResultDivFactor);
+    virtual void setCoefficients(const SAMPLETYPE *coeffs, uint newLength, uint uResultDivFactor);
 };
-
 
 // Optional subclasses that implement CPU-specific optimizations:
 
 #ifdef SOUNDTOUCH_ALLOW_MMX
 
 /// Class that implements MMX optimized functions exclusive for 16bit integer samples type.
-    class FIRFilterMMX : public FIRFilter
-    {
-    protected:
-        short *filterCoeffsUnalign;
-        short *filterCoeffsAlign;
+class FIRFilterMMX : public FIRFilter
+{
+  protected:
+    short *filterCoeffsUnalign;
+    short *filterCoeffsAlign;
 
-        virtual uint evaluateFilterStereo(short *dest, const short *src, uint numSamples) const override;
-    public:
-        FIRFilterMMX();
-        ~FIRFilterMMX();
+    virtual uint evaluateFilterStereo(short *dest, const short *src, uint numSamples) const override;
 
-        virtual void setCoefficients(const short *coeffs, uint newLength, uint uResultDivFactor) override;
-    };
+  public:
+    FIRFilterMMX();
+    ~FIRFilterMMX();
+
+    virtual void setCoefficients(const short *coeffs, uint newLength, uint uResultDivFactor) override;
+};
 
 #endif // SOUNDTOUCH_ALLOW_MMX
 
-
 #ifdef SOUNDTOUCH_ALLOW_SSE
-    /// Class that implements SSE optimized functions exclusive for floating point samples type.
-    class FIRFilterSSE : public FIRFilter
-    {
-    protected:
-        float *filterCoeffsUnalign;
-        float *filterCoeffsAlign;
+/// Class that implements SSE optimized functions exclusive for floating point samples type.
+class FIRFilterSSE : public FIRFilter
+{
+  protected:
+    float *filterCoeffsUnalign;
+    float *filterCoeffsAlign;
 
-        virtual uint evaluateFilterStereo(float *dest, const float *src, uint numSamples) const override;
-    public:
-        FIRFilterSSE();
-        ~FIRFilterSSE();
+    virtual uint evaluateFilterStereo(float *dest, const float *src, uint numSamples) const override;
 
-        virtual void setCoefficients(const float *coeffs, uint newLength, uint uResultDivFactor) override;
-    };
+  public:
+    FIRFilterSSE();
+    ~FIRFilterSSE();
+
+    virtual void setCoefficients(const float *coeffs, uint newLength, uint uResultDivFactor) override;
+};
 
 #endif // SOUNDTOUCH_ALLOW_SSE
 
-}
+} // namespace soundtouch
 
-#endif  // FIRFilter_H
+#endif // FIRFilter_H

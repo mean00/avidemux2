@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-/// 
+///
 /// Linear interpolation routine.
 ///
 /// Author        : Copyright (c) Olli Parviainen
@@ -41,21 +41,18 @@ namespace soundtouch
 /// Linear transposer class that uses integer arithmetic
 class InterpolateLinearInteger : public TransposerBase
 {
-protected:
+  protected:
     int iFract;
     int iRate;
 
-    virtual int transposeMono(SAMPLETYPE *dest, 
-                       const SAMPLETYPE *src, 
-                       int &srcSamples) override;
-    virtual int transposeStereo(SAMPLETYPE *dest, 
-                         const SAMPLETYPE *src, 
-                         int &srcSamples) override;
+    virtual int transposeMono(SAMPLETYPE *dest, const SAMPLETYPE *src, int &srcSamples) override;
+    virtual int transposeStereo(SAMPLETYPE *dest, const SAMPLETYPE *src, int &srcSamples) override;
     virtual int transposeMulti(SAMPLETYPE *dest, const SAMPLETYPE *src, int &srcSamples) override;
-public:
+
+  public:
     InterpolateLinearInteger();
 
-    /// Sets new target rate. Normal rate = 1.0, smaller values represent slower 
+    /// Sets new target rate. Normal rate = 1.0, smaller values represent slower
     /// rate, larger faster rates.
     virtual void setRate(double newRate) override;
 
@@ -67,22 +64,17 @@ public:
     }
 };
 
-
 /// Linear transposer class that uses floating point arithmetic
 class InterpolateLinearFloat : public TransposerBase
 {
-protected:
+  protected:
     double fract;
 
-    virtual int transposeMono(SAMPLETYPE *dest, 
-                       const SAMPLETYPE *src, 
-                       int &srcSamples);
-    virtual int transposeStereo(SAMPLETYPE *dest, 
-                         const SAMPLETYPE *src, 
-                         int &srcSamples);
+    virtual int transposeMono(SAMPLETYPE *dest, const SAMPLETYPE *src, int &srcSamples);
+    virtual int transposeStereo(SAMPLETYPE *dest, const SAMPLETYPE *src, int &srcSamples);
     virtual int transposeMulti(SAMPLETYPE *dest, const SAMPLETYPE *src, int &srcSamples);
 
-public:
+  public:
     InterpolateLinearFloat();
 
     virtual void resetRegisters();
@@ -93,6 +85,6 @@ public:
     }
 };
 
-}
+} // namespace soundtouch
 
 #endif
