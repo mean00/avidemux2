@@ -419,7 +419,7 @@ if [ "x$create_app_bundle" = "x1" ]; then
       $FLAVOR \
       "${SRCTOP}/avidemux/osxInstaller" || fail "cmake"
     echo "** Preparing packaging **"
-    ninja package
+    make package
   fi
 fi
 echo "** ALL DONE **"
