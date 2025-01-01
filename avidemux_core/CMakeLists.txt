@@ -187,8 +187,6 @@ IF(MSVC)
   # install runtimes also
   SET(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION ${AVIDEMUX_BIN_DIR})
   INCLUDE(InstallRequiredSystemLibraries)
-  FILE(GLOB dlls   ${VS_ROOT}/bin/*.dll)
-  INSTALL(FILES ${dlls} DESTINATION ${AVIDEMUX_BIN_DIR})
 ENDIF()
 
 MESSAGE("")

@@ -1,6 +1,18 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.7)
 PROJECT(QTIFW)
 #
+IF(MSVC)
+  IF(EXISTS "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
+    SET(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
+    MESSAGE(STATUS "Using MSVC VCPKG setup <${CMAKE_TOOLCHAIN_FILE}>")
+  ELSE()
+    MESSAGE(FATAL_ERROR "VCPKG not setup properly")
+  ENDIF()
+  SET(VCPKG_BIN_DIR $ENV{VCPKG_ROOT}/installed/x64-windows/bin)
+  # Copy vcpkg runtime dll
+  FILE(GLOB dlls   ${VCPKG_BIN_DIR}/*.dll)
+  INSTALL(FILES ${dlls} DESTINATION ${CMAKE_INSTALL_PREFIX})
+ENDIF()
 INCLUDE(../../qt4/cmake/avidemux_qt_api.cmake)
 
 SET(ADM_HEADER_DIR ${AVIDEMUX_FAKEROOT}${CMAKE_INSTALL_PREFIX}/include/avidemux/${AVIDEMUX_API_VERSION})
@@ -46,7 +58,6 @@ CONFIGURE_FILE(${META}/installscript.js ${PKG}.run/meta/installscript.js   COPYO
 CONFIGURE_FILE(${META}/targetwidget.ui  ${PKG}.run/meta/targetwidget.ui   COPYONLY)
 CONFIGURE_FILE(${META_DEV}/installscript.qs ${PKG}.dev/meta/installscript.qs  COPYONLY)
 CONFIGURE_FILE(${META_DEV}/package.xml.in   ${PKG}.dev/meta/package.xml @ONLY)
-
 #
 IF(MSVC)
   SET(PREFIX_CMD "binarycreator.exe")
