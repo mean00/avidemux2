@@ -216,13 +216,30 @@ bool x265Encoder::setup(void)
                         {
                              param.rc.bStatWrite=1;
                              param.rc.bStatRead=0;
+#if X265_BUILD > 213
+                             if (strlen(logFile) >= X265_MAX_STRING_SIZE)
+                             {
+                                 ADM_error("Logfile filename length %d out of bounds, must be less than %d\n", strlen(logFile), X265_MAX_STRING_SIZE);
+                                 return false;
+                             }
+                             snprintf(param.rc.statFileName, X265_MAX_STRING_SIZE, "%s", logFile);
+#else
                              param.rc.statFileName=strdup(logFile);
- 
+#endif
                         }else
                         {
                              param.rc.bStatWrite=0;
                              param.rc.bStatRead=1;
+#if X265_BUILD > 213
+                             if (strlen(logFile) >= X265_MAX_STRING_SIZE)
+                             {
+                                 ADM_error("Logfile filename length %d out of bounds, must be less than %d\n", strlen(logFile), X265_MAX_STRING_SIZE);
+                                 return false;
+                             }
+                             snprintf(param.rc.statFileName, X265_MAX_STRING_SIZE, "%s", logFile);
+#else
                              param.rc.statFileName=strdup(logFile);
+#endif
                              if(!ADM_fileExist(logFile))
                              {
                                    ADM_error("Logfile %s does not exist \n",logFile);

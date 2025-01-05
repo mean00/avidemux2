@@ -2886,10 +2886,13 @@ uint8_t initGUI(const vector<IScriptEngine *> &scriptEngines)
             qset->clear();
         delete qset;
         qset = NULL;
-        // Probing for OpenGL fails if VU meter is hidden, delay hiding it.
+        // Probing for OpenGL fails if dummyGLWidget parent is hidden.
+        // If VU meter is that parent, delay hiding it.
         vuMeterIsHidden = mw->ui.audioMetreWidget->isHidden();
+#ifdef _WIN32
         if (openglEnabled && vuMeterIsHidden)
             mw->ui.audioMetreWidget->setVisible(true);
+#endif
     }
 
     if (!statusbarHidden)
@@ -2928,8 +2931,14 @@ uint8_t initGUI(const vector<IScriptEngine *> &scriptEngines)
     UI_updateRecentMenu();
     UI_updateRecentProjectMenu();
 
-    // Init vumeter
-    VuMeter = mw->ui.frameVU;
+    // Assign future parent of dummyGLWidget
+    VuMeter =
+#ifdef _WIN32
+    mw->ui.frameVU;
+#else
+    mw->ui.frame_video;
+#endif
+    // Init VU meter
     UI_InitVUMeter(mw->ui.frameVU);
 
 #ifdef USE_OPENGL
@@ -2938,10 +2947,11 @@ uint8_t initGUI(const vector<IScriptEngine *> &scriptEngines)
         ADM_info("OpenGL activated, initializing... \n");
         openGLStarted = true;
         UI_Qt4InitGl();
+    #ifdef _WIN32
         if (vuMeterIsHidden)
             mw->ui.audioMetreWidget->setVisible(false);
-    }
-    else
+    #endif
+    }else
     {
         ADM_info("OpenGL not activated, not initialized\n");
     }
