@@ -168,9 +168,9 @@ echo "Top source dir : \"${SRCTOP}\""
 
 pushd "${SRCTOP}" > /dev/null
 
-export MAJOR=`cat cmake/avidemuxVersion.cmake | grep "VERSION_MAJOR " | sed 's/..$//g' | sed 's/^.*"//g'`
-export MINOR=`cat cmake/avidemuxVersion.cmake | grep "VERSION_MINOR " | sed 's/..$//g' | sed 's/^.*"//g'`
-export PATCH=`cat cmake/avidemuxVersion.cmake | grep "VERSION_P " | sed 's/..$//g' | sed 's/^.*"//g'`
+export MAJOR=`cat avidemux_core/cmake/avidemuxVersion.cmake | grep "VERSION_MAJOR " | sed 's/..$//g' | sed 's/^.*"//g'`
+export MINOR=`cat avidemux_core/cmake/avidemuxVersion.cmake | grep "VERSION_MINOR " | sed 's/..$//g' | sed 's/^.*"//g'`
+export PATCH=`cat avidemux_core/cmake/avidemuxVersion.cmake | grep "VERSION_P " | sed 's/..$//g' | sed 's/^.*"//g'`
 export API_VERSION="${MAJOR}.${MINOR}"
 
 DAT=`date +"%y%m%d-%Hh%Mm"`
@@ -382,10 +382,10 @@ fi
 cd "$BUILDTOP"
 if [ "x$create_app_bundle" = "x1" ] ; then
     mkdir "${PREFIX}/fonts"
-    cp "${SRCTOP}/cmake/osx/fonts.conf" "${PREFIX}/fonts"
+    cp "${SRCTOP}/avidemux/qt4/cmake/osx/fonts.conf" "${PREFIX}/fonts"
     # Copy icons
     echo "Copying icons"
-    cp "${SRCTOP}"/cmake/osx/*.icns "$PREFIX"
+    cp "${SRCTOP}"/avidemux/qt4/cmake/osx/*.icns "$PREFIX"
     mkdir -p "${PREFIX}"/../MacOS
     if [ -d "${PREFIX}"/../PlugIns ]; then
         rm -Rf "${PREFIX}"/../PlugIns
