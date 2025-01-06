@@ -3,7 +3,7 @@ index 07514b5f..bd97be53 100644
 --- a/src/qtbase.mk
 +++ b/src/qtbase.mk
 @@ -8,7 +8,7 @@ $(PKG)_VERSION  := 5.15.15
- $(PKG)_CHECKSUM := e5f941fecf694ecba97c550b45b0634e552166cc6c815bcfdc481edd62796ba1
+ $(PKG)_CHECKSUM := b04815058c18058b6ba837206756a2c87d1391f07a0dcb0dd314f970fd041592
  $(PKG)_SUBDIR   := $(PKG)-everywhere-src-$($(PKG)_VERSION)
  $(PKG)_FILE     := $(PKG)-everywhere-opensource-src-$($(PKG)_VERSION).tar.xz
 -$(PKG)_URL      := https://download.qt.io/archive/qt/5.15/$($(PKG)_VERSION)/submodules/$($(PKG)_FILE)

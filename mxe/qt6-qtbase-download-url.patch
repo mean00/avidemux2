@@ -1,0 +1,13 @@
+diff --git a/src/qt/qt6/qt6-qtbase.mk b/src/qt/qt6/qt6-qtbase.mk
+index e85da836..39133a07 100644
+--- a/src/qt/qt6/qt6-qtbase.mk
++++ b/src/qt/qt6/qt6-qtbase.mk
+@@ -9,7 +9,7 @@ $(PKG)_VERSION  := 6.8.1
+ $(PKG)_CHECKSUM := 40b14562ef3bd779bc0e0418ea2ae08fa28235f8ea6e8c0cb3bce1d6ad58dcaf
+ $(PKG)_SUBDIR   := $(PKG_BASENAME)-everywhere-src-$($(PKG)_VERSION)
+ $(PKG)_FILE     := $(PKG_BASENAME)-everywhere-src-$($(PKG)_VERSION).tar.xz
+-$(PKG)_URL      := https://download.qt.io/archive/qt/6.8/$($(PKG)_VERSION)/submodules/$($(PKG)_FILE)
++$(PKG)_URL      := https://mirrors.dotsrc.org/qtproject/archive/qt/6.8/$($(PKG)_VERSION)/submodules/$($(PKG)_FILE)
+ $(PKG)_TARGETS  := $(BUILD) $(MXE_TARGETS)
+ $(PKG)_DEPS     := cc freetype harfbuzz jpeg libpng mesa openssl pcre2 sqlite zlib zstd $(BUILD)~$(PKG) \
+                    $(if $(findstring shared,$(MXE_TARGETS)), icu4c)

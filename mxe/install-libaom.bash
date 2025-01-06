@@ -97,7 +97,7 @@ fi
 cd "${AOM_HOME}/aom"
 
 if [ "x${AOM_TAG}" = "x" ]; then
-    AOM_TAG="v3.7.0"
+    AOM_TAG="v3.11.0"
 fi
 
 if [ "x${FRESH}" = "x0" ]; then

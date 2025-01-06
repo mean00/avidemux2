@@ -71,19 +71,20 @@ prepare_sources()
     # fdk-aac 2.0.0 --> 2.0.3
     apply_patch fdk-aac
 
-    # libvpx 1.8.2 --> 1.13.1
+    # libvpx 1.8.2 --> 1.14.1
     apply_patch libvpx
 
     # opus 1.3.1 --> 1.5.2
     apply_patch opus
 
-    # x265 3.4 --> 3.6
+    # x265 3.4 --> 4.1
     apply_patch x265
 
     # download.qt.io redirects to the closest mirror, and at least one of the mirrors
     # hosts corrupted files, causing download to hang (which may be a MXE bug).
     # Hardcode a known good mirror.
     apply_patch qtbase-download-url
+    apply_patch qt6-qtbase-download-url
 }
 build_mxe()
 {
@@ -166,6 +167,7 @@ ogg \
 opus \
 qttools \
 qtwinextras \
+qt6-qttools \
 sdl2 \
 vorbis \
 x264 \

@@ -1,13 +1,19 @@
 diff --git a/src/x265-1-fixes.patch b/src/x265-1-fixes.patch
-deleted file mode 100644
-index d996a477..00000000
+index d996a477..2cc3c009 100644
 --- a/src/x265-1-fixes.patch
-+++ /dev/null
-@@ -1,36 +0,0 @@
++++ b/src/x265-1-fixes.patch
+@@ -1,36 +1,43 @@
 -This file is part of MXE. See LICENSE.md for licensing information.
--
++From 87e2c37255cbb97e29fd1c71106272e33a7a93a1 Mon Sep 17 00:00:00 2001
++From: Min Chen <chenm003@163.com>
++Date: Thu, 28 Nov 2024 16:09:28 -0800
++Subject: [PATCH] Fix SEI buffer memory leaks
+ 
 -Contains ad hoc patches for cross building.
--
++---
++ source/encoder/encoder.cpp | 16 ++++++++++++++++
++ 1 file changed, 16 insertions(+)
+ 
 -From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 -From: darealshinji <djcj@gmx.de>
 -Date: Sat, 1 Jul 2017 17:09:40 +0200
@@ -33,13 +39,45 @@ index d996a477..00000000
 -+++ b/source/encoder/encoder.h
 -@@ -33,7 +33,7 @@
 - #include "framedata.h"
-- 
++diff --git a/source/encoder/encoder.cpp b/source/encoder/encoder.cpp
++index 2e65cb1a9..e3285bbae 100644
++--- a/source/encoder/encoder.cpp
+++++ b/source/encoder/encoder.cpp
++@@ -1082,6 +1082,16 @@ void Encoder::copyUserSEIMessages(Frame *frame, const x265_picture* pic_in)
++     }
++ 
++     int numPayloads = pic_in->userSEI.numPayloads + toneMapPayload + userPayload;
+++
+++    // TODO: we may reuse buffer if become smaller than exist buffer
+++    if (frame->m_userSEI.payloads && numPayloads != frame->m_userSEI.numPayloads)
+++    {
+++        for (int i = 0; i < frame->m_userSEI.numPayloads; i++)
+++            delete[] frame->m_userSEI.payloads[i].payload;
+++        delete[] frame->m_userSEI.payloads;
+++        frame->m_userSEI.payloads = NULL;
+++    }
+++
++     frame->m_userSEI.numPayloads = numPayloads;
+  
 - #ifdef ENABLE_DYNAMIC_HDR10
 --    #include "dynamicHDR10\hdr10plus.h"
 -+    #include "dynamicHDR10/hdr10plus.h"
 - #endif
-- 
++     if (frame->m_userSEI.numPayloads)
++@@ -1102,6 +1112,12 @@ void Encoder::copyUserSEIMessages(Frame *frame, const x265_picture* pic_in)
++             else
++                 input = pic_in->userSEI.payloads[i];
+  
 - struct x265_encoder {};
+++            // TODO: condition may improve, because buffer size may change from big to small, but never back to original allocate size
+++            if (frame->m_userSEI.payloads[i].payload && frame->m_userSEI.payloads[i].payloadSize < input.payloadSize)
+++            {
+++                delete[] frame->m_userSEI.payloads[i].payload;
+++                frame->m_userSEI.payloads[i].payload = NULL;
+++            }
++             if (!frame->m_userSEI.payloads[i].payload)
++                 frame->m_userSEI.payloads[i].payload = new uint8_t[input.payloadSize];
++             memcpy(frame->m_userSEI.payloads[i].payload, input.payload, input.payloadSize);
 diff --git a/src/x265.mk b/src/x265.mk
 index 3b0329e0..47cbbc5a 100644
 --- a/src/x265.mk
@@ -50,8 +88,8 @@ index 3b0329e0..47cbbc5a 100644
  $(PKG)_IGNORE   :=
 -$(PKG)_VERSION  := 2.4
 -$(PKG)_CHECKSUM := 9c2aa718d78f6fecdd783f08ab83b98d3169e5f670404da4c16439306907d729
-+$(PKG)_VERSION  := 3.6
-+$(PKG)_CHECKSUM := 663531f341c5389f460d730e62e10a4fcca3428ca2ca109693867bc5fe2e2807
++$(PKG)_VERSION  := 4.1
++$(PKG)_CHECKSUM := a31699c6a89806b74b0151e5e6a7df65de4b49050482fe5ebf8a4379d7af8f29
  $(PKG)_SUBDIR   := x265_$($(PKG)_VERSION)
  $(PKG)_FILE     := x265_$($(PKG)_VERSION).tar.gz
 -$(PKG)_URL      := https://bitbucket.org/multicoreware/x265/downloads/$($(PKG)_FILE)
