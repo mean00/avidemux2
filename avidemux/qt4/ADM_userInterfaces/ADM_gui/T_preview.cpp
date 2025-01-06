@@ -14,14 +14,14 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-//clang-format off
-#include "ADM_qtx.h"
+// clang-format off
 #include <QApplication>
 #include <QFrame>
 #include <QImage>
 #include <QPaintEngine>
 #include <QPainter>
 #include <QWindow>
+#include "ADM_qtx.h"
 #if defined(USING_QT5)
 #if !defined(__APPLE__)
 #include <QWindow>
@@ -31,6 +31,7 @@ extern "C" void *XOpenDisplay(char *);
 #endif
 
 #endif
+// clang-format on
 #ifdef USING_QT6
 #include <QGuiApplication>
 using namespace QNativeInterface;
@@ -39,14 +40,14 @@ using namespace QNativeInterface;
 #ifdef __APPLE__
 #include <Carbon/Carbon.h>
 #endif
-// clang format-off
+// clang-format off
 #include "ADM_assert.h"
 #include "DIA_coreToolkit.h"
-#include "GUI_accelRender.h"
 #include "GUI_render.h"
+#include "GUI_accelRender.h"
 #include "GUI_ui.h"
 #include "T_preview.h"
-// clang format-on
+// clang-format on
 
 void UI_QT4VideoWidget(QFrame *host);
 extern QApplication *currentQApplication();
