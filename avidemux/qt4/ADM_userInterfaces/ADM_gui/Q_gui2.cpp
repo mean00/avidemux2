@@ -2777,6 +2777,10 @@ static const UI_FUNCTIONS_T UI_Hooks = {
 };
 
 static myQApplication *myApplication = NULL;
+QApplication *currentQApplication()
+{
+    return myApplication;
+}
 /**
  * \fn UI_reset
  * \brief reset

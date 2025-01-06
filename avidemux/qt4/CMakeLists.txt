@@ -161,6 +161,7 @@ ENDIF()
 
 # Add misc subdirs
 ADD_SUBDIRECTORY(ADM_UIs ./ADM_UIsQt4)
+ADD_SUBDIRECTORY(ADM_qt ./ADM_qtxQt4)
 ADD_SUBDIRECTORY(ADM_userInterfaces ./ADM_userInterfaces${QT_LIBRARY_EXTENSION})
 
 SDLify(../common/main.cpp)
@@ -242,7 +243,7 @@ ENDIF()
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # UI Specific
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE ADM_render6 ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY})
+TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE ADM_qtx_${QT_EXTENSION}  ADM_render6 ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY})
 
 TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE ${PlatformLibs})
 

@@ -26,6 +26,7 @@
 #include "GUI_nullRender.h"
 #include "GUI_renderInternal.h"
 #include "prefs.h"
+#include "ADM_qtx.h"
 // clang-format on
 
 extern VideoRenderBase *spawnSimpleRender();
@@ -309,7 +310,15 @@ bool spawnRenderer(void)
     }
 // #define TRY_RENDERER_CLASS(clss,name) TRY_RENDERER_INTERNAL(clss,new,name)
 // #define TRY_RENDERER_FUNC(func,name) TRY_RENDERER_INTERNAL(func,,name)
-#define TRY_RENDERER_SPAWN(spawn, name) TRY_RENDERER_INTERNAL(spawn, , name)
+#define TRY_RENDERER_SPAWN(spawn, name)                                                                                \
+    if (QT_X11_ENGINE == admDetectQtEngine())                                                                          \
+    {                                                                                                                  \
+        TRY_RENDERER_INTERNAL(spawn, , name)                                                                           \
+    }                                                                                                                  \
+    else                                                                                                               \
+    {                                                                                                                  \
+        ADM_info("Disabling %s because of Wayland use\n", #name);                                                      \
+    }
 /**
  *
  * @param renderName
