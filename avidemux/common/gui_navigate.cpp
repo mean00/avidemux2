@@ -4,7 +4,7 @@
 
             GUI Part of get next frame, previous key frame, any frame etc...
 
-    
+
     copyright            : (C) 2002/2008 by mean
     email                : fixounet@free.fr
  ***************************************************************************/
@@ -22,61 +22,60 @@
 #include "ADM_default.h"
 #include "avi_vars.h"
 
-#include <math.h>
-#include "prototype.h"
-#include "gui_action.hxx"
 #include "gtkgui.h"
+#include "gui_action.hxx"
+#include "prototype.h"
+#include <math.h>
 
-#include "DIA_coreToolkit.h"
-#include "ADM_commonUI/DIA_busy.h"
-#include "ADM_commonUI/GUI_ui.h"
-#include "DIA_enter.h"
-#include "DIA_coreToolkit.h"
-#include "ADM_vidMisc.h"
 #include "ADM_preview.h"
+#include "ADM_vidMisc.h"
+#include "DIA_busy.h"
+#include "DIA_coreToolkit.h"
+#include "DIA_enter.h"
+#include "GUI_ui.h"
 
-static ADMCountdown  NaggingCountDown(5000); // Wait 5 sec before nagging again for cannot seek
+static ADMCountdown NaggingCountDown(5000); // Wait 5 sec before nagging again for cannot seek
 static void A_timedError(bool *first, const char *s);
 
-extern uint8_t DIA_gotoTime(uint32_t *hh, uint32_t *mm, uint32_t *ss,uint32_t *ms);
+extern uint8_t DIA_gotoTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms);
 extern void A_setHDRConfig(void);
 extern void A_setPostproc(void);
 
 static uint32_t jumpTarget[4] = {0};
 
-bool   GUI_infiniteForward(uint64_t pts);
-bool   GUI_lastFrameBeforePts(uint64_t pts);
-bool   GUI_SeekByTime(int64_t time);
-bool   GUI_CoarseSeekByTime(int64_t time);
-void  GUI_PrevCutPoint();
-void  GUI_NextCutPoint();
-bool A_jumpToTime(uint32_t hh,uint32_t mm,uint32_t ss,uint32_t ms);
+bool GUI_infiniteForward(uint64_t pts);
+bool GUI_lastFrameBeforePts(uint64_t pts);
+bool GUI_SeekByTime(int64_t time);
+bool GUI_CoarseSeekByTime(int64_t time);
+void GUI_PrevCutPoint();
+void GUI_NextCutPoint();
+bool A_jumpToTime(uint32_t hh, uint32_t mm, uint32_t ss, uint32_t ms);
 
 /**
     \fn HandleAction_Staged
 */
 void HandleAction_Staged(Action action)
 {
-    switch(action)
+    switch (action)
     {
-        case ACT_SetHDRConfig:
-            A_setHDRConfig();
-            break;
-        case ACT_SetPostProcessing:
-            A_setPostproc();
-            break;
-        case ACT_SelectTime:
-            {
-                stagedActionSuccess = 0;
-                // Get current time
-                uint64_t pts = admPreview::getCurrentPts();
-                uint32_t *t = jumpTarget;
-                ms2time((uint32_t)(pts/1000),t,t+1,t+2,t+3);
-                if (DIA_gotoTime(t,t+1,t+2,t+3))
-                    stagedActionSuccess = 1;
-            }
-            break;
-        default:break;
+    case ACT_SetHDRConfig:
+        A_setHDRConfig();
+        break;
+    case ACT_SetPostProcessing:
+        A_setPostproc();
+        break;
+    case ACT_SelectTime: {
+        stagedActionSuccess = 0;
+        // Get current time
+        uint64_t pts = admPreview::getCurrentPts();
+        uint32_t *t = jumpTarget;
+        ms2time((uint32_t)(pts / 1000), t, t + 1, t + 2, t + 3);
+        if (DIA_gotoTime(t, t + 1, t + 2, t + 3))
+            stagedActionSuccess = 1;
+    }
+    break;
+    default:
+        break;
     }
 }
 /**
@@ -85,261 +84,273 @@ void HandleAction_Staged(Action action)
 */
 void HandleAction_Navigate(Action action)
 {
-static int ignore_change=0;
+    static int ignore_change = 0;
     switch (action)
-      {
-    
-      case ACT_Scale:
+    {
+
+    case ACT_Scale:
         if (!ignore_change)
         {
-          uint32_t nf;
-          ignore_change++;
-          nf = GUI_GetScale ();
-          ADM_info("Scale :%" PRIu32"\n",nf);
-          double tme=nf;
-          double totalDuration=(double) video_body->getVideoDuration();
-          tme*=totalDuration;
-          tme/=ADM_SCALE_SIZE;
-          uint64_t pts=5000+(uint64_t)tme; // aim a bit higher to avoid double "search previous" events
-          if(pts>totalDuration) pts=totalDuration;
-          
-          ADM_info("Scale Time:%" PRIu64" ms (total=%" PRIu64" ms)\n",pts/1000,video_body->getVideoDuration()/1000);
-          ADM_info("Scale Time:%s ms \n",ADM_us2plain(pts));
-           if(false==video_body->getPKFramePTS(&pts))
+            uint32_t nf;
+            ignore_change++;
+            nf = GUI_GetScale();
+            ADM_info("Scale :%" PRIu32 "\n", nf);
+            double tme = nf;
+            double totalDuration = (double)video_body->getVideoDuration();
+            tme *= totalDuration;
+            tme /= ADM_SCALE_SIZE;
+            uint64_t pts = 5000 + (uint64_t)tme; // aim a bit higher to avoid double "search previous" events
+            if (pts > totalDuration)
+                pts = totalDuration;
+
+            ADM_info("Scale Time:%" PRIu64 " ms (total=%" PRIu64 " ms)\n", pts / 1000,
+                     video_body->getVideoDuration() / 1000);
+            ADM_info("Scale Time:%s ms \n", ADM_us2plain(pts));
+            if (false == video_body->getPKFramePTS(&pts))
             {
-                if(false==video_body->getNKFramePTS(&pts))
+                if (false == video_body->getNKFramePTS(&pts))
                 {
-                    ADM_warning("Cannot seek to %" PRIu64" ms\n",pts/1000);
+                    ADM_warning("Cannot seek to %" PRIu64 " ms\n", pts / 1000);
                     ignore_change--;
                     break;
                 }
             }
-             ADM_info("Seeking to  Time:%s ms \n",ADM_us2plain(pts));
-            if(true!=admPreview::seekToIntraPts(pts))
+            ADM_info("Seeking to  Time:%s ms \n", ADM_us2plain(pts));
+            if (true != admPreview::seekToIntraPts(pts))
             {
-                ADM_warning("Scale: Seeking to intra at %" PRIu64" ms failed\n",pts/1000);
+                ADM_warning("Scale: Seeking to intra at %" PRIu64 " ms failed\n", pts / 1000);
             }
             UI_setCurrentTime(pts);
             UI_purge();
             ignore_change--;
         }
         break;
-      case ACT_FineScale:
-        if(playing) break;
+    case ACT_FineScale:
+        if (playing)
+            break;
         if (!ignore_change)
         {
             uint32_t nf;
             ignore_change++;
-            nf = GUI_GetScale ();
-            ADM_info("Fine Scale :%" PRIu32"\n",nf);
-            double tme=nf;
-            double totalDuration=(double) video_body->getVideoDuration();
-            tme*=totalDuration;
-            tme/=ADM_SCALE_SIZE;
-            uint64_t pts=5000+(uint64_t)tme; // aim a bit higher to avoid double "search previous" events
-            if(pts>totalDuration) pts=totalDuration;
+            nf = GUI_GetScale();
+            ADM_info("Fine Scale :%" PRIu32 "\n", nf);
+            double tme = nf;
+            double totalDuration = (double)video_body->getVideoDuration();
+            tme *= totalDuration;
+            tme /= ADM_SCALE_SIZE;
+            uint64_t pts = 5000 + (uint64_t)tme; // aim a bit higher to avoid double "search previous" events
+            if (pts > totalDuration)
+                pts = totalDuration;
 
-            ADM_info("Fine Scale Time:%" PRIu64" ms (total=%" PRIu64" ms)\n",pts/1000,video_body->getVideoDuration()/1000);
-            ADM_info("Fine Scale Time:%s ms \n",ADM_us2plain(pts));
+            ADM_info("Fine Scale Time:%" PRIu64 " ms (total=%" PRIu64 " ms)\n", pts / 1000,
+                     video_body->getVideoDuration() / 1000);
+            ADM_info("Fine Scale Time:%s ms \n", ADM_us2plain(pts));
 
-            uint64_t lastpts=pts;
-            if(false==video_body->getNKFramePTS(&lastpts)) // at the end of the video, be careful
+            uint64_t lastpts = pts;
+            if (false == video_body->getNKFramePTS(&lastpts)) // at the end of the video, be careful
             {
-                if(false==video_body->getPKFramePTS(&lastpts))
+                if (false == video_body->getPKFramePTS(&lastpts))
                 {
                     ignore_change--;
                     break;
                 }
                 GUI_infiniteForward(lastpts);
-                lastpts=admPreview::getCurrentPts();
-                if(pts>=lastpts)
-                    pts=lastpts;
+                lastpts = admPreview::getCurrentPts();
+                if (pts >= lastpts)
+                    pts = lastpts;
             }
-            if(false==GUI_lastFrameBeforePts(pts)) // we are probably at the beginning of the video,
-                video_body->rewind(); // go to the first frame then
+            if (false == GUI_lastFrameBeforePts(pts)) // we are probably at the beginning of the video,
+                video_body->rewind();                 // go to the first frame then
             admPreview::samePicture();
             UI_setCurrentTime(pts);
             UI_purge();
             ignore_change--;
         }
-        break;      
-      case ACT_GotoMarkA:
-      case ACT_GotoMarkB:
-        {
-            uint64_t pts = ADM_NO_PTS;
-            uint64_t rescue = admPreview::getCurrentPts();
-            if(action==ACT_GotoMarkA)
-                pts = video_body->getMarkerAPts();
-            else
-                pts = video_body->getMarkerBPts();
-            if(pts == ADM_NO_PTS) return;
-            // handle default values
-            if(!pts)
-            {
-                video_body->rewind();
-            }else if(pts == video_body->getVideoDuration())
-            {
-                pts = video_body->getLastKeyFramePts();
-                if(pts == ADM_NO_PTS) return;
-                GUI_infiniteForward(pts);
-            }else if(false == video_body->goToTimeVideo(pts))
-            {
-                ADM_warning("Marker %s PTS %s doesn't match a frame exactly or decoding failure, making something up.\n",
-                    (action == ACT_GotoMarkA)? "A" : "B",
-                    ADM_us2plain(pts));
-                uint64_t start = pts;
-                // Can we seek to previous keyframe and approach the marker from there?
-                if(false == video_body->getPKFramePTS(&start) || start == ADM_NO_PTS)
-                { // Nope, try to seek to the next keyframe instead.
-                    start = pts;
-                    if(false == video_body->getNKFramePTS(&start) || start == ADM_NO_PTS)
-                    {
-                        ADM_warning("Seek to marker %s at %s failed.\n", (action == ACT_GotoMarkA)? "A" : "B", ADM_us2plain(pts));
-                        admPreview::seekToTime(rescue);
-                        return;
-                    }
-                    if(false == admPreview::seekToIntraPts(start))
-                    { // try to recover
-                        admPreview::seekToTime(rescue);
-                        return;
-                    }
-                    GUI_setCurrentFrameAndTime();
-                    return;
-                }
-                admPreview::deferDisplay(true);
-                if(false == admPreview::seekToIntraPts(start))
-                {
-                    admPreview::seekToTime(rescue);
-                    admPreview::deferDisplay(false);
-                    return;
-                }
-                while(pts > admPreview::getCurrentPts() && admPreview::nextPicture())
-                {
-                }
-                admPreview::deferDisplay(false);
-            }
-            admPreview::samePicture();
-            GUI_setCurrentFrameAndTime();
-        }
         break;
+    case ACT_GotoMarkA:
+    case ACT_GotoMarkB: {
+        uint64_t pts = ADM_NO_PTS;
+        uint64_t rescue = admPreview::getCurrentPts();
+        if (action == ACT_GotoMarkA)
+            pts = video_body->getMarkerAPts();
+        else
+            pts = video_body->getMarkerBPts();
+        if (pts == ADM_NO_PTS)
+            return;
+        // handle default values
+        if (!pts)
+        {
+            video_body->rewind();
+        }
+        else if (pts == video_body->getVideoDuration())
+        {
+            pts = video_body->getLastKeyFramePts();
+            if (pts == ADM_NO_PTS)
+                return;
+            GUI_infiniteForward(pts);
+        }
+        else if (false == video_body->goToTimeVideo(pts))
+        {
+            ADM_warning("Marker %s PTS %s doesn't match a frame exactly or decoding failure, making something up.\n",
+                        (action == ACT_GotoMarkA) ? "A" : "B", ADM_us2plain(pts));
+            uint64_t start = pts;
+            // Can we seek to previous keyframe and approach the marker from there?
+            if (false == video_body->getPKFramePTS(&start) || start == ADM_NO_PTS)
+            { // Nope, try to seek to the next keyframe instead.
+                start = pts;
+                if (false == video_body->getNKFramePTS(&start) || start == ADM_NO_PTS)
+                {
+                    ADM_warning("Seek to marker %s at %s failed.\n", (action == ACT_GotoMarkA) ? "A" : "B",
+                                ADM_us2plain(pts));
+                    admPreview::seekToTime(rescue);
+                    return;
+                }
+                if (false == admPreview::seekToIntraPts(start))
+                { // try to recover
+                    admPreview::seekToTime(rescue);
+                    return;
+                }
+                GUI_setCurrentFrameAndTime();
+                return;
+            }
+            admPreview::deferDisplay(true);
+            if (false == admPreview::seekToIntraPts(start))
+            {
+                admPreview::seekToTime(rescue);
+                admPreview::deferDisplay(false);
+                return;
+            }
+            while (pts > admPreview::getCurrentPts() && admPreview::nextPicture())
+            {
+            }
+            admPreview::deferDisplay(false);
+        }
+        admPreview::samePicture();
+        GUI_setCurrentFrameAndTime();
+    }
+    break;
 
-      case ACT_PreviousKFrame:
+    case ACT_PreviousKFrame:
         GUI_PreviousKeyFrame();
         break;
-      case ACT_PreviousFrame:
+    case ACT_PreviousFrame:
         GUI_PrevFrame();
         break;
     case ACT_Forward1Mn:
-          GUI_SeekByTime(60*1000LL*1000LL);
-          break;
-        case ACT_Back1Mn:
-          GUI_SeekByTime(-60*1000LL*1000LL);
-          break;        
-      case ACT_Forward4Seconds:
+        GUI_SeekByTime(60 * 1000LL * 1000LL);
+        break;
+    case ACT_Back1Mn:
+        GUI_SeekByTime(-60 * 1000LL * 1000LL);
+        break;
+    case ACT_Forward4Seconds:
         GUI_SeekByTime(4000000LL);
         break;
 
-      case ACT_Forward2Seconds:
+    case ACT_Forward2Seconds:
         GUI_SeekByTime(2000000LL);
-    break;
+        break;
 
-      case ACT_Forward1Second:
+    case ACT_Forward1Second:
         GUI_SeekByTime(1000000LL);
         break;
 
-      case ACT_Back4Seconds:
+    case ACT_Back4Seconds:
         GUI_SeekByTime(-4000000LL);
         break;
 
-      case ACT_Back2Seconds:
+    case ACT_Back2Seconds:
         GUI_SeekByTime(-2000000LL);
         break;
 
-      case ACT_Back1Second:
+    case ACT_Back1Second:
         GUI_SeekByTime(-1000000LL);
-    break;
+        break;
 
-      case ACT_NextFrame:
+    case ACT_NextFrame:
         GUI_NextFrame();
-      break;
-      case ACT_NextKFrame:
+        break;
+    case ACT_NextKFrame:
         GUI_NextKeyFrame();
-      break;
-      case ACT_PrevCutPoint:
+        break;
+    case ACT_PrevCutPoint:
         GUI_PrevCutPoint();
-      break;
-      case ACT_NextCutPoint:
+        break;
+    case ACT_NextCutPoint:
         GUI_NextCutPoint();
-      break;
-      case ACT_NextBlackFrame:
+        break;
+    case ACT_NextBlackFrame:
         GUI_NextBlackFrame();
-      break;
-      case ACT_PrevBlackFrame:
+        break;
+    case ACT_PrevBlackFrame:
         GUI_PrevBlackFrame();
-      break;
-      case ACT_End:
+        break;
+    case ACT_End: {
+        uint64_t pts = video_body->getLastKeyFramePts();
+        if (pts == ADM_NO_PTS)
+            break;
+        GUI_infiniteForward(pts);
+        admPreview::samePicture();
+        GUI_setCurrentFrameAndTime();
+    }
+    break;
+    case ACT_Begin:
+        video_body->rewind();
+        admPreview::samePicture(); // Ugly FIXME TODO
+        GUI_setCurrentFrameAndTime();
+        // GUI_GoToKFrameTime(0);
+        break;
+    case ACT_GotoTime: {
+        if (playing)
+            break;
+        if (!stagedActionSuccess)
+            break;
+        uint32_t *t = jumpTarget;
+        uint32_t hh, mm, ss, ms;
+        hh = *t++;
+        mm = *t++;
+        ss = *t++;
+        ms = *t;
+        A_jumpToTime(hh, mm, ss, ms);
+        stagedActionSuccess = 0;
+    }
+    break;
+    case ACT_Refresh: { // Flush cache and seek to the current picture
+        if (playing)
+            break;
+        if (!stagedActionSuccess)
+            break;
+        ADMImage *pic = admPreview::getBuffer();
+        if (!pic)
+            break;
+        uint64_t time = admPreview::getCurrentPts();
+        admPreview::deferDisplay(true);
+        if (pic->flags & AVI_KEY_FRAME)
         {
-            uint64_t pts=video_body->getLastKeyFramePts();
-            if(pts==ADM_NO_PTS) break;    
-            GUI_infiniteForward(pts);
-            admPreview::samePicture();
-            GUI_setCurrentFrameAndTime();
+            admPreview::nextPicture();
+            admPreview::previousKeyFrame();
         }
-            break;
-      case ACT_Begin:
-            video_body->rewind();
-            admPreview::samePicture(); // Ugly FIXME TODO
-             GUI_setCurrentFrameAndTime();
-            //GUI_GoToKFrameTime(0);
-            break;
-      case ACT_GotoTime:
-      {
-            if(playing) break;
-            if(!stagedActionSuccess) break;
-            uint32_t *t = jumpTarget;
-            uint32_t hh,mm,ss,ms;
-            hh = *t++;
-            mm = *t++;
-            ss = *t++;
-            ms = *t;
-            A_jumpToTime(hh,mm,ss,ms);
-            stagedActionSuccess = 0;
-      }
-      break;
-      case ACT_Refresh:
-        { // Flush cache and seek to the current picture
-            if(playing) break;
-            if(!stagedActionSuccess) break;
-            ADMImage *pic = admPreview::getBuffer();
-            if(!pic) break;
-            uint64_t time = admPreview::getCurrentPts();
-            admPreview::deferDisplay(true);
-            if(pic->flags & AVI_KEY_FRAME)
-            {
-                admPreview::nextPicture();
-                admPreview::previousKeyFrame();
-            }else
-            {
-                admPreview::previousKeyFrame(); // flush cache
-                if(false == admPreview::seekToTime(time))
-                    video_body->rewind(); // avoid crash
-            }
-            admPreview::deferDisplay(false);
-            admPreview::samePicture();
-            GUI_setCurrentFrameAndTime();
-            stagedActionSuccess = 0;
-            break;
+        else
+        {
+            admPreview::previousKeyFrame(); // flush cache
+            if (false == admPreview::seekToTime(time))
+                video_body->rewind(); // avoid crash
         }
-      case ACT_SeekBackward:
-            GUI_CoarseSeekByTime(-4000000LL);
-            break;
-      case ACT_SeekForward:
-            GUI_CoarseSeekByTime(4000000LL);
-            break;
-      default:
-      ADM_assert(0);
-      break;
-      }
+        admPreview::deferDisplay(false);
+        admPreview::samePicture();
+        GUI_setCurrentFrameAndTime();
+        stagedActionSuccess = 0;
+        break;
+    }
+    case ACT_SeekBackward:
+        GUI_CoarseSeekByTime(-4000000LL);
+        break;
+    case ACT_SeekForward:
+        GUI_CoarseSeekByTime(4000000LL);
+        break;
+    default:
+        ADM_assert(0);
+        break;
+    }
 }
 /**
     \fn GUI_NextFrame
@@ -352,16 +363,15 @@ bool GUI_NextFrame(void)
     if (!avifileinfo)
         return false;
 
-    if(!admPreview::nextPicture())
+    if (!admPreview::nextPicture())
     {
-        UI_notifyError(QT_TRANSLATE_NOOP("navigate","Cannot go to next frame"),2500);        
+        UI_notifyError(QT_TRANSLATE_NOOP("navigate", "Cannot go to next frame"), 2500);
         return false;
     }
     GUI_setCurrentFrameAndTime();
     UI_purge();
     return true;
 }
-
 
 /**
     \fn GUI_NextKeyFrame
@@ -377,11 +387,11 @@ bool GUI_NextKeyFrame(void)
         return false;
 
     if (!admPreview::nextKeyFrame())
-      {
-        UI_notifyError(QT_TRANSLATE_NOOP("navigate","Cannot go to next keyframe"),2500);
-        //A_timedError(&firstError, QT_TRANSLATE_NOOP("navigate","Cannot go to next keyframe"));
+    {
+        UI_notifyError(QT_TRANSLATE_NOOP("navigate", "Cannot go to next keyframe"), 2500);
+        // A_timedError(&firstError, QT_TRANSLATE_NOOP("navigate","Cannot go to next keyframe"));
         return false;
-      }
+    }
     GUI_setCurrentFrameAndTime();
     UI_purge();
     return true;
@@ -398,9 +408,9 @@ bool GUI_GoToKFrameTime(uint64_t exactTime)
     if (!avifileinfo)
         return false;
 
-    if(!admPreview::seekToIntraPts(exactTime))
+    if (!admPreview::seekToIntraPts(exactTime))
         return false;
-    //admPreview::samePicture(); // why a second time?
+    // admPreview::samePicture(); // why a second time?
     GUI_setCurrentFrameAndTime();
     UI_purge();
     return true;
@@ -444,11 +454,11 @@ bool GUI_PreviousKeyFrame(void)
         return false;
 
     if (!admPreview::previousKeyFrame())
-      {
-        UI_notifyError(QT_TRANSLATE_NOOP("navigate","Cannot go to previous keyframe"),2500);
-        //A_timedError(&firstError, QT_TRANSLATE_NOOP("navigate","Cannot go to previous keyframe"));
+    {
+        UI_notifyError(QT_TRANSLATE_NOOP("navigate", "Cannot go to previous keyframe"), 2500);
+        // A_timedError(&firstError, QT_TRANSLATE_NOOP("navigate","Cannot go to previous keyframe"));
         return false;
-      }
+    }
     GUI_setCurrentFrameAndTime();
     UI_purge();
     return true;
@@ -456,7 +466,7 @@ bool GUI_PreviousKeyFrame(void)
 
 uint8_t A_rebuildKeyFrame(void)
 {
-//    return video_body->rebuildFrameType();
+    //    return video_body->rebuildFrameType();
     return 1;
 }
 /**
@@ -472,9 +482,10 @@ bool GUI_PrevFrame(void)
 
     if (!admPreview::previousPicture())
     {
-        UI_notifyError(QT_TRANSLATE_NOOP("navigate","Cannot go to previous frame"),2500);        
-//        We're probably at the beginning of the file ...
-//            GUI_Error_HIG(QT_TRANSLATE_NOOP("navigate","Error"),    QT_TRANSLATE_NOOP("navigate","Cannot go to previous frame"));
+        UI_notifyError(QT_TRANSLATE_NOOP("navigate", "Cannot go to previous frame"), 2500);
+        //        We're probably at the beginning of the file ...
+        //            GUI_Error_HIG(QT_TRANSLATE_NOOP("navigate","Error"),    QT_TRANSLATE_NOOP("navigate","Cannot go to
+        //            previous frame"));
         return false;
     }
     GUI_setCurrentFrameAndTime();
@@ -485,13 +496,13 @@ bool GUI_PrevFrame(void)
       \fn A_jogRead
       \brief read an average value of jog
 */
-#define NB_JOG_READ           3
-#define JOG_READ_PERIOD_US    5*1000    // 5ms
-#define JOG_THRESH1           40
-#define JOG_THRESH2           80
-#define JOG_THRESH1_PERIOD    100*1000    // us
-#define JOG_THRESH2_PERIOD    40*1000
-#define JOG_THRESH3_PERIOD    500
+#define NB_JOG_READ 3
+#define JOG_READ_PERIOD_US 5 * 1000 // 5ms
+#define JOG_THRESH1 40
+#define JOG_THRESH2 80
+#define JOG_THRESH1_PERIOD 100 * 1000 // us
+#define JOG_THRESH2_PERIOD 40 * 1000
+#define JOG_THRESH3_PERIOD 500
 /**
     \fn A_jogRead
     \brief Read an average value of jog
@@ -500,13 +511,13 @@ uint32_t A_jogRead(void)
 {
     int32_t sum = 0, v;
     for (int i = 0; i < NB_JOG_READ; i++)
-      {
-      v = UI_readJog();
-      if (abs(v) < 10)
-          v = 0;
-      sum += v;
-      ADM_usleep(JOG_READ_PERIOD_US);
-      }
+    {
+        v = UI_readJog();
+        if (abs(v) < 10)
+            v = 0;
+        sum += v;
+        ADM_usleep(JOG_READ_PERIOD_US);
+    }
     return sum / NB_JOG_READ;
 }
 #define REFRESH 10000
@@ -521,31 +532,31 @@ void A_jog(void)
     uint32_t slip;
     static int jog = 0;
     if (jog)
-    return;
+        return;
     jog++;
     while ((r = A_jogRead()))
-      {
-      a = abs(r);
-      printf("%d \n", r);
-      if (a < JOG_THRESH1)
-          slip = JOG_THRESH1_PERIOD;
-      else if (a < JOG_THRESH2)
-          slip = JOG_THRESH2_PERIOD;
-      else
-          slip = JOG_THRESH3_PERIOD;
+    {
+        a = abs(r);
+        printf("%d \n", r);
+        if (a < JOG_THRESH1)
+            slip = JOG_THRESH1_PERIOD;
+        else if (a < JOG_THRESH2)
+            slip = JOG_THRESH2_PERIOD;
+        else
+            slip = JOG_THRESH3_PERIOD;
 
-      if (r > 0)
-          GUI_NextKeyFrame();
-      else
-          GUI_PreviousKeyFrame();
-      UI_purge();
-      for (int i = 0; i < slip / REFRESH; i++)
+        if (r > 0)
+            GUI_NextKeyFrame();
+        else
+            GUI_PreviousKeyFrame();
+        UI_purge();
+        for (int i = 0; i < slip / REFRESH; i++)
         {
-        UI_purge();
-        ADM_usleep(REFRESH);
-        UI_purge();
+            UI_purge();
+            ADM_usleep(REFRESH);
+            UI_purge();
         }
-      }
+    }
     jog--;
 }
 /**
@@ -557,17 +568,17 @@ void GUI_setAllFrameAndTime(void)
 {
     UI_setTotalTime(video_body->getVideoDuration());
     uint32_t numOfSegs = video_body->getNbSegment();
-    uint64_t * segPts = new uint64_t[numOfSegs];
-    for(int i=0; i<numOfSegs; i++)
+    uint64_t *segPts = new uint64_t[numOfSegs];
+    for (int i = 0; i < numOfSegs; i++)
     {
-        _SEGMENT * seg = video_body->getSegment(i);
+        _SEGMENT *seg = video_body->getSegment(i);
         if (seg)
             segPts[i] = seg->_startTimeUs;
         else
             segPts[i] = ADM_NO_PTS;
     }
     UI_setSegments(numOfSegs, segPts);
-    delete [] segPts;
+    delete[] segPts;
     // progress bar
     GUI_setCurrentFrameAndTime(0);
 }
@@ -578,13 +589,13 @@ void GUI_setAllFrameAndTime(void)
 */
 void GUI_setCurrentFrameAndTime(uint64_t offset)
 {
-    uint64_t pts=admPreview::getCurrentPts()+offset;
+    uint64_t pts = admPreview::getCurrentPts() + offset;
     double len;
-   
+
     UI_setCurrentTime(pts);
-    len=pts;
-    len*=ADM_SCALE_SIZE;
-    len/=video_body->getVideoDuration();  
+    len = pts;
+    len *= ADM_SCALE_SIZE;
+    len /= video_body->getVideoDuration();
     GUI_SetScale(len);
 }
 
@@ -592,22 +603,23 @@ void GUI_setCurrentFrameAndTime(uint64_t offset)
     \fn A_jumpToTime
     \brief Jump to a given time
 */
-bool A_jumpToTime(uint32_t hh,uint32_t mm,uint32_t ss,uint32_t ms)
+bool A_jumpToTime(uint32_t hh, uint32_t mm, uint32_t ss, uint32_t ms)
 {
     uint64_t pts, total = video_body->getVideoDuration();
-    if(!total) return false;
+    if (!total)
+        return false;
 
-    pts=hh*3600+mm*60+ss;
-    pts*=1000;
-    pts+=ms;
-    pts*=1000;
+    pts = hh * 3600 + mm * 60 + ss;
+    pts *= 1000;
+    pts += ms;
+    pts *= 1000;
     // Aim higher to avoid rejecting the target picture if PTS is not a multiple of 1000 us.
     // We can overshoot if two pics are less than 1ms apart, an unlikely scenario.
-    pts+=999;
+    pts += 999;
 
-    if(pts >= total)
-        pts = total-1;
-    if(false==GUI_lastFrameBeforePts(pts)) // we are probably at the beginning of the video,
+    if (pts >= total)
+        pts = total - 1;
+    if (false == GUI_lastFrameBeforePts(pts)) // we are probably at the beginning of the video,
     {
         video_body->rewind(); // go to the first frame then
         admPreview::samePicture();
@@ -620,17 +632,17 @@ bool A_jumpToTime(uint32_t hh,uint32_t mm,uint32_t ss,uint32_t ms)
 */
 bool GUI_SeekByTime(int64_t time)
 {
-    uint64_t pts=admPreview::getCurrentPts();
+    uint64_t pts = admPreview::getCurrentPts();
 
     if (time < 0 && pts < -time)
-    {   // we can't assume that pts=0 were legitimate, rewind to the first frame instead
+    { // we can't assume that pts=0 were legitimate, rewind to the first frame instead
         video_body->rewind();
         admPreview::samePicture();
         GUI_setCurrentFrameAndTime();
         return true;
     }
     pts += time;
-    ADM_info("Seek to:%s ms \n",ADM_us2plain(pts));
+    ADM_info("Seek to:%s ms \n", ADM_us2plain(pts));
     pts++; // we want to get the picture at pts if possible, not before
     if (pts >= video_body->getVideoDuration())
         return false;
@@ -642,48 +654,49 @@ bool GUI_SeekByTime(int64_t time)
 */
 bool GUI_CoarseSeekByTime(int64_t time)
 {
-    uint64_t pts=admPreview::getCurrentPts();
+    uint64_t pts = admPreview::getCurrentPts();
 
     if (time < 0 && pts < -time)
-    {   // we can't assume that pts=0 were legitimate, rewind to the first frame instead
+    { // we can't assume that pts=0 were legitimate, rewind to the first frame instead
         video_body->rewind();
         admPreview::samePicture();
         GUI_setCurrentFrameAndTime();
         return true;
-    }else
+    }
+    else
     {
         pts += time;
     }
     uint64_t totalDuration = video_body->getVideoDuration();
-    if(pts>totalDuration) pts=totalDuration;
-    ADM_info("Coarse Seek to:%s ms \n",ADM_us2plain(pts));
+    if (pts > totalDuration)
+        pts = totalDuration;
+    ADM_info("Coarse Seek to:%s ms \n", ADM_us2plain(pts));
     if (time >= 0)
     {
-        if(false==video_body->getNKFramePTS(&pts))
+        if (false == video_body->getNKFramePTS(&pts))
         {
-            ADM_warning("Cannot seek to %" PRIu64" ms\n",pts/1000);
+            ADM_warning("Cannot seek to %" PRIu64 " ms\n", pts / 1000);
             return false;
         }
     }
     else
     {
-        if(false==video_body->getPKFramePTS(&pts))
+        if (false == video_body->getPKFramePTS(&pts))
         {
-            ADM_warning("Cannot seek to %" PRIu64" ms\n",pts/1000);
+            ADM_warning("Cannot seek to %" PRIu64 " ms\n", pts / 1000);
             return false;
         }
     }
-    ADM_info("Actual Seeking to  Time:%s ms \n",ADM_us2plain(pts));
-    if(false==admPreview::seekToIntraPts(pts))
+    ADM_info("Actual Seeking to  Time:%s ms \n", ADM_us2plain(pts));
+    if (false == admPreview::seekToIntraPts(pts))
     {
-        ADM_warning("Coarse Seeking: Seeking to intra at %" PRIu64" ms failed\n",pts/1000);
+        ADM_warning("Coarse Seeking: Seeking to intra at %" PRIu64 " ms failed\n", pts / 1000);
         return false;
     }
     GUI_setCurrentFrameAndTime();
     UI_purge();
     return true;
 }
-
 
 /**
     \fn GUI_PrevCutPoint
@@ -695,19 +708,20 @@ void GUI_PrevCutPoint()
     if (!avifileinfo)
         return;
 
-    uint64_t pts=admPreview::getCurrentPts();
-    uint64_t last_prev_pts=ADM_NO_PTS;
+    uint64_t pts = admPreview::getCurrentPts();
+    uint64_t last_prev_pts = ADM_NO_PTS;
     int segNo, numOfSegs = video_body->getNbSegment();
-    for(int i=1; i<numOfSegs; i++) // we are not interested in the first segment
+    for (int i = 1; i < numOfSegs; i++) // we are not interested in the first segment
     {
-        _SEGMENT * seg = video_body->getSegment(i);
+        _SEGMENT *seg = video_body->getSegment(i);
         if (seg)
         {
             if (seg->_startTimeUs < pts)
             {
                 last_prev_pts = seg->_startTimeUs;
                 segNo = i;
-            } else
+            }
+            else
                 break;
         }
     }
@@ -715,11 +729,11 @@ void GUI_PrevCutPoint()
     if (last_prev_pts == ADM_NO_PTS)
         return;
 
-    ADM_info("Seeking to cut point at %s ms\n",ADM_us2plain(last_prev_pts));
+    ADM_info("Seeking to cut point at %s ms\n", ADM_us2plain(last_prev_pts));
 
     // Can we use a fast lane?
     uint64_t tmp = video_body->getFirstFrameInSegmentPts(segNo);
-    if(tmp != ADM_NO_PTS && admPreview::seekToTime(tmp))
+    if (tmp != ADM_NO_PTS && admPreview::seekToTime(tmp))
     {
         GUI_setCurrentFrameAndTime();
         return;
@@ -729,7 +743,7 @@ void GUI_PrevCutPoint()
     bool gotPreviousKeyFrame = video_body->getPKFramePTS(&tmp);
     if (gotPreviousKeyFrame && tmp == last_prev_pts)
     {
-        if(admPreview::seekToIntraPts(last_prev_pts))
+        if (admPreview::seekToIntraPts(last_prev_pts))
             GUI_setCurrentFrameAndTime();
         return;
     }
@@ -743,7 +757,8 @@ void GUI_PrevCutPoint()
             admPreview::deferDisplay(false);
             return;
         }
-    } else // no keyframe before the cut point
+    }
+    else // no keyframe before the cut point
     {
         video_body->rewind();
     }
@@ -773,12 +788,12 @@ void GUI_NextCutPoint()
     if (!avifileinfo)
         return;
 
-    uint64_t pts=admPreview::getCurrentPts();
-    uint64_t first_next_pts=ADM_NO_PTS;
+    uint64_t pts = admPreview::getCurrentPts();
+    uint64_t first_next_pts = ADM_NO_PTS;
     int segNo, numOfSegs = video_body->getNbSegment();
-    for(int i=1; i<numOfSegs; i++)
+    for (int i = 1; i < numOfSegs; i++)
     {
-        _SEGMENT * seg = video_body->getSegment(i);
+        _SEGMENT *seg = video_body->getSegment(i);
         if (seg)
         {
             if (seg->_startTimeUs > pts)
@@ -793,11 +808,11 @@ void GUI_NextCutPoint()
     if (first_next_pts == ADM_NO_PTS)
         return;
 
-    ADM_info("Seeking to cut point at %s ms\n",ADM_us2plain(first_next_pts));
+    ADM_info("Seeking to cut point at %s ms\n", ADM_us2plain(first_next_pts));
 
     // Can we use the fast lane?
     uint64_t tmp = video_body->getFirstFrameInSegmentPts(segNo);
-    if(tmp != ADM_NO_PTS && admPreview::seekToTime(tmp))
+    if (tmp != ADM_NO_PTS && admPreview::seekToTime(tmp))
     {
         GUI_setCurrentFrameAndTime();
         return;
@@ -808,7 +823,7 @@ void GUI_NextCutPoint()
     bool gotPreviousKeyFrame = video_body->getPKFramePTS(&tmp);
     if (gotPreviousKeyFrame && tmp == first_next_pts)
     {
-        if(admPreview::seekToIntraPts(first_next_pts))
+        if (admPreview::seekToIntraPts(first_next_pts))
             GUI_setCurrentFrameAndTime();
         return;
     }
@@ -847,42 +862,43 @@ bool GUI_GoToTime(uint64_t time)
 {
 
     // We have to call the editor as the frames needed to decode the target frame may be hidden
-    if(false==video_body->goToTimeVideo(time))
+    if (false == video_body->goToTimeVideo(time))
     {
-        GUI_Error_HIG(QT_TRANSLATE_NOOP("navigate","Seek"), QT_TRANSLATE_NOOP("navigate","Error seeking to %" PRIu64" ms"),time/1000);
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("navigate", "Seek"),
+                      QT_TRANSLATE_NOOP("navigate", "Error seeking to %" PRIu64 " ms"), time / 1000);
     }
     admPreview::samePicture();
     GUI_setCurrentFrameAndTime();
     return true;
-}   
+}
 /**
  * \brief go forward as much as possible from pts
  * @param pts
- * @return 
+ * @return
  */
 bool GUI_infiniteForward(uint64_t pts)
 {
     admPreview::deferDisplay(1);
-    if(false==video_body->goToTimeVideo(pts))
+    if (false == video_body->goToTimeVideo(pts))
     {
-        ADM_warning("Seek to %s failed, retrying from the previous keyframe\n",ADM_us2plain(pts));
+        ADM_warning("Seek to %s failed, retrying from the previous keyframe\n", ADM_us2plain(pts));
         // work around a possible inability to decode keyframe at pts
-        uint64_t tmp=pts;
-        if(!video_body->getPKFramePTS(&tmp))
+        uint64_t tmp = pts;
+        if (!video_body->getPKFramePTS(&tmp))
             return false;
-        ADM_info("Retrying from keyframe at %s\n",ADM_us2plain(tmp));
-        if(false==video_body->goToTimeVideo(tmp))
+        ADM_info("Retrying from keyframe at %s\n", ADM_us2plain(tmp));
+        if (false == video_body->goToTimeVideo(tmp))
         {
-            ADM_error("Seek to the penultimate keyframe failed as well, giving up\n",ADM_us2plain(tmp));
+            ADM_error("Seek to the penultimate keyframe failed as well, giving up\n", ADM_us2plain(tmp));
             return false;
         }
     }
     bool refreshNeeded = true;
-    while(admPreview::nextPicture())
+    while (admPreview::nextPicture())
     {
         refreshNeeded = false;
     }
-    if(refreshNeeded)
+    if (refreshNeeded)
         admPreview::samePicture();
     admPreview::deferDisplay(0);
     return true;
@@ -893,32 +909,32 @@ bool GUI_infiniteForward(uint64_t pts)
  */
 bool GUI_lastFrameBeforePts(uint64_t pts)
 {
-    uint64_t tmp=pts;
-    uint64_t current=admPreview::getCurrentPts();
+    uint64_t tmp = pts;
+    uint64_t current = admPreview::getCurrentPts();
     // Try to find a keyframe just before pts...
-    if(!video_body->getPKFramePTS(&tmp))
+    if (!video_body->getPKFramePTS(&tmp))
         return false;
 
-    if(tmp<=current && pts>current) // within the same GOP, seeking forward
-        tmp=current; // no need to go back to the keyframe
-    else if(!video_body->goToTimeVideo(tmp))
+    if (tmp <= current && pts > current) // within the same GOP, seeking forward
+        tmp = current;                   // no need to go back to the keyframe
+    else if (!video_body->goToTimeVideo(tmp))
         return false;
 
     // Starting from tmp, approach the last frame before pts
     admPreview::deferDisplay(true);
     bool stepBack = false;
-    while(true)
+    while (true)
     {
         stepBack = admPreview::nextPicture();
-        if(!stepBack)
+        if (!stepBack)
             break;
         tmp = admPreview::getCurrentPts();
-        if(tmp == ADM_NO_PTS)
+        if (tmp == ADM_NO_PTS)
             break;
-        if(tmp >= pts)
+        if (tmp >= pts)
             break;
     }
-    if(stepBack)
+    if (stepBack)
         admPreview::previousPicture();
     admPreview::deferDisplay(false);
     admPreview::samePicture();
@@ -934,13 +950,13 @@ bool GUI_lastFrameBeforePts(uint64_t pts)
  */
 void A_timedError(bool *first, const char *s)
 {
-    if(*first || NaggingCountDown.done()) // else still running, do not nag
+    if (*first || NaggingCountDown.done()) // else still running, do not nag
     {
-        if(UI_navigationButtonsPressed()) // probably auto-repeat in action
+        if (UI_navigationButtonsPressed()) // probably auto-repeat in action
             return;
         NaggingCountDown.reset();
         *first = false;
-        GUI_Error_HIG(QT_TRANSLATE_NOOP("navigate","Error"),s);
+        GUI_Error_HIG(QT_TRANSLATE_NOOP("navigate", "Error"), s);
         return;
     }
     NaggingCountDown.reset();

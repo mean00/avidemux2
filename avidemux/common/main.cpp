@@ -32,7 +32,9 @@
 #include "avi_vars.h"
 
 #include "ADM_assert.h"
+#if (ADM_UI_TYPE_BUILD != ADM_UI_CLI)
 #include "ADM_qtx.h"
+#endif
 #include "GUI_render.h"
 #include "adm_main.h"
 #include "audio_out.h"

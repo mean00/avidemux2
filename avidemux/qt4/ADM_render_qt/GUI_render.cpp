@@ -29,33 +29,10 @@
 #include "ADM_qtx.h"
 // clang-format on
 
-extern VideoRenderBase *spawnSimpleRender();
-
-#ifdef USE_XV
-extern VideoRenderBase *spawnXvRender();
-#endif
-
-#ifdef USE_SDL
-extern VideoRenderBase *spawnSdlRender();
-#endif
-
-#ifdef USE_VDPAU
-extern VideoRenderBase *spawnVDPAURender();
-#endif
-
-#ifdef USE_LIBVA
-extern VideoRenderBase *spawnLIBVARender();
-#endif
-
-#if defined(USE_OPENGL)
-extern VideoRenderBase *RenderSpawnQtGl(void);
-#endif
-#if defined(USE_DXVA2)
-extern VideoRenderBase *RenderSpawnDxva2(void);
-#endif
 #include "ADM_colorspace.h"
 #include "DIA_uiTypes.h"
 
+ADM_renderContext renderContext;
 //_____________________________________
 //_____________________________________
 static VideoRenderBase *renderer = NULL;
@@ -63,9 +40,6 @@ static uint8_t *accelSurface = NULL;
 static bool spawnRenderer(void);
 //_______________________________________
 
-static void *draw = NULL;
-static uint32_t phyW = 0, phyH = 0; /* physical window size */
-static float lastZoom = ZOOM_1_1;
 static uint8_t _lock = 0;
 
 static const UI_FUNCTIONS_T *HookFunc = NULL;
@@ -143,7 +117,7 @@ void *MUI_getDrawWidget(void)
 */
 uint8_t renderInit(void)
 {
-    draw = MUI_getDrawWidget();
+    renderContext.draw = MUI_getDrawWidget();
     enableDraw = false;
     return 1;
 }
@@ -187,16 +161,16 @@ uint8_t renderDisplayResize(uint32_t w, uint32_t h, float zoom)
     bool create = false;
     enableDraw = false;
     ADM_info("Render to %" PRIu32 "x%" PRIu32 " zoom=%.4f, old one =%d x %d, zoom=%.4f, renderer=%p\n", w, h, zoom,
-             phyW, phyH, lastZoom, renderer);
+             renderContext.phyW, renderContext.phyH, renderContext.lastZoom, renderer);
     // Check if something has changed...
 
-    if (renderer && w == phyW && h == phyH && zoom == lastZoom)
+    if (renderer && w == renderContext.phyW && h == renderContext.phyH && zoom == renderContext.lastZoom)
     {
         ADM_info("          No change, nothing to do\n");
         return true;
     }
 
-    if (!renderer || (w != phyW || h != phyH))
+    if (!renderer || (w != renderContext.phyW || h != renderContext.phyH))
     {
         if (renderer)
         {
@@ -204,9 +178,9 @@ uint8_t renderDisplayResize(uint32_t w, uint32_t h, float zoom)
             delete renderer;
             renderer = NULL;
         }
-        phyW = w;
-        phyH = h;
-        lastZoom = zoom;
+        renderContext.phyW = w;
+        renderContext.phyH = h;
+        renderContext.lastZoom = zoom;
         if (w && h)
             spawnRenderer();
     }
@@ -215,8 +189,8 @@ uint8_t renderDisplayResize(uint32_t w, uint32_t h, float zoom)
         renderer->changeZoom(zoom);
     }
     // Resize widget to be the same as input after zoom
-    lastZoom = zoom;
-    MUI_updateDrawWindowSize(draw, (uint32_t)((float)w * zoom), (uint32_t)((float)h * zoom));
+    renderContext.lastZoom = zoom;
+    MUI_updateDrawWindowSize(renderContext.draw, (uint32_t)((float)w * zoom), (uint32_t)((float)h * zoom));
     if (w && h)
         renderCompleteRedrawRequest();
     UI_purge();
@@ -282,111 +256,53 @@ uint8_t renderExpose(void)
     renderRefresh();
     return 1;
 }
-/**
-    \fn spawnRenderer
-    \brief Create renderer according to prefs
-*/
-#if ADM_UI_TYPE_BUILD == ADM_UI_CLI
+/**                                                                                                                    \
+ *                                                                                                                     \
+ * @param renderName                                                                                                   \
+ * @return                                                                                                             \
+ */
+extern VideoRenderBase *spawnDefaultRenderer(ADM_RENDER_TYPE preferred, ADM_renderContext &ctx);
+extern VideoRenderBase *spawnCommonRenderer(ADM_RENDER_TYPE preferred, ADM_renderContext &ctx);
 
-bool spawnRenderer(void)
-{
-    renderer = new nullRender();
-    return true;
-}
-#else
+#if APPLE
+#elif _WIN32
+VideoRenderBase *spawnWin32Renderer(ADM_RENDER_TYPE preferred, ADM_renderContext &ctx);
+#else // linux
+VideoRenderBase *spawnLinuxRenderer(ADM_RENDER_TYPE preferred, ADM_renderContext &ctx);
+#endif
 
-#define TRY_RENDERER_INTERNAL(clss, create, name)                                                                      \
-    renderer = create clss();                                                                                          \
-    r = renderer->init(&xinfo, phyW, phyH, lastZoom);                                                                  \
-    if (!r)                                                                                                            \
+#define TRY_RENDERER(spawnFactory)                                                                                     \
     {                                                                                                                  \
-        delete renderer;                                                                                               \
-        renderer = NULL;                                                                                               \
-        ADM_warning(name " init failed\n");                                                                            \
-    }                                                                                                                  \
-    else                                                                                                               \
-    {                                                                                                                  \
-        ADM_info(name " init ok\n");                                                                                   \
+        renderer = spawnFactory(prefRenderer, renderContext);                                                          \
+        if (renderer)                                                                                                  \
+            return true;                                                                                               \
     }
-// #define TRY_RENDERER_CLASS(clss,name) TRY_RENDERER_INTERNAL(clss,new,name)
-// #define TRY_RENDERER_FUNC(func,name) TRY_RENDERER_INTERNAL(func,,name)
-#define TRY_RENDERER_SPAWN(spawn, name)                                                                                \
-    if (QT_X11_ENGINE == admDetectQtEngine())                                                                          \
-    {                                                                                                                  \
-        TRY_RENDERER_INTERNAL(spawn, , name)                                                                           \
-    }                                                                                                                  \
-    else                                                                                                               \
-    {                                                                                                                  \
-        ADM_info("Disabling %s because of Wayland use\n", #name);                                                      \
-    }
+
 /**
  *
- * @param renderName
- * @return
+ *
  */
 bool spawnRenderer(void)
 {
-    int prefRenderer = MUI_getPreferredRender();
+    ADM_RENDER_TYPE prefRenderer = (ADM_RENDER_TYPE)MUI_getPreferredRender();
     bool r = false;
 
     GUI_WindowInfo xinfo;
-    MUI_getWindowInfo(draw, &xinfo);
-    switch (prefRenderer)
-    {
-#if defined(USE_DXVA2)
-    case RENDER_DXVA2: {
-        TRY_RENDERER_SPAWN(RenderSpawnDxva2, "Dxva2");
-        break;
-    }
-#endif
-#if defined(USE_OPENGL)
-    case RENDER_QTOPENGL: {
-        bool hasOpenGl = false;
-        prefs->get(FEATURES_ENABLE_OPENGL, &hasOpenGl);
-        if (!hasOpenGl)
-        {
-            ADM_warning("OpenGl is disabled\n");
-            renderer = NULL;
-        }
-        else
-        {
-            TRY_RENDERER_SPAWN(RenderSpawnQtGl, "QtGl");
-        }
-        break;
-    }
-#endif
+    MUI_getWindowInfo(renderContext.draw, &renderContext.xinfo);
 
-#if defined(USE_VDPAU)
-    case RENDER_VDPAU:
-        TRY_RENDERER_SPAWN(spawnVDPAURender, "VDPAU")
-        break;
-#endif
-#if defined(USE_LIBVA)
-    case RENDER_LIBVA:
-        TRY_RENDERER_SPAWN(spawnLIBVARender, "LIBVA")
-        break;
-#endif
+    // lookup renderer
+    TRY_RENDERER(spawnCommonRenderer)
+#if APPLE
 
-#if defined(USE_XV)
-    case RENDER_XV:
-        TRY_RENDERER_SPAWN(spawnXvRender, "Xv")
-        break;
+#elif _WIN32
+    TRY_RENDERER(spawnWin32Renderer);
+#else // linux
+    TRY_RENDERER(spawnLinuxRenderer);
 #endif
-
-#if defined(USE_SDL)
-    case RENDER_SDL:
-        TRY_RENDERER_SPAWN(spawnSdlRender, "SDL")
-        break;
-#endif
-    }
-    if (!renderer)
-    {
-        TRY_RENDERER_SPAWN(spawnSimpleRender, "simpleRenderer");
-        ADM_assert(renderer);
-    }
+    // none found, use default
+    renderer = spawnDefaultRenderer(RENDER_DEFAULT, renderContext);
     return true;
 }
-#endif
 
 /**
     \fn

@@ -24,14 +24,14 @@
 #include <math.h>
 
 #include "ADM_assert.h"
-#include "ADM_commonUI/DIA_busy.h"
-#include "ADM_commonUI/GUI_ui.h"
 #include "ADM_coreAudio.h"
+#include "DIA_busy.h"
 #include "DIA_coreToolkit.h"
 #include "DIA_fileSel.h"
 #include "DIA_processing.h"
 #include "DIA_working.h"
 #include "GUI_render.h"
+#include "GUI_ui.h"
 #include "audio_out.h"
 #include "gtkgui.h"
 #include "gui_action.hxx"

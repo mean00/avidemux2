@@ -14,8 +14,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef GUI_RENDER_H
-#define GUI_RENDER_H
+#pragma once
 
 #include "ADM_image.h"
 #include "ADM_render6_export.h"
@@ -66,34 +65,25 @@ void UI_getMaximumPreviewSize(uint32_t *availWidth, uint32_t *availHeight);
  * can do Xv, but the QT4 one cannot */
 typedef enum
 {
-    RENDER_GTK = 0,
-#ifdef USE_XV
     RENDER_XV = 1,
-#endif
-
-#ifdef USE_SDL
     RENDER_SDL = 2,
-
-#ifdef _WIN32
     RENDER_DIRECTX = 3,
-#endif
-#endif
-#ifdef USE_VDPAU
     RENDER_VDPAU = 4,
-
-#endif
-#ifdef USE_OPENGL
     RENDER_QTOPENGL = 5,
-#endif
-#ifdef USE_LIBVA
-    RENDER_LIBVA = 6,
-#endif
-#ifdef USE_DXVA2
-    RENDER_DXVA2 = 6,
-#endif // USE_DXVA2
-
+    RENDER_LIBVA = 7,
+    RENDER_DXVA2 = 8,
+    RENDER_DEFAULT = 9,
+    RENDER_GTK = 10,
     RENDER_LAST
-
 } ADM_RENDER_TYPE;
-
-#endif
+/**
+ *
+ */
+typedef struct
+{
+    int phyW;
+    int phyH;
+    int lastZoom;
+    GUI_WindowInfo xinfo;
+    void *draw;
+} ADM_renderContext;

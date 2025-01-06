@@ -1,5 +1,5 @@
 /***************************************************************************
-                            \file   ADM_guiBitrate 
+                            \file   ADM_guiBitrate
                             \brief	Simple bitrate analyzer
 
     copyright            : (C) 2003/2009 by mean
@@ -16,32 +16,33 @@
  ***************************************************************************/
 #include "ADM_cpp.h"
 using std::string;
-#include <math.h>
 #include "ADM_default.h"
+#include "ADM_edit.hxx"
 #include "DIA_coreToolkit.h"
 #include "DIA_factory.h"
-#include "ADM_edit.hxx"
+#include <math.h>
 /**
       \fn GUI_displayBitrate
       \brief display a bargraph with bitrates
 */
 extern ADM_Composer *video_body;
-void GUI_displayBitrate( void )
+void GUI_displayBitrate(void)
 {
 
- uint32_t total,max;
- uint32_t len,idx,nb_frame,k,changed;
- uint32_t round,sum,average[60];;
+    uint32_t total, max;
+    uint32_t len, idx, nb_frame, k, changed;
+    uint32_t round, sum, average[60];
+    ;
 
- float f;
+    float f;
 
-float    display[20];
-uint32_t medium=0;
-uint32_t nbIFrame=0;
-uint32_t nbPFrame=0;
-uint32_t nbBFrame=0;
-uint32_t curBFrame=0;
-uint32_t maxBFrame=0;
+    float display[20];
+    uint32_t medium = 0;
+    uint32_t nbIFrame = 0;
+    uint32_t nbPFrame = 0;
+    uint32_t nbBFrame = 0;
+    uint32_t curBFrame = 0;
+    uint32_t maxBFrame = 0;
 #if 0
 	// 1st compute the total
 	uint32_t start,end;
@@ -197,7 +198,9 @@ uint32_t maxBFrame=0;
           bar[19-i]=new  diaElemBar((uint32_t)display[i],str);
             
         }
-#define DOME(a,b,c)       sprintf(bf,"%u",b); diaElemReadOnlyText a(bf,c);
+#define DOME(a, b, c)                                                                                                  \
+    sprintf(bf, "%u", b);                                                                                              \
+    diaElemReadOnlyText a(bf, c);
         char bf[100];
         DOME(mx,max,QT_TRANSLATE_NOOP("histogram","Max. bitrate:"));
         DOME(med,medium,QT_TRANSLATE_NOOP("histogram","Average bitrate:"));
@@ -226,4 +229,4 @@ uint32_t maxBFrame=0;
         }
 #endif
 }
-//EOF
+// EOF

@@ -34,12 +34,12 @@
 #include "ADM_cpp.h"
 #include "config.h"
 
-#include "ADM_commonUI/GUI_ui.h"
 #include "ADM_default.h"
 #include "ADM_edit.hxx"
 #include "ADM_preview.h"
 #include "DIA_coreToolkit.h"
 #include "GUI_render.h"
+#include "GUI_ui.h"
 
 extern uint8_t UI_getPhysicalScreenSize(void *window, uint32_t *w, uint32_t *h);
 // static void                 previewBlit(ADMImage *from,ADMImage *to,uint32_t startx,uint32_t starty);

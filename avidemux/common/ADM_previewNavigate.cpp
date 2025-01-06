@@ -38,8 +38,8 @@
 #include "ADM_edit.hxx"
 #include "GUI_render.h"
 
-#include "ADM_commonUI/GUI_ui.h"
 #include "ADM_preview.h"
+#include "GUI_ui.h"
 
 #include "DIA_coreToolkit.h"
 
