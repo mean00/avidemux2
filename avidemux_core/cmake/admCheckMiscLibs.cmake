@@ -3,9 +3,7 @@
 ########################################
 INCLUDE(admCheckGettext)
 
-IF(NOT CROSS)
-	checkGettext()
-ENDIF()
+checkGettext()
 
 SET(ADM_LOCALE "${CMAKE_INSTALL_PREFIX}/share/locale")
 
