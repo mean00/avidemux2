@@ -97,7 +97,6 @@ INCLUDE_DIRECTORIES("${AVIDEMUX_SEARCH_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MI
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Unbundle some libraries here
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-OPTION(USE_EXTERNAL_LIBASS "Use system installed libass library." OFF)
 OPTION(USE_EXTERNAL_LIBMAD "Use system installed libmad library." OFF)
 OPTION(USE_EXTERNAL_LIBA52 "Use system installed liba52 library." OFF)
 OPTION(USE_EXTERNAL_MP4V2 "Use system installed libmp4v2 library." OFF)
@@ -105,10 +104,8 @@ OPTION(USE_EXTERNAL_MP4V2 "Use system installed libmp4v2 library." OFF)
 INCLUDE(FindPkgConfig)
 
 # libass
-IF(USE_EXTERNAL_LIBASS)
-  PKG_CHECK_MODULES(LIBASS REQUIRED libass)
-  INCLUDE_DIRECTORIES(SYSTEM ${LIBASS_INCLUDE_DIRS})
-ENDIF()
+PKG_CHECK_MODULES(LIBASS REQUIRED libass)
+INCLUDE_DIRECTORIES(SYSTEM ${LIBASS_INCLUDE_DIRS})
 
 # libmad
 IF(USE_EXTERNAL_LIBMAD)

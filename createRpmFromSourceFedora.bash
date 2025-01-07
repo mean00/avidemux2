@@ -196,7 +196,7 @@ echo "Building..."
 umask 0022
 logfile="/tmp/log-bootstrap-$(date +%F_%T).log"
 SRCTOP=$(cd $(dirname "$0") && pwd)
-bash "${SRCTOP}"/bootStrap.bash ${rebuild} --with-system-libass --rpm 2>&1 | tee ${logfile}
+bash "${SRCTOP}"/bootStrap.bash ${rebuild} --rpm 2>&1 | tee ${logfile}
 if [ ${PIPESTATUS[0]} -ne 0 ]; then
   fail "Build failed, please inspect ${logfile} and /tmp/logbuild* files."
 fi

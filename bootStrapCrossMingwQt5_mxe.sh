@@ -11,7 +11,6 @@ do_core=1
 do_qt=1
 do_cli=1
 do_plugins=1
-external_libass=1
 external_liba52=0
 external_libmad=0
 do_release_pkg=1
@@ -35,9 +34,6 @@ authorSetup()
 setupEnv()
 {
     export BUILDDATE=$(date +%y%m%d-%H%M%S)
-    if [ "x$external_libass" = "x1" ]; then
-        export EXTRA_CMAKE_DEFS="-DUSE_EXTERNAL_LIBASS=true $EXTRA_CMAKE_DEFS"
-    fi
     if [ "x$external_liba52" = "x1" ]; then
         export EXTRA_CMAKE_DEFS="-DUSE_EXTERNAL_LIBA52=true $EXTRA_CMAKE_DEFS"
     fi
@@ -150,7 +146,6 @@ usage()
     echo "  --without-qt           : Don't build Qt application and plugins"
     echo "  --with-plugins         : Build plugins (default)"
     echo "  --without-plugins      : Don't build plugins"
-    echo "  --with-internal-libass : Use bundled libass instead of the system one"
     echo "  --with-system-liba52   : Use the system liba52 (a52dec) instead of the bundled one"
     echo "  --with-system-libmad   : Use the system libmad instead of the bundled one"
     echo "  --nopkg                : Don't create a ZIP archive with all required libraries"
@@ -220,14 +215,12 @@ create_release_package()
     if [ "x${external_liba52}" = "x1" ]; then
         cp -v liba52-*.dll "$TARGETDIR"
     fi
-    if [ "x${external_libass}" = "x1" ]; then
-        cp -v libass-*.dll "$TARGETDIR"
-    fi
     if [ "x${external_libmad}" = "x1" ]; then
         cp -v libmad-*.dll "$TARGETDIR"
     fi
     cp -v \
     libaom.dll \
+    libass-*.dll \
     libbrotlicommon.dll \
     libbrotlidec.dll \
     libbz2.dll \
@@ -350,9 +343,6 @@ while [ $# != 0 ]; do
             ;;
         --with-core)
             do_core=1
-            ;;
-        --with-internal-libass)
-            export external_libass=0
             ;;
         --with-system-liba52)
             export external_liba52=1

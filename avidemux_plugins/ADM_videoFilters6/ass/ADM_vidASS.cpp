@@ -24,11 +24,7 @@
 #include "prefs.h"
 extern "C"
 {
-#ifdef USE_EXTERNAL_LIBASS
 #include "ass/ass.h"
-#else
-#include "ADM_libass/ass.h"
-#endif
 }
 
 typedef enum

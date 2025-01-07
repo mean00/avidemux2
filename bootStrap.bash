@@ -2,7 +2,7 @@
 # Bootstrapper to semi-automatically build avidemux deb/rpm from source
 # (c) Mean-Euma  2009/2024
 #
-# By default we use qt5 now
+# By default we use qt6 now
 #
 #
 RED="\e[31m"
@@ -30,7 +30,6 @@ need_ae_lav_build_quirk=""
 if [[ $(uname -m) = i?86 ]]; then
   need_ae_lav_build_quirk="1"
 fi
-external_libass=1
 external_liba52=0
 external_libmad=0
 external_libmp4v2=0
@@ -129,7 +128,7 @@ config() {
   printModule $do_plugins Plugins
 }
 usage() {
-  echo "Bootstrap avidemux 2.6:"
+  echo "Bootstrap Avidemux:"
   echo "***********************"
   echo "  --help                : Print usage"
   echo "  --prefix=DIR          : Install to directory DIR (default: $default_install_prefix)"
@@ -147,11 +146,10 @@ usage() {
   echo "  --without-qt          : Don't build Qt dependent components"
   echo "  --with-plugins        : Build plugins (default)"
   echo "  --without-plugins     : Don't build plugins"
-  echo "  --enable-qt4          : Try to use Qt4 instead of Qt5"
+  echo "  --enable-qt4          : Try to use Qt4 instead of Qt6"
   echo "  --enable-qt5          : Try to use Qt5 instead of Qt6"
   echo "  --enable-asan         : Enable Clang/llvm address sanitizer"
   echo "  --with-clang          : Use clang/clang++ as compiler"
-  echo "  --with-system-libass  : Use system libass instead of the bundled one"
   echo "  --with-system-liba52  : Use system liba52 (a52dec) instead of the bundled one"
   echo "  --with-system-libmad  : Use system libmad instead of the bundled one"
   echo "  --with-system-libmp4v2: Use system libmp4v2 instead of the bundled one"
@@ -270,9 +268,6 @@ while [ $# != 0 ]; do
   --with-core)
     do_core=1
     ;;
-  --with-system-libass)
-    external_libass=1
-    ;;
   --with-system-liba52)
     external_liba52=1
     ;;
@@ -302,9 +297,6 @@ fi
 SRCTOP=$(cd $(dirname "$0") && pwd)
 POSTFIX=""
 FAKEROOT_DIR="${BUILDTOP}/install"
-if [ "x$external_libass" = "x1" ]; then
-  EXTRA_CMAKE_DEFS="-DUSE_EXTERNAL_LIBASS=true $EXTRA_CMAKE_DEFS"
-fi
 if [ "x$external_liba52" = "x1" ]; then
   EXTRA_CMAKE_DEFS="-DUSE_EXTERNAL_LIBA52=true $EXTRA_CMAKE_DEFS"
 fi

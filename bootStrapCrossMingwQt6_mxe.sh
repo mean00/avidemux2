@@ -34,7 +34,6 @@ setupEnv()
 {
     export BITS="64"
     export BUILDDATE=$(date +%y%m%d-%H%M%S)
-    export EXTRA_CMAKE_DEFS="-DUSE_EXTERNAL_LIBASS=true $EXTRA_CMAKE_DEFS"
     if [ "x$external_liba52" = "x1" ]; then
         export EXTRA_CMAKE_DEFS="-DUSE_EXTERNAL_LIBA52=true $EXTRA_CMAKE_DEFS"
     fi

@@ -127,7 +127,7 @@ install_deps
 echo "Compiling avidemux, this may take a few minutes..."
 logfile="/tmp/log-bootstrap-$(date +%F_%T).log"
 SRCTOP=$(cd $(dirname "$0") && pwd)
-bash "${SRCTOP}"/bootStrap.bash --with-system-libass --deb --prefix=$install_prefix $rebuild 2>&1 | tee ${logfile}
+bash "${SRCTOP}"/bootStrap.bash --deb --prefix=$install_prefix $rebuild 2>&1 | tee ${logfile}
 if [ ${PIPESTATUS[0]} -ne 0 ]; then
     echo "Build failed, please inspect ${logfile} and /tmp/logbuild* files."
     if [ $install_packages -eq 1 ]; then

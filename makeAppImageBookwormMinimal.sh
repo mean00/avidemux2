@@ -254,7 +254,7 @@ rm -rf install > /dev/null 2>&1
 
 SRCTOP=$(cd $(dirname "$0") && pwd)
 logfile="/tmp/log-bootstrap-$(date +%F_%T).log"
-bash "${SRCTOP}/bootStrap.bash" --with-system-libass --with-system-libmad ${rebuild} 2>&1 | tee ${logfile}
+bash "${SRCTOP}/bootStrap.bash" --with-system-libmad ${rebuild} 2>&1 | tee ${logfile}
 if [ ${PIPESTATUS[0]} -ne 0 ]; then
     fail "Build failed, please inspect ${logfile} and /tmp/logbuild* files."
 fi

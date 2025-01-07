@@ -254,7 +254,7 @@ rm -rf install > /dev/null 2>&1
 
 export CXXFLAGS="$CXXFLAGS -std=c++11"
 logfile="/tmp/log-bootstrap-$(date +%F_%T).log"
-bash bootStrap.bash --with-system-libass --with-system-libmad ${rebuild} 2>&1 | tee ${logfile}
+bash bootStrap.bash --with-system-libmad ${rebuild} 2>&1 | tee ${logfile}
 if [ ${PIPESTATUS[0]} -ne 0 ]; then
     fail "Build failed, please inspect ${logfile} and /tmp/logbuild* files."
 fi
