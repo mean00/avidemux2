@@ -1,32 +1,35 @@
-SET(ADM_codecs_SRCS 
-ADM_codecs.cpp
-ADM_ffmp43.cpp
-ADM_codecFFsimple.cpp
-ADM_rgb16.cpp
-ADM_uyvy.cpp
-ADM_codecSearch.cpp
-DIA_lavDecoder.cpp
-ADM_ffHwAccel.cpp
-ADM_ffVp9.cpp
+
+SET(ADM_LIB ADM_coreVideoCodec6)
+ADM_ADD_SHARED_LIBRARY(${ADM_LIB})
+TARGET_SOURCES(${ADM_LIB} PRIVATE
+  ADM_codecs.cpp
+  ADM_ffmp43.cpp
+  ADM_codecFFsimple.cpp
+  ADM_rgb16.cpp
+  ADM_uyvy.cpp
+  ADM_codecSearch.cpp
+  DIA_lavDecoder.cpp
+  ADM_ffHwAccel.cpp
+  ADM_ffVp9.cpp
 )
 
-IF(${ADM_DEBUG})
-    ADD_DEFINITIONS(-DADM_DEBUG)
-ENDIF(${ADM_DEBUG})
-ADM_ADD_SHARED_LIBRARY(ADM_coreVideoCodec6 ${ADM_codecs_SRCS})
-TARGET_LINK_LIBRARIES(ADM_coreVideoCodec6 
+TARGET_LINK_LIBRARIES(ADM_coreVideoCodec6 PUBLIC
                                           ADM_core6
-                                          ADM_coreImage6 
+                                          ADM_coreImage6
                                           ADM_coreUI6
                                           ADM_coreUtils6
+                                          ADM_coreImage6
                                           ADM_libavcodec
                                           ADM_libavformat
-                                          ADM_libavutil)
+                                          ADM_libavutil
+)
 
-if (NOT ${CMAKE_VERSION} VERSION_GREATER 2.8.3)
-	add_dependencies(ADM_coreVideoCodec6 libavcodec libavformat libavutil)
-endif (NOT ${CMAKE_VERSION} VERSION_GREATER 2.8.3)
+TARGET_INCLUDE_DIRECTORIES(${ADM_LIB} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 
-ADM_INSTALL_LIB(ADM_coreVideoCodec6)
+ADM_INSTALL_LIB(${ADM_LIB})
+
+IF(${ADM_DEBUG})
+  TARGET_COMPILE_DEFINITIONS(ADM_coreVideoCodec6 PRIVATE "ADM_DEBUG")
+ENDIF()
 
 REMOVE_DEFINITIONS(-DHAVE_CONFIG_H)

@@ -11,8 +11,8 @@ SET(${ADM_LIB}_SRCS
         ADM_transfert.cpp  interact.cpp       mpastrm_in.cpp  stillsstream.cpp  mpegconsts.c      mjpeg_logging.c    decodebufmodel.cpp
 	yuv4mpeg.c          cpu_accel.c)
 
-include_directories("${PTHREAD_INCLUDE_DIR}")
 ADD_MUXER(${ADM_LIB} ${${ADM_LIB}_SRCS})
+TARGET_LINK_LIBRARIES(${ADM_LIB} PRIVATE adm_pthread
 ADD_DEFINITIONS(${ADM_LIB} "-I${CMAKE_CURRENT_SOURCE_DIR} -DHAVE_FMAX -DRETSIGTYPE=void")
 
 IF (NOT APPLE)

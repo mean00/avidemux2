@@ -1,3 +1,4 @@
+INCLUDE(admPluginLocation)
 SET(AUTOSCRIPT_DIR "${AVIDEMUX_LIB_DIR}/${ADM_PLUGIN_DIR}/autoScripts/")
 
 FILE(GLOB py_files ${CMAKE_CURRENT_SOURCE_DIR}/*.py)

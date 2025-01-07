@@ -11,4 +11,5 @@ ADD_DEFINITIONS("-DADM_CURRENT_VERSION=${currentVersion}")
 
 
 ADD_LIBRARY( ${ADM_update} STATIC ADM_update.cpp ${${ADM_update}_source})
+TARGET_LINK_LIBRARIES(${ADM_update} PUBLIC adm_pthread)
 

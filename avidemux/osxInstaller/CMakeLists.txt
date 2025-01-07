@@ -1,32 +1,40 @@
-cmake_minimum_required(VERSION 3.7)
-project("AvidemuxBundle")
+CMAKE_MINIMUM_REQUIRED(VERSION 3.7)
+PROJECT("AvidemuxBundle")
 MESSAGE(STATUS  "* Start *")
 
 SET(ORIGINAL "${CMAKE_BINARY_DIR}/../Avidemux${AVIDEMUX_MAJOR_MINOR}.app")
 SET(ADM_CMAKE_DIR "${ORIGINAL}/Contents/Resources/include/avidemux/${AVIDEMUX_MAJOR_MINOR}/cmake") # needed by config helper
-SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" "${ADM_CMAKE_DIR}" "${CMAKE_MODULE_PATH}")
-
+IF(NOT FAKEROOT)
+  SET(AVIDEMUX_FAKEROOT "")
+ELSE()
+  SET(AVIDEMUX_FAKEROOT "${FAKEROOT}")
+ENDIF()
+# To get icons etc..
+LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_CURRENT_SOURCE_DIR}/../qt4/cmake )
+#probably not needed
+LIST(APPEND CMAKE_MODULE_PATH ${AVIDEMUX_FAKEROOT}${CMAKE_INSTALL_PREFIX}/include/avidemux/${AVIDEMUX_API_VERSION}/cmake ${ADM_CMAKE_DIR})
+#
 # Can we instead propagate vars set during the build?
-include(admConfigHelper)
-include(admDetermineSystem)
+INCLUDE(admConfigHelper)
+INCLUDE(admDetermineSystem)
 
-include(admCheckQt)
+INCLUDE(admCheckQt)
 
 IF(ENABLE_QT6)
   MESSAGE(STATUS  "* Checking Qt6 *")
-ELSE(ENABLE_QT6)
+ELSE()
   IF(ENABLE_QT5)
     MESSAGE(STATUS "* Checking Qt5 *")
-  ELSE(ENABLE_QT5)
+  ELSE()
     MESSAGE(FATAL_ERROR "Unsupported Qt version requested")
-  ENDIF(ENABLE_QT5)
-ENDIF(ENABLE_QT6)
+  ENDIF()
+ENDIF()
 
 checkQt()
 
 IF(NOT QT_FOUND)
   MESSAGE(FATAL_ERROR "Qt not found")
-ENDIF(NOT QT_FOUND)
+ENDIF()
 
 SET(BUNDLE_NAME "Avidemux-${AVIDEMUX_VERSION}.app")
 SET(BUNDLE "${CMAKE_BINARY_DIR}/${BUNDLE_NAME}")
@@ -43,19 +51,22 @@ LIST(APPEND bundleDirs  "${BUNDLE}/Contents/Resources/lib")
 IF(ENABLE_QT6)
   # A gross hack to work around the failure to resolve @loader_path for libbrotli.
   LIST(APPEND bundleDirs "/usr/local/lib")
-ENDIF(ENABLE_QT6)
+ENDIF()
 #
 
 #
 MESSAGE(STATUS "* Creating Skeleton *")
-FILE(COPY  "${ORIGINAL}/Contents/MacOS/Avidemux${AVIDEMUX_MAJOR_MINOR}" DESTINATION "${BUNDLE}/Contents/MacOS/")
+# Quick Hack...
+#FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/../qt4/ADM_userInterfaces/ADM_gui/pics/avidemux.icns"
+#  DESTINATION "${ORIGINAL}/Contents/Resources/avidemux.icns")
+FILE(COPY "${ORIGINAL}/Contents/MacOS/Avidemux${AVIDEMUX_MAJOR_MINOR}" DESTINATION "${BUNDLE}/Contents/MacOS/")
 # Copy jobs and cli too
-FILE(COPY  "${ORIGINAL}/Contents/Resources/bin/avidemux_cli"          DESTINATION "${BUNDLE}/Contents/MacOS/")
-FILE(COPY  "${ORIGINAL}/Contents/Resources/bin/avidemux_jobs"         DESTINATION "${BUNDLE}/Contents/MacOS/")
-FILE(COPY  "${ORIGINAL}/Contents/Info.plist"                          DESTINATION "${BUNDLE}/Contents/")
-FILE(COPY  "${ORIGINAL}/Contents/Resources/lib"                       DESTINATION "${BUNDLE}/Contents/Resources/")
+FILE(COPY "${ORIGINAL}/Contents/Resources/bin/avidemux_cli"          DESTINATION "${BUNDLE}/Contents/MacOS/")
+FILE(COPY "${ORIGINAL}/Contents/Resources/bin/avidemux_jobs"         DESTINATION "${BUNDLE}/Contents/MacOS/")
+FILE(COPY "${ORIGINAL}/Contents/Info.plist"                          DESTINATION "${BUNDLE}/Contents/")
+FILE(COPY "${ORIGINAL}/Contents/Resources/lib"                       DESTINATION "${BUNDLE}/Contents/Resources/")
 
-include(linkMacro)
+INCLUDE(linkMacro)
 
 makeLink("Resources/lib"  "." ${BUNDLE}/Contents/)
 #
@@ -70,15 +81,15 @@ IF(EXISTS "${QT_PLUGINS_DIR}/styles")
         OWNER_WRITE OWNER_READ OWNER_EXECUTE
         GROUP_WRITE GROUP_READ GROUP_EXECUTE
         WORLD_WRITE WORLD_READ WORLD_EXECUTE)
-ENDIF(EXISTS "${QT_PLUGINS_DIR}/styles")
+ENDIF()
 # Update Qt plugins
 #
-file(GLOB  pluginList "${BUNDLE}/Contents/PlugIns/platforms/*.dylib" "${BUNDLE}/Contents/PlugIns/styles/*.dylib")
+FILE(GLOB  pluginList "${BUNDLE}/Contents/PlugIns/platforms/*.dylib" "${BUNDLE}/Contents/PlugIns/styles/*.dylib")
 MESSAGE(STATUS "List of plugins ${pluginList}")
 FOREACH(plugin ${pluginList})
   MESSAGE(STATUS "=> ${plugin}")
   LIST(APPEND myPlugins ${plugin})
-ENDFOREACH(plugin ${pluginList})
+ENDFOREACH()
 MESSAGE(STATUS ">>List of plugins to process ${myPlugins}")
 MESSAGE(STATUS " * plugin *")
 #
@@ -95,7 +106,7 @@ FOREACH(k ${kind})
   file(GLOB_RECURSE  kind_${k} "${k}/*.dylib")
   MESSAGE(STATUS "\t ${kind_${k}}")
   LIST(APPEND all_adm_plugin  ${kind_${k}})
-ENDFOREACH(k ${kind})
+ENDFOREACH()
 #
 LIST(APPEND all ${myPlugins})
 LIST(APPEND all ${all_adm_plugin})
@@ -118,7 +129,7 @@ FOREACH(lang ${ListOfTranslationFiles})
   STRING(REPLACE ".qm" "" lang "${lang}")
   MESSAGE(STATUS "Creating directory ${BUNDLE}/Contents/Resources/${lang}.lproj")
   FILE(MAKE_DIRECTORY "${BUNDLE}/Contents/Resources/${lang}.lproj")
-ENDFOREACH(lang ${ListOfTranslationFiles})
+ENDFOREACH()
 
 # Fixup bundle
 CONFIGURE_FILE("${CMAKE_SOURCE_DIR}/cmake/admFixupBundle.cmake.in" "${CMAKE_BINARY_DIR}/admFixupBundle.cmake" @ONLY)
@@ -132,15 +143,15 @@ IF(NOT DMG_BASENAME)
   SET(DMG_BASENAME "Avidemux ${AVIDEMUX_VERSION}")
   IF(ENABLE_QT6)
     SET(DMG_BASENAME "${DMG_BASENAME} Qt6")
-  ELSE(ENABLE_QT6)
+  ELSE()
     IF(ENABLE_QT5)
       SET(DMG_BASENAME "${DMG_BASENAME} Qt5")
-    ENDIF(ENABLE_QT5)
-  ENDIF(ENABLE_QT6)
+    ENDIF()
+  ENDIF()
   IF(NOT RELEASE AND BUILD_REV)
     SET(DMG_BASENAME "${DMG_BASENAME} ${BUILD_REV}")
-  ENDIF(NOT RELEASE AND BUILD_REV)
-ENDIF(NOT DMG_BASENAME)
+  ENDIF()
+ENDIF()
 
 #
 SET(CPACK_GENERATOR         "DragNDrop")
@@ -156,7 +167,7 @@ SET(CPACK_PACKAGE_ICON      "${CMAKE_SOURCE_DIR}/avidemux_dmg.icns")
 SET(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}")
 INSTALL(DIRECTORY "${BUNDLE}" DESTINATION . COMPONENT Runtime USE_SOURCE_PERMISSIONS)
 
-include(CPack)
+INCLUDE(CPack)
 
 MESSAGE(STATUS "* All done *")
 

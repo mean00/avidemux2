@@ -10,7 +10,7 @@ ADD_VIDEO_ENCODER(ADM_ve_libva
                 ADM_libVaEncodingContextH264.cpp
                     )
 
-TARGET_LINK_LIBRARIES(ADM_ve_libva ADM_coreLibVAEnc6 ADM_coreLibVA6 va)
+TARGET_LINK_LIBRARIES(ADM_ve_libva PRIVATE ADM_coreLibVAEnc6 ADM_coreLibVA6 va)
 INIT_VIDEO_ENCODER(ADM_ve_libva)
 INSTALL_VIDEO_ENCODER(ADM_ve_libva)
 SET(ADM_vf_logo_SRCS ADM_vidLogo.cpp)

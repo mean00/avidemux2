@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-/// 
-/// Sample rate transposer. Changes sample rate by using linear interpolation 
+///
+/// Sample rate transposer. Changes sample rate by using linear interpolation
 /// together with anti-alias filtering (first order interpolation with anti-
 /// alias filtering should be quite adequate for this application).
 ///
-/// Use either of the derived classes of 'RateTransposerInteger' or 
+/// Use either of the derived classes of 'RateTransposerInteger' or
 /// 'RateTransposerFloat' for corresponding integer/floating point tranposing
 /// algorithm implementation.
 ///
@@ -38,10 +38,10 @@
 #ifndef RateTransposer_H
 #define RateTransposer_H
 
-#include <stddef.h>
 #include "AAFilter.h"
-#include "FIFOSamplePipe.h"
 #include "FIFOSampleBuffer.h"
+#include "FIFOSamplePipe.h"
+#include <stddef.h>
 
 #include "STTypes.h"
 
@@ -51,27 +51,22 @@ namespace soundtouch
 /// Abstract base class for transposer implementations (linear, advanced vs integer, float etc)
 class TransposerBase
 {
-public:
-        enum ALGORITHM {
+  public:
+    enum ALGORITHM
+    {
         LINEAR = 0,
         CUBIC,
         SHANNON
     };
 
-protected:
-    virtual int transposeMono(SAMPLETYPE *dest, 
-                        const SAMPLETYPE *src, 
-                        int &srcSamples)  = 0;
-    virtual int transposeStereo(SAMPLETYPE *dest, 
-                        const SAMPLETYPE *src, 
-                        int &srcSamples) = 0;
-    virtual int transposeMulti(SAMPLETYPE *dest, 
-                        const SAMPLETYPE *src, 
-                        int &srcSamples) = 0;
+  protected:
+    virtual int transposeMono(SAMPLETYPE *dest, const SAMPLETYPE *src, int &srcSamples) = 0;
+    virtual int transposeStereo(SAMPLETYPE *dest, const SAMPLETYPE *src, int &srcSamples) = 0;
+    virtual int transposeMulti(SAMPLETYPE *dest, const SAMPLETYPE *src, int &srcSamples) = 0;
 
     static ALGORITHM algorithm;
 
-public:
+  public:
     double rate;
     int numChannels;
 
@@ -92,12 +87,11 @@ public:
     static void setAlgorithm(ALGORITHM a);
 };
 
-
 /// A common linear samplerate transposer class.
 ///
 class RateTransposer : public FIFOProcessor
 {
-protected:
+  protected:
     /// Anti-alias filter object
     AAFilter *pAAFilter;
     TransposerBase *pTransposer;
@@ -114,20 +108,21 @@ protected:
 
     bool bUseAAFilter;
 
-
-    /// Transposes sample rate by applying anti-alias filter to prevent folding. 
+    /// Transposes sample rate by applying anti-alias filter to prevent folding.
     /// Returns amount of samples returned in the "dest" buffer.
     /// The maximum amount of samples that can be returned at a time is set by
     /// the 'set_returnBuffer_size' function.
-    void processSamples(const SAMPLETYPE *src, 
-                        uint numSamples);
+    void processSamples(const SAMPLETYPE *src, uint numSamples);
 
-public:
+  public:
     RateTransposer();
     virtual ~RateTransposer() override;
 
     /// Returns the output buffer object
-    FIFOSamplePipe *getOutput() { return &outputBuffer; };
+    FIFOSamplePipe *getOutput()
+    {
+        return &outputBuffer;
+    };
 
     /// Return anti-alias filter object
     AAFilter *getAAFilter();
@@ -138,7 +133,7 @@ public:
     /// Returns nonzero if anti-alias filter is enabled.
     bool isAAFilterEnabled() const;
 
-    /// Sets new target rate. Normal rate = 1.0, smaller values represent slower 
+    /// Sets new target rate. Normal rate = 1.0, smaller values represent slower
     /// rate, larger faster rates.
     virtual void setRate(double newRate);
 
@@ -159,6 +154,6 @@ public:
     int getLatency() const;
 };
 
-}
+} // namespace soundtouch
 
 #endif

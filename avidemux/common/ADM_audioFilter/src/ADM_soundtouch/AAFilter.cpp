@@ -1,9 +1,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 ///
 /// FIR low-pass (anti-alias) filter with filter coefficient design routine and
-/// MMX optimization. 
-/// 
-/// Anti-alias filter is used to prevent folding of high frequencies when 
+/// MMX optimization.
+///
+/// Anti-alias filter is used to prevent folding of high frequencies when
 /// transposing the sample rate with interpolation.
 ///
 /// Author        : Copyright (c) Olli Parviainen
@@ -33,39 +33,40 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <memory.h>
-#include "ADM_default.h"
-#include <math.h>
-#include <stdlib.h>
 #include "AAFilter.h"
+#include "ADM_default.h"
 #include "FIRFilter.h"
+#include <math.h>
+#include <memory.h>
+#include <stdlib.h>
 
 using namespace soundtouch;
 
-#define PI       3.14159265358979323846
-#define TWOPI    (2 * PI)
+#define PI 3.14159265358979323846
+#define TWOPI (2 * PI)
 
 // define this to save AA filter coefficients to a file
 // #define _DEBUG_SAVE_AAFILTER_COEFFICIENTS   1
 
 #ifdef _DEBUG_SAVE_AAFILTER_COEFFICIENTS
-    #include <stdio.h>
+#include <stdio.h>
 
-    static void _DEBUG_SAVE_AAFIR_COEFFS(SAMPLETYPE *coeffs, int len)
+static void _DEBUG_SAVE_AAFIR_COEFFS(SAMPLETYPE *coeffs, int len)
+{
+    FILE *fptr = fopen("aa_filter_coeffs.txt", "wt");
+    if (fptr == NULL)
+        return;
+
+    for (int i = 0; i < len; i++)
     {
-        FILE *fptr = fopen("aa_filter_coeffs.txt", "wt");
-        if (fptr == NULL) return;
-
-        for (int i = 0; i < len; i ++)
-        {
-            double temp = coeffs[i];
-            fprintf(fptr, "%lf\n", temp);
-        }
-        fclose(fptr);
+        double temp = coeffs[i];
+        fprintf(fptr, "%lf\n", temp);
     }
+    fclose(fptr);
+}
 
 #else
-    #define _DEBUG_SAVE_AAFIR_COEFFS(x, y)
+#define _DEBUG_SAVE_AAFIR_COEFFS(x, y)
 #endif
 
 /*****************************************************************************
@@ -81,12 +82,10 @@ AAFilter::AAFilter(uint len)
     setLength(len);
 }
 
-
 AAFilter::~AAFilter()
 {
     delete pFIR;
 }
-
 
 // Sets new anti-alias filter cut-off edge frequency, scaled to
 // sampling frequency (nyquist frequency = 0.5).
@@ -97,7 +96,6 @@ void AAFilter::setCutoffFreq(double newCutoffFreq)
     calculateCoeffs();
 }
 
-
 // Sets number of FIR filter taps
 void AAFilter::setLength(uint newLength)
 {
@@ -105,12 +103,11 @@ void AAFilter::setLength(uint newLength)
     calculateCoeffs();
 }
 
-
 // Calculates coefficients for a low-pass FIR filter using Hamming window
 void AAFilter::calculateCoeffs()
 {
     uint i;
-    double cntTemp, temp, tempCoeff,h, w;
+    double cntTemp, temp, tempCoeff, h, w;
     double wc;
     double scaleCoeff, sum;
     double *work;
@@ -128,25 +125,25 @@ void AAFilter::calculateCoeffs()
     tempCoeff = TWOPI / (double)length;
 
     sum = 0;
-    for (i = 0; i < length; i ++) 
+    for (i = 0; i < length; i++)
     {
         cntTemp = (double)i - (double)(length / 2);
 
         temp = cntTemp * wc;
-        if (temp != 0) 
+        if (temp != 0)
         {
-            h = sin(temp) / temp;                     // sinc function
-        } 
-        else 
+            h = sin(temp) / temp; // sinc function
+        }
+        else
         {
             h = 1.0;
         }
-        w = 0.54 + 0.46 * cos(tempCoeff * cntTemp);       // hamming window
+        w = 0.54 + 0.46 * cos(tempCoeff * cntTemp); // hamming window
 
         temp = w * h;
         work[i] = temp;
 
-        // calc net sum of coefficients 
+        // calc net sum of coefficients
         sum += temp;
     }
 
@@ -154,15 +151,15 @@ void AAFilter::calculateCoeffs()
     ADM_assert(sum > 0);
 
     // ensure we've really designed a lowpass filter...
-    ADM_assert(work[length/2] > 0);
-    ADM_assert(work[length/2 + 1] > -1e-6);
-    ADM_assert(work[length/2 - 1] > -1e-6);
+    ADM_assert(work[length / 2] > 0);
+    ADM_assert(work[length / 2 + 1] > -1e-6);
+    ADM_assert(work[length / 2 - 1] > -1e-6);
 
     // Calculate a scaling coefficient in such a way that the result can be
     // divided by 16384
     scaleCoeff = 16384.0f / sum;
 
-    for (i = 0; i < length; i ++) 
+    for (i = 0; i < length; i++)
     {
         temp = work[i] * scaleCoeff;
         // scale & round to nearest integer
@@ -181,19 +178,17 @@ void AAFilter::calculateCoeffs()
     delete[] coeffs;
 }
 
-
-// Applies the filter to the given sequence of samples. 
-// Note : The amount of outputted samples is by value of 'filter length' 
+// Applies the filter to the given sequence of samples.
+// Note : The amount of outputted samples is by value of 'filter length'
 // smaller than the amount of input samples.
 uint AAFilter::evaluate(SAMPLETYPE *dest, const SAMPLETYPE *src, uint numSamples, uint numChannels) const
 {
     return pFIR->evaluate(dest, src, numSamples, numChannels);
 }
 
-
 /// Applies the filter to the given src & dest pipes, so that processed amount of
-/// samples get removed from src, and produced amount added to dest 
-/// Note : The amount of outputted samples is by value of 'filter length' 
+/// samples get removed from src, and produced amount added to dest
+/// Note : The amount of outputted samples is by value of 'filter length'
 /// smaller than the amount of input samples.
 uint AAFilter::evaluate(FIFOSampleBuffer &dest, FIFOSampleBuffer &src) const
 {
@@ -214,7 +209,6 @@ uint AAFilter::evaluate(FIFOSampleBuffer &dest, FIFOSampleBuffer &src) const
 
     return result;
 }
-
 
 uint AAFilter::getLength() const
 {

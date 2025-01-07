@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-/// 
+///
 /// Linear interpolation algorithm.
 ///
 /// Author        : Copyright (c) Olli Parviainen
@@ -29,39 +29,36 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+#include "InterpolateLinear.h"
 #include "ADM_default.h"
 #include <stdlib.h>
-#include "InterpolateLinear.h"
 
 using namespace soundtouch;
 
 //////////////////////////////////////////////////////////////////////////////
 //
 // InterpolateLinearInteger - integer arithmetic implementation
-// 
+//
 
 /// fixed-point interpolation routine precision
-#define SCALE    65536
-
+#define SCALE 65536
 
 // Constructor
 InterpolateLinearInteger::InterpolateLinearInteger() : TransposerBase()
 {
-    // Notice: use local function calling syntax for sake of clarity, 
+    // Notice: use local function calling syntax for sake of clarity,
     // to indicate the fact that C++ constructor can't call virtual functions.
     resetRegisters();
     setRate(1.0f);
 }
-
 
 void InterpolateLinearInteger::resetRegisters()
 {
     iFract = 0;
 }
 
-
-// Transposes the sample rate of the given samples using linear interpolation. 
-// 'Mono' version of the routine. Returns the number of samples returned in 
+// Transposes the sample rate of the given samples using linear interpolation.
+// 'Mono' version of the routine. Returns the number of samples returned in
 // the "dest" buffer
 int InterpolateLinearInteger::transposeMono(SAMPLETYPE *dest, const SAMPLETYPE *src, int &srcSamples)
 {
@@ -73,7 +70,7 @@ int InterpolateLinearInteger::transposeMono(SAMPLETYPE *dest, const SAMPLETYPE *
     while (srcCount < srcSampleEnd)
     {
         LONG_SAMPLETYPE temp;
-    
+
         ADM_assert(iFract < SCALE);
 
         temp = (SCALE - iFract) * src[0] + iFract * src[1];
@@ -92,9 +89,8 @@ int InterpolateLinearInteger::transposeMono(SAMPLETYPE *dest, const SAMPLETYPE *
     return i;
 }
 
-
-// Transposes the sample rate of the given samples using linear interpolation. 
-// 'Stereo' version of the routine. Returns the number of samples returned in 
+// Transposes the sample rate of the given samples using linear interpolation.
+// 'Stereo' version of the routine. Returns the number of samples returned in
 // the "dest" buffer
 int InterpolateLinearInteger::transposeStereo(SAMPLETYPE *dest, const SAMPLETYPE *src, int &srcSamples)
 {
@@ -107,7 +103,7 @@ int InterpolateLinearInteger::transposeStereo(SAMPLETYPE *dest, const SAMPLETYPE
     {
         LONG_SAMPLETYPE temp0;
         LONG_SAMPLETYPE temp1;
-    
+
         ADM_assert(iFract < SCALE);
 
         temp0 = (SCALE - iFract) * src[0] + iFract * src[2];
@@ -122,13 +118,12 @@ int InterpolateLinearInteger::transposeStereo(SAMPLETYPE *dest, const SAMPLETYPE
         int iWhole = iFract / SCALE;
         iFract -= iWhole * SCALE;
         srcCount += iWhole;
-        src += 2*iWhole;
+        src += 2 * iWhole;
     }
     srcSamples = srcCount;
 
     return i;
 }
-
 
 int InterpolateLinearInteger::transposeMulti(SAMPLETYPE *dest, const SAMPLETYPE *src, int &srcSamples)
 {
@@ -140,14 +135,14 @@ int InterpolateLinearInteger::transposeMulti(SAMPLETYPE *dest, const SAMPLETYPE 
     while (srcCount < srcSampleEnd)
     {
         LONG_SAMPLETYPE temp, vol1;
-    
+
         ADM_assert(iFract < SCALE);
         vol1 = (LONG_SAMPLETYPE)(SCALE - iFract);
-        for (int c = 0; c < numChannels; c ++)
+        for (int c = 0; c < numChannels; c++)
         {
             temp = vol1 * src[c] + iFract * src[c + numChannels];
             dest[0] = (SAMPLETYPE)(temp / SCALE);
-            dest ++;
+            dest++;
         }
         i++;
 
@@ -163,8 +158,7 @@ int InterpolateLinearInteger::transposeMulti(SAMPLETYPE *dest, const SAMPLETYPE 
     return i;
 }
 
-
-// Sets new target iRate. Normal iRate = 1.0, smaller values represent slower 
+// Sets new target iRate. Normal iRate = 1.0, smaller values represent slower
 // iRate, larger faster iRates.
 void InterpolateLinearInteger::setRate(double newRate)
 {
@@ -172,32 +166,28 @@ void InterpolateLinearInteger::setRate(double newRate)
     TransposerBase::setRate(newRate);
 }
 
-
 //////////////////////////////////////////////////////////////////////////////
 //
 // InterpolateLinearFloat - floating point arithmetic implementation
-// 
+//
 //////////////////////////////////////////////////////////////////////////////
-
 
 // Constructor
 InterpolateLinearFloat::InterpolateLinearFloat() : TransposerBase()
 {
-    // Notice: use local function calling syntax for sake of clarity, 
+    // Notice: use local function calling syntax for sake of clarity,
     // to indicate the fact that C++ constructor can't call virtual functions.
     resetRegisters();
     setRate(1.0);
 }
-
 
 void InterpolateLinearFloat::resetRegisters()
 {
     fract = 0;
 }
 
-
-// Transposes the sample rate of the given samples using linear interpolation. 
-// 'Mono' version of the routine. Returns the number of samples returned in 
+// Transposes the sample rate of the given samples using linear interpolation.
+// 'Mono' version of the routine. Returns the number of samples returned in
 // the "dest" buffer
 int InterpolateLinearFloat::transposeMono(SAMPLETYPE *dest, const SAMPLETYPE *src, int &srcSamples)
 {
@@ -213,7 +203,7 @@ int InterpolateLinearFloat::transposeMono(SAMPLETYPE *dest, const SAMPLETYPE *sr
 
         out = (1.0 - fract) * src[0] + fract * src[1];
         dest[i] = (SAMPLETYPE)out;
-        i ++;
+        i++;
 
         // update position fraction
         fract += rate;
@@ -227,9 +217,8 @@ int InterpolateLinearFloat::transposeMono(SAMPLETYPE *dest, const SAMPLETYPE *sr
     return i;
 }
 
-
-// Transposes the sample rate of the given samples using linear interpolation. 
-// 'Mono' version of the routine. Returns the number of samples returned in 
+// Transposes the sample rate of the given samples using linear interpolation.
+// 'Mono' version of the routine. Returns the number of samples returned in
 // the "dest" buffer
 int InterpolateLinearFloat::transposeStereo(SAMPLETYPE *dest, const SAMPLETYPE *src, int &srcSamples)
 {
@@ -245,22 +234,21 @@ int InterpolateLinearFloat::transposeStereo(SAMPLETYPE *dest, const SAMPLETYPE *
 
         out0 = (1.0 - fract) * src[0] + fract * src[2];
         out1 = (1.0 - fract) * src[1] + fract * src[3];
-        dest[2*i]   = (SAMPLETYPE)out0;
-        dest[2*i+1] = (SAMPLETYPE)out1;
-        i ++;
+        dest[2 * i] = (SAMPLETYPE)out0;
+        dest[2 * i + 1] = (SAMPLETYPE)out1;
+        i++;
 
         // update position fraction
         fract += rate;
         // update whole positions
         int whole = (int)fract;
         fract -= whole;
-        src += 2*whole;
+        src += 2 * whole;
         srcCount += whole;
     }
     srcSamples = srcCount;
     return i;
 }
-
 
 int InterpolateLinearFloat::transposeMulti(SAMPLETYPE *dest, const SAMPLETYPE *src, int &srcSamples)
 {
@@ -272,14 +260,14 @@ int InterpolateLinearFloat::transposeMulti(SAMPLETYPE *dest, const SAMPLETYPE *s
     while (srcCount < srcSampleEnd)
     {
         float temp, vol1, fract_float;
-    
+
         vol1 = (float)(1.0 - fract);
-		fract_float = (float)fract;
-        for (int c = 0; c < numChannels; c ++)
+        fract_float = (float)fract;
+        for (int c = 0; c < numChannels; c++)
         {
-			temp = vol1 * src[c] + fract_float * src[c + numChannels];
+            temp = vol1 * src[c] + fract_float * src[c + numChannels];
             *dest = (SAMPLETYPE)temp;
-            dest ++;
+            dest++;
         }
         i++;
 

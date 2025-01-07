@@ -6,8 +6,8 @@
  #include <dlfcn.h>
 #endif
 
-
-
+#define STRINGIFY(x) #x
+#define MKSTRING(x) STRINGIFY(x)
 
 #ifdef __APPLE__
         #define  DLL_TO_LOAD "libvapoursynth-script.dylib"
@@ -18,7 +18,7 @@
         #define  PYTHONLIB ""
     #else
         #define  DLL_TO_LOAD "libvapoursynth-script.so"
-        #define  PYTHONLIB VAPOURSYNTH_PYTHONLIB
+        #define  PYTHONLIB MKSTRING(VAPOURSYNTH_PYTHONLIB)
     #endif
 #endif
 
@@ -44,8 +44,8 @@ public:
     bool vsInit(const char *dllName,const char *pythonLib)
     {
 #if !defined(__APPLE__) && !defined(_WIN32)      
-      ADM_info("Trying to dlopen %s\n",VAPOURSYNTH_PYTHONLIB);
-      dlopen(VAPOURSYNTH_PYTHONLIB, RTLD_LAZY|RTLD_GLOBAL);
+      ADM_info("Trying to dlopen %s\n", PYTHONLIB);
+      dlopen(PYTHONLIB, RTLD_LAZY|RTLD_GLOBAL);
 #endif      
       bool loaded= loadLibrary(dllName);
       if(!loaded) 

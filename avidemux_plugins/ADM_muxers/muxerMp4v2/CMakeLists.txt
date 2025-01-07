@@ -1,22 +1,21 @@
 include(mx_plugin)
 SET(ADM_mp4v2_SRCS
-	muxerMp4v2Plugin.cpp
-	muxerMp4v2.cpp
-	muxerMp4v2Audio.cpp
-	muxerMp4v2Video.cpp
-	muxerMp4v2Config.cpp
+ muxerMp4v2Plugin.cpp
+ muxerMp4v2.cpp
+ muxerMp4v2Audio.cpp
+ muxerMp4v2Video.cpp
+ muxerMp4v2Config.cpp
 )
 IF(NOT USE_EXTERNAL_MP4V2)
-        ADD_SUBDIRECTORY(libmp4v2)
+  ADD_SUBDIRECTORY(libmp4v2)
 ENDIF()
 
 ADD_LIBRARY(ADM_mx_mp4v2 SHARED ${ADM_mp4v2_SRCS})
 IF(USE_EXTERNAL_MP4V2)
-        TARGET_LINK_LIBRARIES(ADM_mx_mp4v2 ${MP4V2_LIBRARIES})
+  TARGET_LINK_LIBRARIES(ADM_mx_mp4v2 PRIVATE ${MP4V2_LIBRARIES})
 ELSE()
-        TARGET_LINK_LIBRARIES(ADM_mx_mp4v2 ADM_libmp4v2)
-        INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/libmp4v2/include/)
+  TARGET_LINK_LIBRARIES(ADM_mx_mp4v2 PRIVATE ADM_libmp4v2)
 ENDIF()
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
+TARGET_INCLUDE_DIRECTORIES(ADM_mx_mp4v2 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 INIT_MUXER(ADM_mx_mp4v2)
 INSTALL_MUXER(ADM_mx_mp4v2)

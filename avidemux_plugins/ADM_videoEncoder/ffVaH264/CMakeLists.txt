@@ -1,6 +1,6 @@
 INCLUDE(ve_plugin)
 INCLUDE_DIRECTORIES(${ADM_HEADER_DIR}/ADM_coreLibVAEnc)
-SET(ffVaEncH264_SRCS 
+SET(ffVaEncH264_SRCS
         ffVAEncH264_plugin.cpp
         ADM_ffVAEncH264.cpp
 )
@@ -8,4 +8,4 @@ ADD_VIDEO_ENCODER(ADM_ve_ffVaEncH264  ${ffVaEncH264_SRCS})
 
 INIT_VIDEO_ENCODER(ADM_ve_ffVaEncH264)
 INSTALL_VIDEO_ENCODER(ADM_ve_ffVaEncH264)
-TARGET_LINK_LIBRARIES(ADM_ve_ffVaEncH264 ADM_libavcodec ADM_libavutil ADM_coreLibVAEnc6 ADM_coreLibVA6)
+TARGET_LINK_LIBRARIES(ADM_ve_ffVaEncH264 PRIVATE ADM_libavcodec ADM_libavutil ADM_coreLibVAEnc6 ADM_coreLibVA6)

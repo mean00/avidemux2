@@ -34,33 +34,33 @@
 #define AVS_CAPI_H
 
 #ifdef __cplusplus
-#  define EXTERN_C extern "C"
+#define EXTERN_C extern "C"
 #else
-#  define EXTERN_C
+#define EXTERN_C
 #endif
 
 #ifdef MSVC
 #ifndef AVSC_USE_STDCALL
-#  define AVSC_CC __cdecl
+#define AVSC_CC __cdecl
 #else
-#  define AVSC_CC __stdcall
+#define AVSC_CC __stdcall
 #endif
 #else
-#  define AVSC_CC
+#define AVSC_CC
 #endif
 
 #define AVSC_INLINE static __inline
 
 #ifdef BUILDING_AVSCORE
-#  define AVSC_EXPORT __declspec(dllexport)
-#  define AVSC_API(ret, name) EXTERN_C AVSC_EXPORT ret AVSC_CC name
+#define AVSC_EXPORT __declspec(dllexport)
+#define AVSC_API(ret, name) EXTERN_C AVSC_EXPORT ret AVSC_CC name
 #else
-#  define AVSC_EXPORT EXTERN_C __declspec(dllexport)
-#  ifndef AVSC_NO_DECLSPEC
-#    define AVSC_API(ret, name) EXTERN_C __declspec(dllimport) ret AVSC_CC name
-#  else
-#    define AVSC_API(ret, name) typedef ret (AVSC_CC *name##_func)
-#  endif
+#define AVSC_EXPORT EXTERN_C __declspec(dllexport)
+#ifndef AVSC_NO_DECLSPEC
+#define AVSC_API(ret, name) EXTERN_C __declspec(dllimport) ret AVSC_CC name
+#else
+#define AVSC_API(ret, name) typedef ret(AVSC_CC *name##_func)
+#endif
 #endif
 
-#endif //AVS_CAPI_H
+#endif // AVS_CAPI_H

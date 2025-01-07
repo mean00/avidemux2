@@ -1,9 +1,9 @@
-SET(ADM_script_SRCS
-	ADM_script.cpp
+SET(ADM_LIB ADM_script6)
+ADD_LIBRARY(${ADM_LIB} STATIC)
+TARGET_SOURCES(${ADM_LIB} PRIVATE
+  ADM_script.cpp
 )
 
-include_directories(../include)
-include_directories(../../ADM_editor)
-
-ADD_LIBRARY(ADM_script6 STATIC ${ADM_script_SRCS})
-target_link_libraries(ADM_script6 ADM_coreScript)
+TARGET_INCLUDE_DIRECTORIES(${ADM_LIB} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+TARGET_LINK_LIBRARIES(${ADM_LIB} PUBLIC ADM_core6 ADM_coreScript ADM_editor6_interface adm_pthread)
+#

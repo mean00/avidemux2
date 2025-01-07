@@ -4,6 +4,11 @@
 #
 # By default we use qt5 now
 #
+#
+RED="\e[31m"
+GREEN="\e[32m"
+ENDCOLOR="\e[0m"
+#
 packages_ext=""
 packages_dir="pkgs"
 rebuild=0
@@ -15,23 +20,24 @@ do_plugins=1
 do_asan=0
 debug=0
 default_install_prefix="/usr"
-qt_ext=Qt5
-QT_FLAVOR="-DENABLE_QT5=True"
+qt_ext=Qt6
+QT_FLAVOR="-DENABLE_QT6=True"
 COMPILER=""
-export QT_SELECT=5 # default for ubuntu, harmless for others
+export QT_SELECT=qt6 # default for ubuntu, harmless for others
 install_prefix="$default_install_prefix"
 # -lc is required to build libADM_ae_lav* audio encoder plugins on 32 bit ubuntu
 need_ae_lav_build_quirk=""
 if [[ $(uname -m) = i?86 ]]; then
   need_ae_lav_build_quirk="1"
 fi
-external_libass=0
+external_libass=1
 external_liba52=0
 external_libmad=0
 external_libmp4v2=0
+#test -f $HOME/myCC && export COMPILER="-DCMAKE_C_COMPILER=$HOME/myCC -DCMAKE_CXX_COMPILER=$HOME/myC++"
 
 fail() {
-  echo "** Failed at $1 **"
+  echo -e "${RED}** Failed at $1 **${ENDCOLOR}"
   exit 1
 }
 
@@ -60,7 +66,9 @@ Process() {
   fi
   BUILDDIR="${PWD}/${BASE}"
   FAKEROOT="-DFAKEROOT=$FAKEROOT_DIR"
-  echo "Building in \"${BUILDDIR}\" from \"${SOURCEDIR}\" with EXTRA=<$EXTRA>, DEBUG=<$DEBUG>, MAKER=<${MAKER}>"
+  echo -e "${GREEN}${BASE}: Building in \"${BUILDDIR}\" from \"${SOURCEDIR}\" with EXTRA=<$EXTRA>, DEBUG=<$DEBUG>, MAKER=<${MAKER}> ${ENDCOLOR}"
+  echo "   $BASE:Cmake started..."
+  $ADATE
   if [ "x$rebuild" != "x1" ]; then
     rm -Rf "${BUILDDIR}"
   fi
@@ -81,14 +89,20 @@ Process() {
     $ASAN \
     $DEBUG \
     -G "$BUILDER" \
-    "$SOURCEDIR" || fail "cmake"
+    "$SOURCEDIR" >&/tmp/logCmake$BASE || fail "cmake,result in /tmp/logCmake$BASE"
+  $ADATE
+  echo "   $BASE:Build started..."
   ${MAKER} >&/tmp/log$BASE || fail "${MAKER}, result in /tmp/log$BASE"
   if [ "x$PKG" != "x" ]; then
     DESTDIR="${FAKEROOT_DIR}/tmp" $FAKEROOT_COMMAND ${MAKER} package || fail "packaging"
   fi
+  $ADATE
+  echo "   $BASE:Install started..."
   # we need the make install so that other packcges can be built against this one
-  DESTDIR="${FAKEROOT_DIR}" ${MAKER} install || fail "install"
+  DESTDIR="${FAKEROOT_DIR}" ${MAKER} install >&/tmp/logInstall$BASE || fail "install faied, see /tmp/logInstall$BASE"
   popd >/dev/null
+  $ADATE
+  echo "   Done "
 }
 printModule() {
   value=$1
@@ -134,7 +148,7 @@ usage() {
   echo "  --with-plugins        : Build plugins (default)"
   echo "  --without-plugins     : Don't build plugins"
   echo "  --enable-qt4          : Try to use Qt4 instead of Qt5"
-  echo "  --enable-qt6          : Try to use Qt6 instead of Qt5"
+  echo "  --enable-qt5          : Try to use Qt5 instead of Qt6"
   echo "  --enable-asan         : Enable Clang/llvm address sanitizer"
   echo "  --with-clang          : Use clang/clang++ as compiler"
   echo "  --with-system-libass  : Use system libass instead of the bundled one"
@@ -236,10 +250,10 @@ while [ $# != 0 ]; do
     export QT_SELECT=4
     qt_ext=Qt4
     ;;
-  --enable-qt6)
-    QT_FLAVOR="-DENABLE_QT6=True"
-    export QT_SELECT=6
-    qt_ext=Qt6
+  --enable-qt5)
+    QT_FLAVOR="-DENABLE_QT5=True"
+    export QT_SELECT=5
+    qt_ext=Qt5
     ;;
   --enable-asan)
     do_asan=1
@@ -348,7 +362,7 @@ cd "${BUILDTOP}"
 if [ "x$packages_ext" = "x" ]; then
   echo "No packaging"
 else
-  echo "Preparing packages"
+  echo -e "${GREEN}Preparing packages${ENDCOLOR}"
   rm -Rf "${packages_dir}"
   mkdir "${packages_dir}"
   find . -name "*.$packages_ext" | grep -vi cpa | xargs cp -t "${packages_dir}"

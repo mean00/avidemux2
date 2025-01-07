@@ -1,71 +1,86 @@
-SET(ADM_core_SRCS
-	ADM_cpuCap.cpp  ADM_memsupport.cpp  ADM_threads.cpp  ADM_win32.cpp  ADM_misc.cpp  ADM_debug.cpp
-	TLK_clock.cpp  ADM_fileio.cpp  ADM_dynamicLoading.cpp  ADM_queue.cpp  ADM_benchmark.cpp
-        ADM_coreTranslator.cpp
-        ADM_prettyPrint.cpp
+#
+# This is the top core library
+# *everything* should link to it
+#
+SET(ADM_LIB ADM_core6)
+ADM_ADD_SHARED_LIBRARY(ADM_core6)
+
+# This should be the only place we directly link/include pthread
+INCLUDE(admCheckThreads) # half baked workaround for VC++
+TARGET_LINK_LIBRARIES(ADM_core6 PUBLIC ADM_libavutil)
+TARGET_LINK_LIBRARIES(ADM_core6 PUBLIC adm_gettext)
+TARGET_LINK_LIBRARIES(ADM_core6 PUBLIC adm_pthread)
+
+TARGET_SOURCES(${ADM_LIB} PRIVATE
+  ADM_cpuCap.cpp  ADM_memsupport.cpp  ADM_threads.cpp
+  ADM_win32.cpp  ADM_misc.cpp ADM_debug.cpp TLK_clock.cpp  ADM_fileio.cpp
+  ADM_dynamicLoading.cpp  ADM_queue.cpp
+  ADM_benchmark.cpp ADM_coreTranslator.cpp ADM_prettyPrint.cpp
 )
-IF (MINGW)
-	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_crashdump_mingw.cpp ADM_folder_win32.cpp ADM_folder_mingw.cpp ADM_win32_mingw.cpp )
-ELSEIF (APPLE)
-	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_crashdump_apple.cpp ADM_folder_mac.cpp)
-    IF(CREATE_BUNDLE)
-       ADD_DEFINITIONS(-DCREATE_BUNDLE)
-    ENDIF(CREATE_BUNDLE)
-ELSEIF (UNIX)
-	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_crashdump_unix.cpp ADM_folder_linux.cpp)
-ELSEIF (MSVC)
-	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_crashdump_vs.cpp ADM_folder_win32.cpp ADM_folder_vs.cpp ADM_win32_vs.cpp)
-ELSE (MINGW)
-	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_crashdump_other.cpp ADM_folder_linux.cpp) # Default
-ENDIF (MINGW)
 
+MACRO(ADDSRC xfiles)
+  TARGET_SOURCES(ADM_core6 PRIVATE ${xfiles} ${ARGN})
+  #MESSAGE(STATUS " ---Adding ${xfiles}")
+ENDMACRO()
 
-IF (NOT APPLE)
-	SET(ADM_core_SRCS ${ADM_core_SRCS} ADM_memcpy.cpp)
-ENDIF (NOT APPLE)
+IF(MINGW)
+  ADDSRC(ADM_crashdump_mingw.cpp ADM_folder_win32.cpp ADM_folder_mingw.cpp ADM_win32_mingw.cpp )
+ELSEIF(APPLE)
+  ADDSRC(ADM_crashdump_apple.cpp ADM_folder_mac.cpp)
+  IF(CREATE_BUNDLE)
+    TARGET_COMPILE_DEFINITIONS(${ADM_LIB} PRIVATE CREATE_BUNDLE)
+  ENDIF()
+ELSEIF(UNIX)
+  ADDSRC(ADM_crashdump_unix.cpp ADM_folder_linux.cpp)
+ELSEIF(MSVC)
+  ADDSRC(ADM_crashdump_vs.cpp ADM_folder_win32.cpp ADM_folder_vs.cpp ADM_win32_vs.cpp)
+ELSE()
+  ADDSRC(ADM_crashdump_other.cpp ADM_folder_linux.cpp) # Default
+ENDIF()
 
-if (ADM_DEBUG AND FIND_LEAKS)
-	set(ADM_core_SRCS ${ADM_core_SRCS} ADM_nvwa/debug_new.cpp)
+IF(NOT APPLE)
+  ADDSRC(ADM_memcpy.cpp)
+ENDIF()
 
-	if (MINGW)
-		set(ADM_core_SRCS ${ADM_core_SRCS} ADM_nvwa/addr2line.cpp)
-	endif (MINGW)
-endif (ADM_DEBUG AND FIND_LEAKS)
+IF(ADM_DEBUG AND FIND_LEAKS)
+  ADDSRC(ADM_nvwa/debug_new.cpp)
+  IF(MINGW)
+    ADDSRC(ADM_nvwa/addr2line.cpp)
+  ENDIF()
+ENDIF()
 
-set(ADM_core_SRCS ${ADM_core_SRCS})
+IF(ADM_CPU_X86)
+  YASMIFY(asmFiles cpuid adm_emms)
+  MESSAGE(STATUS "List of asm files ${asmFiles}")
+  ADDSRC(${asmFiles})
+ENDIF()
 
-YASMIFY(asmFiles cpuid adm_emms)
-MESSAGE(STATUS "List of asm files ${asmFiles}")
-ADM_ADD_SHARED_LIBRARY(ADM_core6 ${ADM_core_SRCS} ${asmFiles})
-include_directories("${PTHREAD_INCLUDE_DIR}")
+IF(WIN32)
+  TARGET_LINK_LIBRARIES(ADM_core6 PUBLIC imagehlp ws2_32 powrprof)
+ELSEIF(APPLE)
+  TARGET_LINK_LIBRARIES(ADM_core6 PUBLIC "-framework Carbon")
+ELSE()
+  TARGET_LINK_LIBRARIES(ADM_core6 PUBLIC dl m)
+ENDIF()
 
-IF (WIN32)
-	target_link_libraries(ADM_core6 imagehlp ws2_32 powrprof)
-ELSEIF (APPLE)
-	target_link_libraries(ADM_core6 "-framework Carbon")
-elseif (UNIX)
-	target_link_libraries(ADM_core6 dl m)
-ENDIF (WIN32)
+IF(HAVE_EXECINFO)
+  TARGET_INCLUDE_DIRECTORIES(ADM_core6 PRIVATE "${EXECINFO_INCLUDE_DIR}")
+  TARGET_LINK_LIBRARIES(ADM_core6 PRIVATE "${EXECINFO_LIBRARY_DIR}")
+ENDIF()
 
-if (HAVE_EXECINFO)
-	include_directories("${EXECINFO_INCLUDE_DIR}")
-	target_link_libraries(ADM_core6 "${EXECINFO_LIBRARY_DIR}")
-endif (HAVE_EXECINFO)
+IF(ADM_DEBUG AND FIND_LEAKS)
+  TARGET_COMPILE_DEFINITIONS(ADM_core6 PUBLIC _DEBUG_NEW_ERROR_ACTION=NULL PACKAGE=1 PACKAGE_VERSION=1)
 
-if (ADM_DEBUG AND FIND_LEAKS)
-	add_definitions(-D_DEBUG_NEW_ERROR_ACTION=NULL -DPACKAGE=1 -DPACKAGE_VERSION=1)
+  IF(UNIX)
+    TARGET_COMPILE_OPTIONS(ADM_core6 PUBLIC -fPIC)
+  ENDIF()
 
-	if (UNIX)
-		add_definitions(-fPIC)
-	endif (UNIX)
-
-	if (MINGW)
-		target_link_libraries(ADM_core6  bfd  iberty  imagehlp)
-	endif (MINGW)
-endif (ADM_DEBUG AND FIND_LEAKS)
+  IF(MINGW)
+    TARGET_LINK_LIBRARIES(ADM_core6  PUBLIC bfd  iberty  imagehlp)
+  ENDIF()
+ENDIF()
 
 REMOVE_DEFINITIONS(-DHAVE_CONFIG_H)
 
-target_link_libraries(ADM_core6  ADM_libavutil) # To get the CPU functions of libavutil
-ADM_LINK_THREAD(ADM_core6)
+# To get the CPU functions of libavutil
 ADM_INSTALL_LIB(ADM_core6)

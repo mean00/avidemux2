@@ -1,0 +1,25 @@
+IF(NOT GNUMAKE_EXECUTABLE)
+	MESSAGE(STATUS "Checking for GNU Make")
+	MESSAGE(STATUS "*********************")
+
+	find_program(GNUMAKE_EXECUTABLE
+		make
+		${GNUMAKE_DIR}
+		/bin
+		/usr/bin 
+		/usr/local/bin
+		/sbin)
+	SET(GNUMAKE_EXECUTABLE ${GNUMAKE_EXECUTABLE} CACHE STRING "")
+
+	IF(GNUMAKE_EXECUTABLE)
+		MESSAGE(STATUS "Found GNU Make")
+		
+		IF(VERBOSE)
+			MESSAGE(STATUS "Path: ${GNUMAKE_EXECUTABLE}")
+		ENDIF()
+	ELSE()
+		MESSAGE(FATAL_ERROR "GNU Make not found")
+	ENDIF()
+
+	MESSAGE("")
+ENDIF()
