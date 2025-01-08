@@ -2,6 +2,3 @@
 	path = avidemux/qt4/i18n
 	url = ../avidemux2_i18n.git
 	branch = master
-[submodule "avidemux/qt4/qlementine"]
-	path = avidemux/qt4/qlementine
-	url = https://github.com/oclero/qlementine.git
