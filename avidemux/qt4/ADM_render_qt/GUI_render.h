@@ -83,7 +83,7 @@ typedef struct
 {
     int phyW;
     int phyH;
-    int lastZoom;
+    float lastZoom;
     GUI_WindowInfo xinfo;
     void *draw;
 } ADM_renderContext;
