@@ -5,7 +5,6 @@
 
 */
 
-
 /***************************************************************************
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -13,9 +12,9 @@
  *   the Free Software Foundation; either version 2 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
-#include "ADM_default.h"
-#include "ADM_coreVideoFilterInternal.h"
 #include "ADM_coreVideoFilterFunc.h"
+#include "ADM_coreVideoFilterInternal.h"
+#include "ADM_default.h"
 #include "ADM_dynamicLoading.h"
 #include "ADM_videoFilterApi.h"
 #include "BVector.h"
@@ -25,13 +24,14 @@
 #if 1
 #define aprintf printf
 #else
-#define aprintf(...) {}
+#define aprintf(...)                                                                                                   \
+    {                                                                                                                  \
+    }
 #endif
-static uint32_t lastTag=100;
+static uint32_t lastTag = 100;
 extern ADM_UI_TYPE UI_GetCurrentUI(void);
 
-
-#if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
+#if (ADM_UI_TYPE_BUILD != ADM_UI_CLI)
 #ifdef USE_LIBVA
 #include "ADM_coreLibVA.h"
 #endif
@@ -43,48 +43,39 @@ extern ADM_vf_plugin *getFakePartialPlugin();
 
 ADM_vf_plugin::ADM_vf_plugin(const char *file) : ADM_LibWrapper()
 {
-	initialised = (loadLibrary(file) && getSymbols(12,
-		&create, "create",
-		&destroy, "destroy",
-		&getApiVersion, "getApiVersion",
-		&supportedUI, "supportedUI",
-        &neededFeatures,"neededFeatures",
-		&getFilterVersion, "getFilterVersion",
-		&getDesc, "getDesc",
-		&getInternalName, "getInternalName",
-		&getDisplayName, "getDisplayName",
-        &getCategory,"getCategory",
-        &partializable,"partializable",
-        &redirector,"redirector"
-        ));
+    initialised =
+        (loadLibrary(file) &&
+         getSymbols(12, &create, "create", &destroy, "destroy", &getApiVersion, "getApiVersion", &supportedUI,
+                    "supportedUI", &neededFeatures, "neededFeatures", &getFilterVersion, "getFilterVersion", &getDesc,
+                    "getDesc", &getInternalName, "getInternalName", &getDisplayName, "getDisplayName", &getCategory,
+                    "getCategory", &partializable, "partializable", &redirector, "redirector"));
 };
-
 
 /**
     \fn sortVideoCategoryByName
 */
-static bool sortVideoCategoryByName(BVector <ADM_vf_plugin *> &list,const int cat)
+static bool sortVideoCategoryByName(BVector<ADM_vf_plugin *> &list, const int cat)
 {
-    int n=list.size();
-    for(int start=0;start<n-2;start++)
-    for(int i=0;i<n-1;i++)
-    {
-        ADM_vf_plugin *left=list[i];
-        ADM_vf_plugin *right=list[i+1];
-
-        const char       *    leftName=left->getDisplayName();
-        const char       *    rightName=right->getDisplayName();
-        if(strcasecmp(leftName,rightName)>0)
+    int n = list.size();
+    for (int start = 0; start < n - 2; start++)
+        for (int i = 0; i < n - 1; i++)
         {
-            list[i]=right;
-            list[i+1]=left;
+            ADM_vf_plugin *left = list[i];
+            ADM_vf_plugin *right = list[i + 1];
+
+            const char *leftName = left->getDisplayName();
+            const char *rightName = right->getDisplayName();
+            if (strcasecmp(leftName, rightName) > 0)
+            {
+                list[i] = right;
+                list[i + 1] = left;
+            }
         }
-    }
     // rederive tag
-    for(int i=0;i<n;i++)
+    for (int i = 0; i < n; i++)
     {
-            ADM_vf_plugin *left=list[i];
-            left->tag=i+cat*100;
+        ADM_vf_plugin *left = list[i];
+        left->tag = i + cat * 100;
     }
     return true;
 }
@@ -93,51 +84,48 @@ static bool sortVideoCategoryByName(BVector <ADM_vf_plugin *> &list,const int ca
 */
 static bool sortVideoFiltersByName(void)
 {
-    for(int i=0;i<VF_MAX;i++)
+    for (int i = 0; i < VF_MAX; i++)
     {
-        if(i!=VF_HIDDEN)
-            sortVideoCategoryByName(ADM_videoFilterPluginsList[i],i);
+        if (i != VF_HIDDEN)
+            sortVideoCategoryByName(ADM_videoFilterPluginsList[i], i);
     }
     return true;
-
 }
 
 /**
  *     \fn tryLoadingVideoFilterPlugin
  *  \brief try to load the plugin given as argument..
  */
-static uint8_t tryLoadingVideoFilterPlugin(const char *file,uint32_t featureMask)
+static uint8_t tryLoadingVideoFilterPlugin(const char *file, uint32_t featureMask)
 {
     ADM_vf_plugin *plugin = new ADM_vf_plugin(file);
-    admVideoFilterInfo          *info=NULL;
-
+    admVideoFilterInfo *info = NULL;
 
     if (!plugin->isAvailable())
     {
-            printf("[ADM_vf_plugin] Unable to load %s\n", ADM_getFileName(file).c_str());
-            goto Err_ad;
+        printf("[ADM_vf_plugin] Unable to load %s\n", ADM_getFileName(file).c_str());
+        goto Err_ad;
     }
 
     // Check API version
     if (plugin->getApiVersion() != VF_API_VERSION)
     {
-            printf("[ADM_vf_plugin] File %s has API version too old (%d vs %d)\n",
-                    ADM_getFileName(std::string(file)).c_str(), plugin->getApiVersion(), VF_API_VERSION);
-            goto Err_ad;
+        printf("[ADM_vf_plugin] File %s has API version too old (%d vs %d)\n",
+               ADM_getFileName(std::string(file)).c_str(), plugin->getApiVersion(), VF_API_VERSION);
+        goto Err_ad;
     }
-    if(!(plugin->supportedUI() & UI_GetCurrentUI()))
-    {  // FIXME
+    if (!(plugin->supportedUI() & UI_GetCurrentUI()))
+    { // FIXME
         ADM_info("==> wrong UI\n");
         goto Err_ad;
-
     }
     {
-        int needed=plugin->neededFeatures();
-        if(needed)
+        int needed = plugin->neededFeatures();
+        if (needed)
         {
-            if(  ((needed & featureMask)!=needed))
+            if (((needed & featureMask) != needed))
             {
-                ADM_info("[ADM_vf_plugin] %s needs features that are not active\n",plugin->getDisplayName());
+                ADM_info("[ADM_vf_plugin] %s needs features that are not active\n", plugin->getDisplayName());
                 goto Err_ad;
             }
         }
@@ -148,24 +136,23 @@ static uint8_t tryLoadingVideoFilterPlugin(const char *file,uint32_t featureMask
     plugin->getFilterVersion(&major, &minor, &patch);
     plugin->nameOfLibrary = ADM_strdup(ADM_getFileName(std::string(file)).c_str());
 
-    info=&(plugin->info);
+    info = &(plugin->info);
 
+    info->internalName = plugin->getInternalName();
+    info->desc = plugin->getDesc();
+    info->displayName = plugin->getDisplayName();
+    info->category = plugin->getCategory();
 
-    info->internalName=plugin->getInternalName();
-    info->desc=plugin->getDesc();
-    info->displayName=plugin->getDisplayName();
-    info->category=plugin->getCategory();
-
-    printf("[ADM_vf_plugin] Plugin loaded version %d.%d.%d, name %s/%s\n",
-        major, minor, patch, info->internalName, info->displayName);
-    if(info->category>=VF_MAX)
+    ADM_info("[ADM_vf_plugin] Plugin loaded version %d.%d.%d, name %s/%s\n", major, minor, patch, info->internalName,
+             info->displayName);
+    if (info->category >= VF_MAX)
     {
         ADM_error("This filter has an unknown caregory!\n");
         goto Err_ad;
-
-    }else
+    }
+    else
     {
-        plugin->tag=ADM_videoFilterPluginsList[info->category].size()+info->category*100;
+        plugin->tag = ADM_videoFilterPluginsList[info->category].size() + info->category * 100;
         ADM_videoFilterPluginsList[info->category].append(plugin);
     }
 
@@ -181,10 +168,10 @@ Err_ad:
 */
 uint32_t ADM_vf_getNbFilters(void)
 {
-    uint32_t sum=0;
-    for(int i=0;i<VF_MAX;i++)
+    uint32_t sum = 0;
+    for (int i = 0; i < VF_MAX; i++)
     {
-        sum+=ADM_videoFilterPluginsList[i].size();
+        sum += ADM_videoFilterPluginsList[i].size();
     }
     return sum;
 }
@@ -194,8 +181,8 @@ uint32_t ADM_vf_getNbFilters(void)
 */
 uint32_t ADM_vf_getNbFiltersInCategory(VF_CATEGORY cat)
 {
-    ADM_assert(cat<VF_MAX);
-    return  ADM_videoFilterPluginsList[cat].size();
+    ADM_assert(cat < VF_MAX);
+    return ADM_videoFilterPluginsList[cat].size();
 }
 /**
     \fn ADM_vf_getFilterInfo
@@ -205,74 +192,73 @@ uint32_t ADM_vf_getNbFiltersInCategory(VF_CATEGORY cat)
     @param major, minor,patch [out] Version number
     @return true
 */
-bool ADM_vf_getFilterInfo(VF_CATEGORY cat,int filter, const char **name,const char **desc,
-                uint32_t *major,uint32_t *minor,uint32_t *patch       )
+bool ADM_vf_getFilterInfo(VF_CATEGORY cat, int filter, const char **name, const char **desc, uint32_t *major,
+                          uint32_t *minor, uint32_t *patch)
 {
 
-        ADM_assert(filter>=0 && cat<VF_MAX && filter<ADM_videoFilterPluginsList[cat].size());
+    ADM_assert(filter >= 0 && cat < VF_MAX && filter < ADM_videoFilterPluginsList[cat].size());
 
-        ADM_vf_plugin *a=ADM_videoFilterPluginsList[cat][filter];
-        a->getFilterVersion(major, minor, patch);
+    ADM_vf_plugin *a = ADM_videoFilterPluginsList[cat][filter];
+    a->getFilterVersion(major, minor, patch);
 
-        *name=a->info.displayName;
-        *desc=a->info.desc;
-        return 1;
+    *name = a->info.displayName;
+    *desc = a->info.desc;
+    return 1;
 }
 /**
  * \fn parseOneFolder
  * @param folder
  */
-static void parseOneFolder(const char *folder,uint32_t featureMask )
+static void parseOneFolder(const char *folder, uint32_t featureMask)
 {
     std::vector<std::string> files;
-    if(!buildDirectoryContent(folder, &files, SHARED_LIB_EXT))
+    if (!buildDirectoryContent(folder, &files, SHARED_LIB_EXT))
     {
         printf("[ADM_vf_plugin] Cannot open plugin directory\n");
         return;
     }
 
-    ADM_info("Feature Mask = 0x%x\n",featureMask);
-    for(int i=0;i<files.size();i++)
-        tryLoadingVideoFilterPlugin(files.at(i).c_str(),featureMask);
+    ADM_info("Feature Mask = 0x%x\n", featureMask);
+    for (int i = 0; i < files.size(); i++)
+        tryLoadingVideoFilterPlugin(files.at(i).c_str(), featureMask);
 
     int nb = ADM_vf_getNbFilters();
-    printf("[ADM_vf_plugin] Scanning done, found %d video filter%s so far\n",nb,(nb==1)? "" : "s");
+    printf("[ADM_vf_plugin] Scanning done, found %d video filter%s so far\n", nb, (nb == 1) ? "" : "s");
 }
 /**
  *     \fn ADM_ad_GetPluginVersion
  *  \brief load all audio plugins
  */
-uint8_t ADM_vf_loadPlugins(const char *path,const char *subFolder)
+uint8_t ADM_vf_loadPlugins(const char *path, const char *subFolder)
 {
 
-        uint32_t featureMask=0;
-#if (ADM_UI_TYPE_BUILD!=ADM_UI_CLI)
+    uint32_t featureMask = 0;
+#if (ADM_UI_TYPE_BUILD != ADM_UI_CLI)
 #ifdef USE_LIBVA
-        if(admLibVA::isOperationnal()) featureMask|=ADM_FEATURE_LIBVA;
+    if (admLibVA::isOperationnal())
+        featureMask |= ADM_FEATURE_LIBVA;
 #endif
 #ifdef USE_VDPAU
-        if(admVdpau::isOperationnal()) featureMask|=ADM_FEATURE_VDPAU;
+    if (admVdpau::isOperationnal())
+        featureMask |= ADM_FEATURE_VDPAU;
 #endif
 #if defined(USE_OPENGL)
-        bool hasOpenGl=false;
-        prefs->get(FEATURES_ENABLE_OPENGL,&hasOpenGl);
-        if(hasOpenGl)
-            featureMask|=ADM_FEATURE_OPENGL;
+    bool hasOpenGl = false;
+    prefs->get(FEATURES_ENABLE_OPENGL, &hasOpenGl);
+    if (hasOpenGl)
+        featureMask |= ADM_FEATURE_OPENGL;
 #endif
 #endif
 
-    printf("[ADM_vf_plugin] Scanning directory %s\n",path);
+    printf("[ADM_vf_plugin] Scanning directory %s\n", path);
 
-
-
-    std::string myPath=std::string(path);
-    parseOneFolder(myPath.c_str(),featureMask);
-    myPath+=std::string("/")+std::string(subFolder);
-    parseOneFolder(myPath.c_str(),featureMask);
-
+    std::string myPath = std::string(path);
+    parseOneFolder(myPath.c_str(), featureMask);
+    myPath += std::string("/") + std::string(subFolder);
+    parseOneFolder(myPath.c_str(), featureMask);
 
     sortVideoFiltersByName();
-    if(!ADM_videoFilterPluginsList[VF_HIDDEN].size())
+    if (!ADM_videoFilterPluginsList[VF_HIDDEN].size())
         ADM_videoFilterPluginsList[VF_HIDDEN].append(getFakePartialPlugin());
     return 1;
 }
@@ -282,21 +268,21 @@ uint8_t ADM_vf_loadPlugins(const char *path,const char *subFolder)
 bool ADM_vf_cleanup(void)
 {
     ADM_info("Destroying video filter list\n");
-    for(int cat=0;cat<VF_MAX;cat++)
+    for (int cat = 0; cat < VF_MAX; cat++)
     {
-        int nb=ADM_videoFilterPluginsList[cat].size();
-        for(int i=0;i<nb;i++)
+        int nb = ADM_videoFilterPluginsList[cat].size();
+        for (int i = 0; i < nb; i++)
         {
-            ADM_vf_plugin *a=ADM_videoFilterPluginsList[cat][i];
-            if(a->tag==VF_PARTIAL_FILTER)
+            ADM_vf_plugin *a = ADM_videoFilterPluginsList[cat][i];
+            if (a->tag == VF_PARTIAL_FILTER)
                 continue;
-            if(a->nameOfLibrary)
+            if (a->nameOfLibrary)
             {
                 ADM_dealloc(a->nameOfLibrary);
-                a->nameOfLibrary=NULL;
+                a->nameOfLibrary = NULL;
             }
             delete a;
-            ADM_videoFilterPluginsList[cat][i]=NULL;
+            ADM_videoFilterPluginsList[cat][i] = NULL;
         }
         ADM_videoFilterPluginsList[cat].clear();
     }
@@ -309,18 +295,18 @@ bool ADM_vf_cleanup(void)
 */
 static ADM_vf_plugin *ADM_vf_getPluginFromInternalName(const char *name)
 {
-    for(int cat=0;cat<VF_MAX;cat++)
+    for (int cat = 0; cat < VF_MAX; cat++)
     {
-        int nb=ADM_videoFilterPluginsList[cat].size();
-        for(int i=0;i<nb;i++)
+        int nb = ADM_videoFilterPluginsList[cat].size();
+        for (int i = 0; i < nb; i++)
         {
-            if(!strcasecmp(ADM_videoFilterPluginsList[cat][i]->getInternalName(),name))
+            if (!strcasecmp(ADM_videoFilterPluginsList[cat][i]->getInternalName(), name))
             {
                 return ADM_videoFilterPluginsList[cat][i];
             }
         }
     }
-    ADM_error("Cannot get video filter from name <%s>\n",name);
+    ADM_error("Cannot get video filter from name <%s>\n", name);
     return NULL;
 }
 /**
@@ -329,8 +315,9 @@ static ADM_vf_plugin *ADM_vf_getPluginFromInternalName(const char *name)
 */
 const char *ADM_vf_getDisplayNameFromTag(uint32_t tag)
 {
-    ADM_vf_plugin *plugin=ADM_vf_getPluginFromTag(tag);
-    if(!plugin) return NULL;
+    ADM_vf_plugin *plugin = ADM_vf_getPluginFromTag(tag);
+    if (!plugin)
+        return NULL;
     return plugin->info.displayName;
 }
 /**
@@ -338,8 +325,9 @@ const char *ADM_vf_getDisplayNameFromTag(uint32_t tag)
 */
 VF_CATEGORY ADM_vf_getFilterCategoryFromTag(uint32_t tag)
 {
-    ADM_vf_plugin *plugin=ADM_vf_getPluginFromTag(tag);
-    if(!plugin) return VF_INVALID;
+    ADM_vf_plugin *plugin = ADM_vf_getPluginFromTag(tag);
+    if (!plugin)
+        return VF_INVALID;
     return plugin->info.category;
 }
 
@@ -349,8 +337,9 @@ VF_CATEGORY ADM_vf_getFilterCategoryFromTag(uint32_t tag)
 */
 const char *ADM_vf_getInternalNameFromTag(uint32_t tag)
 {
-    ADM_vf_plugin *plugin=ADM_vf_getPluginFromTag(tag);
-    if(!plugin) return NULL;
+    ADM_vf_plugin *plugin = ADM_vf_getPluginFromTag(tag);
+    if (!plugin)
+        return NULL;
     return plugin->getInternalName();
 }
 /**
@@ -358,8 +347,9 @@ const char *ADM_vf_getInternalNameFromTag(uint32_t tag)
 */
 uint32_t ADM_vf_getTagFromInternalName(const char *name)
 {
-    ADM_vf_plugin *plg=ADM_vf_getPluginFromInternalName(name);
-    if(!plg) return -1;
+    ADM_vf_plugin *plg = ADM_vf_getPluginFromInternalName(name);
+    if (!plg)
+        return -1;
     return plg->tag;
 }
 /**
@@ -367,8 +357,9 @@ uint32_t ADM_vf_getTagFromInternalName(const char *name)
 */
 bool ADM_vf_canBePartialized(uint32_t tag)
 {
-    ADM_vf_plugin *plugin=ADM_vf_getPluginFromTag(tag);
-    if(!plugin) return false;
+    ADM_vf_plugin *plugin = ADM_vf_getPluginFromTag(tag);
+    if (!plugin)
+        return false;
     return plugin->partializable();
 }
 /**
@@ -376,16 +367,16 @@ bool ADM_vf_canBePartialized(uint32_t tag)
 */
 bool ADM_vf_findCompatibleFilter(std::string &name, CONFcouple **c)
 {
-    for(int cat=0;cat<VF_HIDDEN;cat++)
+    for (int cat = 0; cat < VF_HIDDEN; cat++)
     {
         int nb = ADM_videoFilterPluginsList[cat].size();
-        for(int i=0;i<nb;i++)
+        for (int i = 0; i < nb; i++)
         {
             ADM_vf_plugin *a = ADM_videoFilterPluginsList[cat][i];
-            if(a->redirector(name,c))
+            if (a->redirector(name, c))
                 return true;
         }
     }
     return false;
 }
-//EOF
+// EOF
