@@ -215,13 +215,14 @@ void myQApplication::handleFileOpenRequests(void)
  *
  *
  */
-#ifdef USING_QT6
-#include "oclero/qlementine.hpp"
-#endif
+// #ifdef USING_QT6
+// #include "oclero/qlementine.hpp"
+// #endif
 void mySetStyle()
 {
 #ifdef USING_QT6
-    QApplication::setStyle(new oclero::qlementine::QlementineStyle(currentQApplication()));
+    // QApplication::setStyle(new oclero::qlementine::QlementineStyle(currentQApplication()));
+    QApplication::setStyle("fusion");
 #elif USING_QT5
     QApplication::setStyle("fusion");
 #else

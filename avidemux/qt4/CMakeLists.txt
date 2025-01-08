@@ -250,10 +250,10 @@ TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE ${PlatformLibs})
 TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE ADM_commonUI6_${QT_EXTENSION})
 
 # install qlementine theme
-IF("${QT_EXTENSION}" STREQUAL "qt6")
-  ADD_SUBDIRECTORY(qlementine)
-  TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE oclero::qlementine)
-ENDIF()
+#IF("${QT_EXTENSION}" STREQUAL "qt6")
+  #ADD_SUBDIRECTORY(qlementine)
+  #TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE oclero::qlementine)
+#ENDIF()
 #
 
 #

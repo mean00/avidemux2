@@ -12,14 +12,17 @@
  *   the Free Software Foundation; either version 2 of the License, or     *
  *   (at your option) any later version.                                   *
  ***************************************************************************/
-#include "ADM_coreVideoFilterFunc.h"
-#include "ADM_coreVideoFilterInternal.h"
+// clang-format off
+#include "config.h"
 #include "ADM_default.h"
+#include "ADM_default.h"
+#include "ADM_coreVideoFilterInternal.h"
+#include "ADM_coreVideoFilterFunc.h"
 #include "ADM_dynamicLoading.h"
 #include "ADM_videoFilterApi.h"
 #include "BVector.h"
-#include "config.h"
 #include "prefs.h"
+// clang-format on
 
 #if 1
 #define aprintf printf
