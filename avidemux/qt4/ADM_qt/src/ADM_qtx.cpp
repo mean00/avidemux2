@@ -9,6 +9,13 @@ extern QApplication *currentQApplication();
  *
  *
  */
+#if defined(__APPLE__) || defined(_WIN32)
+QT_LINUX_WINDOW_ENGINE admDetectQtEngine()
+{
+    return QT_NO_ENGINE;
+}
+
+#else
 #ifdef USING_QT6
 QT_LINUX_WINDOW_ENGINE admDetectQtEngine()
 {
@@ -39,4 +46,5 @@ QT_LINUX_WINDOW_ENGINE admDetectQtEngine()
     return QT_X11_ENGINE;
 }
 
+#endif
 #endif

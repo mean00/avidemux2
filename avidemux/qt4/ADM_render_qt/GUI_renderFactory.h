@@ -31,7 +31,7 @@
         return spawn;                                                                                                  \
     }
 #define TRY_RENDERER_QT(spawn, name)                                                                                   \
-    if (QT_X11_ENGINE == admDetectQtEngine())                                                                          \
+    if (QT_WAYLAND_ENGINE != admDetectQtEngine())                                                                      \
     {                                                                                                                  \
         TRY_RENDERER_INTERNAL(spawn, , name)                                                                           \
     }                                                                                                                  \
