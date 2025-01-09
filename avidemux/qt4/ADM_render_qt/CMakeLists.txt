@@ -19,7 +19,7 @@ IF(APPLE)
   IF(USE_SDL)
     TARGET_SOURCES(${ADM_LIB} PRIVATE GUI_sdlRenderHelper.m)
   ENDIF()
-ELSEIF(_WIN32)
+ELSEIF(WIN32)
   TARGET_SOURCES(${ADM_LIB} PRIVATE GUI_renderFactory_win32.cpp)
 ELSE() # linux
   TARGET_SOURCES(${ADM_LIB} PRIVATE GUI_renderFactory_linux.cpp)

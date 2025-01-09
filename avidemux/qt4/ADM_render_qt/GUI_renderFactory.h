@@ -30,6 +30,11 @@
         ADM_info(name " init ok\n");                                                                                   \
         return spawn;                                                                                                  \
     }
+
+#if defined(__APPLE__) || defined(_WIN32)
+#define TRY_RENDERER_QT(spawn, name) TRY_RENDERER_INTERNAL(spawn, , name)
+#define TRY_RENDERER_SPAWN_ALL(spawn, name) TRY_RENDERER_INTERNAL(spawn, , name)
+#else
 #define TRY_RENDERER_QT(spawn, name)                                                                                   \
     if (QT_WAYLAND_ENGINE != admDetectQtEngine())                                                                      \
     {                                                                                                                  \
@@ -39,6 +44,6 @@
     {                                                                                                                  \
         ADM_info("Disabling %s because of Wayland use\n", #name);                                                      \
     }
-#define TRY_RENDERER_SPAWN_ALL(spawn, name)                                                                            \
-    TRY_RENDERER_INTERNAL(spawn, , name)                                                                               \
+#define TRY_RENDERER_SPAWN_ALL(spawn, name) TRY_RENDERER_INTERNAL(spawn, , name)
+#endif
 //

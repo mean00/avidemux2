@@ -34,7 +34,7 @@ VideoRenderBase *spawnWin32Renderer(ADM_RENDER_TYPE preferred, ADM_renderContext
     {
 #if defined(USE_DXVA2)
     case RENDER_DXVA2: {
-        TRY_RENDERER_ALL(RenderSpawnDxva2, "Dxva2");
+        TRY_RENDERER_SPAWN_ALL(RenderSpawnDxva2, "Dxva2");
         break;
     }
 #endif
