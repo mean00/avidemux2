@@ -23,7 +23,7 @@ install_deps()
     # gcc, g++ and make get installed as dependencies of build-essential
     sudo apt-get update && sudo apt-get install build-essential cmake pkg-config yasm \
     libsqlite3-dev \
-    libxv-dev libvdpau-dev libva-dev \
+    libxv-dev libvdpau-dev libva-dev libglu1-mesa-dev \
     libasound2-dev libpulse-dev \
     qt6-base-dev qt6-l10n-tools \
     libx264-dev libxvidcore-dev \
@@ -125,6 +125,8 @@ done
 install_deps
 #
 echo "Compiling avidemux, this may take a few minutes..."
+# A hack to find qt6 lrelease on Ubuntu
+export QTDIR="/usr/lib/qt6"
 SRCTOP=$(cd $(dirname "$0") && pwd)
 bash "${SRCTOP}"/bootStrap.bash --deb --prefix=$install_prefix $rebuild
 if [ $? -ne 0 ]; then
