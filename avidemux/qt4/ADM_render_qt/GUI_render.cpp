@@ -264,8 +264,8 @@ uint8_t renderExpose(void)
 extern VideoRenderBase *spawnDefaultRenderer(ADM_RENDER_TYPE preferred, ADM_renderContext &ctx);
 extern VideoRenderBase *spawnCommonRenderer(ADM_RENDER_TYPE preferred, ADM_renderContext &ctx);
 
-#if APPLE
-#elif _WIN32
+#ifdef __APPLE__
+#elif defined _WIN32
 VideoRenderBase *spawnWin32Renderer(ADM_RENDER_TYPE preferred, ADM_renderContext &ctx);
 #else // linux
 VideoRenderBase *spawnLinuxRenderer(ADM_RENDER_TYPE preferred, ADM_renderContext &ctx);
@@ -292,9 +292,9 @@ bool spawnRenderer(void)
 
     // lookup renderer
     TRY_RENDERER(spawnCommonRenderer)
-#if APPLE
+#ifdef __APPLE__
 
-#elif _WIN32
+#elif defined _WIN32
     TRY_RENDERER(spawnWin32Renderer);
 #else // linux
     TRY_RENDERER(spawnLinuxRenderer);
