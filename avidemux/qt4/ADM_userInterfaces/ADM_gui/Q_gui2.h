@@ -206,6 +206,9 @@ protected:
     void dropEvent(QDropEvent *event);
     void openFiles(QList<QUrl>);
     void changeEvent(QEvent* event);
+
+    void setTimeDisplaySize(void);
+
     /* Zoom control */
     bool adjustZoom(int width, int height);
     bool blockResizing;

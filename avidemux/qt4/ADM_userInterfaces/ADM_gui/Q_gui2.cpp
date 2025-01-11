@@ -31,6 +31,7 @@
 #ifdef USE_CUSTOM_TIME_DISPLAY_FONT
 #include <QFontDatabase>
 #endif
+#include <QStyleFactory>
 
 #ifdef __APPLE__
 #include <QFileOpenEvent>
@@ -630,6 +631,35 @@ void MainWindow::navigateWhilePlayingTimerTimeout(void)
         break;
     }
 }
+
+/**
+    \fn setTimeDisplaySize
+    \brief Enlarge current time display for "windows11" Qt style
+*/
+void MainWindow::setTimeDisplaySize(void)
+{
+    // set the size of the current time display to fit the content
+    QString text = "00:00:00.000"; // Don't translate this.
+    QString oldtext = ui.currentTime->text();
+    ui.currentTime->setText(text); // Override ui translations to make sure we use point as decimal separator.
+    QRect ctrect = ui.currentTime->fontMetrics().boundingRect(text);
+#define DEFAULT_CT_DISPLAY_STRETCH_FACTOR 1.15
+#ifdef _WIN32
+    QStyle *currentStyle = QApplication::style();
+    QString currentStyleName = "unknown";
+    if (currentStyle)
+        currentStyleName = currentStyle->objectName().toLower(); // style names are case-insensitive
+
+    float stretchFactor = (0 == strcmp(currentStyleName.toUtf8().constData(), "windows11")) ?
+            1.25 : DEFAULT_CT_DISPLAY_STRETCH_FACTOR;
+    ui.currentTime->setFixedSize(stretchFactor * ctrect.width(), ui.currentTime->height());
+#else
+    ui.currentTime->setFixedSize(DEFAULT_CT_DISPLAY_STRETCH_FACTOR * ctrect.width(), ui.currentTime->height());
+#endif
+#undef DEFAULT_CT_DISPLAY_STRETCH_FACTOR
+    ui.currentTime->setText(oldtext);
+}
+
 /**
     \fn ctor
 */
@@ -742,8 +772,7 @@ MainWindow::MainWindow(const vector<IScriptEngine *> &scriptEngines) : _scriptEn
     ui.currentTime->setFont(QFont("ADM7SEG"));
 #endif
     ui.currentTime->setText(text); // Override ui translations to make sure we use point as decimal separator.
-    QRect ctrect = ui.currentTime->fontMetrics().boundingRect(text);
-    ui.currentTime->setFixedSize(1.15 * ctrect.width(), ui.currentTime->height());
+    setTimeDisplaySize();
 
     text = QString("/ ") + text;
     ui.totalTime->setText(text); // Override ui translations here too.
@@ -797,7 +826,17 @@ MainWindow::MainWindow(const vector<IScriptEngine *> &scriptEngines) : _scriptEn
     connect(ui.menuToolbars->actions().last(), SIGNAL(triggered(bool)), this, SLOT(restoreDefaultWidgetState(bool)));
 
     QStyle *currentStyle = QApplication::style();
-    defaultStyle = currentStyle->objectName();
+    defaultStyle = currentStyle->objectName().toLower(); // style names are case-insensitive
+    if (NULL != getenv("ADM_QT_STYLE_VERBOSE"))
+    {
+        QStringList listOfStyles = QStyleFactory::keys();
+        ADM_info("Built-in Qt styles:\n");
+        for (auto it = listOfStyles.begin(); it < listOfStyles.end(); it++)
+        {
+            printf("\t%s\n", (*it).toUtf8().constData());
+        }
+        ADM_info("Default Qt style: %s\n", defaultStyle.toUtf8().constData());
+    }
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #define BASIC_QT_STYLE "fusion"
 #else
@@ -1858,10 +1897,26 @@ void MainWindow::setDefaultThemeSlot(bool b)
 {
     UNUSED_ARG(b);
 
-    QApplication::setStyle(defaultStyle);
-    ui.currentTime->setTextMargins(0, 0, 0, 0);
-    QPalette pal = style()->standardPalette();
+    if (NULL != getenv("ADM_QT_STYLE_VERBOSE"))
+    {
+        QString styleName ="unknown style";
+        QStyle *currentStyle = qApp->style();
+        if (currentStyle)
+            styleName = currentStyle->objectName();
+
+        ADM_info("Slot triggered, current style: %s\n", styleName.toUtf8().constData());
+    }
+
+    QStyle *style = QStyleFactory::create(defaultStyle);
+    if (!style)
+    {
+        ADM_warning("Invalid Qt style name \"%s\"\n", defaultStyle.toUtf8().constData());
+        return;
+    }
+    QPalette pal; // empty palette to restore native style colors
+    qApp->setStyle(style);
     qApp->setPalette(pal);
+    ui.currentTime->setTextMargins(0, 0, 0, 0);
 
 #ifdef BROKEN_PALETTE_PROPAGATION
 #define PROPAGATE_PALETTE(x)                                                                                           \
@@ -1894,9 +1949,20 @@ void MainWindow::setDefaultThemeSlot(bool b)
     }                                                                                                                  \
     ui.comboBoxVideo->view()->setPalette(x);                                                                           \
     ui.comboBoxAudio->view()->setPalette(x);                                                                           \
-    ui.comboBoxFormat->view()->setPalette(x);
+    ui.comboBoxFormat->view()->setPalette(x);                                                                          \
+    ui.pushButtonVideoConf->setPalette(x);                                                                             \
+    ui.pushButtonVideoFilter->setPalette(x);                                                                           \
+    ui.pushButtonAudioConf->setPalette(x);                                                                             \
+    ui.pushButtonAudioFilter->setPalette(x);                                                                           \
+    ui.pushButtonFormatConfigure->setPalette(x);                                                                       \
+    ui.pushButtonTime->setPalette(x);                                                                                  \
+    ui.pushButtonJumpToMarkerA->setPalette(x);                                                                         \
+    ui.pushButtonJumpToMarkerB->setPalette(x);
 
     PROPAGATE_PALETTE(pal)
+#endif
+#ifdef _WIN32
+    setTimeDisplaySize();
 #endif
     defaultThemeAction->setChecked(true);
     lightThemeAction->setChecked(false);
@@ -1945,6 +2011,9 @@ void MainWindow::setLightTheme(void)
     qApp->setPalette(lightPalette);
 #ifdef BROKEN_PALETTE_PROPAGATION
     PROPAGATE_PALETTE(lightPalette)
+#endif
+#ifdef _WIN32
+    setTimeDisplaySize();
 #endif
     defaultThemeAction->setChecked(false);
     lightThemeAction->setChecked(true);
@@ -2004,6 +2073,9 @@ void MainWindow::setDarkTheme(void)
     qApp->setPalette(darkPalette);
 #ifdef BROKEN_PALETTE_PROPAGATION
     PROPAGATE_PALETTE(darkPalette)
+#endif
+#ifdef _WIN32
+    setTimeDisplaySize();
 #endif
     defaultThemeAction->setChecked(false);
     lightThemeAction->setChecked(false);
