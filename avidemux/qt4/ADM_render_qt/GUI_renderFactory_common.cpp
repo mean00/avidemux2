@@ -64,14 +64,15 @@ VideoRenderBase *spawnCommonRenderer(ADM_RENDER_TYPE preferred, ADM_renderContex
         {
             TRY_RENDERER_SPAWN_ALL(RenderSpawnQtGl, "QtGl");
         }
-        break;
     }
+    break;
 #endif
 
 #if defined(USE_SDL)
-    case RENDER_SDL:
+    case RENDER_SDL: {
         TRY_RENDERER_SPAWN_ALL(spawnSdlRender, "SDL")
-        break;
+    }
+    break;
 #endif
     default:
         break;

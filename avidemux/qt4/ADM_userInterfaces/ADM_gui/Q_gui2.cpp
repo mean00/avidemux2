@@ -223,7 +223,7 @@ void mySetStyle()
 #ifdef USING_QT6
     // QApplication::setStyle(new oclero::qlementine::QlementineStyle(currentQApplication()));
     QApplication::setStyle("fusion");
-#elif USING_QT5
+#elif defined(USING_QT5)
     QApplication::setStyle("fusion");
 #else
 #error "QT4 is obsolete"

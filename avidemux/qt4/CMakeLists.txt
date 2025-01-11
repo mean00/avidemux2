@@ -100,6 +100,7 @@ ENDIF()
 
 # Qt4 openGL
 INCLUDE(admCheckOpenGl)
+INCLUDE(FindSDL2)
 #
 #--
 MESSAGE(STATUS "Adding Qt inc paths : <${QT_INCLUDES}> and definitions <${QT_DEFINITIONS}>")

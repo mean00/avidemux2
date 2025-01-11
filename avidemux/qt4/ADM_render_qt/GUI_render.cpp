@@ -167,29 +167,35 @@ uint8_t renderDisplayResize(uint32_t w, uint32_t h, float zoom)
     if (renderer && w == renderContext.phyW && h == renderContext.phyH && zoom == renderContext.lastZoom)
     {
         ADM_info("          No change, nothing to do\n");
-        return true;
     }
-
-    if (!renderer || (w != renderContext.phyW || h != renderContext.phyH))
+    else
     {
-        if (renderer)
+        // Same, different zoom
+        if (!renderer || (w != renderContext.phyW || h != renderContext.phyH))
         {
-            renderer->stop();
-            delete renderer;
-            renderer = NULL;
+            if (renderer)
+            {
+                renderer->stop();
+                delete renderer;
+                renderer = NULL;
+            }
+            renderContext.phyW = w;
+            renderContext.phyH = h;
+            renderContext.lastZoom = 0;
+            if (w && h)
+            {
+                spawnRenderer();            // which check if we use it later ?
+                renderer->changeZoom(zoom); // force change zoom
+            }
         }
-        renderContext.phyW = w;
-        renderContext.phyH = h;
+        else // only zoom changed
+        {
+            renderer->changeZoom(zoom);
+        }
+        // Resize widget to be the same as input after zoom
         renderContext.lastZoom = zoom;
-        if (w && h)
-            spawnRenderer();
     }
-    else // only zoom changed
-    {
-        renderer->changeZoom(zoom);
-    }
-    // Resize widget to be the same as input after zoom
-    renderContext.lastZoom = zoom;
+    // make sure the draw is resized
     MUI_updateDrawWindowSize(renderContext.draw, (uint32_t)((float)w * zoom), (uint32_t)((float)h * zoom));
     if (w && h)
         renderCompleteRedrawRequest();
@@ -256,10 +262,10 @@ uint8_t renderExpose(void)
     renderRefresh();
     return 1;
 }
-/**                                                                                                                    \
+/** \
  *                                                                                                                     \
- * @param renderName                                                                                                   \
- * @return                                                                                                             \
+ * @param renderName \
+ * @return \
  */
 extern VideoRenderBase *spawnDefaultRenderer(ADM_RENDER_TYPE preferred, ADM_renderContext &ctx);
 extern VideoRenderBase *spawnCommonRenderer(ADM_RENDER_TYPE preferred, ADM_renderContext &ctx);
