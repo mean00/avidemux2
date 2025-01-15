@@ -16,7 +16,6 @@ external_libmad=0
 do_release_pkg=1
 author_setup=0
 BUILDER=make
-export QTDIR=/opt/mxe/usr/x86_64-pc-linux-gnu/qt6/
 # Functions
 
 authorSetup() {
@@ -57,9 +56,12 @@ setupEnv() {
   else
     export MINGW="${MXE_ROOT}/usr/${MXE_TARGET}"
     export QT_HOME="${MINGW}"/qt6
-    export PATH="$PATH":"${MXE_ROOT}"/usr/bin:"${QT_HOME}"/bin
+    export QTDIR=${QT_HOME}
+    export PATH="$PATH":"${MXE_ROOT}"/usr/bin:"${QT_HOME}/bin":"${MXE_ROOT}/usr/x86_64-pc-linux-gnu/qt6/bin"
     export TOOLCHAIN_LOCATION="${MXE_ROOT}"/usr
     export SDL2DIR="$MINGW"
+    echo "Using <${PATH}> as path"
+    which lrelease
     PARAL="-j $(nproc)"
     if [ "x$debug" != "x1" ]; then
       export INSTALL_DIR="${MINGW}"/out/avidemux
