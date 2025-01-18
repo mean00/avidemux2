@@ -96,7 +96,7 @@ static bool questionCommon(const char *title, const char *question, const char *
 
     box.exec();
 
-    return box.clickedButton() == qobject_cast<QAbstractButton *>(yesButton);
+    return box.clickedButton() == yesButton;
 }
 
 /**********************************************/
