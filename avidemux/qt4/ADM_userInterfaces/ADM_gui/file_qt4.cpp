@@ -224,7 +224,8 @@ static int fileSelWriteInternal(const char *label, char *target, uint32_t max, c
     {                     
         if(!strstr(fileName.toUtf8().constData(),".")) //FIXME
         {
-            fileName=fileName+QString(".")+QString(ext);
+            fileName += ".";
+            fileName += ext;
             len+=extSize;
         }
     }
@@ -235,12 +236,20 @@ static int fileSelWriteInternal(const char *label, char *target, uint32_t max, c
         if(newFile.exists())
         {
             QFileInfo fileInfo(newFile);
-            QString q=QString::fromUtf8(QT_TRANSLATE_NOOP("qfile","Overwrite file "))+fileInfo.fileName()+QString("?");
+            char *format = ADM_strdup(QT_TRANSLATE_NOOP("qfile", "Overwrite file \"%s\"?"));
+            ADM_assert(format);
+
+            uint32_t mxlen = strlen(format) + max + 1;
+            char *buf = (char *)ADM_alloc(mxlen);
+            snprintf(buf, mxlen, format, fileInfo.fileName().toUtf8().constData());
             // Show the dialog even in silent mode or if the user has disabled alerts.
-            if(!GUI_Question(q.toUtf8().constData(),true))
-            {
+            bool cancel = (ADM_ERR == GUI_Question(buf, true));
+            ADM_dealloc(format);
+            ADM_dealloc(buf);
+            format = NULL;
+            buf = NULL;
+            if (cancel)
                 return 0;
-            }
         }
     }
 
