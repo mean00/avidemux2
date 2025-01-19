@@ -104,8 +104,7 @@ static void enableMenus(uint32_t menuState)
  */
 static int fileSelWriteInternal(const char *label, char *target, uint32_t max, const char *location, const char *ext)
 {
-    QString str,outputPath,outputExt; // null strings
-    QString fileName,dot = ".";
+    QString str, outputPath, fileName, outputExt;
     QString separator = "/"; // Qt uses forward slash on Windows too
     QString filterFile=QString::fromUtf8(QT_TRANSLATE_NOOP("qfile","All files (*.*)"));
     QFileDialog::Options opts = QFileDialog::Options();
@@ -115,7 +114,8 @@ static int fileSelWriteInternal(const char *label, char *target, uint32_t max, c
 
     if(doFilter)
     {
-        outputExt = dot+QString(ext);
+        outputExt = ".";
+        outputExt += ext;
         extSize+=strlen(ext);
         for(int i=0; i < getScriptEngines().size(); i++)
         {
@@ -183,18 +183,29 @@ static int fileSelWriteInternal(const char *label, char *target, uint32_t max, c
 
         if(!strcmp(canonicalNew, canonicalLast))
         { // try to avoid name collision when saving in the same directory as the currently loaded video
-            str = outputPath+separator+inputBaseName+QString("_edit")+outputExt;
+            str = outputPath;
+            str += separator;
+            str += inputBaseName;
+            str += "_edit";
+            str += outputExt;
         }
         delete [] canonicalNew;
         delete [] canonicalLast;
     }else
     {
-        str = QDir::homePath()+separator+QString("out")+dot+outputExt;
+        str = QDir::homePath();
+        str += separator;
+        str += "out";
+        str += outputExt;
     }
 
     if(doFilter)
     {
-        filterFile=QString(ext)+QString::fromUtf8(QT_TRANSLATE_NOOP("qfile"," files (*."))+QString(ext)+QString(");;")+filterFile;
+        QString prependTo = ext;
+        prependTo += QString::fromUtf8(QT_TRANSLATE_NOOP("qfile"," files (*."));
+        prependTo += ext;
+        prependTo += ");;";
+        filterFile = prependTo + filterFile;
     }
 
 #ifndef __APPLE__
@@ -221,8 +232,9 @@ static int fileSelWriteInternal(const char *label, char *target, uint32_t max, c
 
     // Check if we need to add an extension....
     if(doFilter)
-    {                     
-        if(!strstr(fileName.toUtf8().constData(),".")) //FIXME
+    {
+        QString s = ext;
+        if(QFileInfo(fileName).suffix().toLower() != s.toLower())
         {
             fileName += ".";
             fileName += ext;
@@ -279,7 +291,7 @@ static int fileSelWriteInternal(const char *label, char *target, uint32_t max, c
 static int fileSelReadInternal(const char *label, char *target, uint32_t max, const char *location, const char *ext)
 {
     QString str;
-    QString fileName,dot=QString(".");
+    QString fileName;
     QString filterFile=QString::fromUtf8(QT_TRANSLATE_NOOP("qfile","All files (*.*)"));
     bool doFilter = !!(ext && strlen(ext));
     bool isProject=false;
@@ -327,7 +339,11 @@ static int fileSelReadInternal(const char *label, char *target, uint32_t max, co
 
     if(doFilter)
     {
-        filterFile=QString(ext)+QString::fromUtf8(QT_TRANSLATE_NOOP("qfile"," files (*."))+QString(ext)+QString(");;")+filterFile;
+        QString prependTo = ext;
+        prependTo += QString::fromUtf8(QT_TRANSLATE_NOOP("qfile"," files (*."));
+        prependTo += ext;
+        prependTo += ");;";
+        filterFile = prependTo + filterFile;
     }
 
     uint32_t menuState = disableMenus();
