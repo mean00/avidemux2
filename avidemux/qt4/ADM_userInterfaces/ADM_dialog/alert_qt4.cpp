@@ -262,7 +262,7 @@ int GUI_Alternate(const char *title,const char *choice1,const char *choice2)
 
     box.exec();
 
-    if (box.clickedButton() == qobject_cast<QAbstractButton *>(second))
+    if (box.clickedButton() == second)
     {
         printf("Alternate: the second option chosen\n");
         return 1;
