@@ -80,6 +80,7 @@ ADM_PREBUILD()
 
 INCLUDE(commonCmakeApplication)
 INCLUDE(admWindRes)
+ADD_SUBDIRECTORY(ADM_commonUI)
 #
 ADD_EXECUTABLE(avidemux3_cli)
 TARGET_SOURCES(avidemux3_cli PRIVATE ${ADM_EXE_SRCS})
@@ -130,7 +131,7 @@ MACRO(LINKBUNCH lst)
   TARGET_LINK_LIBRARIES(avidemux3_cli PRIVATE ${lst} ${ARGN})
 ENDMACRO()
 ADD_SUBDIRECTORY(ADM_render_cli)
-TARGET_LINK_LIBRARIES(avidemux3_cli PRIVATE ADM_editor6_interface ADM_videoEncoder6_interface ADM_videoFilter6_interface ADM_commonUI6_interface)
+TARGET_LINK_LIBRARIES(avidemux3_cli PRIVATE ADM_editor6_interface ADM_videoEncoder6_interface ADM_videoFilter6_interface )
 LINKBUNCH(${commonLibs1})
 TARGET_LINK_LIBRARIES(avidemux3_cli PRIVATE ADM_filtersCli6)
 LINKBUNCH(${commonLibs2})
@@ -151,6 +152,8 @@ TARGET_LINK_LIBRARIES(avidemux3_cli PRIVATE
   ADM_render6_cli
   ADM_coreVideoFilter6
 )
+#
+TARGET_LINK_LIBRARIES(avidemux3_cli PRIVATE ADM_commonUI6_CLI)
 
 # SDL
 IF(USE_SDL)

@@ -13,4 +13,4 @@ TARGET_SOURCES(${ADM_LIB} PRIVATE
 )
 
 TARGET_INCLUDE_DIRECTORIES(${ADM_LIB} PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
-TARGET_LINK_LIBRARIES(${ADM_LIB} PRIVATE ADM_videoFilter6_interface ADM_coreVideoFilter6 ADM_editor6_interface ADM_render6_interface ADM_commonUI6_interface  adm_pthread)
+TARGET_LINK_LIBRARIES(${ADM_LIB} PRIVATE ADM_videoFilter6_interface ADM_coreVideoFilter6 ADM_editor6_interface ADM_render6_interface ADM_ui_interface  adm_pthread)

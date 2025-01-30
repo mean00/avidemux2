@@ -23,20 +23,21 @@
 
 #include <math.h>
 
-#include "avi_vars.h"
-#include "ADM_commonUI/GUI_ui.h"
-#include "DIA_coreToolkit.h"
 #include "ADM_assert.h"
+#include "DIA_coreToolkit.h"
+#include "GUI_ui.h"
+#include "avi_vars.h"
 
-#include "audio_out.h"
 #include "ADM_coreAudio.h"
+#include "audio_out.h"
 #include "gui_action.hxx"
 
-//#include "ADM_encoder/adm_encConfig.h"
-//#include "ADM_filter/vidVCD.h"
-//#include "ADM_encoder/ADM_vidEncode.hxx"
+// #include "ADM_encoder/adm_encConfig.h"
+// #include "ADM_filter/vidVCD.h"
+// #include "ADM_encoder/ADM_vidEncode.hxx"
 
-//extern void setVideoEncoderSettings (COMPRESSION_MODE mode, uint32_t param,     uint32_t extraConf, uint8_t * extraData);
+// extern void setVideoEncoderSettings (COMPRESSION_MODE mode, uint32_t param,     uint32_t extraConf, uint8_t *
+// extraData);
 
 uint8_t A_autoDrive(Action action)
 {
@@ -49,7 +50,6 @@ uint8_t A_autoDrive(Action action)
                 return 0;
         }
 
-      
 #define PSP_AUDIO_FQ 24000        
         switch(action)
         {
@@ -149,9 +149,9 @@ uint8_t A_autoDrive(Action action)
                     case ACT_AUTO_PSP:
                           {
 #ifdef USE_XVID_4
-                            if(!videoCodecSelectByName("XVID4")) 
+                            if(!videoCodecSelectByName("XVID4"))
 #else
-                            if(!videoCodecSelectByName("FFMpeg4"))            
+                            if(!videoCodecSelectByName("FFMpeg4"))
 #endif
                             {
                               GUI_Error_HIG(QT_TRANSLATE_NOOP("adm","Codec Error"),QT_TRANSLATE_NOOP("adm", "Cannot select MPEG-4 SP codec."));
@@ -310,6 +310,6 @@ uint8_t A_autoDrive(Action action)
               UI_SetCurrentFormat(ADM_PS);
         }
 #endif
-        return 1;
+    return 1;
 }
-//EOF
+// EOF

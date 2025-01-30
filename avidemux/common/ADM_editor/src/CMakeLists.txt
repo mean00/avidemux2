@@ -30,10 +30,11 @@ TARGET_SOURCES(${ADM_LIB} PRIVATE
 TARGET_INCLUDE_DIRECTORIES(${ADM_LIB} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 TARGET_LINK_LIBRARIES(${ADM_LIB} PUBLIC ADM_editor6_interface ADM_audioFilter6_interface
   ADM_videoFilter6_interface ADM_videoEncoder6_interface
-  ADM_commonUI6_interface ADM_core6 ADM_coreUtils6 ADM_script6 adm_pthread)
+  ADM_ui_interface ADM_core6 ADM_coreUtils6 ADM_script6 adm_pthread ADM_ui_interface)
 #
 
 ADD_LIBRARY(ADM_editor6_interface INTERFACE  )
 TARGET_INCLUDE_DIRECTORIES( ADM_editor6_interface INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/../.. ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+TARGET_LINK_LIBRARIES( ADM_editor6_interface INTERFACE ADM_ui_interface)
 
 

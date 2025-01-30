@@ -14,41 +14,44 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
+// clang-format off
+#include <QApplication>
 #include <QFrame>
-
 #include <QImage>
 #include <QPaintEngine>
 #include <QPainter>
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0) && !defined(__APPLE__)
 #include <QWindow>
+#include "ADM_qtx.h"
+#if defined(USING_QT5)
+#if !defined(__APPLE__)
+#include <QWindow>
+#if !defined(_WIN32)
+extern "C" void *XOpenDisplay(char *);
+#endif
 #endif
 
+#endif
+// clang-format on
+#ifdef USING_QT6
+#include <QGuiApplication>
+using namespace QNativeInterface;
+#endif
 /* Probably on unix/X11 ..*/
 #ifdef __APPLE__
 #include <Carbon/Carbon.h>
-#elif !defined(_WIN32)
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-#include <QX11Info> // removed in qt5
-#else
-extern "C"
-{
-    extern void *XOpenDisplay(char *name);
-}
 #endif
-#endif
-// clang format-off
+// clang-format off
 #include "ADM_assert.h"
 #include "DIA_coreToolkit.h"
-#include "GUI_ui.h"
 #include "GUI_render.h"
 #include "GUI_accelRender.h"
+#include "GUI_ui.h"
 #include "T_preview.h"
-// clang format-on
+// clang-format on
 
 void UI_QT4VideoWidget(QFrame *host);
+extern QApplication *currentQApplication();
 extern QWidget *QuiMainWindows;
-
 static uint32_t displayW = 0, displayH = 0;
 static ADM_Qvideo *videoWindow = NULL;
 
@@ -96,16 +99,6 @@ ADM_Qvideo::ADM_Qvideo(QWidget *z) : QWidget(z)
 ADM_Qvideo::ADM_Qvideo(QFrame *z) : QWidget(z)
 {
     useExternalRedraw(true);
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    // Put a transparent background
-    // setAutoFillBackground(true);
-    QPalette p = palette();
-    QColor color(Qt::black);
-    color.setAlpha(0);
-    p.setColor(QPalette::Window, color);
-    setPalette(p);
-#endif
-
     drawer = NULL;
     doOnce = false;
     _width = _height = 0;
@@ -155,7 +148,7 @@ void ADM_Qvideo::setADMSize(int width, int height)
 {
     _width = width;
     _height = height;
-#if !defined(__APPLE__) && !defined(_WIN32) && QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#if !defined(__APPLE__) && !defined(_WIN32) && defined(USING_QT6)
     // Work around an issue with Qt 6.2.1 which results in video frame displaying
     // garbage for all subsequently loaded videos after its size was set to zero.
     static uint8_t workaround = 0;
@@ -231,24 +224,82 @@ void UI_updateDrawWindowSize(void *win, uint32_t w, uint32_t h)
     videoWindow->setADMSize(w, h);
     if (!w || !h)
         QuiMainWindows->update(); // clean up the space previously occupied by the video window on closing
-#if 0
-	
-	UI_purge();
-
-// Trolltech need to get their act together.  Resizing doesn't work well or the same on all platforms.
-#if defined(__APPLE__)
-	// Hack required for Mac to resize properly.  adjustSize() just doesn't cut the mustard.
-	QuiMainWindows->resize(QuiMainWindows->width() + 1, QuiMainWindows->height() + 1);
-#else
-	// resizing doesn't work unless called twice on Windows and Linux.
-	QuiMainWindows->adjustSize();
-#endif
-#endif
-
     UI_purge();
 
     printf("[RDR] Resizing to %u x %u\n", displayW, displayH);
 }
+/**
+ *
+ *
+ */
+#if defined(__APPLE__)
+
+static void systemWindowInfo(GUI_WindowInfo *xinfo)
+{
+    xinfo->display = NULL; // we may not call winId() on a QWidget on macOS, it breaks OpenGL
+    xinfo->systemWindowId = 0;
+}
+#elif defined(_WIN32)
+
+static void systemWindowInfo(GUI_WindowInfo *xinfo)
+{
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    QWindow *window = QuiMainWindows->windowHandle();
+    if (window)
+        xinfo->scalingFactor = (double)window->devicePixelRatio();
+#endif
+
+    xinfo->display = (void *)videoWindow->winId();
+    xinfo->systemWindowId = videoWindow->winId();
+}
+
+#else // linux
+static void systemWindowInfo(GUI_WindowInfo *xinfo)
+{
+    static void *myDisplay = NULL;
+    QWindow *window = QuiMainWindows->windowHandle();
+    if (window)
+        xinfo->scalingFactor = (double)window->devicePixelRatio();
+#ifdef USING_QT5
+    if (!myDisplay)
+        myDisplay = XOpenDisplay(NULL);
+#else
+    if (!myDisplay)
+    {
+        ADM_info("Running on platform %s\n", currentQApplication()->platformName().toLatin1().data());
+        switch (admDetectQtEngine())
+        {
+        case QT_X11_ENGINE: {
+            auto x11 = currentQApplication()->nativeInterface<QNativeInterface::QX11Application>();
+            if (x11)
+            {
+                ADM_info("found x11 display\n");
+                myDisplay = x11->display();
+            }
+        }
+        break;
+        case QT_WAYLAND_ENGINE:
+
+        {
+            auto wayland = currentQApplication()->nativeInterface<QNativeInterface::QWaylandApplication>();
+            if (wayland)
+            {
+                ADM_info("found wayland display\n");
+                myDisplay = wayland->display();
+            }
+        }
+        break;
+        default:
+            ADM_warning("Cannot get qt engine infos\n");
+            myDisplay = NULL;
+            break;
+        }
+    }
+#endif
+    xinfo->display = myDisplay;
+    xinfo->systemWindowId = videoWindow->winId();
+}
+#endif
 
 /**
       \brief Retrieve info from window, needed for accel layer
@@ -260,39 +311,13 @@ void UI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
     xinfo->widget = videoWindow;
     xinfo->systemWindowId = 0;
     xinfo->scalingFactor = 1.;
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0) && !defined(__APPLE__)
-    QWindow *window = QuiMainWindows->windowHandle();
-    if (window)
-        xinfo->scalingFactor = (double)window->devicePixelRatio();
-#endif
-
-#if defined(_WIN32)
-    xinfo->display = (void *)videoWindow->winId();
-    xinfo->systemWindowId = videoWindow->winId();
-#elif defined(__APPLE__)
-    xinfo->display = NULL; // we may not call winId() on a QWidget on macOS, it breaks OpenGL
-    xinfo->systemWindowId = 0;
-#else // linux
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-    const QX11Info &info = videoWindow->x11Info();
-    xinfo->display = info.display();
-#else
-    {
-        static void *myDisplay = NULL;
-        if (!myDisplay)
-            myDisplay = XOpenDisplay(NULL);
-        xinfo->display = myDisplay;
-    }
-#endif
-    xinfo->systemWindowId = videoWindow->winId();
-#endif
     QPoint localPoint(0, 0);
     QPoint windowPoint = videoWindow->mapToGlobal(localPoint);
     xinfo->x = windowPoint.x();
     xinfo->y = windowPoint.y();
     xinfo->width = displayW;
     xinfo->height = displayH;
+    systemWindowInfo(xinfo);
 }
 /**
  * \brief DEPRECATED

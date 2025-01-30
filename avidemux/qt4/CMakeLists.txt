@@ -100,6 +100,7 @@ ENDIF()
 
 # Qt4 openGL
 INCLUDE(admCheckOpenGl)
+INCLUDE(FindSDL2)
 #
 #--
 MESSAGE(STATUS "Adding Qt inc paths : <${QT_INCLUDES}> and definitions <${QT_DEFINITIONS}>")
@@ -160,7 +161,9 @@ ELSE()
 ENDIF()
 
 # Add misc subdirs
+ADD_SUBDIRECTORY(ADM_commonUI)
 ADD_SUBDIRECTORY(ADM_UIs ./ADM_UIsQt4)
+ADD_SUBDIRECTORY(ADM_qt ./ADM_qtxQt4)
 ADD_SUBDIRECTORY(ADM_userInterfaces ./ADM_userInterfaces${QT_LIBRARY_EXTENSION})
 
 SDLify(../common/main.cpp)
@@ -242,9 +245,17 @@ ENDIF()
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # UI Specific
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE ADM_render6 ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY})
+TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE ADM_qtx_${QT_EXTENSION}  ADM_render6 ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY})
 
 TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE ${PlatformLibs})
+TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE ADM_commonUI6_${QT_EXTENSION})
+
+# install qlementine theme
+#IF("${QT_EXTENSION}" STREQUAL "qt6")
+  #ADD_SUBDIRECTORY(qlementine)
+  #TARGET_LINK_LIBRARIES(avidemux3_${QT_EXTENSION} PRIVATE oclero::qlementine)
+#ENDIF()
+#
 
 #
 # i18n
@@ -272,5 +283,4 @@ IF(UNIX AND NOT APPLE)
   ADD_SUBDIRECTORY(xdg_data)
 ENDIF()
 
-#
 MESSAGE("")

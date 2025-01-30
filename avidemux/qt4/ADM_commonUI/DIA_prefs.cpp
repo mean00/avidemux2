@@ -17,6 +17,7 @@
 #include "prefs.h"
 
 #include "ADM_pp.h"
+#include "ADM_qtx.h"
 #include "GUI_render.h"
 #include "audio_out.h"
 
@@ -45,6 +46,14 @@ extern bool nvDecProbe(void);
 #endif
 
 uint8_t DIA_Preferences(void);
+#define NOT_WAYLAND(call, var)                                                                                         \
+    bool var;                                                                                                          \
+    if (QT_WAYLAND_ENGINE != admDetectQtEngine())                                                                      \
+        var = call;                                                                                                    \
+    else                                                                                                               \
+    {                                                                                                                  \
+        var = false;                                                                                                   \
+    }
 
 /**
       \fn DIA_Preferences
@@ -95,15 +104,15 @@ uint8_t DIA_Preferences(void)
 #endif
 #ifdef USE_VDPAU
     bool bvdpau = false;
-    bool vdpauAvailable = vdpauProbe();
+    NOT_WAYLAND(vdpauProbe(), vdpauAvailable);
 #endif
 #ifdef USE_LIBVA
     bool blibva = false;
-    bool libvaAvailable = libvaProbe();
+    NOT_WAYLAND(libvaProbe(), libvaAvailable);
 #endif
 #ifdef USE_NVENC
     bool bnvdec = false;
-    bool nvdecAvailable = nvDecProbe();
+    NOT_WAYLAND(nvDecProbe(), nvdecAvailable);
 #endif
 #ifdef USE_VIDEOTOOLBOX
     bool bvideotoolbox = false;

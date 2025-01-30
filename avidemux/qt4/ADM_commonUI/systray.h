@@ -16,10 +16,9 @@
  */
 #ifndef ADM_SYSTRAY_H
 #define ADM_SYSTRAY_H
-void *adm_new_systray(GdkPixbuf *pixbug[],int  nb, char *name);
+void *adm_new_systray(GdkPixbuf *pixbug[], int nb, char *name);
 void adm_delete_systray(void *systray);
 void adm_change_tooltip(void *systray, const char *tips);
 void adm_changeIcon_systray(void);
 
 #endif
-

@@ -13,14 +13,14 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#include <BVector.h>
-#include "ADM_default.h"
 #include "ADM_coreDemuxer.h"
+#include "ADM_default.h"
 #include "ADM_demuxerInternal.h"
+#include <BVector.h>
 
 void ADM_demuxersCleanup(void);
 
-BVector <ADM_demuxer *> ListOfDemuxers;
+BVector<ADM_demuxer *> ListOfDemuxers;
 
 /**
         \fn ADM_dm_getNbDemuxers
@@ -34,11 +34,11 @@ uint32_t ADM_dm_getNbDemuxers(void)
     \fn     ADM_dm_getDemuxerInfo
     \brief  Get Infos about the demuxer #th plugin
 */
-bool     ADM_dm_getDemuxerInfo(int filter, const char **name, uint32_t *major,uint32_t *minor,uint32_t *patch)
+bool ADM_dm_getDemuxerInfo(int filter, const char **name, uint32_t *major, uint32_t *minor, uint32_t *patch)
 {
-    ADM_assert(filter<ListOfDemuxers.size());
-    ListOfDemuxers[filter]->getVersion(major,minor,patch);
-    *name=ListOfDemuxers[filter]->descriptor;
+    ADM_assert(filter < ListOfDemuxers.size());
+    ListOfDemuxers[filter]->getVersion(major, minor, patch);
+    *name = ListOfDemuxers[filter]->descriptor;
     return true;
 }
 /**
@@ -46,21 +46,26 @@ bool     ADM_dm_getDemuxerInfo(int filter, const char **name, uint32_t *major,ui
     \brief Try loading the file given as argument as an audio device plugin
 
 */
-#define Fail(x) {printf("%s:"#x"\n",file);goto er;}
+#define Fail(x)                                                                                                        \
+    {                                                                                                                  \
+        printf("%s:" #x "\n", file);                                                                                   \
+        goto er;                                                                                                       \
+    }
 static bool tryLoadingDemuxerPlugin(const char *file)
 {
-	ADM_demuxer *dll=new ADM_demuxer(file);
-    if(!dll->initialised) Fail(CannotLoad);
-    if(dll->apiVersion!=ADM_DEMUXER_API_VERSION) Fail(WrongApiVersion);
+    ADM_demuxer *dll = new ADM_demuxer(file);
+    if (!dll->initialised)
+        Fail(CannotLoad);
+    if (dll->apiVersion != ADM_DEMUXER_API_VERSION)
+        Fail(WrongApiVersion);
 
     ListOfDemuxers.append(dll); // Needed for cleanup. FIXME TODO Delete it.
-    printf("[Demuxers] Registered filter %s as  %s\n",file,dll->descriptor);
+    ADM_info("[Demuxers] Registered filter %s as  %s\n", file, dll->descriptor);
     return true;
-	// Fail!
+    // Fail!
 er:
-	delete dll;
-	return false;
-
+    delete dll;
+    return false;
 }
 /**
  * 	\fn ADM_dm_loadPlugins
@@ -68,36 +73,36 @@ er:
  */
 uint8_t ADM_dm_loadPlugins(const char *path)
 {
-// FIXME Factorize
-	std::vector<std::string> files;
-	ADM_info("Scanning directory %s\n",path);
+    // FIXME Factorize
+    std::vector<std::string> files;
+    ADM_info("Scanning directory %s\n", path);
 
-	if(!buildDirectoryContent(path, &files, SHARED_LIB_EXT))
-	{
-		ADM_warning("Cannot open plugin directory\n");
-		return 0;
-	}
+    if (!buildDirectoryContent(path, &files, SHARED_LIB_EXT))
+    {
+        ADM_warning("Cannot open plugin directory\n");
+        return 0;
+    }
 
-	for(int i=0;i<files.size();i++)
-		tryLoadingDemuxerPlugin(files.at(i).c_str());
-    int nb=ListOfDemuxers.size();
-	
+    for (int i = 0; i < files.size(); i++)
+        tryLoadingDemuxerPlugin(files.at(i).c_str());
+    int nb = ListOfDemuxers.size();
+
     // Now sort them according to priority
-    
-    for(int i=0;i<nb;i++)
-        for(int j=i+1;j<nb;j++) // sub optimal, but who cares
+
+    for (int i = 0; i < nb; i++)
+        for (int j = i + 1; j < nb; j++) // sub optimal, but who cares
         {
-            if(ListOfDemuxers[i]->priority<ListOfDemuxers[j]->priority)
-                {
-                        ADM_demuxer *a=ListOfDemuxers[i];
-                        ListOfDemuxers[i]=ListOfDemuxers[j];
-                        ListOfDemuxers[j]=a;
-                }
+            if (ListOfDemuxers[i]->priority < ListOfDemuxers[j]->priority)
+            {
+                ADM_demuxer *a = ListOfDemuxers[i];
+                ListOfDemuxers[i] = ListOfDemuxers[j];
+                ListOfDemuxers[j] = a;
+            }
         }
-    for(int i=0;i<nb;i++)
-        ADM_info("Demuxer plugin : %s, priority :%d\n",ListOfDemuxers[i]->name,(int)ListOfDemuxers[i]->priority);
-    ADM_info("Scanning done, %d demuxers found\n",nb);
-	return 1;
+    for (int i = 0; i < nb; i++)
+        ADM_info("Demuxer plugin : %s, priority :%d\n", ListOfDemuxers[i]->name, (int)ListOfDemuxers[i]->priority);
+    ADM_info("Scanning done, %d demuxers found\n", nb);
+    return 1;
 }
 /**
     \fn ADM_dm_destroy
@@ -113,33 +118,34 @@ bool ADM_dm_cleanup(void)
 */
 void ADM_demuxersCleanup(void)
 {
-        int nb=ListOfDemuxers.size();
-        for(int i=0;i<nb;i++)
-                {
-                        if(ListOfDemuxers[i]) delete ListOfDemuxers[i];
-                        ListOfDemuxers[i]=NULL;
-                }
+    int nb = ListOfDemuxers.size();
+    for (int i = 0; i < nb; i++)
+    {
+        if (ListOfDemuxers[i])
+            delete ListOfDemuxers[i];
+        ListOfDemuxers[i] = NULL;
+    }
 }
 /**
     \fn ADM_demuxerSpawn
     \brief Locate the correct demuxer and instantiate it
 
 */
-vidHeader *ADM_demuxerSpawn(uint32_t magic,const char *name)
+vidHeader *ADM_demuxerSpawn(uint32_t magic, const char *name)
 {
-int found=-1;
-uint32_t score=0;
-uint32_t mark;
-    for(int i=0;i<ListOfDemuxers.size();i++)
+    int found = -1;
+    uint32_t score = 0;
+    uint32_t mark;
+    for (int i = 0; i < ListOfDemuxers.size(); i++)
     {
-        mark=ListOfDemuxers[i]->probe(magic,name);
-        if(mark>score)
+        mark = ListOfDemuxers[i]->probe(magic, name);
+        if (mark > score)
         {
-            score=mark;
-            found=i;
+            score = mark;
+            found = i;
         }
     }
-    if(score && found!=-1)
+    if (score && found != -1)
     {
         return ListOfDemuxers[found]->createdemuxer();
     }
@@ -147,4 +153,3 @@ uint32_t mark;
 }
 
 // EOF
-

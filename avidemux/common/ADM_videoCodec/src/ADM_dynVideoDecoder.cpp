@@ -15,41 +15,39 @@
 #include "ADM_default.h"
 #include <BVector.h>
 
-#include "DIA_fileSel.h"
 #include "ADM_coreVideoDecoderInternal.h"
 #include "ADM_dynamicLoading.h"
+#include "DIA_fileSel.h"
 
 /**
     \class ADM_videoEncoder6
     \brief Plugin Wrapper Class
 
 */
-class ADM_videoDecoder6 :public ADM_LibWrapper
+class ADM_videoDecoder6 : public ADM_LibWrapper
 {
-public:
-        int                  initialised;
-        ADM_videoDecoderDesc *desc;
-        ADM_videoDecoderDesc  *(*getInfo)();
-        ADM_videoDecoder6(const char *file) : ADM_LibWrapper()
+  public:
+    int initialised;
+    ADM_videoDecoderDesc *desc;
+    ADM_videoDecoderDesc *(*getInfo)();
+    ADM_videoDecoder6(const char *file) : ADM_LibWrapper()
+    {
+        initialised = (loadLibrary(file) && getSymbols(1, &getInfo, "getInfo"));
+        if (initialised)
         {
-                initialised = (loadLibrary(file) && getSymbols(1,
-				&getInfo, "getInfo"));
-                if(initialised)
-                {
-                    desc=getInfo();
-                    printf("[videoDecoder6]Name :%s ApiVersion :%d Description :%s\n",
-                                                        desc->decoderName,
-                                                        desc->apiVersion,
-                                                        desc->description);
-                }else
-                {
-                    printf("[videoDecoder6]Symbol loading failed for %s\n",file);
-                }
+            desc = getInfo();
+            ADM_info("[videoDecoder6]Name :%s ApiVersion :%d Description :%s\n", desc->decoderName, desc->apiVersion,
+                     desc->description);
         }
+        else
+        {
+            ADM_info("[videoDecoder6]Symbol loading failed for %s\n", file);
+        }
+    }
 };
 
-BVector <ADM_videoDecoder6 *> ListOfDecoders;
-// 
+BVector<ADM_videoDecoder6 *> ListOfDecoders;
+//
 
 /**
         \fn ADM_vd6_getNbEncoders
@@ -63,15 +61,15 @@ uint32_t ADM_vd6_getNbEncoders(void)
     \fn     ADM_ve6_getEncoderInfo
     \brief  Get Infos about the demuxer #th plugin
 */
-bool     ADM_vd6_getEncoderInfo(int filter, const char **name, uint32_t *major,uint32_t *minor,uint32_t *patch)
+bool ADM_vd6_getEncoderInfo(int filter, const char **name, uint32_t *major, uint32_t *minor, uint32_t *patch)
 {
-    ADM_assert(filter<ListOfDecoders.size());
-    ADM_videoDecoderDesc *desc=ListOfDecoders[filter]->desc;
+    ADM_assert(filter < ListOfDecoders.size());
+    ADM_videoDecoderDesc *desc = ListOfDecoders[filter]->desc;
     ADM_assert(desc);
-    *name=desc->menuName;
-    *major=desc->major;
-    *minor=desc->minor;
-    *patch=desc->patch;
+    *name = desc->menuName;
+    *major = desc->major;
+    *minor = desc->minor;
+    *patch = desc->patch;
     return true;
 }
 /**
@@ -79,21 +77,26 @@ bool     ADM_vd6_getEncoderInfo(int filter, const char **name, uint32_t *major,u
     \brief Try loading the file given as argument as an audio device plugin
 
 */
-#define Fail(x) {printf("%s:"#x"\n",file);goto er;}
+#define Fail(x)                                                                                                        \
+    {                                                                                                                  \
+        ADM_warning("%s:" #x "\n", file);                                                                              \
+        goto er;                                                                                                       \
+    }
 static bool tryLoadingEncoderPlugin(const char *file)
 {
-	ADM_videoDecoder6 *dll=new ADM_videoDecoder6(file);
-    if(!dll->initialised) Fail(CannotLoad);
-    if(dll->desc->apiVersion!=ADM_VIDEO_DECODER_API_VERSION) Fail(WrongApiVersion);
-//fixme todo also check uiType    
+    ADM_videoDecoder6 *dll = new ADM_videoDecoder6(file);
+    if (!dll->initialised)
+        Fail(CannotLoad);
+    if (dll->desc->apiVersion != ADM_VIDEO_DECODER_API_VERSION)
+        Fail(WrongApiVersion);
+    // fixme todo also check uiType
     ListOfDecoders.append(dll); // Needed for cleanup. FIXME TODO Delete it.
-    printf("[VideoDecoder6] Registered filter %s as  %s\n",file,dll->desc->description);
+    ADM_info("[VideoDecoder6] Registered filter %s as  %s\n", file, dll->desc->description);
     return true;
-	// Fail!
+    // Fail!
 er:
-	delete dll;
-	return false;
-
+    delete dll;
+    return false;
 }
 /**
  * 	\fn ADM_vd6_loadPlugins
@@ -101,23 +104,23 @@ er:
  */
 uint8_t ADM_vd6_loadPlugins(const char *path)
 {
-// FIXME Factorize
+    // FIXME Factorize
 
-	std::vector<std::string> files;
-	printf("[ADM_vd6_plugin] Scanning directory %s\n",path);
+    std::vector<std::string> files;
+    ADM_info("[ADM_vd6_plugin] Scanning directory %s\n", path);
 
-	if(!buildDirectoryContent(path, &files, SHARED_LIB_EXT))
-	{
-		printf("[ADM_vd6_plugin] Cannot open plugin directory\n");
-		return 0;
-	}
+    if (!buildDirectoryContent(path, &files, SHARED_LIB_EXT))
+    {
+        ADM_info("[ADM_vd6_plugin] Cannot open plugin directory\n");
+        return 0;
+    }
 
-	for(int i=0;i<files.size();i++)
-		tryLoadingEncoderPlugin(files.at(i).c_str());
+    for (int i = 0; i < files.size(); i++)
+        tryLoadingEncoderPlugin(files.at(i).c_str());
 
-	printf("[ADM_vd6_plugin] Scanning done\n");
+    ADM_info("[ADM_vd6_plugin] Scanning done\n");
 
-	return 1;
+    return 1;
 }
 /**
         \fn ADM_ve6_cleanup
@@ -125,64 +128,67 @@ uint8_t ADM_vd6_loadPlugins(const char *path)
 */
 void ADM_vd6_cleanup(void)
 {
-        int nb=ListOfDecoders.size();
-        for(int i=0;i<nb;i++)
-                {
-                        if(ListOfDecoders[i]) delete ListOfDecoders[i];
-                        ListOfDecoders[i]=NULL;
-                }
+    int nb = ListOfDecoders.size();
+    for (int i = 0; i < nb; i++)
+    {
+        if (ListOfDecoders[i])
+            delete ListOfDecoders[i];
+        ListOfDecoders[i] = NULL;
+    }
 }
 
 /**
     \fn ADM_vd6_getMenuName
-    \brief 
+    \brief
 */
 const char *ADM_vd6_getMenuName(uint32_t i)
 {
-	 int nb=ListOfDecoders.size();
+    int nb = ListOfDecoders.size();
 
-	ADM_assert(i < nb);
+    ADM_assert(i < nb);
 
-	return ListOfDecoders[i]->desc->menuName;
+    return ListOfDecoders[i]->desc->menuName;
 }
 /**
     \fn createVideoEncoder
 */
-static decoders *createVideoDecoderFromIndex(int index,uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen,
-                    uint8_t *extra, uint32_t bpp)
+static decoders *createVideoDecoderFromIndex(int index, uint32_t w, uint32_t h, uint32_t fcc, uint32_t extraDataLen,
+                                             uint8_t *extra, uint32_t bpp)
 {
-    int nb=ListOfDecoders.size();
-	ADM_assert(index < nb);
-    ADM_videoDecoder6 *plugin=ListOfDecoders[index];
+    int nb = ListOfDecoders.size();
+    ADM_assert(index < nb);
+    ADM_videoDecoder6 *plugin = ListOfDecoders[index];
 
-    decoders *dec=plugin->desc->create(w,h,fcc,extraDataLen,extra,bpp);
+    decoders *dec = plugin->desc->create(w, h, fcc, extraDataLen, extra, bpp);
     return dec;
 }
 /**
     \fn createVideoEncoderFromIndex
     \brief Spawn a decoder. If not possible returns NULL.
 */
-decoders *tryCreatingVideoDecoder(uint32_t w, uint32_t h, uint32_t fcc,uint32_t extraDataLen,
-                    uint8_t *extra, uint32_t bpp)
+decoders *tryCreatingVideoDecoder(uint32_t w, uint32_t h, uint32_t fcc, uint32_t extraDataLen, uint8_t *extra,
+                                  uint32_t bpp)
 {
 
-     int nb=ListOfDecoders.size();
-     for(int i=0;i<nb;i++)
-     {
-            ADM_videoDecoder6 *plugin=ListOfDecoders[i];
-            uint32_t *f=plugin->desc->fccs;
-            if(!f) continue;
-            while(*f)
+    int nb = ListOfDecoders.size();
+    for (int i = 0; i < nb; i++)
+    {
+        ADM_videoDecoder6 *plugin = ListOfDecoders[i];
+        uint32_t *f = plugin->desc->fccs;
+        if (!f)
+            continue;
+        while (*f)
+        {
+            if (fcc == *f)
             {
-                if(fcc==*f)
-                {
-                    decoders *dec=createVideoDecoderFromIndex(i,w,h,fcc,extraDataLen,extra,bpp);
-                    if(dec) return dec;
-                }
-                f++;
+                decoders *dec = createVideoDecoderFromIndex(i, w, h, fcc, extraDataLen, extra, bpp);
+                if (dec)
+                    return dec;
             }
-     }
-     ADM_info("No decoder found in plugin\n");
-     return NULL;
+            f++;
+        }
+    }
+    ADM_info("No decoder found in plugin\n");
+    return NULL;
 }
-//EOF
+// EOF

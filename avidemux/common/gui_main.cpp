@@ -27,8 +27,8 @@
 #include "gtkgui.h"
 #include "gui_action.hxx"
 
-#include "ADM_commonUI/GUI_ui.h"
 #include "GUI_render.h"
+#include "GUI_ui.h"
 #include "prefs.h"
 
 #include "DIA_factory.h"
@@ -1769,7 +1769,7 @@ void A_Resync(void)
     UI_setMarkers(video_body->getMarkerAPts(), video_body->getMarkerBPts());
     UI_setAudioTrackCount(video_body->getNumberOfActiveAudioTracks());
 }
-uint8_t DIA_job_select(char **jobname, char **filename);
+bool DIA_job_select(char **jobname, char **filename);
 void A_addJob(void)
 {
     char *name = NULL;
