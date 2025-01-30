@@ -807,8 +807,8 @@ MainWindow::MainWindow(const vector<IScriptEngine *> &scriptEngines) : _scriptEn
     QString rFiles = QString::fromUtf8(QT_TRANSLATE_NOOP("qgui2", "Recent Files"));
     QString rProjects = QString::fromUtf8(QT_TRANSLATE_NOOP("qgui2", "Recent Projects"));
 
-    recentFiles = new QMenu(rFiles, this);
-    recentProjects = new QMenu(rProjects, this);
+    recentFiles = new QMenu(rFiles, ui.menuRecent);
+    recentProjects = new QMenu(rProjects, ui.menuRecent);
     ui.menuRecent->addMenu(recentFiles);
     ui.menuRecent->addMenu(recentProjects);
     connect(this->recentFiles, SIGNAL(triggered(QAction *)), this, SLOT(searchRecentFiles(QAction *)));
