@@ -181,7 +181,7 @@ uint8_t renderDisplayResize(uint32_t w, uint32_t h, float zoom)
             }
             renderContext.phyW = w;
             renderContext.phyH = h;
-            renderContext.lastZoom = 0;
+            renderContext.lastZoom = ZOOM_1_1;
             if (w && h)
             {
                 spawnRenderer();            // which check if we use it later ?
