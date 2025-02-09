@@ -43,6 +43,13 @@ apply_patch_from_location()
     patch --dry-run -d "${MXE_ROOT_DIR}" -p1 < "${ploc}${pbase}.patch" \
     && patch -d "${MXE_ROOT_DIR}" -p1 < "${ploc}${pbase}.patch" || fail "Failed at $pbase patch"
 }
+backout_patch()
+{
+    local pbase=$1
+    local in="${SRCDIR}/backout/${pbase}.patch"
+    patch --dry-run -d "${MXE_ROOT_DIR}" -Rp1 < "$in" \
+    && patch -d "${MXE_ROOT_DIR}" -Rp1 < "$in" || fail "Failed at $pbase patch"
+}
 apply_patch_current()
 {
     apply_patch_from_location $1 "$PWD"
@@ -85,6 +92,10 @@ prepare_sources()
     # Hardcode a known good mirror.
     apply_patch qtbase-download-url
     apply_patch qt6-qtbase-download-url
+
+    # MXE update of SQLite to 3.49.0 broke its installation, revert to 3.48.0
+    backout_patch sqlite-update-to-349000
+    backout_patch sqlite-correct-library-extension
 }
 build_mxe()
 {
@@ -102,7 +113,7 @@ build_mxe()
 install_libaom()
 {
     # get and install libaom
-    (AOM_TAG="v3.9.1" "${SRCDIR}/${libaom_script}" "${MXE_ROOT_DIR}") || fail "Failed at libaom"
+    (AOM_TAG="v3.11.0" "${SRCDIR}/${libaom_script}" "${MXE_ROOT_DIR}") || fail "Failed at libaom"
 }
 install_nvidia_headers()
 {
