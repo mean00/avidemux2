@@ -1,9 +1,9 @@
 diff --git a/src/qt/qt6/qt6-qtbase.mk b/src/qt/qt6/qt6-qtbase.mk
-index e85da836..39133a07 100644
+index 9af89b37..3504f4d0 100644
 --- a/src/qt/qt6/qt6-qtbase.mk
 +++ b/src/qt/qt6/qt6-qtbase.mk
-@@ -9,7 +9,7 @@ $(PKG)_VERSION  := 6.8.1
- $(PKG)_CHECKSUM := 40b14562ef3bd779bc0e0418ea2ae08fa28235f8ea6e8c0cb3bce1d6ad58dcaf
+@@ -9,7 +9,7 @@ $(PKG)_VERSION  := 6.8.2
+ $(PKG)_CHECKSUM := 012043ce6d411e6e8a91fdc4e05e6bedcfa10fcb1347d3c33908f7fdd10dfe05
  $(PKG)_SUBDIR   := $(PKG_BASENAME)-everywhere-src-$($(PKG)_VERSION)
  $(PKG)_FILE     := $(PKG_BASENAME)-everywhere-src-$($(PKG)_VERSION).tar.xz
 -$(PKG)_URL      := https://download.qt.io/archive/qt/6.8/$($(PKG)_VERSION)/submodules/$($(PKG)_FILE)
