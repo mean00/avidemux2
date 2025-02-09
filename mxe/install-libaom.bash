@@ -33,9 +33,10 @@ process()
         -DENABLE_DOCS=0 \
         -DENABLE_EXAMPLES=0 \
         -DENABLE_TOOLS=0 \
-        -DBUILD_SHARED_LIBS=1 \
+        -DBUILD_SHARED_LIBS=0 \
         -DCONFIG_ANALYZER=0 \
         -DFORCE_HIGHBITDEPTH_DECODING=0 \
+        -DCONFIG_CWG_C013=1 \
         -DCMAKE_INSTALL_PREFIX=${MXE_ROOT}/usr/${CROSS_PREFIX} || failMsg "Failed at cmake"
     make -j $(nproc) || failMsg "Failed at make"
     make install || failMsg "Failed at make install"
