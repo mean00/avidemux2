@@ -36,13 +36,17 @@ bash createRpmFromSourceFedora.bash --deps-only
 ```
 Build Avidemux:
 ```
-bash bootStrap.bash --with-system-libass
+bash bootStrap.bash
+```
+> Alternatively building on Qt5 instead of Qt6:
+```
+bash bootStrap.bash --enable-qt5
 ```
 
 The compiled output will be in the `install` subdirectory of the build directory.
 
 Avidemux can be run without installation by means of a start script derived
-from the template `run_avidemux_template.sh`.
+from the template `run_avidemux_template_qt6.sh`.
 
 1. Make a copy of this script file.
 2. If Avidemux has been built in a different location than `${HOME}/avidemux2`,
