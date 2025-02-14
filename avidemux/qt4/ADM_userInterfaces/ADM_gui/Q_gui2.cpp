@@ -4008,9 +4008,11 @@ myQApplication::~myQApplication()
 #endif
 #endif
 
+#if 0
 #ifdef SDL_ON_LINUX
     ADM_warning("This is SDL on linux, exiting brutally to avoid lock.\n");
     ::exit(0); //
+#endif
 #endif
     ADM_warning("Exiting app\n");
 }
