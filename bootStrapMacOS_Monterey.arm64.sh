@@ -406,6 +406,7 @@ if [ "x$create_app_bundle" = "x1" ] ; then
         -DAVIDEMUX_MAJOR_MINOR="${MAJOR}.${MINOR}" \
         -DDMG_BASENAME="$dmg_base" \
         -DBUILD_REV="$REV" \
+        -DNO_STRANGE_HACK=1 \
         $FLAVOR \
         "${SRCTOP}/avidemux/osxInstaller" || fail "cmake"
         echo "** Preparing packaging **"
