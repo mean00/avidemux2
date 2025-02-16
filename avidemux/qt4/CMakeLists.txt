@@ -101,7 +101,9 @@ ENDIF()
 
 # Qt4 openGL
 INCLUDE(admCheckOpenGl)
-INCLUDE(FindSDL2)
+IF(NOT APPLE)
+  INCLUDE(FindSDL2)
+ENDIF()
 #
 #--
 MESSAGE(STATUS "Adding Qt inc paths : <${QT_INCLUDES}> and definitions <${QT_DEFINITIONS}>")
