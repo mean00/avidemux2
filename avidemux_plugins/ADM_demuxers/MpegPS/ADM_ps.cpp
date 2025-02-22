@@ -277,6 +277,7 @@ uint8_t psHeader::close(void)
     lastFrame=0xffffffff;
     videoTrackSize=0;
     videoDuration = ADM_NO_PTS;
+    psPacket = NULL;
 }
 /**
     \fn psHeader
