@@ -94,8 +94,8 @@ prepare_sources()
     apply_patch qt6-qtbase-download-url
 
     # MXE update of SQLite to 3.49.0 broke its installation, revert to 3.48.0
-    backout_patch sqlite-update-to-349000
-    backout_patch sqlite-correct-library-extension
+    #backout_patch sqlite-update-to-349000
+    #backout_patch sqlite-correct-library-extension
 }
 build_mxe()
 {
