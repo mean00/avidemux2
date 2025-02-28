@@ -243,7 +243,6 @@ create_release_package() {
     libpcre2-8-*.dll \
     libpng16-*.dll \
     libsamplerate-*.dll \
-    libsqlite3-*.dll \
     libssl-*.dll \
     libssp-*.dll \
     libstdc++-*.dll \
@@ -259,6 +258,14 @@ create_release_package() {
     xvidcore.dll \
     zlib1.dll \
     "$TARGETDIR"
+# MXE may install libsqlite3 DLL to a wrong location
+  if [ -f libsqlite3-*.dll ]; then
+    cp -v libsqlite3-*.dll "$TARGETDIR"
+  else
+    echo "Warning: no libsqlite3 DLL in default location, trying alternate."
+    cd "${MINGW}"/lib
+    cp -v libsqlite3*.dll "$TARGETDIR"
+  fi
   cd "$QT_HOME"
   cp -v \
     bin/Qt6Core.dll \

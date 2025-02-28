@@ -26,7 +26,7 @@ Section "Avidemux Core" SecCore
     ${File} ${BINARY_FOLDER}/libharfbuzz-0.dll
     ${File} ${BINARY_FOLDER}/libiconv-2.dll
     ${File} ${BINARY_FOLDER}/libpng16-16.dll
-    ${File} ${BINARY_FOLDER}/libsqlite3-0.dll
+    ${File} ${BINARY_FOLDER}/libsqlite3*.dll
     ${File} ${BINARY_FOLDER}/libstdc++-6.dll
     ${File} ${BINARY_FOLDER}/libwinpthread-1.dll
     ${File} ${BINARY_FOLDER}/zlib1.dll
