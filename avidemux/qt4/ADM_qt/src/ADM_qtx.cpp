@@ -21,7 +21,9 @@ QT_LINUX_WINDOW_ENGINE admDetectQtEngine()
 {
     if (engineDetected)
         return qtEngine;
-    ADM_info("Running on platform %s\n", currentQApplication()->platformName().toLatin1().data());
+    QString pname = currentQApplication()->platformName();
+    ADM_info("Running on platform %s\n", pname.toLatin1().constData());
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
     auto x11 = currentQApplication()->nativeInterface<QNativeInterface::QX11Application>();
     if (x11)
     {
@@ -37,6 +39,12 @@ QT_LINUX_WINDOW_ENGINE admDetectQtEngine()
             qtEngine = QT_WAYLAND_ENGINE;
         }
     }
+#else
+    if (!strncmp(pname.toLatin1().constData(), "xcb", 3))
+        qtEngine = QT_X11_ENGINE;
+    else if (!strncmp(pname.toLatin1().constData(), "wayland", 7))
+        qtEngine = QT_WAYLAND_ENGINE;
+#endif
     return qtEngine;
 }
 #else
