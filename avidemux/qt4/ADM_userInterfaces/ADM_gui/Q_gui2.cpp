@@ -47,6 +47,7 @@
 
 #include "ADM_QSettings.h"
 #include "ADM_default.h"
+#include "ADM_qtx.h"
 #include "ADM_toolkitQt.h"
 
 #include "ADM_last.h"
@@ -92,6 +93,7 @@ bool openGLStarted = false;
 #endif
 
 MainWindow *MainWindow::mainWindowSingleton = NULL;
+QApplication *currentQApplication();
 
 extern int global_argc;
 extern char **global_argv;
@@ -210,6 +212,25 @@ void myQApplication::handleFileOpenRequests(void)
     }
 }
 #endif
+/**
+ *
+ *
+ */
+// #ifdef USING_QT6
+// #include "oclero/qlementine.hpp"
+// #endif
+static void mySetStyle()
+{
+#ifdef USING_QT6
+    // QApplication::setStyle(new oclero::qlementine::QlementineStyle(currentQApplication()));
+    QApplication::setStyle("fusion");
+#elif defined(USING_QT5)
+    QApplication::setStyle("fusion");
+#else
+#error "QT4 is obsolete"
+    QApplication::setStyle("cleanlooks");
+#endif
+}
 
 void MainWindow::comboChanged(int z)
 {
@@ -786,8 +807,8 @@ MainWindow::MainWindow(const vector<IScriptEngine *> &scriptEngines) : _scriptEn
     QString rFiles = QString::fromUtf8(QT_TRANSLATE_NOOP("qgui2", "Recent Files"));
     QString rProjects = QString::fromUtf8(QT_TRANSLATE_NOOP("qgui2", "Recent Projects"));
 
-    recentFiles = new QMenu(rFiles, this);
-    recentProjects = new QMenu(rProjects, this);
+    recentFiles = new QMenu(rFiles, ui.menuRecent);
+    recentProjects = new QMenu(rProjects, ui.menuRecent);
     ui.menuRecent->addMenu(recentFiles);
     ui.menuRecent->addMenu(recentProjects);
     connect(this->recentFiles, SIGNAL(triggered(QAction *)), this, SLOT(searchRecentFiles(QAction *)));
@@ -837,11 +858,6 @@ MainWindow::MainWindow(const vector<IScriptEngine *> &scriptEngines) : _scriptEn
         }
         ADM_info("Default Qt style: %s\n", defaultStyle.toUtf8().constData());
     }
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-#define BASIC_QT_STYLE "fusion"
-#else
-#define BASIC_QT_STYLE "cleanlooks"
-#endif
     defaultThemeAction = new QAction(QT_TRANSLATE_NOOP("qgui2", "Default theme"), this);
     defaultThemeAction->setCheckable(true);
     ui.menuThemes->addAction(defaultThemeAction);
@@ -1978,14 +1994,13 @@ void MainWindow::setDefaultThemeSlot(bool b)
         qset = NULL;
     }
 }
-
 /**
     \fn     setLightTheme
     \brief  Set default fusion theme
 */
 void MainWindow::setLightTheme(void)
 {
-    QApplication::setStyle(BASIC_QT_STYLE);
+    mySetStyle();
     QPalette lightPalette;
     lightPalette.setColor(QPalette::Window, QColor(239, 239, 239));
     lightPalette.setColor(QPalette::WindowText, QColor(0, 0, 0));
@@ -2047,7 +2062,7 @@ void MainWindow::setLightThemeSlot(bool b)
 */
 void MainWindow::setDarkTheme(void)
 {
-    QApplication::setStyle(BASIC_QT_STYLE);
+    mySetStyle();
     QPalette darkPalette;
     darkPalette.setColor(QPalette::Window, QColor(32, 32, 32));
     darkPalette.setColor(QPalette::WindowText, QColor(234, 234, 234));
@@ -2849,6 +2864,10 @@ static const UI_FUNCTIONS_T UI_Hooks = {
 };
 
 static myQApplication *myApplication = NULL;
+QApplication *currentQApplication()
+{
+    return myApplication;
+}
 /**
  * \fn UI_reset
  * \brief reset
@@ -3006,9 +3025,9 @@ uint8_t initGUI(const vector<IScriptEngine *> &scriptEngines)
     // Assign future parent of dummyGLWidget
     VuMeter =
 #ifdef _WIN32
-    mw->ui.frameVU;
+        mw->ui.frameVU;
 #else
-    mw->ui.frame_video;
+        mw->ui.frame_video;
 #endif
     // Init VU meter
     UI_InitVUMeter(mw->ui.frameVU);
@@ -3019,11 +3038,12 @@ uint8_t initGUI(const vector<IScriptEngine *> &scriptEngines)
         ADM_info("OpenGL activated, initializing... \n");
         openGLStarted = true;
         UI_Qt4InitGl();
-    #ifdef _WIN32
+#ifdef _WIN32
         if (vuMeterIsHidden)
             mw->ui.audioMetreWidget->setVisible(false);
-    #endif
-    }else
+#endif
+    }
+    else
     {
         ADM_info("OpenGL not activated, not initialized\n");
     }
@@ -3988,9 +4008,11 @@ myQApplication::~myQApplication()
 #endif
 #endif
 
+#if 0
 #ifdef SDL_ON_LINUX
     ADM_warning("This is SDL on linux, exiting brutally to avoid lock.\n");
     ::exit(0); //
+#endif
 #endif
     ADM_warning("Exiting app\n");
 }

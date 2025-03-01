@@ -179,6 +179,7 @@ ENDIF()
   SET(SDL2_MAIN_TEMP    "${SDL2_MAIN_TEMP}" CACHE INTERNAL "")
 
   SET(SDL2_FOUND "YES")
+  SET(USE_SDL True)
 ENDIF()
 
 INCLUDE(FindPackageHandleStandardArgs)

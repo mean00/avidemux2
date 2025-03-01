@@ -28,3 +28,4 @@ COPY_QT6_DLL(Network)
 #
 INSTALL(FILES "${QT_PLUGINS_DIR}/platforms/qminimal.dll" DESTINATION "${AVIDEMUX_BIN_DIR}/platforms")
 INSTALL(FILES "${QT_PLUGINS_DIR}/platforms/qwindows.dll" DESTINATION "${AVIDEMUX_BIN_DIR}/platforms")
+INSTALL(FILES "${QT_PLUGINS_DIR}/styles/qmodernwindowsstyle.dll" DESTINATION "${AVIDEMUX_BIN_DIR}/styles")

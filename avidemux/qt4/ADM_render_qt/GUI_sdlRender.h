@@ -53,8 +53,10 @@ class sdlRender : public VideoRenderBase
 
   protected:
 };
-ADM_RENDER6_EXPORT const std::vector<sdlDriverInfo> &getListOfSdlDrivers();
-ADM_RENDER6_EXPORT bool setSdlDriverByName(const std::string &name);
-ADM_RENDER6_EXPORT std::string getSdlDriverName();
-ADM_RENDER6_EXPORT bool initSdl(const std::string &videoDevice);
-ADM_RENDER6_EXPORT void quitSdl(void);
+// #define SDL_RENDER
+#define SDL_RENDER ADM_RENDER6_EXPORT
+SDL_RENDER const std::vector<sdlDriverInfo> &getListOfSdlDrivers();
+SDL_RENDER bool setSdlDriverByName(const std::string &name);
+SDL_RENDER std::string getSdlDriverName();
+SDL_RENDER bool initSdl(const std::string &videoDevice);
+SDL_RENDER void quitSdl(void);

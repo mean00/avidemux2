@@ -32,11 +32,13 @@
 #include "avi_vars.h"
 
 #include "ADM_assert.h"
+#if (ADM_UI_TYPE_BUILD != ADM_UI_CLI)
+#include "ADM_qtx.h"
+#endif
 #include "GUI_render.h"
 #include "adm_main.h"
 #include "audio_out.h"
 #include "prefs.h"
-
 #ifdef USE_VDPAU
 #if ADM_UI_TYPE_BUILD == ADM_UI_CLI
 bool vdpauProbe(void)
@@ -375,26 +377,34 @@ int startAvidemux(int argc, char *argv[])
     }
 
 #if (ADM_UI_TYPE_BUILD != ADM_UI_CLI)
-#if defined(USE_VDPAU)
-    PROBE_HW_ACCEL(vdpauProbe, VDPAU, initVDPAUDecoder, admVdpau_exitCleanup)
-#endif
 
 #if defined(USE_DXVA2)
     PROBE_HW_ACCEL(dxva2Probe, DXVA2, initDXVA2Decoder, admDxva2_exitCleanup)
-#endif
-
-#if defined(USE_LIBVA)
-    PROBE_HW_ACCEL(libvaProbe, LIBVA, initLIBVADecoder, admLibVa_exitCleanup)
 #endif
 
 #if defined(USE_VIDEOTOOLBOX)
     PROBE_HW_ACCEL(videotoolboxProbe, VideoToolbox, initVideoToolboxDecoder, admVideoToolbox_exitCleanup)
 #endif
 
-#if defined(USE_NVENC)
-    PROBE_HW_ACCEL(nvDecProbe, NVDEC, initNvDecDecoder, admNvDec_exitCleanup)
+    {
+        QT_LINUX_WINDOW_ENGINE eng = admDetectQtEngine();
+        if (QT_X11_ENGINE == eng)
+        {
+#if defined(USE_VDPAU)
+            PROBE_HW_ACCEL(vdpauProbe, VDPAU, initVDPAUDecoder, admVdpau_exitCleanup)
 #endif
 
+#if defined(USE_LIBVA)
+            PROBE_HW_ACCEL(libvaProbe, LIBVA, initLIBVADecoder, admLibVa_exitCleanup)
+#endif
+        }
+        if (QT_WAYLAND_ENGINE != eng)
+        {
+#if defined(USE_NVENC)
+            PROBE_HW_ACCEL(nvDecProbe, NVDEC, initNvDecDecoder, admNvDec_exitCleanup)
+#endif
+        }
+    }
 #endif // !CLI
 
 #ifdef USE_SDL

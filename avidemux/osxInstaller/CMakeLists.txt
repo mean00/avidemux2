@@ -56,9 +56,11 @@ ENDIF()
 
 #
 MESSAGE(STATUS "* Creating Skeleton *")
+IF(NOT ${NO_STRANGE_HACK})
 # Quick Hack...
-#FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/../qt4/ADM_userInterfaces/ADM_gui/pics/avidemux.icns"
-#  DESTINATION "${ORIGINAL}/Contents/Resources/avidemux.icns")
+  FILE(COPY "${CMAKE_CURRENT_SOURCE_DIR}/../qt4/ADM_userInterfaces/ADM_gui/pics/avidemux.icns"
+       DESTINATION "${ORIGINAL}/Contents/Resources/avidemux.icns")
+ENDIF()
 FILE(COPY "${ORIGINAL}/Contents/MacOS/Avidemux${AVIDEMUX_MAJOR_MINOR}" DESTINATION "${BUNDLE}/Contents/MacOS/")
 # Copy jobs and cli too
 FILE(COPY "${ORIGINAL}/Contents/Resources/bin/avidemux_cli"          DESTINATION "${BUNDLE}/Contents/MacOS/")

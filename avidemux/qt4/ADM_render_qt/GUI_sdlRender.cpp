@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "ADM_qtx.h"
 
 extern "C"
 {
@@ -351,16 +352,15 @@ bool sdlRenderImpl::init(GUI_WindowInfo *window, uint32_t w, uint32_t h, float z
 
     SDL_SetHint(SDL_HINT_VIDEO_FOREIGN_WINDOW_OPENGL, "1");
 
-#if 0
-    sdl_window = SDL_CreateWindow("avidemux_sdl2",
-                          winfo.x,
-                          winfo.y,
-                          displayWidth, displayHeight,
-                          SDL_WINDOW_BORDERLESS | SDL_WINDOW_FOREIGN);
-    //SDL_SetWindowPosition(sdl_window,window->x,window->y);
-#else
-    sdl_window = SDL_CreateWindowFrom((void *)window->systemWindowId);
-#endif
+    if (admDetectQtEngine() == QT_WAYLAND_ENGINE)
+    {
+        sdl_window = SDL_CreateWindow("avidemux_sdl2", winfo.x, winfo.y, displayWidth, displayHeight,
+                                      SDL_WINDOW_BORDERLESS | SDL_WINDOW_FOREIGN);
+    }
+    else
+    {
+        sdl_window = SDL_CreateWindowFrom((void *)window->systemWindowId);
+    }
 
     if (!sdl_window)
     {
