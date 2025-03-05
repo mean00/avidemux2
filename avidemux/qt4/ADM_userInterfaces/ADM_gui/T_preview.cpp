@@ -260,7 +260,7 @@ static void systemWindowInfo(GUI_WindowInfo *xinfo)
     QWindow *window = QuiMainWindows->windowHandle();
     if (window)
         xinfo->scalingFactor = (double)window->devicePixelRatio();
-#ifdef USING_QT5
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
     if (!myDisplay)
         myDisplay = XOpenDisplay(NULL);
 #else
