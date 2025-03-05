@@ -22,25 +22,21 @@
 #include <QPainter>
 #include <QWindow>
 #include "ADM_qtx.h"
-#if defined(USING_QT5)
-#if !defined(__APPLE__)
-#include <QWindow>
-#if !defined(_WIN32)
-extern "C" void *XOpenDisplay(char *);
-#endif
-#endif
-
-#endif
-// clang-format on
-#ifdef USING_QT6
-#include <QGuiApplication>
-using namespace QNativeInterface;
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
+  #if !defined(__APPLE__)
+    #include <QWindow>
+    #if !defined(_WIN32)
+      extern "C" void *XOpenDisplay(char *);
+    #endif
+  #endif
+#else
+  #include <QGuiApplication>
+  using namespace QNativeInterface;
 #endif
 /* Probably on unix/X11 ..*/
 #ifdef __APPLE__
 #include <Carbon/Carbon.h>
 #endif
-// clang-format off
 #include "ADM_assert.h"
 #include "DIA_coreToolkit.h"
 #include "GUI_render.h"
