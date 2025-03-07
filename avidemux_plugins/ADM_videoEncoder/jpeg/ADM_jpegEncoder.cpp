@@ -38,6 +38,13 @@ ADM_jpegEncoder::ADM_jpegEncoder(ADM_coreVideoFilter *src,bool globalHeader) : A
 bool ADM_jpegEncoder::configureContext(void)
 {
     _context->flags |= AV_CODEC_FLAG_QSCALE;
+    int q = jpegConf.quantizer;
+    if (q < 1 || q > 31)
+    {
+        ADM_warning("Quantizer %d out of range 1 - 31, defaulting to 2\n", q);
+        q = 2;
+    }
+    _context->qmin = _context->qmax = q;
     return true;
 }
 
@@ -96,7 +103,7 @@ uint32_t pixfrmtM;
         {ADM_PIXFRMT_YV12,QT_TRANSLATE_NOOP("jpeg","YUV420"),NULL}
     };
 
-    diaElemUInteger  q(&(jpegConf.quantizer),QT_TRANSLATE_NOOP("jpeg","_Quantizer:"),2,31);
+    diaElemUInteger  q(&(jpegConf.quantizer),QT_TRANSLATE_NOOP("jpeg","_Quantizer:"),1,31);
     diaElemMenu      c(&pixfrmtM,QT_TRANSLATE_NOOP("jpeg","_Pixel format:"),2,pixfrmtMenus);
 
     diaElem *elems[2]={&q,&c};
