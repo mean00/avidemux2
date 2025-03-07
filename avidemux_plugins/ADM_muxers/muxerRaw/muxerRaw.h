@@ -21,9 +21,28 @@
 
 extern raw_muxer muxerConfig;
 
+typedef enum
+{
+    EXT_DEFAULT = 0,
+    EXT_BIN = 1,
+    EXT_JPEG = 2,
+    NB_EXT = 3
+} RAW_MUXER_EXT;
+
 class muxerRaw : public ADM_muxer
 {
 protected:
+#if defined(__APPLE__)
+#define MAX_LEN 1024
+#else
+#define MAX_LEN 4096
+#endif
+#define FMT_BUF_SIZE 16
+                char fullName[MAX_LEN];
+                char fmt[FMT_BUF_SIZE];
+                std::string baseName;
+                std::string ext;
+                int maxFiles;
                 FILE *file;
 public:
                 muxerRaw();

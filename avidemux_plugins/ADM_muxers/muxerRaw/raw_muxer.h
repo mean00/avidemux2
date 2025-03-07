@@ -3,4 +3,7 @@
 #pragma once
 typedef struct {
 uint32_t requestAnnexB;
+uint32_t separateFiles;
+uint32_t maxDigits;
+uint32_t extIdx;
 }raw_muxer;
