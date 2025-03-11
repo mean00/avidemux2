@@ -1,6 +1,6 @@
---- libavformat/matroskaenc.c.orig	2024-04-05 01:23:00.000000000 +0200
-+++ libavformat/matroskaenc.c	2024-05-31 20:57:25.812315941 +0200
-@@ -1003,6 +1003,8 @@
+--- libavformat/matroskaenc.c.orig	2024-09-30 01:31:48.000000000 +0200
++++ libavformat/matroskaenc.c	2025-03-09 19:40:48.595534686 +0100
+@@ -1005,6 +1005,8 @@
                                const AVCodecParameters *par,
                                const uint8_t *extradata, int extradata_size)
  {
@@ -9,7 +9,7 @@
      const uint8_t *header_start[3];
      int header_len[3];
      int first_header_size;
-@@ -1028,6 +1030,29 @@
+@@ -1030,6 +1032,29 @@
          avio_write(pb, header_start[j], header_len[j]);
  
      return 0;

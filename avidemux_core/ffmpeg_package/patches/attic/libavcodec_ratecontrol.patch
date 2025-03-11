@@ -1,0 +1,14 @@
+--- libavcodec/ratecontrol.c.orig	2023-11-11 01:25:17.000000000 +0100
++++ libavcodec/ratecontrol.c	2024-05-31 20:57:25.809315967 +0200
+@@ -613,7 +613,11 @@
+         }
+ 
+         if (init_pass2(s) < 0) {
++            /* Calling ff_rate_control_uninit a second time results in memory corruption.
++             * Rely on avcodec_close and skip this one. (eum.) */
++#if 0
+             ff_rate_control_uninit(s);
++#endif
+             return -1;
+         }
+     }

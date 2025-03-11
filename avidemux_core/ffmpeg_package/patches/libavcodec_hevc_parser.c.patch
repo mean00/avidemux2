@@ -1,6 +1,6 @@
---- libavcodec/hevc_parser.c.orig	2023-11-11 01:25:17.000000000 +0100
-+++ libavcodec/hevc_parser.c	2024-05-30 20:25:46.552614124 +0200
-@@ -30,6 +30,13 @@
+--- libavcodec/hevc/parser.c.orig	2024-09-30 01:31:48.000000000 +0200
++++ libavcodec/hevc/parser.c	2025-03-09 21:26:12.007918332 +0100
+@@ -31,6 +31,13 @@
  #include "h2645_parse.h"
  #include "parser.h"
  
@@ -14,7 +14,7 @@
  #define START_CODE 0x000001 ///< start_code_prefix_one_3bytes
  
  #define IS_IRAP_NAL(nal) (nal->type >= 16 && nal->type <= 23)
-@@ -173,6 +180,136 @@
+@@ -169,6 +176,124 @@
  }
  
  /**
@@ -37,11 +37,7 @@
 +    if (!ps)
 +        return NULL;
 +
-+    // Do we have an active SPS?
-+    if (ps->sps)
-+        return ps->sps;
-+
-+    // Nope, probably no slice header decoded yet. Pick the first PPS from the list and keep fingers crossed.
++    // Pick the first PPS from the list and keep fingers crossed.
 +    for (i = 0; i < HEVC_MAX_PPS_COUNT; i++)
 +    {
 +        pps = ps->pps_list[i];
@@ -80,11 +76,7 @@
 +    if (!ps)
 +        return NULL;
 +
-+    // Do we have an active PPS?
-+    if (ps->pps)
-+        return ps->pps;
-+
-+    // Nope, pick the first one from the list.
++    // Pick the first one from the list and hope.
 +    for (i = 0; i < HEVC_MAX_PPS_COUNT; i++)
 +    {
 +        pps = ps->pps_list[i];
@@ -114,11 +106,7 @@
 +    if (!ps)
 +        return NULL;
 +
-+    // Do we have a VPS set as active?
-+    if (ps->vps)
-+        return ps->vps;
-+
-+    // Nope, take the first PPS from the list and follow the chain.
++    // Take the first PPS from the list and follow the chain.
 +    for (i = 0; i < HEVC_MAX_PPS_COUNT; i++)
 +    {
 +        pps = ps->pps_list[i];
