@@ -30,8 +30,8 @@
 extern "C"
 {
 #include "libavcodec/parser.h"
-#include "libavcodec/hevc.h"
-#include "libavcodec/hevc_ps.h"
+#include "libavcodec/hevc/hevc.h"
+#include "libavcodec/hevc/ps.h"
 #include "libavcodec/avcodec.h"
 #include "libavcodec/ff_spsinfo.h"
 #include "libavutil/mem.h"
@@ -159,18 +159,22 @@ static bool spsInfoFromParserContext(AVCodecParserContext *parser, ADM_SPSinfoH2
         spsinfo->height=sps->height-ow->top_offset-ow->bottom_offset;
         spsinfo->fps1000=23976;
         spsinfo->log2_max_poc_lsb=sps->log2_max_poc_lsb;
-        spsinfo->separate_colour_plane_flag=sps->separate_colour_plane_flag;
+        spsinfo->separate_colour_plane_flag = 0;
         spsinfo->dependent_slice_segments_enabled_flag=0;
         spsinfo->address_coding_length=bitsNeeded(sps->ctb_width*sps->ctb_height);
         printf("VPS = %d  x %d ** %d\n",sps->ctb_width,sps->ctb_height, sps->ctb_size);
         uint32_t timeBaseNum=0;
         uint32_t timeBaseDen=0;
-        if(vps && vps->vps_timing_info_present_flag)
+        if(vps)
         {
-            printf("VPS timescale = %u\n",vps->vps_time_scale);
-            printf("VPS num unit in tick = %u\n",vps->vps_num_units_in_tick);
-            timeBaseNum=vps->vps_num_units_in_tick;
-            timeBaseDen=vps->vps_time_scale;
+            spsinfo->separate_colour_plane_flag = vps->rep_format.separate_colour_plane_flag;
+            if (vps->vps_timing_info_present_flag)
+            {
+                printf("VPS timescale = %u\n",vps->vps_time_scale);
+                printf("VPS num unit in tick = %u\n",vps->vps_num_units_in_tick);
+                timeBaseNum = vps->vps_num_units_in_tick;
+                timeBaseDen = vps->vps_time_scale;
+            }
         }else if(sps->vui.vui_timing_info_present_flag)
         {
             printf("VUI timescale = %u\n",sps->vui.vui_time_scale);
@@ -193,7 +197,7 @@ static bool spsInfoFromParserContext(AVCodecParserContext *parser, ADM_SPSinfoH2
         if(pps)
         {
             spsinfo-> num_extra_slice_header_bits=pps-> num_extra_slice_header_bits;
-            spsinfo->dependent_slice_segments_enabled_flag=pps->dependent_slice_segments_enabled_flag;
+            spsinfo->dependent_slice_segments_enabled_flag = pps->dependent_slice_segments_enabled_flag;
             spsinfo->output_flag_present_flag=pps->output_flag_present_flag;
         }
         if(sps->vui.frame_field_info_present_flag)
