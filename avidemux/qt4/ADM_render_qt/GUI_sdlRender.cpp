@@ -350,7 +350,9 @@ bool sdlRenderImpl::init(GUI_WindowInfo *window, uint32_t w, uint32_t h, float z
         return false;
     }
 
+    #if SDL_VERSION_ATLEAST(2,0,22)
     SDL_SetHint(SDL_HINT_VIDEO_FOREIGN_WINDOW_OPENGL, "1");
+    #endif
 
     if (admDetectQtEngine() == QT_WAYLAND_ENGINE)
     {
