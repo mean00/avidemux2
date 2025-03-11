@@ -123,6 +123,7 @@ bool ADM_ffNvEncEncoder::configureContext(void)
             av_dict_set(&_options,"rc","constqp",0);
             snprintf(buf, OPTION_BUFFER_SIZE, "%d", NvEncSettings.quality);
             av_dict_set(&_options,"qp",buf,0);
+            _context->bit_rate = 0;
             break;
         case NV_FF_RC_CBR:
             _context->bit_rate = _context->rc_max_rate = NvEncSettings.bitrate*1000;
