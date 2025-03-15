@@ -5,3 +5,4 @@ Icon=avidemux.png
 Type=Application
 Categories=AudioVideo;AudioVideoEditing;Video;
 MimeType=video/mpeg;video/x-mpeg;video/mp4;video/x-m4v;video/quicktime;video/3gp;video/mkv;video/x-matroska;video/webm;video/flv;video/x-flv;video/dv;video/x-msvideo;video/x-ms-wmv;video/x-ms-asf;video/x-anim;
+StartupWMClass=avidemux3_qt5
