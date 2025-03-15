@@ -263,12 +263,12 @@ uint8_t tsHeader::close(void)
     \fn tsHeader
     \brief constructor
 */
-
  tsHeader::tsHeader( void ) : vidHeader()
 {
     tsPacket = NULL;
     fieldEncoded=false;
-    lastFrame=0xffffffff;
+#define TS_INVALID 0xFFFFFFFF
+    lastFrame = TS_INVALID;
     videoPid=0;
     videoNeedEscaping=false;
     sizeOfVideoInBytes=0;
@@ -285,6 +285,12 @@ uint8_t tsHeader::close(void)
     close();
 }
 
+static bool isKeyFrame(uint8_t type)
+{
+    if (type == 1 || type == 4)
+        return true;
+    return false;
+}
 
 /**
         \fn getFrame
@@ -303,7 +309,7 @@ uint8_t  tsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
     if(frame>=ListOfFrames.size()) return 0;
     dmxFrame *pk=ListOfFrames[frame];
     // next frame
-    if(frame==(lastFrame+1) && pk->type!=1)
+    if((lastFrame != TS_INVALID) && (frame == lastFrame + 1) && !isKeyFrame(pk->type))
     {
         lastFrame++;
         bool r=tsPacket->read(pk->len,img->data);
@@ -317,7 +323,7 @@ uint8_t  tsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
              return r;
     }
     // Intra ?
-    if(pk->type==1 || pk->type==4)
+    if(isKeyFrame(pk->type))
     {
         if(!tsPacket->seek(pk->startAt,pk->index)) return false;
          bool r=tsPacket->read(pk->len,img->data);
@@ -336,12 +342,16 @@ uint8_t  tsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
     // Random frame
     // Need to rewind, then forward
     int startPoint=frame;
-    while(startPoint && ListOfFrames[startPoint]->type!=1 && ListOfFrames[startPoint]->type!=4) startPoint--;
-    printf("[tsDemux] Wanted frame %" PRIu32", going back to frame %" PRIu32", last frame was %" PRIu32",\n",frame,startPoint,lastFrame);
-    pk=ListOfFrames[startPoint];
+    while(startPoint > 0 && !isKeyFrame(pk->type))
+    {
+        startPoint--;
+        pk = ListOfFrames[startPoint];
+    }
+    // ADM_info("Want frame %" PRIu32", rewinding to frame %" PRIu32", last frame was %" PRIu32"\n", frame, startPoint, lastFrame);
     if(!tsPacket->seek(pk->startAt,pk->index)) 
     {
             printf("[tsDemux] Failed to rewind to frame %" PRIu32"\n",startPoint);
+            lastFrame = TS_INVALID;
             return false;
     }
     // Now forward
@@ -351,7 +361,7 @@ uint8_t  tsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
         if(!tsPacket->read(pk->len,img->data))
         {
             printf("[tsDemux] Read fail for frame %" PRIu32"\n",startPoint);
-            lastFrame=0xffffffff;
+            lastFrame = TS_INVALID;
             return false;
         }
         lastFrame=startPoint;
