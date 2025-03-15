@@ -269,14 +269,17 @@ int startAvidemux(int argc, char *argv[])
 
 #define STR(x) #x
 #define MKSTRING(x) STR(x)
-    printf("*************************\n");
-    printf("  Avidemux v%s", MKSTRING(ADM_VERSION));
 
 #if defined(ADM_SUBVERSION)
-    printf(" (%s) .", MKSTRING(ADM_SUBVERSION));
+    printf("****************************************************\n");
+    printf(" Avidemux v%s ", MKSTRING(ADM_VERSION));
+    printf("(%s, fflibs %s)\n", MKSTRING(ADM_SUBVERSION), MKSTRING(FFMPEG_VERSION));
+    printf("****************************************************\n");
+#else
+    printf("*******************\n");
+    printf(" Avidemux v%s", MKSTRING(ADM_VERSION));
+    printf("*******************\n");
 #endif
-
-    printf("\n*************************\n");
     printf(" http://www.avidemux.org\n");
     printf(" Code      : Mean, JSC, Grant Pedersen,eumagga0x2a\n");
     printf(" GFX       : Nestor Di, nestordi@augcyl.org\n");

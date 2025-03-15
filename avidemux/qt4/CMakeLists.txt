@@ -63,7 +63,8 @@ MESSAGE(STATUS "Found cmake subfolder. good.")
 # Go
 #
 INCLUDE(avidemuxVersion)
-MESSAGE(STATUS "Building agains version ${AVIDEMUX_VERSION}.")
+INCLUDE(admFFmpegVersion)
+MESSAGE(STATUS "Building agains version ${AVIDEMUX_VERSION} with fflibs ${FFMPEG_VERSION}")
 
 IF(WIN32)
   IF(MSVC)
@@ -172,6 +173,7 @@ ADD_SUBDIRECTORY(ADM_userInterfaces ./ADM_userInterfaces${QT_LIBRARY_EXTENSION})
 SDLify(../common/main.cpp)
 IF(ADM_SUBVERSION)
   ADD_SOURCE_CFLAGS(../common/main.cpp "-DADM_SUBVERSION=\"${ADM_SUBVERSION}\"")
+  ADD_SOURCE_CFLAGS(../common/main.cpp "-DFFMPEG_VERSION=\"${FFMPEG_VERSION}\"")
 ENDIF()
 ADD_SOURCE_CFLAGS(../common/main.cpp "-DADM_VERSION=\"${AVIDEMUX_VERSION}\"")
 ADD_SOURCE_CFLAGS(../common/main.cpp "-DQT_FLAVOR=\"${QT_EXTENSION}\"")
