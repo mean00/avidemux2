@@ -174,6 +174,7 @@ fribidi \
 lame \
 libass \
 libvpx \
+nsis \
 ogg \
 opus \
 qttools \
