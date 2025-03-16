@@ -272,9 +272,10 @@ uint8_t psHeader::close(void)
 */
 
  psHeader::psHeader( void ) : vidHeader()
-{ 
+{
+#define PS_INVALID 0xFFFFFFFF
     fieldEncoded=false;
-    lastFrame=0xffffffff;
+    lastFrame = PS_INVALID;
     videoTrackSize=0;
     videoDuration = ADM_NO_PTS;
     psPacket = NULL;
@@ -298,7 +299,7 @@ uint8_t  psHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
     if(frame>=ListOfFrames.size()) return 0;
     getFlags(frame,&(img->flags));
     dmxFrame *pk=ListOfFrames[frame];
-    if(frame==(lastFrame+1) && pk->type!=1) // the next frame, not an intra
+    if(lastFrame != PS_INVALID && (frame == lastFrame+1) && pk->type!=1) // the next frame, not an intra
     {
         lastFrame++;
         bool r=psPacket->read(pk->len,img->data);
@@ -331,6 +332,7 @@ uint8_t  psHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
     if(!psPacket->seek(pk->startAt,pk->index))
     {
         printf("[psDemux] Failed to rewind to frame %" PRIu32"\n",startPoint);
+        lastFrame = PS_INVALID;
         return false;
     }
 
@@ -341,7 +343,7 @@ uint8_t  psHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
         if(!psPacket->read(pk->len,img->data))
         {
             printf("[psDemux] Read failed for frame %" PRIu32"\n",startPoint);
-            lastFrame=0xffffffff;
+            lastFrame = PS_INVALID;
             return false;
         }
         lastFrame=startPoint;
