@@ -129,7 +129,6 @@ find . -type f -exec sed -i -e 's|/usr/lib|././/lib|g' {} \;
 popd > /dev/null
 cp "$APPIMAGE_SCRIPT_DIR"/AppRunBookworm install/AppRun
 cp "$APPIMAGE_SCRIPT_DIR"/avidemux.png install
-cp "$APPIMAGE_SCRIPT_DIR"/avidemux.desktop install
 
 FT_PROBE_EXE_NAME="freetype_probe"
 FT_PROBE_LOCATION="buildPluginsCommon/ADM_videoFilters6/ass"
@@ -138,8 +137,16 @@ if [ -e "${FT_PROBE_LOCATION}/${FT_PROBE_EXE_NAME}" ]; then
     chmod +x "install/${FT_PROBE_EXE_NAME}"
 fi
 
-# Patch desktop file
-sed -i 's/avidemux.png/avidemux/g' install/avidemux.desktop
+# Create launcher file
+echo "[Desktop Entry]" > install/avidemux.desktop
+echo "Name=Avidemux" >> install/avidemux.desktop
+echo "Exec=avidemux3_qt6" >> install/avidemux.desktop
+echo "Icon=avidemux" >> install/avidemux.desktop
+echo "Type=Application" >> install/avidemux.desktop
+echo "Categories=AudioVideo;AudioVideoEditing;Video;" >> install/avidemux.desktop
+echo "MimeType=video/mpeg;video/x-mpeg;video/mp4;video/x-m4v;video/quicktime;video/3gp;video/mkv;video/x-matroska;video/webm;video/flv;video/x-flv;video/dv;video/x-msvideo;video/x-ms-wmv;video/x-ms-asf;video/x-anim;" >> install/avidemux.desktop
+echo "StartupWMClass=avidemux3_qt6" >> install/avidemux.desktop
+
 if [ -f /tmp/myappimage.squashfs ]; then
     rm -f /tmp/myappimage.squashfs || exit 1
 fi
