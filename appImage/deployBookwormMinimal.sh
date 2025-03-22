@@ -10,44 +10,30 @@
 
 fail()
 {
-        echo "************************* $* FAILED"
-        echo "************************* $* FAILED"
-        echo "************************* $* FAILED"
-        echo "************************* $* FAILED"
-        echo "************************* $* FAILED"
-        echo "************************* $* FAILED"
-        echo "************************* $* FAILED"
+        echo "******** $* FAILED ********"
         exit 1
 
 }
 cpyX86()
 {
-        cp -t ../lib  /usr/lib/x86_64-linux-gnu/$1 || fail copy_x86lib $1
-
+        cp -t ../lib/x86_64-linux-gnu /usr/lib/x86_64-linux-gnu/$1 || fail copy_x86lib $1
 }
 cpyX86Optional()
 {
-        cp -t ../../opt/lib  /usr/lib/x86_64-linux-gnu/$1 || fail copy_x86lib $1
-
+        cp -t ../../opt/lib /usr/lib/x86_64-linux-gnu/$1 || fail copy_x86lib $1
 }
 cpyX86Rename()
 {
-        cp -t ../lib/$2  /usr/lib/x86_64-linux-gnu/$1 || fail copy_x86lib $1
+        cp -t ../lib/$2 /usr/lib/x86_64-linux-gnu/$1 || fail copy_x86lib $1
 }
-cpyLib()
-{
-        cp -t ../lib  /usr/lib/$1 || fail copy_lib $i
 
-}
 cpyRootLib()
 {
-        cp -t ../lib  /lib/$1 || fail copy_lib $i
-
+        cp -t ../lib /lib/$1 || fail copy_lib $i
 }
 cpyRootx86Lib()
 {
-        cp -t ../lib  /lib/x86_64-linux-gnu/$1 || fail copy_lib $i
-
+        cp -t ../lib/x86_64-linux-gnu /lib/x86_64-linux-gnu/$1 || fail copy_lib $i
 }
 
 
@@ -67,21 +53,20 @@ fi
 pushd install/usr/bin > /dev/null || exit 1
 mkdir -p ../lib/va || exit 1
 mkdir -p ../lib/vdpau || exit 1
-mkdir -p ../lib/qt5/plugins || exit 1
+mkdir -p ../lib/qt6/plugins || exit 1
 mkdir -p ../../opt/lib || exit 1
 
-# qt5
-ldd avidemux3_qt5 | grep libQ | sed 's/^.*=>//g' | sed 's/ (.*$//g' | xargs cp -t ../lib/qt5/ || fail qt5
-ldd avidemux3_qt5 | grep icu | sed 's/^.*=>//g' | sed 's/ (.*$//g' | xargs cp -t ../lib/qt5 || fail icu
-cp /usr/lib/x86_64-linux-gnu/libQt5DBus.so.5 ../lib/qt5 || fail QtDbus
-cp /usr/lib/x86_64-linux-gnu/libQt5XcbQpa.so.5  ../lib/qt5 || fail QtXcb
+# Qt6
+ldd avidemux3_qt6 | grep libQ | sed 's/^.*=>//g' | sed 's/ (.*$//g' | xargs cp -t ../lib/qt6/ || fail qt6
+ldd avidemux3_qt6 | grep icu | sed 's/^.*=>//g' | sed 's/ (.*$//g' | xargs cp -t ../lib/qt6 || fail icu
+cp /usr/lib/x86_64-linux-gnu/libQt6DBus.so.6 ../lib/qt6 || fail QtDbus
+cp /usr/lib/x86_64-linux-gnu/libQt6XcbQpa.so.6 ../lib/qt6 || fail QtXcb
 
-cp -Rap -t ../lib/qt5/plugins /usr/lib/x86_64-linux-gnu/qt5/plugins/platforms || fail qtplugins
-cp -Rap -t ../lib/qt5/plugins /usr/lib/x86_64-linux-gnu/qt5/plugins/platformthemes || fail qtplatformthemes
-cp -Rap -t ../lib/qt5/plugins /usr/lib/x86_64-linux-gnu/qt5/plugins/xcbglintegrations || fail qxcbglintegrations
+cp -Rap -t ../lib/qt6/plugins /usr/lib/x86_64-linux-gnu/qt6/plugins/platforms || fail qtplugins
+cp -Rap -t ../lib/qt6/plugins /usr/lib/x86_64-linux-gnu/qt6/plugins/platformthemes || fail qtplatformthemes
+cp -Rap -t ../lib/qt6/plugins /usr/lib/x86_64-linux-gnu/qt6/plugins/xcbglintegrations || fail qxcbglintegrations
 
 cpyRootx86Lib libdouble-conversion.so.3
-cpyX86 libxcb-xinerama.so.0
 cpyX86 libmd4c.so.0
 
 # various libs
@@ -135,14 +120,14 @@ done
 
 # Qt path
 echo "[Paths]" > qt.conf
-echo "Prefix=../lib/qt5" >> qt.conf
+echo "Prefix=../lib/qt6" >> qt.conf
 
 cd ..
 find . -type f -exec sed -i -e 's|/usr/lib/x86_64-linux-gnu|./././././././././././lib|g' {} \; ; cd ..
 find . -type f -exec sed -i -e 's|/usr/lib|././/lib|g' {} \;
 #
 popd > /dev/null
-cp "$APPIMAGE_SCRIPT_DIR"/AppRunBuster install/AppRun
+cp "$APPIMAGE_SCRIPT_DIR"/AppRunBookworm install/AppRun
 cp "$APPIMAGE_SCRIPT_DIR"/avidemux.png install
 cp "$APPIMAGE_SCRIPT_DIR"/avidemux.desktop install
 

@@ -13,10 +13,11 @@ libsqlite3-dev \
 libxv-dev \
 libvdpau-dev \
 libva-dev \
+libglu1-mesa-dev \
 libasound2-dev \
 libpulse-dev \
-qtbase5-dev \
-qttools5-dev-tools \
+qt6-base-dev \
+qt6-l10n-tools \
 libx264-dev \
 libx265-dev \
 libxvidcore-dev \
@@ -96,9 +97,10 @@ check_aom()
         git clone https://aomedia.googlesource.com/aom || return 1
     else
         echo "Trying to re-use existing aom source directory"
-        git fetch || fail "Cannot fetch changes"
+        pushd "aom" > /dev/null && git fetch || fail "Cannot fetch changes"
+        popd > /dev/null
     fi
-    pushd "aom" > /dev/null && git checkout tags/v3.9.1 || return 1
+    pushd "aom" > /dev/null && git checkout tags/v3.11.0 || return 1
     popd > /dev/null
     if [ -d "build-aom" ]
     then
@@ -113,6 +115,7 @@ check_aom()
     -DBUILD_SHARED_LIBS=1 \
     -DCONFIG_ANALYZER=0 \
     -DFORCE_HIGHBITDEPTH_DECODING=0 \
+    -DCONFIG_CWG_C013=1 \
     -DCMAKE_INSTALL_PREFIX="/usr/local" || return 1
     make -j $(nproc) || return 1
     sudo make install || return 1
@@ -253,10 +256,6 @@ fi
 rm -rf install > /dev/null 2>&1
 
 SRCTOP=$(cd $(dirname "$0") && pwd)
-logfile="/tmp/log-bootstrap-$(date +%F_%T).log"
-bash "${SRCTOP}/bootStrap.bash" --with-system-libmad ${rebuild} 2>&1 | tee ${logfile}
-if [ ${PIPESTATUS[0]} -ne 0 ]; then
-    fail "Build failed, please inspect ${logfile} and /tmp/logbuild* files."
-fi
+bash "${SRCTOP}/bootStrap.bash" --with-system-libmad ${rebuild} 2>&1 || fail "Build failed, please inspect /tmp/log* files."
 bash "${SRCTOP}/appImage/deployBookwormMinimal.sh" "${PWD}/${RT_DIR}/${RUNTIME}"
 exit $?

@@ -1,0 +1,79 @@
+#!/bin/bash
+
+OPENGL_NAME="libGL.so.1"
+PULSE_NAME="libpulse-simple.so.0"
+LIBVA_NAME="libva.so.2"
+LIBVDPAU_NAME="libvdpau.so.1"
+
+if ! (/sbin/ldconfig -p | grep -q ${OPENGL_NAME})
+then
+    echo "Legacy OpenGL library (${OPENGL_NAME}) not found on host, aborting."
+    exit 1
+fi
+if ! (/sbin/ldconfig -p | grep -q ${PULSE_NAME})
+then
+    echo "PulseAudio Simple API library (${PULSE_NAME}) not found on host, aborting."
+    exit 1
+fi
+
+# make relative-path arguments absolute before changing directory
+args=("--portable");
+paramprefix="--";
+param="--load";#enable filename as first/single argument, with --load as supposed default action
+for arg in "$@";
+do # add argument as is, or realpath of argument, depending on paramprefix
+	[ "${arg::2}" = "$paramprefix" ] && args+=("$arg") && param="$arg" || {
+		case "$param" in
+		--append|--load|--run|--save*)
+			args+=("$(realpath -- "$arg")") ;;
+		*)
+			args+=("$arg") ;;
+		esac
+	}
+	[ "$arg" == "$paramprefix" ] && paramprefix="123" && param="--load"; # new paramprefix will never match length-2 string again
+done;
+HERE="$(dirname "$(readlink -f "${0}")")"
+cd "${HERE}/usr/"
+export QT_STYLE_OVERRIDE="fusion"
+FT_PROBE_EXE_NAME="freetype_probe"
+if [ -z "${ADM_APPIMAGE_USE_SYSTEM_FONT_LIBS}" ] && [ -e "${HERE}/${FT_PROBE_EXE_NAME}" ]; then
+    "${HERE}/${FT_PROBE_EXE_NAME}"
+    ADM_APPIMAGE_USE_SYSTEM_FONT_LIBS=$?
+fi
+if [ "x${ADM_APPIMAGE_USE_SYSTEM_FONT_LIBS}" != "x1" ]
+then
+    echo "Using bundled freetype, fontconfig and fribidi." \
+         "Export ADM_APPIMAGE_USE_SYSTEM_FONT_LIBS=1 to use the system ones instead."
+    echo "This is recommended for systems with fontconfig >= 2.13"
+    LD_LIBRARY_PATH="${HERE}/opt/lib:${LD_LIBRARY_PATH}"
+else
+    echo "Using system freetype, fontconfig and fribidi."
+fi
+
+if (/sbin/ldconfig -p | grep -q ${LIBVA_NAME})
+then
+    echo "Using system libva."
+else
+    echo "${LIBVA_NAME} not found on host, using bundled version."
+    LD_LIBRARY_PATH="${HERE}/usr/lib/va:${LD_LIBRARY_PATH}"
+fi
+
+if (/sbin/ldconfig -p | grep -q ${LIBVDPAU_NAME})
+then
+    echo "Using system libvdpau."
+else
+    echo "${LIBVDPAU_NAME} not found on host, using bundled version."
+    LD_LIBRARY_PATH="${HERE}/usr/lib/vdpau:${LD_LIBRARY_PATH}"
+fi
+
+export LD_LIBRARY_PATH="${HERE}/usr/lib/x86_64-linux-gnu:${HERE}/usr/lib/qt6:${LD_LIBRARY_PATH}"
+export PATH="${HERE}/usr/bin:${PATH}"
+# choose binary depending on substrings "_jobs" or "_cli" in the name appImage is called by
+if [[ "${ARGV0##*/}" =~ _jobs ]]
+then "${HERE}/usr/bin/avidemux3_jobs_qt6" "${args[@]}"
+elif [[ "${ARGV0##*/}" =~ _cli ]]
+then "${HERE}/usr/bin/avidemux3_cli" "${args[@]}"
+else "${HERE}/usr/bin/avidemux3_qt6" "${args[@]}"
+fi
+cd -
+
