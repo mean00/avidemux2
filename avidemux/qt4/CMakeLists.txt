@@ -41,8 +41,8 @@ LIST(APPEND CMAKE_MODULE_PATH ${ADM_CMAKE_DIR})
 #
 # Sanity check
 #
-MESSAGE(STATUS  "Checking if avidemux include folder exists as  ${ADM_HEADER_DIR}")
-MESSAGE(STATUS  "  ( CMAKE_INSTALL_PREFIX/include/avidemux/${AVIDEMUX_API_VERSION}")
+MESSAGE(STATUS  "Checking if avidemux include folder exists as ${ADM_HEADER_DIR}")
+MESSAGE(STATUS  "(CMAKE_INSTALL_PREFIX/include/avidemux/${AVIDEMUX_API_VERSION})")
 IF(NOT EXISTS "${ADM_HEADER_DIR}")
   MESSAGE(STATUS  "Make sure you installed all the files.\n i cannot find avidemux include folder.cmake .\nSet CMAKE_INSTALL_PREFIX to the install folder, current value is ${CMAKE_INSTALL_PREFIX}")
   MESSAGE(FATAL_ERROR  "Aborting")
@@ -272,6 +272,11 @@ ADD_SUBDIRECTORY(i18n)
 
 DISPLAY_SUMMARY_LIST()
 
+# install XDG metadata
+IF(UNIX AND NOT APPLE)
+  ADD_SUBDIRECTORY(xdg_data)
+ENDIF()
+
 ADM_POSTBUILD()
 INCLUDE(admPackager)
 admPackager(qt4Package)
@@ -282,10 +287,5 @@ ADM_INSTALL_CMAKE_FOLDER("${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 # install headers
 ADM_INSTALL_QT_INCLUDE_FOLDER("${CMAKE_CURRENT_SOURCE_DIR}/ADM_openGL/include/"  ADM_openGL)
 ADM_INSTALL_QT_INCLUDE_FOLDER("${CMAKE_CURRENT_SOURCE_DIR}/ADM_UIs/include/"  ADM_UIs)
-
-# install XDG metadata
-IF(UNIX AND NOT APPLE)
-  ADD_SUBDIRECTORY(xdg_data)
-ENDIF()
 
 MESSAGE("")
