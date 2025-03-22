@@ -20,7 +20,7 @@
     </categories>
     <url type="homepage">https://www.avidemux.org/</url>
     <provides>
-        <binary>avidemux3_qt5</binary>
+        <binary>avidemux3_${QT_EXTENSION}</binary>
     </provides>
     <update_contact>Avidemux team -- avidemux.org/smif/</update_contact>
     <screenshots>
