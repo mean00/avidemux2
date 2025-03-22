@@ -30,6 +30,7 @@ extern char *ADM_getRelativePath(const char *base0, const char *base1, const cha
 static char ADM_basedir[PATH_BUF_LEN] = {0};
 static char ADM_configdir[PATH_BUF_LEN] = {0};
 
+static std::string ADM_installPath;
 static std::string ADM_autodir;
 static std::string ADM_systemPluginSettings;
 static std::string ADM_i18nDir;
@@ -128,13 +129,14 @@ const std::string ADM_getI8NDir(const std::string &flavor)
 
     if(isPortable)
     {
-        std::string i18n = ADM_getPluginDir();
-        i18n += "/../../share/avidemux6/";
-        i18n += flavor;
-        i18n += "/i18n";
-        ADM_i18nDir=canonize(i18n);
-        ADM_info("Relative to install i18n mode : <%s>\n",ADM_i18nDir.c_str());
-        // 181n
+        if (ADM_installPath.size())
+        {
+            std::string i18n = ADM_installPath;
+            i18n += "share/avidemux6/";
+            i18n += flavor;
+            i18n += "/i18n";
+            ADM_i18nDir = canonize(i18n);
+        }
     }else
     {
         std::string partialPath = flavor;
@@ -260,7 +262,10 @@ void ADM_initBaseDir(int argc, char *argv[])
         std::string p=ADM_extractPath(copy);
         delete [] copy;copy=NULL;
         std::string plugins=p;
-        plugins += "/../lib/";
+        plugins += "/../";
+        ADM_installPath = canonize(plugins);
+        plugins += ADM_RELATIVE_LIB_DIR;
+        plugins += "/";
         plugins += ADM_PLUGIN_DIR;
         plugins = canonize(plugins);
         ADM_setPluginDir(plugins);
