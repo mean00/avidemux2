@@ -66,6 +66,18 @@ prepare_sources()
     # get the source
     git clone https://github.com/mxe/mxe.git || fail "Cannot clone MXE repository. Aborting"
 
+    if [ "$use_last_known_good" -eq 1 ]; then
+        if [ -f "${SRCDIR}/mxe-last-known-good" ]; then
+            . "${SRCDIR}/mxe-last-known-good"
+        else
+            echo "Last known good MXE revision requested, but file \"${SRCDIR}/mxe-last-known-good\" not present."
+            fail "No last known good"
+        fi
+        pushd "${TOP}/mxe" > /dev/null && \
+        git checkout -b last-known-good-rev "${MXE_LAST_KNOWN_GOOD_REVISION}" || fail "Failed at checking out last known good revision"
+        popd > /dev/null
+    fi
+
     [ -d "${MXE_ROOT_DIR}/pkg" ] || mkdir "${MXE_ROOT_DIR}/pkg" || fail "Cannot create folder for packages"
 
     # get x264 source
@@ -159,6 +171,9 @@ show_usage()
     echo " --prepare        Clone MXE repository, get x264 source, patch MXE but"
     echo "                  do not perform build. --prepare takes precedence over"
     echo "                  all other options except of --help."
+    echo
+    echo " --last-good      When preparing sources, check out the last known working"
+    echo "                  MXE revision."
 }
 
 TOP=$(pwd)
@@ -191,25 +206,29 @@ do_prepare_only=0
 do_build_only=0
 do_libaom_only=0
 do_nv_codec_only=0
+use_last_known_good=0
 
 while [ $# != 0 ]; do
     opt="$1"
     case "$opt" in
-        -h|--help)
+        --help)
             show_usage
             exit 0
         ;;
-        -p|--prepare)
+        --prepare)
             do_prepare_only=1
         ;;
-        -b|--build)
+        --build)
             do_build_only=1
         ;;
-        -l|--libaom)
+        --libaom)
             do_libaom_only=1
         ;;
-        -n|--nv-headers)
+        --nv-headers)
             do_nv_codec_only=1
+        ;;
+        --last-good)
+            use_last_known_good=1
         ;;
         *)
             echo "Unknown option $opt"

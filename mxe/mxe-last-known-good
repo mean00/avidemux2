@@ -1,0 +1,3 @@
+#!/bin/bash
+MXE_LAST_KNOWN_GOOD_REVISION=\
+"d8aaa42070904230cfddb7d62f6ce03e295e74ae"

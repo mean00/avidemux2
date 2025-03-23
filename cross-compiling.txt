@@ -41,7 +41,11 @@ below as ${MXE_ROOT}.
 
 An example for the case that Avidemux source was cloned as ~/avidemux2:
 
-    cd ~ && mkdir cross-build && cd cross-build && bash ../avidemux2/mxe/mxe-setup.sh
+    cd ~ && mkdir cross-build && cd cross-build && bash ../avidemux2/mxe/mxe-setup.sh --last-good
+
+Omitting "--last-good" option will result in the latest git master of MXE
+rather than the last known good revision being used, which can work, but is
+untested as a rule.
 
 ##############################################################################
 
@@ -75,4 +79,4 @@ host Linux distribution.
 
 As of this writing, twolame, aften, vapoursynth and avsproxy are not available.
 
-2024-08-12
+2025-03-23
