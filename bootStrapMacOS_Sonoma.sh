@@ -376,10 +376,10 @@ fi
 cd "$BUILDTOP"
 if [ "x$create_app_bundle" = "x1" ]; then
   mkdir "${PREFIX}/fonts"
-  cp "${SRCTOP}/cmake/osx/fonts.conf" "${PREFIX}/fonts"
+  cp "${SRCTOP}/avidemux/qt4/cmake/osx/fonts.conf" "${PREFIX}/fonts"
   # Copy icons
   echo "Copying icons"
-  cp "${SRCTOP}"/cmake/osx/*.icns "$PREFIX"
+  cp "${SRCTOP}"/avidemux/qt4/cmake/osx/*.icns "$PREFIX"
   mkdir -p "${PREFIX}"/../MacOS
   if [ -d "${PREFIX}"/../PlugIns ]; then
     rm -Rf "${PREFIX}"/../PlugIns
