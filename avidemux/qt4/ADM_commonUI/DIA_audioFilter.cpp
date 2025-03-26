@@ -79,10 +79,15 @@ int DIA_getAudioFilter(ADM_AUDIOFILTER_CONFIG *config, double tempoHint)
     {
         vConvTempo = defaultConvTempo;
     }
-    diaElemFloatResettable eCustomTempo(&vConvTempo, QT_TRANSLATE_NOOP("adm", "Tempo multiplier:"), 0.1, 10.0,
+    diaElemFloatResettable eCustomTempo(&vConvTempo, QT_TRANSLATE_NOOP("adm", "Tempo multiplier:"),
+                                        AUDIO_FILTER_STRETCH_MIN,
+                                        AUDIO_FILTER_STRETCH_MAX,
                                         defaultConvTempo,
                                         QT_TRANSLATE_NOOP("adm", "A value of 2.0 means twice as fast playback."), 9);
-    diaElemFloatResettable eCustomPitch(&vConvPitch, QT_TRANSLATE_NOOP("adm", "Pitch multiplier:"), 0.1, 10.0, 1.0,
+    diaElemFloatResettable eCustomPitch(&vConvPitch, QT_TRANSLATE_NOOP("adm", "Pitch multiplier:"),
+                                        AUDIO_FILTER_STRETCH_MIN,
+                                        AUDIO_FILTER_STRETCH_MAX,
+                                        1.0,
                                         QT_TRANSLATE_NOOP("adm", "Every doubling means one octave upshift"), 9);
     eFPS.link(menuFPS + 3, 1, &eCustomTempo);
     eFPS.link(menuFPS + 3, 1, &eCustomPitch);

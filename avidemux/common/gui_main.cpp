@@ -326,9 +326,20 @@ void HandleAction(Action action)
                 int nb = videoChain->size();
                 videoFilter = (*videoChain)[nb - 1];
                 info = videoFilter->getInfo();
-                tempoHint /= info->totalDuration;
+                if (info->totalDuration)
+                {
+                    tempoHint /= info->totalDuration;
+                } else
+                {
+                    tempoHint = 1.0;
+                }
                 destroyVideoFilterChain(videoChain);
                 // printf("[audioFilterConfigure] tempo hint: %f\n",tempoHint);
+                if (tempoHint < AUDIO_FILTER_STRETCH_MIN || tempoHint > AUDIO_FILTER_STRETCH_MAX)
+                {
+                    ADM_warning("Tempo hint %f out of range, using default ratio of 1.\n", tempoHint);
+                    tempoHint = 1.0;
+                }
             }
             ed->audioEncodingConfig.audioFilterConfigure(tempoHint);
             UI_setTimeShift(ed->audioEncodingConfig.shiftEnabled, ed->audioEncodingConfig.shiftInMs);

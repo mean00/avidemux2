@@ -20,6 +20,7 @@
 
 #include "ADM_audiodef.h"
 #include "audiofilter_normalize_param.h"
+#include "audiofilter_conf.h"
 #include "ADM_confCouple.h"
 /* Encoder part */
 uint8_t         audioCodecSetByIndex(int dex,int i);

@@ -25,6 +25,9 @@
 #include "audiofilter_channels.h"
 #include "audiofilter_eq.h"
 
+#define AUDIO_FILTER_STRETCH_MIN 0.1
+#define AUDIO_FILTER_STRETCH_MAX 10.0
+
 /**
     \class ADM_AUDIOFILTER_CONFIG
 */
