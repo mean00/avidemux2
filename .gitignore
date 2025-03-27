@@ -20,4 +20,6 @@ myBuild*
 oprofile_data
 avidemux/winInstaller/AvidemuxVersion.nsh
 avidemux/qt4/xdg_data/org.avidemux.Avidemux.appdata.xml
+avidemux/qt4/xdg_data/org.avidemux.AvidemuxJobs.desktop
+avidemux/qt4/xdg_data/org.avidemux.AvidemuxJobs.appdata.xml
 *.DS_Store
