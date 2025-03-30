@@ -30,16 +30,17 @@ static uint64_t wrapIt(uint64_t val, uint64_t start, uint64_t &last, uint32_t &l
 {
     if(val==ADM_NO_PTS) return val;
 
-    const uint64_t wraplen=1LL<<32;
+#define WRAPLEN (1LL<<32)
+#define HALFWRAPLEN (1LL<<31)
     if(val<start)
-        val+=wraplen;
+        val += WRAPLEN;
     val-=start;
-    if(last>val && last-val >= wraplen/2)
+    if(last>val && last-val >= HALFWRAPLEN)
         laps++;
-    if(laps && val>last && val-last > wraplen/2)
+    if(laps && val>last && val-last > HALFWRAPLEN)
         laps--;
     last=val;
-    val+=laps*wraplen;
+    val += laps * WRAPLEN;
     return val;
 }
 bool tsHeader::updatePtsDts(void)
@@ -114,11 +115,23 @@ bool tsHeader::updatePtsDts(void)
         {
             if(startPts!=ADM_NO_PTS)
             {
-                if(startPts>=2*dtsIncrement)
+#define MAX_REORDER_DEPTH 32
+                uint64_t minPts = startPts;
+                for (i = 0; i < MAX_REORDER_DEPTH; i++)
                 {
-                    startDts=startPts-2*dtsIncrement;
-                } else startDts=0;
-                ListOfFrames[0]->dts=startDts;
+                    if (i >= ListOfFrames.size())
+                        break;
+                    dmxFrame *f = ListOfFrames[i];
+                    if (f->pts == ADM_NO_PTS)
+                        continue;
+                    if (f->pts < minPts)
+                    {
+                        if(minPts - f->pts > HALFWRAPLEN)
+                            break; // catch timestamps wrapping around
+                        minPts = f->pts;
+                    }
+                }
+                startDts = minPts;
             }
         }
         for(i=0;i<listOfAudioTracks.size();i++)
@@ -126,6 +139,15 @@ bool tsHeader::updatePtsDts(void)
             if(!listOfAudioTracks[i]->access->seekPoints.size()) continue;
             uint64_t a=listOfAudioTracks[i]->access->seekPoints[0].dts;
             if(a<startDts) startDts=a;
+        }
+        if (startDts == ADM_NO_PTS)
+        {
+            ADM_warning("No DTS for the first frame of video, setting to zero.\n");
+            startDts = 0;
+        }
+        if (ListOfFrames[0]->dts == ADM_NO_PTS)
+        {
+            ListOfFrames[0]->dts = startDts;
         }
         // Rescale all so that it starts ~ 0
         // Video..
