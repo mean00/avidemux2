@@ -883,7 +883,7 @@ MainWindow::MainWindow(const vector<IScriptEngine *> &scriptEngines) : _scriptEn
 
     setAcceptDrops(true);
 #ifndef __APPLE__
-    setWindowIcon(QIcon(MKICON(avidemux - icon)));
+    setWindowIcon(QIcon(MKICON(avidemux-icon)));
 #else
     setWindowIcon(QIcon(MKOSXICON(avidemux)));
 #endif
