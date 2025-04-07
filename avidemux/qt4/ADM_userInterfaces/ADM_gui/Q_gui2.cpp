@@ -882,11 +882,14 @@ MainWindow::MainWindow(const vector<IScriptEngine *> &scriptEngines) : _scriptEn
     this->setFocus(Qt::OtherFocusReason);
 
     setAcceptDrops(true);
+
+// clang-format off
 #ifndef __APPLE__
     setWindowIcon(QIcon(MKICON(avidemux-icon)));
 #else
     setWindowIcon(QIcon(MKOSXICON(avidemux)));
 #endif
+// clang-format on
 
     // Hook also the toolbar
     connect(ui.toolBar, SIGNAL(actionTriggered(QAction *)), this, SLOT(searchToolBar(QAction *)));
