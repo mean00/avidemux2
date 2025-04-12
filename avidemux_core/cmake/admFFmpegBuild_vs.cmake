@@ -31,6 +31,10 @@ xadd(--extra-cflags  -I${VS_ROOT}/include )
 xadd(--extra-ldflags  user32.lib )
 xadd(--stdc=c11 )
 
+# Ref build env, we use ccache
+IF(EXISTS "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
+  xadd(--cc="ccache cl")
+ENDIF()
 MESSAGE(STATUS "Using VS compilation flag: ${FFMPEG_FLAGS}")
 
 ADM_FF_ADD_OPTIONS()
