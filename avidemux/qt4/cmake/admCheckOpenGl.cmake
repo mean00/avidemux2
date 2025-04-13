@@ -7,7 +7,7 @@ MESSAGE(STATUS "Checking for OpenGL")
 MESSAGE(STATUS "*******************")
 
 IF(OPENGL)
-        IF(QT6_FOUND OR (QT5_FOUND AND QT_VERSION_MINOR GREATER 4) AND (NOT MSVC))
+        IF(QT6_FOUND OR (QT5_FOUND AND QT_VERSION_MINOR GREATER 4) )
                 MESSAGE(STATUS "Found QOpenGL")
                 IF(CROSS)
                         IF(NOT APPLE)
