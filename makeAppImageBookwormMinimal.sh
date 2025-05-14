@@ -255,6 +255,9 @@ fi
 
 rm -rf install > /dev/null 2>&1
 
+if [ -z "${QTDIR}" ]; then
+    export QTDIR="/usr/lib/qt6"
+fi
 SRCTOP=$(cd $(dirname "$0") && pwd)
 bash "${SRCTOP}/bootStrap.bash" --with-system-libmad ${rebuild} 2>&1 || fail "Build failed, please inspect /tmp/log* files."
 bash "${SRCTOP}/appImage/deployBookwormMinimal.sh" "${PWD}/${RT_DIR}/${RUNTIME}"
