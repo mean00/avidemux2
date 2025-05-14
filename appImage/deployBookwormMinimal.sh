@@ -31,12 +31,6 @@ cpyRootLib()
 {
         cp -t ../lib /lib/$1 || fail copy_lib $i
 }
-cpyRootx86Lib()
-{
-        cp -t ../lib/x86_64-linux-gnu /lib/x86_64-linux-gnu/$1 || fail copy_lib $i
-}
-
-
 
 echo " ** Creating AppImage file **"
 
@@ -66,8 +60,10 @@ cp -Rap -t ../lib/qt6/plugins /usr/lib/x86_64-linux-gnu/qt6/plugins/platforms ||
 cp -Rap -t ../lib/qt6/plugins /usr/lib/x86_64-linux-gnu/qt6/plugins/platformthemes || fail qtplatformthemes
 cp -Rap -t ../lib/qt6/plugins /usr/lib/x86_64-linux-gnu/qt6/plugins/xcbglintegrations || fail qxcbglintegrations
 
-cpyRootx86Lib libdouble-conversion.so.3
+cpyX86 libdouble-conversion.so.3
 cpyX86 libmd4c.so.0
+cpyX86 libb2.so.1
+cpyX86 libgomp.so.1
 
 # various libs
 # The bundled libva doesn't work, but allows Avidemux to run
@@ -96,6 +92,7 @@ AUDIO_PLUGINS="libfaac.so.0 \
 libfdk-aac.so.2 \
 libmad.so.0 \
 libmp3lame.so.0 \
+libopus.so.0 \
 libtwolame.so.0 \
 libvorbis.so.0 \
 libvorbisenc.so.2 \
@@ -103,6 +100,7 @@ libogg.so.0"
 
 VIDEO_PLUGINS="libx264.so.164 \
 libx265.so.199 \
+libxvidcore.so.4 \
 libvpx.so.7 \
 libaom.so.3"
 
