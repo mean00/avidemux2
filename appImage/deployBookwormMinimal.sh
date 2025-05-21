@@ -26,10 +26,9 @@ cpyX86Rename()
 {
         cp -t ../lib/$2 /usr/lib/x86_64-linux-gnu/$1 || fail copy_x86lib $1
 }
-
-cpyRootLib()
+cpyLocal()
 {
-        cp -t ../lib /lib/$1 || fail copy_lib $i
+        cp -t ../lib /usr/local/lib/$1 || fail copy_local_lib $i
 }
 
 echo " ** Creating AppImage file **"
@@ -101,13 +100,15 @@ libogg.so.0"
 VIDEO_PLUGINS="libx264.so.164 \
 libx265.so.199 \
 libxvidcore.so.4 \
-libvpx.so.7 \
-libaom.so.3"
+libvpx.so.7"
 
 for i in ${DISPLAY_LIBS} ${AUDIO_PLUGINS} ${VIDEO_PLUGINS}
 do
         cpyX86 $i
 done
+
+# special case libaom
+cpyLocal libaom.so.3
 
 # subtitles
 cpyX86 libass.so.9
