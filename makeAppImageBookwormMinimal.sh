@@ -79,18 +79,18 @@ check_aom()
         AOM_VERSION=$(pkg-config --modversion aom)
         AOM_VERSION_MAJOR=$(echo "${AOM_VERSION}" | cut -d \. -f 1 - )
         AOM_VERSION_MINOR=$(echo "${AOM_VERSION}" | cut -d \. -f 2 - )
-        if [ "$AOM_VERSION_MAJOR" -gt "3" ] || { [ "$AOM_VERSION_MAJOR" -eq "3" ] && [ $AOM_VERSION_MINOR -ge "6" ]; }; then
+        if [ "$AOM_VERSION_MAJOR" -eq "3" ] && [ $AOM_VERSION_MINOR -ge "11" ]; then
             echo "aom version ${AOM_VERSION} is sufficient."
             return 0
         elif [ "x${nodeps}" = "x1" ]; then
-            echo "aom version is too old and installation disabled on command line."
+            echo "aom version is too old or unsupported and installation disabled on command line."
             return 1
         fi
     elif [ "x${nodeps}" = "x1" ]; then
         echo "aom not found and installation disabled on command line."
         return 1
     fi
-    echo "Minimum required version of aom is missing, will try to install."
+    echo "Minimum required supported version of aom not found, will try to install."
     if ! [ -d "aom" ]
     then
         echo "Will clone aom source to current directory"
@@ -100,7 +100,7 @@ check_aom()
         pushd "aom" > /dev/null && git fetch || fail "Cannot fetch changes"
         popd > /dev/null
     fi
-    pushd "aom" > /dev/null && git checkout tags/v3.11.0 || return 1
+    pushd "aom" > /dev/null && git checkout tags/v3.12.1 || return 1
     popd > /dev/null
     if [ -d "build-aom" ]
     then
@@ -171,7 +171,7 @@ setup()
         fail "Cannot install NVENC headers."
     fi
     if (check_aom); then
-        echo "libaom >= 3.6.0 found"
+        echo "libaom >= 3.11.0 found"
     elif [ "x${nofail}" = "x1" ]; then
         echo "Cannot install required version of libaom, trying to continue nevertheless."
     else
