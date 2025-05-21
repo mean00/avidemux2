@@ -74,6 +74,15 @@ uint8_t DIA_pluginsInfo(void)
                 *end-- = 0;
         }
         aText[i] = new diaElemReadOnlyText(infoString, versionString);
+#define WARN_OOB_ONCE \
+        if (i == DIA_MAX_FRAME) \
+            ADM_warning("Too many plugins for a frame, skipping subsequent ones.\n");
+
+        WARN_OOB_ONCE
+
+        printf("\tAudio decoder plugin %02d: %s v%s\n", i, infoString, versionString);
+        if (i >= DIA_MAX_FRAME)
+            continue;
         frameAudio.swallow(aText[i]);
     }
     diaElem *diaAudio[] = {&frameAudio};
@@ -103,6 +112,12 @@ uint8_t DIA_pluginsInfo(void)
                 *end-- = 0;
         }
         veText[i] = new diaElemReadOnlyText(infoString, versionString);
+
+        WARN_OOB_ONCE
+
+        printf("\tVideo encoder plugin %02d: %s v%s\n", i, infoString, versionString);
+        if (i >= DIA_MAX_FRAME)
+            continue;
         frameVE.swallow(veText[i]);
     }
 
@@ -132,6 +147,12 @@ uint8_t DIA_pluginsInfo(void)
                 *end-- = 0;
         }
         vdText[i] = new diaElemReadOnlyText(infoString, versionString);
+
+        WARN_OOB_ONCE
+
+        printf("\tVideo decoder plugin %02d: %s v%s\n", i, infoString, versionString);
+        if (i >= DIA_MAX_FRAME)
+            continue;
         frameVD.swallow(vdText[i]);
     }
 
@@ -161,6 +182,12 @@ uint8_t DIA_pluginsInfo(void)
                 *end-- = 0;
         }
         avText[i] = new diaElemReadOnlyText(infoString, versionString);
+
+        WARN_OOB_ONCE
+
+        printf("\tAudio device plugin %02d: %s v%s\n", i, infoString, versionString);
+        if (i >= DIA_MAX_FRAME)
+            continue;
         frameAV.swallow(avText[i]);
     }
     diaElem *diaAV[] = {&frameAV};
@@ -191,6 +218,12 @@ uint8_t DIA_pluginsInfo(void)
                 *end-- = 0;
         }
         aeText[i] = new diaElemReadOnlyText(infoString, versionString);
+
+        WARN_OOB_ONCE
+
+        printf("\tAudio encoder plugin %02d: %s v%s\n", i, infoString, versionString);
+        if (i >= DIA_MAX_FRAME)
+            continue;
         frameAE.swallow(aeText[i]);
     }
     diaElem *diaAE[] = {&frameAE};
@@ -221,6 +254,12 @@ uint8_t DIA_pluginsInfo(void)
                 *end-- = 0;
         }
         dmText[i] = new diaElemReadOnlyText(infoString, versionString);
+
+        WARN_OOB_ONCE
+
+        printf("\tDemuxer plugin %02d: %s v%s\n", i, infoString, versionString);
+        if (i >= DIA_MAX_FRAME)
+            continue;
         frameDM.swallow(dmText[i]);
     }
     diaElem *diaDM[] = {&frameDM};
@@ -251,6 +290,12 @@ uint8_t DIA_pluginsInfo(void)
                 *end-- = 0;
         }
         mxText[i] = new diaElemReadOnlyText(infoString, versionString);
+
+        WARN_OOB_ONCE
+
+        printf("\tMuxer plugin %02d: %s v%s\n", i, infoString, versionString);
+        if (i >= DIA_MAX_FRAME)
+            continue;
         frameMX.swallow(mxText[i]);
     }
     diaElem *diaMX[] = {&frameMX};
