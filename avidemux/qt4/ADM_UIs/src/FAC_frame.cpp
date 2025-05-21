@@ -53,11 +53,10 @@ diaElemFrame::diaElemFrame(const char *toggleTitle, const char *tip)
 }
 void diaElemFrame::swallow(diaElem *widget)
 {
-   elems[nbElems]=widget;
-  frameSize+=widget->getSize();
- // setSize(frameSize);
-  nbElems++;
-  ADM_assert(nbElems<DIA_MAX_FRAME); 
+    ADM_assert(nbElems < DIA_MAX_FRAME);
+    elems[nbElems] = widget;
+    frameSize += widget->getSize();
+    nbElems++;
 }
 diaElemFrame::~diaElemFrame()
 {
