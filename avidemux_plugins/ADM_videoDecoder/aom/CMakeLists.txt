@@ -1,6 +1,6 @@
 INCLUDE(vd_plugin)
 INCLUDE(admCheckAom)
-IF (NOT MSVC)
+IF (TRUE) #NOT MSVC)
   checkAomDec()
 ENDIF()
 
