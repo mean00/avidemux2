@@ -1,4 +1,4 @@
-# Avidemux
+# Avidemux 
 
 Avidemux is a simple cross-platform video editor for Linux, Windows and macOS.
 
