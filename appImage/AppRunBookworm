@@ -2,7 +2,7 @@
 
 OPENGL_NAME="libGL.so.1"
 PULSE_NAME="libpulse-simple.so.0"
-LIBVA_NAME="libva.so.2"
+LIBVA_NAME="libva-x11.so.2"
 LIBVDPAU_NAME="libvdpau.so.1"
 
 if ! (/sbin/ldconfig -p | grep -q ${OPENGL_NAME})
