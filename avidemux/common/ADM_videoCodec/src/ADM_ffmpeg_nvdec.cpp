@@ -690,7 +690,7 @@ static bool checkNvDec(void)
     if(r < 0)
     {
         ADM_info("Cannot load CUVID functions, NVDEC is not available.\n");
-        cudaFunc->cuCtxDestroy(ctx);
+        // cudaFunc->cuCtxDestroy(ctx); // triggers a crash when libcuda is present, but libcuvid is not
         goto fail2;
     }
     if(!cuvidFunc->cuvidGetDecoderCaps)
