@@ -661,7 +661,7 @@ static bool checkNvDec(void)
 
     r = cudaFunc->cuInit(0);
 
-    if(r < 0)
+    if(r != CUDA_SUCCESS)
     {
         ADM_warning("Cannot init CUDA, NVDEC is not available.\n");
         goto fail2;
@@ -669,7 +669,7 @@ static bool checkNvDec(void)
 
     r = cudaFunc->cuDeviceGet(&dev, 0);
 
-    if(r < 0)
+    if(r != CUDA_SUCCESS)
     {
         ADM_warning("Cannot get CUDA device, NVDEC is not available.\n");
         goto fail2;
@@ -677,7 +677,7 @@ static bool checkNvDec(void)
 
     r = cudaFunc->cuCtxCreate(&ctx, CU_CTX_SCHED_BLOCKING_SYNC, dev);
 
-    if(r < 0)
+    if(r != CUDA_SUCCESS)
     {
         ADM_warning("Cannot create CUDA context, NVDEC is not available.\n");
         goto fail2;
@@ -690,7 +690,7 @@ static bool checkNvDec(void)
     if(r < 0)
     {
         ADM_info("Cannot load CUVID functions, NVDEC is not available.\n");
-        // cudaFunc->cuCtxDestroy(ctx); // triggers a crash when libcuda is present, but libcuvid is not
+        cudaFunc->cuCtxDestroy(ctx);
         goto fail2;
     }
     if(!cuvidFunc->cuvidGetDecoderCaps)
@@ -703,7 +703,7 @@ static bool checkNvDec(void)
 
     r = cudaFunc->cuCtxPushCurrent(ctx);
 
-    if(r < 0)
+    if(r != CUDA_SUCCESS)
     {
         ADM_warning("Cannot push CUDA context, bailing out.\n");
         cuvid_free_functions(&cuvidFunc);
@@ -720,7 +720,7 @@ static bool checkNvDec(void)
     caps.nBitDepthMinus8 = bit_depth - 8; \
     ADM_info("Checking " #codec " %d bits %s\n", bit_depth, chromaFormatDesc(caps.eChromaFormat)); \
     r = cuvidFunc->cuvidGetDecoderCaps(&caps); \
-    if(r < 0) \
+    if(r != CUDA_SUCCESS) \
     { \
         ADM_warning("Quering decoder capabilities for " #codec " has failed.\n"); \
         if(fatal) \
