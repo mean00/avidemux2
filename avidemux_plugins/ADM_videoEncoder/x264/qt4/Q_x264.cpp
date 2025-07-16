@@ -480,17 +480,12 @@ bool x264Dialog::upload(void)
           // udate idc
           MK_COMBOBOX_DATA(idcLevelComboBox, level);
 
-        // update threads
-          QComboBox *threads=ui.comboBoxThreads;
-          for(int i=0;i<NB_THREADS;i++)
-          {
-                const idcToken *t=listOfThreads+i;
-                if(myCopy.general.threads==t->idcValue)
-                {
-                        threads->setCurrentIndex(i);
-                        break;
-                }
-          }
+        // update threads, accept 99 for auto
+        {
+            const unsigned int threadCount = (myCopy.general.threads == 99) ? 0 : myCopy.general.threads;
+            ui.comboBoxThreads->setCurrentIndex(ui.comboBoxThreads->findData(threadCount));
+        }
+
         switch(ENCODING(mode))
         {
             case COMPRESS_AQ: // CRF
