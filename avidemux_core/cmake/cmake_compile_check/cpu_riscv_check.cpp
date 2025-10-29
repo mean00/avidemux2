@@ -5,5 +5,6 @@ void foo(void)
 
 int main(int a, char **b)
 {
+    foo();
     return 0;
 }
