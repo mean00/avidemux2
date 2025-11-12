@@ -72,7 +72,7 @@ ADM_DECLARE_AUDIO_ENCODER_CONFIG();
 */
 AUDMEncoder_DcaEnc::AUDMEncoder_DcaEnc (AUDMAudioFilter * instream,bool globalHeader,CONFcouple *setup):ADM_AudioEncoder  (instream,setup)
 {
-  ADM_info ("[dcaenc] Creating lame\n");
+  ADM_info ("Creating dcaenc.\n");
   context = NULL;
   wavheader.encoding = WAV_DTS;
   if(setup) // load config if possible
@@ -161,8 +161,6 @@ static void dither32(float *s,int nb,int channels)
 */
 int AUDMEncoder_DcaEnc::send(uint32_t nbSample, uint8_t *dest)
 {
-
-  int nbout;
   dither32 (&(tmpbuffer[tmphead]), nbSample, wavheader.channels);
   ADM_assert (tmptail >= tmphead);
   int32_t *sample32=(int32_t *)& (tmpbuffer[tmphead]);
@@ -186,7 +184,7 @@ int AUDMEncoder_DcaEnc::send(uint32_t nbSample, uint8_t *dest)
 bool AUDMEncoder_DcaEnc::encode(uint8_t *dest, uint32_t *len, uint32_t *samples)
 {
 
-  int32_t nbout;
+  int32_t nbout = 0;
   int neededSamples=inputSize*wavheader.channels;
   *samples = inputSize;	//FIXME
   *len = 0;
@@ -199,7 +197,7 @@ bool AUDMEncoder_DcaEnc::encode(uint8_t *dest, uint32_t *len, uint32_t *samples)
         int left=tmptail-tmphead;
         if (left < neededSamples)
         {
-            if(left)
+            if(left > 0)
             {
                 nbout=send(left,dest);
                 tmphead=tmptail;
@@ -209,16 +207,8 @@ bool AUDMEncoder_DcaEnc::encode(uint8_t *dest, uint32_t *len, uint32_t *samples)
               // Flush
               _state=AudioEncoderStopped;
               // flush pad with 0n todo
-              if(nbout<0)
-              {
-                    ADM_warning("Error while flushing dcaenc\n");
-                    return false;
-              }
-
-              *len=nbout;
-              *samples=inputSize;
-              ADM_info("[dcaenc] Flushing, last block is %d bytes\n",nbout);
-              return true;
+              *samples = 0;
+              return false;
     }
   }
   nbout=send(neededSamples,dest);
