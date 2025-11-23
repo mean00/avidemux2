@@ -377,6 +377,11 @@
                   <string>Average Bitrate (Two Pass)</string>
                  </property>
                 </item>
+                <item>
+                 <property name="text">
+                  <string>Lossless (Single Pass)</string>
+                 </property>
+                </item>
                </widget>
               </item>
               <item>
