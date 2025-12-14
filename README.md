@@ -1,6 +1,34 @@
 # Avidemux 
 
-Avidemux is a simple cross-platform video editor for Linux, Windows and macOS.
+Avidemux is a simple, free, cross-platform video editor that is used for simple cutting, filtering, and encoding video tasks. Avidemux supports automated tasks using projects or scripting and is currently supported on Linux, BSD, MacOS X, and Microsoft Windows. Avidemux was primarily made with the C and C++ programming languages and was created to act as a desktop based video editing application.
+
+Avidemux currently support the follwing file types:
+* AVI
+* DVD
+* MPEG
+* MP4
+* ASF
+
+[View our website](https://avidemux.sourceforge.net/)
+
+# Table of Contents:
+[Why Avidemux](https://github.com/kaimcfarlane/avidemux2/blob/kaimcfarlane-ReadMe_Updates/README.md#why-avidemux)  
+[Main Features](https://github.com/kaimcfarlane/avidemux2/blob/kaimcfarlane-ReadMe_Updates/README.md#main-features)  
+[Download Executables](https://github.com/kaimcfarlane/avidemux2/blob/kaimcfarlane-ReadMe_Updates/README.md#download-executables)  
+[Installation](https://github.com/kaimcfarlane/avidemux2/blob/kaimcfarlane-ReadMe_Updates/README.md#installation---build-from-source)  
+[Examples](https://github.com/kaimcfarlane/avidemux2/blob/kaimcfarlane-ReadMe_Updates/README.md#examples---different-windows)  
+[Documentation](https://github.com/kaimcfarlane/avidemux2/blob/kaimcfarlane-ReadMe_Updates/README.md#documentation-and-support)  
+[Collaborators](https://github.com/kaimcfarlane/avidemux2/blob/kaimcfarlane-ReadMe_Updates/README.md#collaborators)  
+
+# Why Avidemux?
+
+Avidemux provides a simple, easy, and free video editor platform that most can quicky setup and use without much video editing experience. Avidemux can run on every major operating system and supports the most widely used video file types.
+
+# Main Features
+
+* Video Cuts
+* Video Rotation and Flips
+* Video Filters (tranform, interlacing, colors, noise, shaprness, miscellanious)
 
 # Download executables
 
@@ -8,7 +36,7 @@ Avidemux is a simple cross-platform video editor for Linux, Windows and macOS.
 
 [Nightly builds](https://www.avidemux.org/nightly/)
 
-# Build from source
+# Installation - Build from source
 
 **Avidemux build directory must be located on a case-sensitive file system.**
 
@@ -90,3 +118,40 @@ of `BUNDLE_CONTENT` variable in the aforementioned file accordingly.
 ## Build for Windows
 
 [Cross-compiling Avidemux on Linux for Windows](https://github.com/mean00/avidemux2/blob/master/cross-compiling.txt)
+
+# Examples - Different Windows
+
+## Main Window
+Holds general information like project video timeline and main editing options within the top banner.
+
+![avidemux1](https://github.com/user-attachments/assets/e0cffa49-ed3c-4f28-8b8a-7f581cf709bb)
+
+## Filters
+Panel where you can apply different filters to current selected video.
+
+![avidemux2](https://github.com/user-attachments/assets/b25c88b6-4aad-4f0d-982a-630031f1d0a6)
+
+## Video Filter Manager
+Menu where you can add/remove filters to your project.
+
+![avidemux3](https://github.com/user-attachments/assets/57342fb9-c3e8-4cf1-ac36-ee1ef76cf0ba)
+
+## Options
+Settings where you can adjust output and general Avidemux settings.
+
+![avidemux4](https://github.com/user-attachments/assets/5a963cb8-1129-4d50-9f7e-2fe5f333d4bc)
+
+
+# Documentation and Support
+
+[Wiki Docs](https://www.avidemux.org/admWiki/doku.php)
+
+[Forum](https://www.avidemux.org/admForum/)
+
+[Reddit Forum](https://www.reddit.com/r/Avidemux/)
+
+[News](https://avidemux.sourceforge.net/news.html)
+
+# Collaborators
+
+Avidemux was written by Mean but code constributions from other's are always welcome and have been used.
