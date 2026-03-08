@@ -228,40 +228,33 @@ void UI_updateDrawWindowSize(void *win, uint32_t w, uint32_t h)
  *
  *
  */
+static void *myDisplay = NULL;
+static int mySystemWindowId = 0;
+/*
+ * Apple, let them null
+ *
+ */
 #if defined(__APPLE__)
-
-static void systemWindowInfo(GUI_WindowInfo *xinfo)
+static void systemWindowInfo_once()
 {
-    xinfo->display = NULL; // we may not call winId() on a QWidget on macOS, it breaks OpenGL
-    xinfo->systemWindowId = 0;
 }
 #elif defined(_WIN32)
-
-static void systemWindowInfo(GUI_WindowInfo *xinfo)
+/*
+ * Windows
+ */
+static void systemWindowInfo_once()
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    QWindow *window = QuiMainWindows->windowHandle();
-    if (window)
-        xinfo->scalingFactor = (double)window->devicePixelRatio();
-#endif
-
-    xinfo->display = (void *)videoWindow->winId();
-    xinfo->systemWindowId = videoWindow->winId();
+    myDisplay = (void *)videoWindow->winId();
+    mySystemWindowId = videoWindow->winId();
 }
 
 #else // linux
-static void systemWindowInfo(GUI_WindowInfo *xinfo)
+static void systemWindowInfo_once()
 {
-    static void *myDisplay = NULL;
-    bool use_real_windid = true;
-    QWindow *window = QuiMainWindows->windowHandle();
-    if (window)
-        xinfo->scalingFactor = (double)window->devicePixelRatio();
 #if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
-    if (!myDisplay)
-        myDisplay = XOpenDisplay(NULL);
+    myDisplay = XOpenDisplay(NULL);
+    mySystemWindowId = videoWindow->winId();
 #else
-    if (!myDisplay)
     {
         ADM_info("Running on platform %s\n", currentQApplication()->platformName().toLatin1().data());
         switch (admDetectQtEngine())
@@ -272,35 +265,46 @@ static void systemWindowInfo(GUI_WindowInfo *xinfo)
             {
                 ADM_info("found x11 display\n");
                 myDisplay = x11->display();
+                mySystemWindowId = videoWindow->winId();
             }
         }
         break;
-        case QT_WAYLAND_ENGINE:
-
-        {
-            use_real_windid = false;
+        case QT_WAYLAND_ENGINE: {
             auto wayland = currentQApplication()->nativeInterface<QNativeInterface::QWaylandApplication>();
             if (wayland)
             {
                 ADM_info("found wayland display\n");
                 myDisplay = wayland->display();
+                mySystemWindowId = 0;
             }
         }
         break;
-        default:
+        default: {
             ADM_warning("Cannot get qt engine infos\n");
             myDisplay = NULL;
+            mySystemWindowId = 0;
             break;
+        }
         }
     }
 #endif
-    xinfo->display = myDisplay;
-    if (use_real_windid)
-        videoWindow->winId();
-    else
-        xinfo->systemWindowId = 0;
 }
 #endif
+/*
+ *
+ *
+ */
+static void systemWindowInfo(GUI_WindowInfo *xinfo)
+{
+    if (!myDisplay)
+        systemWindowInfo_once();
+
+    QWindow *window = QuiMainWindows->windowHandle();
+    if (window)
+        xinfo->scalingFactor = (double)window->devicePixelRatio();
+    xinfo->systemWindowId = mySystemWindowId;
+    xinfo->display = myDisplay;
+}
 
 /**
       \brief Retrieve info from window, needed for accel layer
