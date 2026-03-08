@@ -37,7 +37,23 @@ extern VideoRenderBase *RenderSpawnQtGl(void);
 VideoRenderBase *spawnDefaultRenderer(ADM_RENDER_TYPE preferred, ADM_renderContext &ctx)
 {
     bool r;
-    TRY_RENDERER_SPAWN_ALL(spawnSimpleRender, "simpleRenderer");
+    VideoRenderBase *spawn = spawnSimpleRender();
+    ADM_info("trying simpleRender\n");
+    r = spawn->init(&ctx.xinfo, ctx.phyW, ctx.phyH, ctx.lastZoom);
+    if (!r)
+    {
+        delete spawn;
+        spawn = NULL;
+        ADM_warning("simpleRender"
+                    " init failed\n");
+    }
+    else
+    {
+        ADM_info("simpleRender"
+                 " init ok\n");
+        return spawn;
+    }
+    // TRY_RENDERER_SPAWN_ALL(spawnSimpleRender, "simpleRenderer");
     ADM_assert(0);
     return NULL;
 }

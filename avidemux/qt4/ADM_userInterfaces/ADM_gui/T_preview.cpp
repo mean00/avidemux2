@@ -253,6 +253,7 @@ static void systemWindowInfo(GUI_WindowInfo *xinfo)
 static void systemWindowInfo(GUI_WindowInfo *xinfo)
 {
     static void *myDisplay = NULL;
+    bool use_real_windid = true;
     QWindow *window = QuiMainWindows->windowHandle();
     if (window)
         xinfo->scalingFactor = (double)window->devicePixelRatio();
@@ -277,6 +278,7 @@ static void systemWindowInfo(GUI_WindowInfo *xinfo)
         case QT_WAYLAND_ENGINE:
 
         {
+            use_real_windid = false;
             auto wayland = currentQApplication()->nativeInterface<QNativeInterface::QWaylandApplication>();
             if (wayland)
             {
@@ -293,7 +295,10 @@ static void systemWindowInfo(GUI_WindowInfo *xinfo)
     }
 #endif
     xinfo->display = myDisplay;
-    xinfo->systemWindowId = videoWindow->winId();
+    if (use_real_windid)
+        videoWindow->winId();
+    else
+        xinfo->systemWindowId = 0;
 }
 #endif
 

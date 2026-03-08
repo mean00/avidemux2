@@ -22,9 +22,9 @@
 #include "ADM_default.h"
 #include "DIA_coreToolkit.h"
 //
-#include "GUI_renderInternal.h"
 #include "GUI_accelRender.h"
 #include "GUI_render.h"
+#include "GUI_renderInternal.h"
 #include "GUI_simpleRender.h"
 // clang format-on
 
@@ -33,9 +33,56 @@
 
 extern void *MUI_getDrawWidget(void);
 
+class EmptyRender : public VideoRenderBase
+{
+  protected:
+  public:
+    EmptyRender(void)
+    {
+        scaler = NULL;
+        currentZoom = ZOOM_1_1;
+    };
+    virtual ~EmptyRender()
+    {
+    }
+    virtual bool init(GUI_WindowInfo *window, uint32_t w, uint32_t h, float zoom)
+    {
+        return true;
+    }
+    virtual bool stop(void)
+    {
+        return true;
+    }
+    virtual bool displayImage(ADMImage *pic)
+    {
+        return true;
+    }
+    virtual bool refresh(void)
+    {
+        return true;
+    }
+    virtual bool changeZoom(float newzoom)
+    {
+        return true;
+    }
+    virtual bool usingUIRedraw(void)
+    {
+        return true;
+    }
+    virtual ADM_HW_IMAGE getPreferedImage(void)
+    {
+        return ADM_HW_NONE;
+    }
+    virtual const char *getName()
+    {
+        return "emptyRender";
+    }
+};
+
 VideoRenderBase *spawnSimpleRender()
 {
     return new simpleRender();
+    // return new EmptyRender();
 }
 
 /**

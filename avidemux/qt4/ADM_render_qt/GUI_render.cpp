@@ -293,9 +293,9 @@ bool spawnRenderer(void)
     ADM_RENDER_TYPE prefRenderer = (ADM_RENDER_TYPE)MUI_getPreferredRender();
     bool r = false;
 
-    GUI_WindowInfo xinfo;
+    // GUI_WindowInfo xinfo;
     MUI_getWindowInfo(renderContext.draw, &renderContext.xinfo);
-
+#if 1
     // lookup renderer
     TRY_RENDERER(spawnCommonRenderer)
 #ifdef __APPLE__
@@ -304,6 +304,7 @@ bool spawnRenderer(void)
     TRY_RENDERER(spawnWin32Renderer);
 #else // linux
     TRY_RENDERER(spawnLinuxRenderer);
+#endif
 #endif
     // none found, use default
     renderer = spawnDefaultRenderer(RENDER_DEFAULT, renderContext);
