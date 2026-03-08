@@ -15,6 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 #pragma once
+#include "ADM_windowInfo.h"
 /**
     \fn class XvRender
 */

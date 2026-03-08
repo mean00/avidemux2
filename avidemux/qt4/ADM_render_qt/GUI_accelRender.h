@@ -12,6 +12,9 @@
 #ifndef GUI_ACCELRENDER_H
 #define GUI_ACCELRENDER_H
 #include "ADM_colorspace.h"
+#include "ADM_image.h"
+#include "ADM_windowInfo.h"
+#include "GUI_render.h"
 /**
     \class VideoRenderBase
 */
