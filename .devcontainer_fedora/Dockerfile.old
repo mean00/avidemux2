@@ -1,0 +1,82 @@
+FROM fedora:43
+
+ARG DEBIAN_FRONTEND=noninteractive
+ARG USER_UID=1000
+ARG USER_GID=1000
+ARG USERNAME=fedora
+RUN echo "http2=0" >> /etc/dnf/dnf.conf  # Disable HTTP/2 to avoid protocol glitches
+RUN echo "sslverify=0" >> /etc/dnf/dnf.conf  # Ensure enabled, but if EOF issues persist, test with 0 (insecure, for debugging only)
+RUN echo "retries=20" >> /etc/dnf/dnf.conf
+RUN echo "keepalive=True" >> /etc/dnf/dnf.conf  # Helps with connection resets
+RUN echo "ip_resolve=4" >> /etc/dnf/dnf.conf  # Force IPv4 for mirror resolution
+RUN echo "fastestmirror=True" >> /etc/dnf/dnf.conf && \
+   echo "max_parallel_downloads=10" >> /etc/dnf/dnf.conf && \
+   echo "timeout=60" >> /etc/dnf/dnf.conf
+#
+RUN sed -i 's|^metalink=|#metalink=|g' /etc/yum.repos.d/fedora*.repo && \
+    sed -i 's|^#baseurl=http://download\.example/pub|baseurl=https://mirror.in2p3.fr/pub/|g' /etc/yum.repos.d/fedora*.repo
+    #sed -i 's|^#baseurl=http://download\.example/pub|baseurl=https://mirrors.mit.edu/fedora|g' /etc/yum.repos.d/fedora*.repo
+#RUN sed -i 's|^metalink=|#metalink=|g' /etc/yum.repos.d/fedora*.repo && \
+    #sed -i 's|^#baseurl=http://download\.example/pub|baseurl=https://download.fedoraproject.org/pub|g' /etc/yum.repos.d/fedora*.repo
+#RUN sed -i 's|^metalink=|#metalink=|g' /etc/yum.repos.d/fedora*.repo && \
+#    sed -i 's|^#baseurl=http://download.example.com|baseurl=https://download.fedoraproject.org|g' /etc/yum.repos.d/fedora*.repo
+#
+RUN curl -v -o /tmp/repomd.xml https://mirror.in2p3.fr/pub/fedora/linux/releases/43/Everything/x86_64/os/repodata/repomd.xml || true
+RUN curl -v -o /tmp/updates-repomd.xml https://mirror.in2p3.fr/pub/fedora/linux/updates/43/Everything/x86_64/repodata/repomd.xml || true
+#
+RUN dnf clean all  # Clear any corrupted metadata cache
+RUN sed -i 's/enabled=1/enabled=0/' /etc/yum.repos.d/fedora-cisco-openh264.repo
+RUN cat /etc/yum.repos.d/fedora-updates.repo
+RUN  dnf -y update --refresh
+RUN dnf -y install   \
+   gcc \
+   gcc-c++ \
+   make \
+   cmake \
+   yasm \
+   pkgconf-pkg-config \
+   fakeroot \
+   bzip2 \
+   zlib-ng-compat-devel \
+   patch \
+   rpm-build \
+   sqlite-devel \
+   qt5-qtbase-devel \
+   qt5-linguist \
+   libxslt \
+   mesa-libGL-devel \
+   mesa-libGLU-devel \
+   libvdpau-devel \
+   libva-devel \
+   libXv-devel \
+   libvorbis-devel \
+   libogg-devel \
+   alsa-lib-devel \
+   pulseaudio-libs-devel \
+   libass-devel \
+   opus-devel \
+   lame-devel \
+   libvpx-devel \
+   libaom-devel \
+   nv-codec-headers \
+   fdk-aac-devel \
+   twolame-devel \
+   xvidcore-devel \
+   x264-devel \
+   x265-devel \
+  && :
+
+#
+#
+
+CMD [ "/bin/bash" ]
+
+###################################
+# Setup user env
+###################################
+USER ${USERNAME}
+RUN mkdir ~/.local &&  mkdir ~/.local/bin &&  mkdir ~/.cargo && mkdir ~/.cargo/bin
+RUN echo "export PATH=\$PATH:\$HOME/.cargo/bin:\$HOME/.local/bin"  >> ~/.bashrc
+#
+
+

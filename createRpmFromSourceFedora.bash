@@ -4,6 +4,7 @@ install_packages=1
 rebuild=""
 sucommand=""
 missing_pkgs=()
+dont_install_deps=0
 #
 echo "Automatic RPM generator for Avidemux, Fedora 40 version"
 #
@@ -165,6 +166,9 @@ while [ $# != 0 ]; do
     usage
     exit 0
     ;;
+  --no-deps)
+    dont_install_deps=1
+    ;;
   --deps-only)
     install_deps
     exit 0
@@ -190,7 +194,9 @@ while [ $# != 0 ]; do
   shift
 done
 #
-install_deps
+if [ $dont_install_deps -eq 0 ]; then
+  install_deps
+fi
 #
 echo "Building..."
 umask 0022

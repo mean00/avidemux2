@@ -1,1 +1,1 @@
-devpod up . --ide none --devcontainer-path .devcontainer_ubuntu/devcontainer.json
+devpod up . --ide none --id adm-ubuntu --devcontainer-path .devcontainer_ubuntu/devcontainer.json
