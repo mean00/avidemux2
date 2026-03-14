@@ -21,3 +21,7 @@ oprofile_data
 avidemux/winInstaller/AvidemuxVersion.nsh
 avidemux/qt4/xdg_data/org.avidemux.Avidemux.appdata.xml
 *.DS_Store
+AppDir
+Avidemux*.AppImage
+.devcontainer_clvc/
+devpod_msvc.sh
