@@ -5,7 +5,7 @@ ARG USER_UID=1000
 ARG USER_GID=1000
 ARG USERNAME=mxe
 
-RUN  sed -i 's/deb.debian.org/192.168.0.9:3142\/deb.debian.org/g' /etc/apt/sources.list.d/debian.sources 
+#RUN  sed -i 's/deb.debian.org/192.168.0.9:3142\/deb.debian.org/g' /etc/apt/sources.list.d/debian.sources 
 #
 RUN sed -i '/^Components:/ s/$/ contrib non-free non-free-firmware/' /etc/apt/sources.list.d/debian.sources
 #RUN sed -i '/^Components:/ s/$/ contrib non-free non-free-firmware/' /etc/apt/sources.list.d/debian-backports.sources
