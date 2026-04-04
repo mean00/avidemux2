@@ -25,3 +25,5 @@ AppDir
 Avidemux*.AppImage
 .devcontainer_clvc/
 devpod_msvc.sh
+avidemux/winInstaller/change.css
+avidemux64
