@@ -2,7 +2,7 @@
   /* A name for the dev container displayed in the UI */
   "name": "Avidemux",
   /* container name when creating container */
-  "image": "avidemux/avidemux:latest",
+  "image": "avidemux/avidemux_trixie:latest",
   /* mount the local folder to /workspaces folder of Docker image */
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/avidemux,type=bind",
   /* the path of workspace folder, which means that this folder will be opened after container is running
