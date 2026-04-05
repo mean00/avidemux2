@@ -1,3 +1,4 @@
+#docker build -t avidemux/avidemux_mxe -f .devcontainer_mxe64/Dockerfile .
 FROM debian:trixie
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -106,6 +107,9 @@ RUN useradd -m mxe && usermod --shell /usr/bin/zsh mxe
 RUN chmod a+rwx /opt/
 RUN echo 'root:password' | chpasswd 
 #
+RUN apt-get install -y python3-pefile
+
+#
 #
 
 CMD [ "/bin/bash" ]
@@ -136,13 +140,12 @@ alias ls='ls --color=auto'
 alias ll='ls -lah'
 
 EOF
-
+# Split the build in two to avoid timeouts, not sure that helps
 RUN cd /opt &&  git clone https://github.com/mxe/mxe.git && cd mxe && \
      echo "MXE_TARGETS := x86_64-w64-mingw32.shared" > settings.mk \
-    && echo "JOBS :=6" >> settings.mk && make  qt6
-
-ENV PATH="/opt/mxe/usr/bin:/usr/local/bin:/opt/mxe/bin:/opt/mxe/usr/x86_64-pc-linux-gnu/qt6/bin/:${PATH}"
-
+    && echo "" >> settings.mk && make  qt6-qtbase
+RUN cd /opt/mxe && make qt6
 RUN echo Done
+ENV PATH="/opt/mxe/usr/bin:/usr/local/bin:/opt/mxe/bin:/opt/mxe/usr/x86_64-pc-linux-gnu/qt6/bin/:${PATH}"
 
 
