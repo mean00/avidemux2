@@ -96,7 +96,11 @@ RUN apt-get install -y \
     sqlite3 \
     apt-file \
     xz-utils \
-    libgl-dev libgl1-mesa-dev
+    libgl-dev libgl1-mesa-dev \
+    nsis \
+    nsis-common \
+    nsis-doc \
+    nsis-pluginapi 
 
   RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 10 \
   && :
@@ -143,7 +147,7 @@ EOF
 # Split the build in two to avoid timeouts, not sure that helps
 RUN cd /opt &&  git clone https://github.com/mxe/mxe.git && cd mxe && \
      echo "MXE_TARGETS := x86_64-w64-mingw32.shared" > settings.mk \
-    && echo "" >> settings.mk && make  qt6-qtbase
+    && echo "JOBS := 4" >> settings.mk && make  qt6-qtbase
 RUN cd /opt/mxe && make qt6
 RUN echo Done
 ENV PATH="/opt/mxe/usr/bin:/usr/local/bin:/opt/mxe/bin:/opt/mxe/usr/x86_64-pc-linux-gnu/qt6/bin/:${PATH}"

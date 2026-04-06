@@ -1,0 +1,13 @@
+diff --git a/vendor/google.golang.org/grpc/dialoptions.go b/vendor/google.golang.org/grpc/dialoptions.go
+index 7494ae59..fd9571be 100644
+--- a/vendor/google.golang.org/grpc/dialoptions.go
++++ b/vendor/google.golang.org/grpc/dialoptions.go
+@@ -667,7 +667,7 @@ func defaultDialOptions() dialOptions {
+ 			BufferPool:      mem.DefaultBufferPool(),
+ 		},
+ 		bs:              internalbackoff.DefaultExponential,
+-		idleTimeout:     30 * time.Minute,
++		idleTimeout:     90 * time.Minute,
+ 		defaultScheme:   "dns",
+ 		maxCallAttempts: defaultMaxCallAttempts,
+ 	}
