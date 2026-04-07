@@ -74,6 +74,8 @@ version 2 media descriptor :
 #include "ADM_dcainfo.h"
 #include "ADM_audioXiphUtils.h"
 
+#include "prefs.h"
+
 #if 1
 #define aprintf(...) {}
 #else
@@ -383,15 +385,32 @@ uint8_t    MP4Header::open(const char *name)
         _idxName = name;
         _idxName += ".idxb";
         bool indexOnDisk = true;
-        bool indexAllowOverwrite = false;
+        bool indexAllowOverwrite = true;
+        bool memOnly = false;
+
+        uint32_t indexingFlags = 0;
+        if (prefs->get(INDEXING_INDEXING_FLAGS, &indexingFlags))
+        {
+            indexingFlags >>= ADM_IDX_FLAGS_OFFSET_MP4;
+            if (!(indexingFlags & ADM_IDX_FLAG_WRITE_INDEX_FILE))
+            {
+                indexOnDisk = false;
+            }
+            if (indexingFlags & ADM_IDX_FLAG_IGNORE_INDEX_FILE)
+            {
+                indexOnDisk = false;
+                memOnly = true;
+                ADM_info("Mem-only indexing.\n");
+            }
+        }
 
         if (NULL != getenv("ADM_NOINDEX_MP4") && !strncmp(getenv("ADM_NOINDEX_MP4"), "1", 1))
             indexOnDisk = false;
 
         if (indexOnDisk)
         {
-            if (NULL != getenv("ADM_MP4_INDEX_ALLOW_OVERWRITE") && !strncmp(getenv("ADM_MP4_INDEX_ALLOW_OVERWRITE"), "1", 1))
-                indexAllowOverwrite = true;
+            if (NULL != getenv("ADM_MP4_INDEX_ALLOW_OVERWRITE") && !strncmp(getenv("ADM_MP4_INDEX_ALLOW_OVERWRITE"), "0", 1))
+                indexAllowOverwrite = false;
         }
         
 #define CLR(x)              memset(& x,0,sizeof(  x));
@@ -524,7 +543,7 @@ uint8_t    MP4Header::open(const char *name)
             if(extractSPSInfo_mp4Header(VDEO.extraData,VDEO.extraDataSize,&info))
             {
                 bool indexLoadedFromDisk = false;
-                if (indexOnDisk)
+                if (!memOnly)
                 {
                     if (loadIndex(_idxName, fileSize))
                     {
@@ -670,7 +689,7 @@ uint8_t    MP4Header::open(const char *name)
                     _video_bih.biHeight = _mainaviheader.dwHeight = info.height;
                 }
                 bool indexLoadedFromDisk = false;
-                if (indexOnDisk)
+                if (!memOnly)
                 {
                     if (loadIndex(_idxName, fileSize))
                     {
