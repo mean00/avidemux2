@@ -15,6 +15,7 @@
 #include "ADM_default.h"
 #include "config.h"
 #include "prefs.h"
+#include "ADM_Video.h"
 
 #include "ADM_pp.h"
 #include "ADM_qtx.h"
@@ -44,6 +45,9 @@ extern bool nvDecProbe(void);
 #if (defined(USE_DXVA2) || defined(USE_VDPAU) || defined(USE_LIBVA) || defined(USE_NVENC) || defined(USE_VIDEOTOOLBOX))
 #define HW_ACCELERATED_DECODING
 #endif
+
+static uint32_t idxSettingsToFlags(uint32_t set, uint32_t off);
+static uint32_t flagsToIdxSettings(uint32_t flag, uint32_t off);
 
 uint8_t DIA_Preferences(void);
 #define NOT_WAYLAND(call, var)                                                                                         \
@@ -200,6 +204,24 @@ uint8_t DIA_Preferences(void)
         defaultPortAvisynth = 9999;
     }
     ADM_info("Avisynth port: %d\n", defaultPortAvisynth);
+
+    // Indexing
+//#define INDEXING_PREFS_VERBOSE
+    uint32_t indexingFlags = ADM_IDX_FLAGS_DEFAULT;
+    if (!prefs->get(INDEXING_INDEXING_FLAGS, &indexingFlags))
+    {
+        indexingFlags = ADM_IDX_FLAGS_DEFAULT;
+    }
+#if 0
+    uint32_t idxPsFiles = flagsToIdxSettings(indexingFlags, ADM_IDX_FLAGS_OFFSET_MPEGPS);
+    uint32_t idxTsFiles = flagsToIdxSettings(indexingFlags, ADM_IDX_FLAGS_OFFSET_MPEGTS);
+#endif
+    uint32_t idxMkvFiles = flagsToIdxSettings(indexingFlags, ADM_IDX_FLAGS_OFFSET_MATROSKA);
+    uint32_t idxMp4Files = flagsToIdxSettings(indexingFlags, ADM_IDX_FLAGS_OFFSET_MP4);
+#ifdef INDEXING_PREFS_VERBOSE
+    ADM_info("Indexing flags: %" PRIu32" -> MPEG-PS: %" PRIu32" MPEG-TS: %" PRIu32" Matroska: %" PRIu32" MP4: %" PRIu32"\n",
+                indexingFlags, idxPsFiles, idxTsFiles, idxMkvFiles, idxMp4Files);
+#endif
 
     // HDR
     if (!prefs->get(HDR_TONEMAPPING, &toneMappingHDR))
@@ -465,6 +487,30 @@ uint8_t DIA_Preferences(void)
     frameAvisynth.swallow(&togAskAvisynthPort);
     frameAvisynth.swallow(&uintDefaultPortAvisynth);
 
+    // Indexing
+    diaElemFrame frameIndexing(QT_TRANSLATE_NOOP("adm","Writing index to disk"));
+#define IDX_FORCE_MEM 0
+#define IDX_USE_SAVED 1
+#define IDX_WRITE_TO_DISK 2
+    diaMenuEntry indexingEntries[] = {
+        {IDX_FORCE_MEM, QT_TRANSLATE_NOOP("adm","Disabled"), NULL },
+        {IDX_USE_SAVED, QT_TRANSLATE_NOOP("adm","Read-only"), NULL },
+        {IDX_WRITE_TO_DISK, QT_TRANSLATE_NOOP("adm","Enabled"), NULL }
+    };
+#if 0
+    diaElemMenu menuIndexingPs(&idxPsFiles, QT_TRANSLATE_NOOP("adm","MPEG-PS files:"), NB_ITEMS(indexingEntries), indexingEntries);
+    diaElemMenu menuIndexingTs(&idxTsFiles, QT_TRANSLATE_NOOP("adm","MPEG-TS files:"), NB_ITEMS(indexingEntries), indexingEntries);
+#endif
+    diaElemMenu menuIndexingMkv(&idxMkvFiles, QT_TRANSLATE_NOOP("adm","Matroska files:"), NB_ITEMS(indexingEntries), indexingEntries);
+    diaElemMenu menuIndexingMp4(&idxMp4Files, QT_TRANSLATE_NOOP("adm","MP4 files:"), NB_ITEMS(indexingEntries), indexingEntries);
+
+#if 0
+    frameIndexing.swallow(&menuIndexingPs);
+    frameIndexing.swallow(&menuIndexingTs);
+#endif
+    frameIndexing.swallow(&menuIndexingMkv);
+    frameIndexing.swallow(&menuIndexingMp4);
+
     // Editor cache
     diaElemFrame frameCache(QT_TRANSLATE_NOOP("adm", "Caching of decoded pictures"));
     diaElemUInteger cacheSize(&editor_cache_size, QT_TRANSLATE_NOOP("adm", "_Cache size:"), 8, 16);
@@ -609,7 +655,7 @@ uint8_t DIA_Preferences(void)
     /* Automation */
 
     /* Import */
-    diaElem *diaImport[] = {&frameMultiLoad, &framePics, &frameAvisynth};
+    diaElem *diaImport[] = {&frameMultiLoad, &framePics, &frameAvisynth, &frameIndexing};
     diaElemTabs tabImport(QT_TRANSLATE_NOOP("adm", "Import"), NB_ELEM(diaImport), diaImport);
 
     /* Output */
@@ -955,6 +1001,19 @@ uint8_t DIA_Preferences(void)
         prefs->set(AVISYNTH_AVISYNTH_DEFAULTPORT, defaultPortAvisynth);
         prefs->set(AVISYNTH_AVISYNTH_ALWAYS_ASK, askPortAvisynth);
 
+        // Indexing
+        indexingFlags = 0;
+#if 0
+        indexingFlags += idxSettingsToFlags(idxPsFiles, ADM_IDX_FLAGS_OFFSET_MPEGPS);
+        indexingFlags += idxSettingsToFlags(idxTsFiles, ADM_IDX_FLAGS_OFFSET_MPEGTS);
+#endif
+        indexingFlags += idxSettingsToFlags(idxMkvFiles, ADM_IDX_FLAGS_OFFSET_MATROSKA);
+        indexingFlags += idxSettingsToFlags(idxMp4Files, ADM_IDX_FLAGS_OFFSET_MP4);
+#ifdef INDEXING_PREFS_VERBOSE
+        ADM_info("Setting indexing flags to %" PRIu32"\n", indexingFlags);
+#endif
+        prefs->set(INDEXING_INDEXING_FLAGS, indexingFlags);
+
         // HDR
         prefs->set(HDR_TONEMAPPING, toneMappingHDR);
         targetLumHDR = dTargetLumHDR;
@@ -999,5 +1058,53 @@ uint8_t DIA_Preferences(void)
     delete[] languagesMenuItems;
 
     return dialogAccepted;
+}
+// Indexing helper funcs
+uint32_t idxSettingsToFlags(uint32_t val, uint32_t off)
+{
+    uint32_t flags = 0;
+    switch (off)
+    {
+        case ADM_IDX_FLAGS_OFFSET_MPEGPS:
+        case ADM_IDX_FLAGS_OFFSET_MPEGTS:
+        case ADM_IDX_FLAGS_OFFSET_MATROSKA:
+        case ADM_IDX_FLAGS_OFFSET_MP4:
+            break;
+        default:
+            return flags;
+    }
+    switch (val)
+    {
+        case IDX_FORCE_MEM:
+            flags |= ADM_IDX_FLAG_IGNORE_INDEX_FILE << off;
+            break;
+        case IDX_WRITE_TO_DISK:
+            flags |= ADM_IDX_FLAG_WRITE_INDEX_FILE << off;
+        case IDX_USE_SAVED:
+        default:
+            break;
+    }
+    return flags;
+}
+
+uint32_t flagsToIdxSettings(uint32_t flags, uint32_t off)
+{
+    switch (off)
+    {
+        case ADM_IDX_FLAGS_OFFSET_MPEGPS:
+        case ADM_IDX_FLAGS_OFFSET_MPEGTS:
+        case ADM_IDX_FLAGS_OFFSET_MATROSKA:
+        case ADM_IDX_FLAGS_OFFSET_MP4:
+            break;
+        default:
+            return IDX_WRITE_TO_DISK;
+    }
+    flags >>= off;
+    if (flags & ADM_IDX_FLAG_WRITE_INDEX_FILE)
+        return IDX_WRITE_TO_DISK;
+    if (flags & ADM_IDX_FLAG_IGNORE_INDEX_FILE)
+        return IDX_FORCE_MEM;
+
+    return IDX_USE_SAVED;
 }
 // EOF
