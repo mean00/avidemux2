@@ -26,6 +26,7 @@ export TOOLCHAIN_LOCATION="${MXE_ROOT}"/usr
 export TOOLCHAIN_FILE="${MINGW}"/share/cmake/mxe-conf.cmake
 export SDL2DIR="$MINGW"
 export GENERATOR="Ninja"
+export MXE_CMAKE=${mxerootdir}/usr/bin/${MXE_TARGET}-cmake
 
 export PATH=${QT_HOME}/bin:$PATH
 
@@ -78,10 +79,9 @@ Process() {
     mkdir "$BUILDDIR" || fail "creating build directory"
   fi
   pushd "$BUILDDIR" >/dev/null
-  cmake -DCROSS="$MINGW" \
+  ${MXE_CMAKE} -DCROSS="$MINGW" \
     -DCMAKE_SYSTEM_NAME:STRING=Windows \
     -DCMAKE_FIND_ROOT_PATH="$MINGW" \
-    -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN_FILE" \
     -DCMAKE_INSTALL_PREFIX="$INSTALL_DIR" \
     -DCMAKE_LINKER:STRING="${CROSS_PREFIX}-ld" \
     -DCMAKE_AR:STRING="${CROSS_PREFIX}-ar" \
@@ -94,6 +94,7 @@ Process() {
   ninja install || fail "install"
   # Only install  component=dev for dev package
   popd >/dev/null
+  #  -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN_FILE" \
 }
 
 usage() {
