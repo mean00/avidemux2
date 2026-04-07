@@ -151,5 +151,10 @@ RUN cd /opt &&  git clone https://github.com/mxe/mxe.git && cd mxe && \
 RUN cd /opt/mxe && make qt6
 RUN echo Done
 ENV PATH="/opt/mxe/usr/bin:/usr/local/bin:/opt/mxe/bin:/opt/mxe/usr/x86_64-pc-linux-gnu/qt6/bin/:${PATH}"
+# --- install libaom
+#COPY ./.devcontainer_mxe64/install-libaom.bash /tmp/
+COPY install-libaom.bash /tmp/
+RUN cd /tmp && bash install-libaom.bash /opt/mxe
+
 
 
