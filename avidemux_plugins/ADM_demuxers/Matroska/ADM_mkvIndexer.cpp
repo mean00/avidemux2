@@ -26,6 +26,8 @@
 #include "ADM_videoInfoExtractor.h"
 #include "ADM_vidMisc.h"
 #include "ADM_metaToFile.h"
+#include "prefs.h"
+
 #define VIDEO _tracks[0]
 
 #if 0
@@ -763,15 +765,32 @@ uint8_t mkvHeader::indexClusters(ADM_ebml_file *parser)
     uint64_t pos;
     uint8_t res=1;
     bool indexOnDisk = true;
-    bool indexAllowOverwrite = false;
+    bool indexAllowOverwrite = true;
+    bool memOnly = false;
+
+    uint32_t indexingFlags = 0;
+    if (prefs->get(INDEXING_INDEXING_FLAGS, &indexingFlags))
+    {
+        indexingFlags >>= ADM_IDX_FLAGS_OFFSET_MATROSKA;
+        if (!(indexingFlags & ADM_IDX_FLAG_WRITE_INDEX_FILE))
+        {
+            indexOnDisk = false;
+        }
+        if (indexingFlags & ADM_IDX_FLAG_IGNORE_INDEX_FILE)
+        {
+            indexOnDisk = false;
+            memOnly = true;
+            ADM_info("Mem-only indexing.\n");
+        }
+    }
 
     if (NULL != getenv("ADM_NOINDEX_MKV") && !strncmp(getenv("ADM_NOINDEX_MKV"), "1", 1))
         indexOnDisk = false;
 
-    if (indexOnDisk)
+    if (!memOnly)
     {
-        if (NULL != getenv("ADM_MKV_INDEX_ALLOW_OVERWRITE") && !strncmp(getenv("ADM_MKV_INDEX_ALLOW_OVERWRITE"), "1", 1))
-            indexAllowOverwrite = true;
+        if (NULL != getenv("ADM_MKV_INDEX_ALLOW_OVERWRITE") && !strncmp(getenv("ADM_MKV_INDEX_ALLOW_OVERWRITE"), "0", 1))
+            indexAllowOverwrite = false;
         if (loadIndex(_idxName, parser->getFileSize()))
         {
             printf("[MKV] Video track indexing loaded from \"%s\"\n", _idxName.c_str());
