@@ -75,5 +75,6 @@ extern const ADM_paramList my_prefs_struct_param[]={
  {"hdr.tonemapping",offsetof(my_prefs_struct,hdr.tonemapping),"uint32_t",ADM_param_uint32_t},
  {"hdr.target_luminance",offsetof(my_prefs_struct,hdr.target_luminance),"float",ADM_param_float},
  {"hdr.out_of_gamut_handling",offsetof(my_prefs_struct,hdr.out_of_gamut_handling),"uint32_t",ADM_param_uint32_t},
+ {"indexing.indexing_flags",offsetof(my_prefs_struct,indexing.indexing_flags),"uint32_t",ADM_param_uint32_t},
 {NULL,0,NULL}
 };

@@ -101,4 +101,7 @@ struct  {
 	float target_luminance;
 	uint32_t out_of_gamut_handling;
 }hdr;
+struct  {
+	uint32_t indexing_flags;
+}indexing;
 }my_prefs_struct;

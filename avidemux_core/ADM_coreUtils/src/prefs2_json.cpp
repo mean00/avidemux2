@@ -104,6 +104,9 @@ json.addUint32("tonemapping",key->hdr.tonemapping);
 json.addFloat("target_luminance",key->hdr.target_luminance);
 json.addUint32("out_of_gamut_handling",key->hdr.out_of_gamut_handling);
 json.endNode();
+json.addNode("indexing");
+json.addUint32("indexing_flags",key->indexing.indexing_flags);
+json.endNode();
 return json.dumpToFile(file);
 };
 bool  my_prefs_struct_jdeserialize(const char *file, const ADM_paramList *tmpl,my_prefs_struct *key){
