@@ -46,7 +46,7 @@ def fix_appdir_recursive(appdir_path):
         for root, _, files in os.walk(appdir_path):
             for f in files:
                 # Check for shared objects or files in bin folders
-                if f.endswith(".so") or ".so." in f or "/bin/" in root:
+                if f.endswith(".so") or ".so." in f or "/bin/" in root or root.endswith("/bin"):
                     all_targets.append(os.path.join(root, f))
 
         # 2. Check each target for host leaks
