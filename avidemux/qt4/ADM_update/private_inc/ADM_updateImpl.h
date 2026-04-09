@@ -15,8 +15,8 @@
 #pragma once
 #include "ADM_update.h"
 #include <QNetworkAccessManager>
-#include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QNetworkRequest>
 #include <QThread>
 
 #if 0
@@ -27,43 +27,45 @@
 
 // Helper defines to construct URL
 #ifdef __MINGW32__
-    #ifdef _WIN64
-            #define ADM_UPDATE_MACHINE "Win64"
-    #else  // _WIN64
-            #define ADM_UPDATE_MACHINE "Win32"
-    #endif // _WIN64
-#else //__MINGW32__
-    #ifdef __APPLE__
-            #define ADM_UPDATE_MACHINE "OsX"
-    #else
-        #ifdef  __linux__
-            #define ADM_UPDATE_MACHINE "Linux"
-        #else
-            #define ADM_UPDATE_MACHINE "???"
-        #endif
-    #endif  // apple
+#ifdef _WIN64
+#define ADM_UPDATE_MACHINE "Win64"
+#else // _WIN64
+#define ADM_UPDATE_MACHINE "Win32"
+#endif // _WIN64
+#else  //__MINGW32__
+#ifdef __APPLE__
+#define ADM_UPDATE_MACHINE "OsX"
+#else
+#ifdef __linux__
+#define ADM_UPDATE_MACHINE "Linux"
+#else
+#define ADM_UPDATE_MACHINE "???"
+#endif
+#endif // apple
 
 #endif // mingw
 
 #define ADM_UPDATE_TARGET "update_for_" ADM_UPDATE_MACHINE ".html"
 
-#define ADM_UPDATE_SIZE_LIMIT   (65535)     // 64kB-1
+#define ADM_UPDATE_SIZE_LIMIT (65535) // 64kB-1
 
 /**
  */
-class ADMCheckUpdate: public QObject
+class ADMCheckUpdate : public QObject
 {
-  Q_OBJECT
-public:
-                    ADMCheckUpdate(ADM_updateComplete *up);
-        virtual     ~ADMCheckUpdate();
-protected:
-        QNetworkAccessManager manager;
-        QNetworkReply *reply;
-        ADM_updateComplete    *_updateCallback;
+    Q_OBJECT
+  public:
+    ADMCheckUpdate(ADM_updateComplete *up);
+    virtual ~ADMCheckUpdate();
 
-public slots:
-        void execute();
-        void downloadFinished(QNetworkReply *reply);
-        void downloadProgressCheck(qint64 bytesReceived, qint64 bytesTotal);
+  protected:
+    QNetworkAccessManager manager;
+    QNetworkReply *reply;
+    ADM_updateComplete *_updateCallback;
+    QNetworkRequest request;
+
+  public slots:
+    void execute();
+    void finished();
+    void downloadProgressCheck(qint64 bytesReceived, qint64 bytesTotal);
 };

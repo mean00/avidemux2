@@ -13,35 +13,33 @@
  *                                                                         *
  ***************************************************************************/
 #include "ADM_update.h"
-#include "ADM_updateImpl.h"
-#include "QTimer"
 #include "ADM_default.h"
 #include "ADM_string.h"
+#include "ADM_updateImpl.h"
+#include "QTimer"
 /**
  */
 ADMCheckUpdate::ADMCheckUpdate(ADM_updateComplete *up)
 {
-    this->_updateCallback=up;
+    this->_updateCallback = up;
     reply = NULL;
-    connect(&manager, SIGNAL(finished(QNetworkReply*)),
-            SLOT(downloadFinished(QNetworkReply*)));
 }
 /**
  */
 ADMCheckUpdate::~ADMCheckUpdate()
 {
-    
 }
 /**
  */
 void ADMCheckUpdate::execute()
 {
     // Construct URL
-    std::string url=std::string(ADM_UPDATE_SERVER)+std::string("/")+std::string(ADM_UPDATE_TARGET);
+    std::string url = std::string(ADM_UPDATE_SERVER) + std::string("/") + std::string(ADM_UPDATE_TARGET);
     QUrl qurl = QUrl::fromUserInput(QString(url.c_str()));
-    QNetworkRequest request(qurl);
+    request = QNetworkRequest(qurl);
     reply = manager.get(request);
-    connect(reply, SIGNAL(downloadProgress(qint64, qint64)),this,SLOT(downloadProgressCheck(qint64, qint64)));
+    connect(reply, SIGNAL(downloadProgress(qint64, qint64)), this, SLOT(downloadProgressCheck(qint64, qint64)));
+    connect(reply, SIGNAL(finished()), this, SLOT(finished()));
 }
 
 void ADMCheckUpdate::downloadProgressCheck(qint64 bytesReceived, qint64 bytesTotal)
@@ -56,61 +54,62 @@ void ADMCheckUpdate::downloadProgressCheck(qint64 bytesReceived, qint64 bytesTot
 
 /**
  */
-void ADMCheckUpdate::downloadFinished(QNetworkReply *reply)
+void ADMCheckUpdate::finished()
 {
     ADM_info("Download finished\n");
+    ADM_assert(reply);
     QString st;
-#if QT_VERSION >= QT_VERSION_CHECK(5,0,0) 
-        st=reply->url().toDisplayString().toUtf8();
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    st = reply->url().toDisplayString().toUtf8();
 #else
-        st=reply->url().toString().toUtf8();
+    st = reply->url().toString().toUtf8();
 #endif
-    if(reply->error())
+    if (reply->error())
     {
-        ADM_warning("Error downloading update %s\n",st.toUtf8().constData());
-        ADM_warning("Er=%s\n",reply->errorString().toUtf8().constData());
+        ADM_warning("Error downloading update %s\n", st.toUtf8().constData());
+        ADM_warning("Er=%s\n", reply->errorString().toUtf8().constData());
         return;
     }
-    ADM_warning("Success downloading update %s\n",st.toUtf8().constData());
-    QByteArray ba=reply->read(ADM_UPDATE_SIZE_LIMIT);   // limit read amount
-    if(!ba.size())
-   	return; 
-    std::string output=std::string(ba.data());
-    output=QString(output.c_str()).simplified().toUtf8().constData();
-    printf("wget output is <%s>\n",output.c_str());
-    std::vector<std::string>result;
-    ADM_splitString(" ",output,result);
-    if(result.size())
-        ADM_info("API version  = <%s>\n",result [0].c_str());
-    if(result.size()!=4)
+    ADM_warning("Success downloading update %s\n", st.toUtf8().constData());
+    QByteArray ba = reply->read(ADM_UPDATE_SIZE_LIMIT); // limit read amount
+    if (!ba.size())
+        return;
+    std::string output = std::string(ba.data());
+    output = QString(output.c_str()).simplified().toUtf8().constData();
+    printf("wget output is <%s>\n", output.c_str());
+    std::vector<std::string> result;
+    ADM_splitString(" ", output, result);
+    if (result.size())
+        ADM_info("API version  = <%s>\n", result[0].c_str());
+    if (result.size() != 4)
     {
         ADM_warning("Invalid output\n");
         return;
     }
-    if(!result[0].compare(std::string("1")))
-    {        
-        ADM_info("Version  = <%s>\n",result [1].c_str());
-        ADM_info("Release date = <%s>\n",result [2].c_str());
-        ADM_info("Download URL = <%s>\n",result [3].c_str());
-        int a,b,c,version;
-        sscanf(result[1].c_str(),"%d.%d.%d",&a,&b,&c);
-        version=(a*10000)+(b*100)+c;
+    if (!result[0].compare(std::string("1")))
+    {
+        ADM_info("Version  = <%s>\n", result[1].c_str());
+        ADM_info("Release date = <%s>\n", result[2].c_str());
+        ADM_info("Download URL = <%s>\n", result[3].c_str());
+        int a, b, c, version;
+        sscanf(result[1].c_str(), "%d.%d.%d", &a, &b, &c);
+        version = (a * 10000) + (b * 100) + c;
         // Compute current version
-        if(version>ADM_CURRENT_VERSION)        
-            _updateCallback(version,result[2],result[3]);
+        if (version > ADM_CURRENT_VERSION)
+            _updateCallback(version, result[2], result[3]);
         else
-            ADM_info("Already up to date (%d/%d)\n",version,ADM_CURRENT_VERSION);
+            ADM_info("Already up to date (%d/%d)\n", version, ADM_CURRENT_VERSION);
     }
-
+    reply->deleteLater();
 }
 
 /**
- * 
+ *
  */
 void ADM_checkForUpdate(ADM_updateComplete *up)
 {
-    
-    ADMCheckUpdate *update=new ADMCheckUpdate(up);
+
+    ADMCheckUpdate *update = new ADMCheckUpdate(up);
     QTimer::singleShot(0, update, SLOT(execute()));
 }
-//EOF
+// EOF
