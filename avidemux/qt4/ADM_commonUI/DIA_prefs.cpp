@@ -14,8 +14,6 @@
 
 #include "ADM_default.h"
 #include "config.h"
-#include "prefs.h"
-#include "ADM_Video.h"
 
 #include "ADM_pp.h"
 #include "ADM_qtx.h"
@@ -29,6 +27,9 @@
 #ifdef USE_SDL
 #include "GUI_sdlRender.h"
 #endif
+
+#include "prefs.h"
+#include "ADM_Video.h"
 
 extern const char *getNativeRendererDesc(int type);
 
