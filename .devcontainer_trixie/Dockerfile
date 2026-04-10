@@ -69,6 +69,7 @@ RUN apt-get install -y \
     libx264-dev libxvidcore-dev \
     libmp3lame-dev libtwolame-dev libopus-dev libvorbis-dev libogg-dev \
     libpng-dev libass-dev 
+
   RUN apt-get install  -y \
     libfaac-dev \
     libfdk-aac-dev \
@@ -84,6 +85,14 @@ RUN apt-get install -y \
   RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 10 \
   && :
     #libaften-dev \
+# Missing packages
+  RUN apt-get install  -y \
+    libopencore-amrnb-dev \
+    libopencore-amrwb-dev \
+    libdca-dev \
+    libfaad-dev  
+
+    #libaften-dev
 
 # App image
 RUN wget --no-proxy https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.1.0/appimage-builder-1.1.0-x86_64.AppImage && \
@@ -105,7 +114,8 @@ RUN  wget --no-proxy https://github.com/linuxdeploy/linuxdeploy-plugin-appimage/
 RUN useradd -m trixie && usermod --shell /usr/bin/zsh trixie
 #
 RUN cd /tmp && git clone https://github.com/FFmpeg/nv-codec-headers.git && cd nv-codec-headers && make install
-
+# Cleanup
+#RUN apt autoclean && apt autoremove
 #
 
 CMD [ "/bin/bash" ]
