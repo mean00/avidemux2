@@ -104,6 +104,8 @@ RUN  wget --no-proxy https://github.com/linuxdeploy/linuxdeploy-plugin-appimage/
     chmod +x /usr/local/bin/*
 RUN useradd -m trixie && usermod --shell /usr/bin/zsh trixie
 #
+RUN cd /tmp && git clone https://github.com/FFmpeg/nv-codec-headers.git && cd nv-codec-headers && make install
+
 #
 
 CMD [ "/bin/bash" ]

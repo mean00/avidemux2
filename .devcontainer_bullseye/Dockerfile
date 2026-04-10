@@ -95,10 +95,11 @@ RUN chmod a+rwx /opt /usr/local/bin
     libx265-dev \
     libvpx-dev \
     libaom-dev \
-    libfuse-dev
+    libfuse-dev \
+    libfaad-dev 
 
   RUN  apt-get install  -y \
-    qt6-base-dev qt6-l10n-tools
+    qt6-base-dev qt6-l10n-tools qt6-wayland
 
     #libfaac-dev \
     #libfdk-aac-dev \
@@ -108,23 +109,12 @@ RUN chmod a+rwx /opt /usr/local/bin
 CMD [ "/bin/bash" ]
 
 
+RUN cd /tmp && git clone https://github.com/FFmpeg/nv-codec-headers.git && cd nv-codec-headers && make install
 
 ###################################
 # Setup user env
 ###################################
 USER ${USERNAME}
-RUN mkdir ~/.local &&  mkdir ~/.local/bin &&  mkdir ~/.cargo && mkdir ~/.cargo/bin
-RUN echo "export http_proxy=\"\"">> ~/.bashrc
-RUN echo "export https_proxy=\"\"">> ~/.bashrc
-RUN echo "export HTTP_PROXY=\"\"">> ~/.bashrc
-RUN echo "export HTTPS_PROXY=\"\"">> ~/.bashrc
-RUN echo "export PATH=\$PATH:\$HOME/.cargo/bin:\$HOME/.local/bin"  >> ~/.bashrc
-RUN echo ".  \$HOME/.cargo/env" >> /home/$USERNAME/.bashrc
-ENV http_proxy=""
-ENV https_proxy=""
-ENV HTTP_PROXY=""
-ENV HTTPS_PROXY=""
-# Extact imagetool 
 #
 RUN cd /tmp  && /usr/local/bin/appimagetool1 --appimage-extract && mv squashfs-root /opt/appimagetool-extracted 
 #

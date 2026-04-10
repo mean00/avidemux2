@@ -63,6 +63,9 @@ RUN apt-get install -y \
   && update-alternatives --install /usr/bin/python python /usr/bin/python3 10 \
   && :
 
+RUN cd /tmp && git clone https://github.com/FFmpeg/nv-codec-headers.git && cd nv-codec-headers && make install
+
+
 RUN rm -f  /etc/apt/apt.conf.d/01proxy
 #
 #  Reuse Arm & Riscv toolchains

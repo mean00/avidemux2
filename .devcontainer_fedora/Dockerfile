@@ -41,6 +41,9 @@ RUN dnf -y  install   --skip-unavailable gcc \
 RUN dnf -y install qt6-*{devel,doc}*
 RUN dnf -y clean all
 
+RUN cd /tmp && git clone https://github.com/FFmpeg/nv-codec-headers.git && cd nv-codec-headers && make install
+
+
 WORKDIR /home/fedora/workspace
 RUN chown fedora:fedora /home/fedora/workspace
 
