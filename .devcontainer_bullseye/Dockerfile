@@ -90,15 +90,17 @@ RUN chmod a+rwx /opt /usr/local/bin
 # 
 # 
 # 
-  RUN  apt-get install  -y \
+RUN  apt-get install  -y \
     libx264-dev \
     libx265-dev \
     libvpx-dev \
     libaom-dev \
     libfuse-dev \
-    libfaad-dev 
+    libfaad-dev  \
+    libopencore-amrnb-dev \
+    libopencore-amrwb-dev
 
-  RUN  apt-get install  -y \
+RUN  apt-get install  -y \
     qt6-base-dev qt6-l10n-tools qt6-wayland
 
     #libfaac-dev \
