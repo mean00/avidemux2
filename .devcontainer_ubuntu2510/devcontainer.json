@@ -29,7 +29,7 @@
   "extensions": [],
   /* start the container with privileged mode, otherwise the devices cannot be accessed on the Docker image.
    */
-  "runArgs": ["--privileged"],
+  "runArgs": ["--privileged", "--name", "avidemux_ubuntu2510"],
   /* --device=/dev/alpha:/dev/beta
    */
   "remoteUser": "ubuntu"
