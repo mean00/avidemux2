@@ -121,7 +121,7 @@ protected:
 public:
                 PsIndexer(void);
                 ~PsIndexer();
-        uint8_t run(const char *file);
+        uint8_t run(const char *file, bool mem);
         bool    writeVideo(PSVideo *video);
         bool    writeAudio(void);
         bool    writeSystem(const char *filename,bool append);
@@ -140,11 +140,11 @@ public:
       \fn psIndexer 
       \brief main indexing loop for mpeg2 payload
 */
-uint8_t   psIndexer(const char *file)
+uint8_t psIndexer(const char *file, bool memOnly)
 {
 uint8_t r;
     PsIndexer *dx=new PsIndexer;
-    r=dx->run(file);
+    r=dx->run(file,memOnly);
     delete dx;
     return r;
 }
@@ -177,7 +177,7 @@ PsIndexer::~PsIndexer()
 /**
     \fn run
 */  
-uint8_t PsIndexer::run(const char *file)
+uint8_t PsIndexer::run(const char *file, bool mem)
 {
     uint32_t temporal_ref,val;
     uint64_t fullSize;
@@ -197,14 +197,20 @@ uint8_t PsIndexer::run(const char *file)
     char *indexName=(char *)malloc(strlen(file)+6);
     sprintf(indexName,"%s.idx2",file);
 
-    index=qfopen(indexName,"wt",true);
+    index = mem ? NULL : qfopen(indexName,"wt",true);
     if(!index)
     {
-        printf("[PsIndex] Cannot create %s\n",indexName);
+        if (mem)
+            ADM_info("Forcing in-memory indexing.\n");
+        else
+            ADM_warning("Cannot create index file \"%s\"\n", indexName);
         mFile = mfopen(indexName,"wt");
         if (!mFile)
         {
-            printf("[PsIndex] Cannot create memFile either\n");
+            if (mem)
+                ADM_error("Cannot create memFile!\n");
+            else
+                ADM_error("Cannot create memFile either.\n");
             free(indexName);
             return 0;
         }

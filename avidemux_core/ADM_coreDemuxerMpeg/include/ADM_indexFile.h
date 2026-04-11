@@ -66,7 +66,7 @@ public:
 
         indexFile();
         ~indexFile();
-    bool open(const char *name);
+    bool open(const char *name, bool memOnly = false);
     bool close(void);
     bool goToSection(const char *section);
     bool readSection(const char *section);

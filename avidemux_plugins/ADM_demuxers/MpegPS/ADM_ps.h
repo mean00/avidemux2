@@ -116,6 +116,7 @@ class psHeader : public vidHeader
 {
   protected:
     bool                fieldEncoded;
+    bool                loopBreaker;
     uint32_t            lastFrame;
     uint64_t            videoTrackSize;
     uint64_t            videoDuration;

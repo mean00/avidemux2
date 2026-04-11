@@ -7,7 +7,6 @@
 #include "ADM_default.h"
 #include "fourcc.h"
 #include "DIA_coreToolkit.h"
-#include "ADM_indexFile.h"
 #include "ADM_ps.h"
 
 #include <math.h>

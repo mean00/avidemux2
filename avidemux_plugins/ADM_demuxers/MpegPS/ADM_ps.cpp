@@ -18,14 +18,16 @@
 #include "fourcc.h"
 #include "DIA_coreToolkit.h"
 #include "ADM_indexFile.h"
+#include "ADM_indexingFlags.h"
 #include "ADM_ps.h"
+#include "prefs.h"
 
 #include <math.h>
 #define MY_CLASS psHeader
 #include "ADM_coreDemuxerMpegTemplate.cpp.h"
 
 uint32_t ADM_UsecFromFps1000(uint32_t fps1000);
-uint8_t psIndexer(const char *file);
+uint8_t psIndexer(const char *file, bool memOnly);
 
 /**
       \fn open
@@ -36,11 +38,29 @@ uint8_t psHeader::open(const char *name)
 {
     char *idxName=(char *)malloc(strlen(name)+6);
     uint8_t r=1;
+    bool createIndexOnDisk = true;
+    bool memOnly = false;
+
+    uint32_t indexingFlags = ADM_IDX_FLAGS_DEFAULT;
+    if (prefs->get(INDEXING_INDEXING_FLAGS, &indexingFlags))
+    {
+        indexingFlags >>= ADM_IDX_FLAGS_OFFSET_MPEGPS;
+        if (!(indexingFlags & ADM_IDX_FLAG_WRITE_INDEX_FILE))
+        {
+            createIndexOnDisk = false;
+        }
+        if (indexingFlags & ADM_IDX_FLAG_IGNORE_INDEX_FILE)
+        {
+            createIndexOnDisk = false;
+            memOnly = true;
+            ADM_info("Mem-only indexing.\n");
+        }
+    }
 
     sprintf(idxName,"%s.idx2",name);
     ListOfIndexFiles.push_back(idxName);
-    if(!ADM_fileExist(idxName))
-        r=psIndexer(name);
+    if(memOnly || !ADM_fileExist(idxName))
+        r=psIndexer(name, !createIndexOnDisk);
     if(r!=ADM_OK)
     {
         if(r==ADM_IGN)
@@ -61,9 +81,9 @@ uint8_t psHeader::open(const char *name)
     indexFile index;
     r=0;
 
-    if(!index.open(idxName))
+    if(!index.open(idxName, memOnly))
     {
-        printf("[psDemux] Cannot open index file %s\n",idxName);
+        printf("[psDemux] Cannot open %s file %s\n", memOnly ? "in-memory index" : "index", idxName);
         free(idxName);
         return false;
     }
@@ -202,14 +222,18 @@ uint8_t psHeader::open(const char *name)
     }
 abt:
     index.close();
-    if(reindex)
+    if(reindex && !memOnly && !loopBreaker)
     {
         uint8_t success=ADM_eraseFile(idxName);
         free(idxName);
         if(success)
+        {
+            loopBreaker = true;
             r=open(name);
-        else
+        }else
+        {
             ADM_error("Can't delete old index file.\n");
+        }
     }else
     {
         free(idxName);
@@ -275,6 +299,7 @@ uint8_t psHeader::close(void)
 {
 #define PS_INVALID 0xFFFFFFFF
     fieldEncoded=false;
+    loopBreaker = false;
     lastFrame = PS_INVALID;
     videoTrackSize=0;
     videoDuration = ADM_NO_PTS;
