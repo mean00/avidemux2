@@ -74,6 +74,7 @@ typedef enum
     RENDER_DXVA2 = 8,
     RENDER_DEFAULT = 9,
     RENDER_GTK = 10,
+    RENDER_SDL3 = 11,
     RENDER_LAST
 } ADM_RENDER_TYPE;
 /**
