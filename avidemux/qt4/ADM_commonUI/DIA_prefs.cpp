@@ -213,8 +213,8 @@ uint8_t DIA_Preferences(void)
     {
         indexingFlags = ADM_IDX_FLAGS_DEFAULT;
     }
-#if 0
     uint32_t idxPsFiles = flagsToIdxSettings(indexingFlags, ADM_IDX_FLAGS_OFFSET_MPEGPS);
+#if 0
     uint32_t idxTsFiles = flagsToIdxSettings(indexingFlags, ADM_IDX_FLAGS_OFFSET_MPEGTS);
 #endif
     uint32_t idxMkvFiles = flagsToIdxSettings(indexingFlags, ADM_IDX_FLAGS_OFFSET_MATROSKA);
@@ -498,15 +498,16 @@ uint8_t DIA_Preferences(void)
         {IDX_USE_SAVED, QT_TRANSLATE_NOOP("adm","Read-only"), NULL },
         {IDX_WRITE_TO_DISK, QT_TRANSLATE_NOOP("adm","Enabled"), NULL }
     };
-#if 0
+
     diaElemMenu menuIndexingPs(&idxPsFiles, QT_TRANSLATE_NOOP("adm","MPEG-PS files:"), NB_ITEMS(indexingEntries), indexingEntries);
+#if 0
     diaElemMenu menuIndexingTs(&idxTsFiles, QT_TRANSLATE_NOOP("adm","MPEG-TS files:"), NB_ITEMS(indexingEntries), indexingEntries);
 #endif
     diaElemMenu menuIndexingMkv(&idxMkvFiles, QT_TRANSLATE_NOOP("adm","Matroska files:"), NB_ITEMS(indexingEntries), indexingEntries);
     diaElemMenu menuIndexingMp4(&idxMp4Files, QT_TRANSLATE_NOOP("adm","MP4 files:"), NB_ITEMS(indexingEntries), indexingEntries);
 
-#if 0
     frameIndexing.swallow(&menuIndexingPs);
+#if 0
     frameIndexing.swallow(&menuIndexingTs);
 #endif
     frameIndexing.swallow(&menuIndexingMkv);
@@ -1004,8 +1005,8 @@ uint8_t DIA_Preferences(void)
 
         // Indexing
         indexingFlags = 0;
-#if 0
         indexingFlags += idxSettingsToFlags(idxPsFiles, ADM_IDX_FLAGS_OFFSET_MPEGPS);
+#if 0
         indexingFlags += idxSettingsToFlags(idxTsFiles, ADM_IDX_FLAGS_OFFSET_MPEGTS);
 #endif
         indexingFlags += idxSettingsToFlags(idxMkvFiles, ADM_IDX_FLAGS_OFFSET_MATROSKA);
