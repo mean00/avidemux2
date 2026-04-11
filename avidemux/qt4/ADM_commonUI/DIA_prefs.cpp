@@ -29,7 +29,7 @@
 #endif
 
 #include "prefs.h"
-#include "ADM_Video.h"
+#include "ADM_indexingFlags.h"
 
 extern const char *getNativeRendererDesc(int type);
 

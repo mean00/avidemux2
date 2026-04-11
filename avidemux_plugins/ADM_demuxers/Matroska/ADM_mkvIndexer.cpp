@@ -26,6 +26,7 @@
 #include "ADM_videoInfoExtractor.h"
 #include "ADM_vidMisc.h"
 #include "ADM_metaToFile.h"
+#include "ADM_indexingFlags.h"
 #include "prefs.h"
 
 #define VIDEO _tracks[0]

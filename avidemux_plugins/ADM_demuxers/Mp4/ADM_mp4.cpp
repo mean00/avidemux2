@@ -73,7 +73,7 @@ version 2 media descriptor :
 #include "ADM_mp3info.h"
 #include "ADM_dcainfo.h"
 #include "ADM_audioXiphUtils.h"
-
+#include "ADM_indexingFlags.h"
 #include "prefs.h"
 
 #if 1
