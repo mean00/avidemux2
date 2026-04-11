@@ -22,6 +22,10 @@
 
 extern VideoRenderBase *spawnSimpleRender();
 
+#ifdef USE_SDL3
+extern VideoRenderBase *spawnSdl3Render();
+#endif
+
 #ifdef USE_SDL
 extern VideoRenderBase *spawnSdlRender();
 #endif
@@ -84,6 +88,12 @@ VideoRenderBase *spawnCommonRenderer(ADM_RENDER_TYPE preferred, ADM_renderContex
     break;
 #endif
 
+#if defined(USE_SDL3)
+    case RENDER_SDL3: {
+        TRY_RENDERER_SPAWN_ALL(spawnSdl3Render, "SDL3")
+    }
+    break;
+#endif
 #if defined(USE_SDL)
     case RENDER_SDL: {
         TRY_RENDERER_SPAWN_ALL(spawnSdlRender, "SDL")
