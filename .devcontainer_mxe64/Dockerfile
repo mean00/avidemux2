@@ -66,7 +66,7 @@ RUN apt-get install -y \
     fuse  patchelf python3-pip python3-setuptools squashfs-tools strace \
     util-linux zsync libfuse2t64  \
     zsh neovim \
-      autoconf \
+    autoconf \
     automake \
     autopoint \
     bash \
@@ -102,7 +102,7 @@ RUN apt-get install -y \
     nsis-doc \
     nsis-pluginapi 
 
-  RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 10 \
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 10 \
   && :
     #libaften-dev \
 
@@ -149,6 +149,7 @@ RUN cd /opt &&  git clone https://github.com/mxe/mxe.git && cd mxe && \
      echo "MXE_TARGETS := x86_64-w64-mingw32.shared" > settings.mk \
     && echo "JOBS := 4" >> settings.mk && make  qt6-qtbase
 RUN cd /opt/mxe && make qt6
+RUN cd /opt/mxe && make opencore-amr  && make fdk-aac && make sdl3
 RUN echo Done
 ENV PATH="/opt/mxe/usr/bin:/usr/local/bin:/opt/mxe/bin:/opt/mxe/usr/x86_64-pc-linux-gnu/qt6/bin/:${PATH}"
 # --- install libaom
