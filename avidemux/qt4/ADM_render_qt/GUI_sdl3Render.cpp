@@ -122,18 +122,21 @@ void sdl3RenderImpl::rescaleDisplay(void)
 
 bool sdl3RenderImpl::init(GUI_WindowInfo *window, uint32_t w, uint32_t h, float zoom)
 {
-    ADM_info("[SDL3] Initializing video subsystem\n");
-
     winfo = *window;
     baseInit(w, h, zoom);
     rescaleDisplay();
 
     SDL_SetLogOutputFunction(SDL_Logger, NULL);
 
+    int version = SDL_GetVersion();
+    ADM_info("[SDL3] Runtime SDL Version: %d.%d.%d\n", SDL_VERSIONNUM_MAJOR(version), SDL_VERSIONNUM_MINOR(version),
+             SDL_VERSIONNUM_MICRO(version));
+
     // Bridge with qt6 window
     if (admDetectQtEngine() == QT_WAYLAND_ENGINE)
     {
-        //
+        SDL_SetHint(SDL_HINT_VIDEO_DRIVER, "wayland");
+        SDL_SetHint(SDL_HINT_VIDEO_WAYLAND_ALLOW_LIBDECOR, "0");
         if (window->display)
         {
             SDL_SetPointerProperty(SDL_GetGlobalProperties(), SDL_PROP_GLOBAL_VIDEO_WAYLAND_WL_DISPLAY_POINTER,
@@ -143,39 +146,34 @@ bool sdl3RenderImpl::init(GUI_WindowInfo *window, uint32_t w, uint32_t h, float 
 
     if (!SDL_InitSubSystem(SDL_INIT_VIDEO))
     {
-        ADM_warning("[SDL3] Video subsystem init failed, error: %s\n", SDL_GetError());
+        const char *err = SDL_GetError();
+        ADM_warning("[SDL3] Video subsystem init failed, error: %s\n", (err && *err) ? err : "Unknown");
         return false;
     }
-    ADM_info("[SDL3] Video subsystem init ok\n");
+    ADM_info("[SDL3] Video subsystem init ok, using driver: %s\n", SDL_GetCurrentVideoDriver());
 
     sdl_running = true;
 
     if (admDetectQtEngine() == QT_WAYLAND_ENGINE)
     {
         ADM_info("[SDL3] Using Wayland backend for borderless window\n");
-        SDL_PropertiesID props = SDL_CreateProperties();
-        SDL_SetPointerProperty(props, SDL_PROP_WINDOW_CREATE_WAYLAND_WL_SURFACE_POINTER, winfo.windowOpaquePointer);
-        SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_WAYLAND_SURFACE_ROLE_CUSTOM_BOOLEAN, true);
-        SDL_SetStringProperty(props, SDL_PROP_WINDOW_CREATE_TITLE_STRING, "avidemux_sdl3");
-        SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, displayWidth);
-        SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, displayHeight);
-        SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_OPENGL_BOOLEAN, true);
-        sdl_window = SDL_CreateWindowWithProperties(props);
-        SDL_DestroyProperties(props);
     }
-    else
-    {
-        ADM_info("[SDL3] Using X11 backend - wrapping existing handle %lx\n", (unsigned long)window->systemWindowId);
-        SDL_PropertiesID props = SDL_CreateProperties();
-        SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_X11_WINDOW_NUMBER, (Sint64)window->systemWindowId);
-        sdl_window = SDL_CreateWindowWithProperties(props);
-        SDL_DestroyProperties(props);
-    }
+
+    SDL_PropertiesID props = SDL_CreateProperties();
+    SDL_SetPointerProperty(props, SDL_PROP_WINDOW_CREATE_WAYLAND_WL_SURFACE_POINTER, winfo.windowOpaquePointer);
+    SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_WAYLAND_SURFACE_ROLE_CUSTOM_BOOLEAN, true);
+    SDL_SetStringProperty(props, SDL_PROP_WINDOW_CREATE_TITLE_STRING, "avidemux_sdl3");
+    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, (int)w);
+    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, (int)h);
+    SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_BORDERLESS_BOOLEAN, true);
+    SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_OPENGL_BOOLEAN, true);
+
+    sdl_window = SDL_CreateWindowWithProperties(props);
+    SDL_DestroyProperties(props);
 
     if (!sdl_window)
     {
-        ADM_warning("[SDL3] Creating window failed, error: %s\n", SDL_GetError());
-        cleanup();
+        ADM_warning("[SDL3] Window creation failed: %s\n", SDL_GetError());
         return false;
     }
 
@@ -183,7 +181,6 @@ bool sdl3RenderImpl::init(GUI_WindowInfo *window, uint32_t w, uint32_t h, float 
     sdl_renderer = SDL_CreateRenderer(sdl_window, NULL);
     if (!sdl_renderer)
     {
-        ADM_warning("[SDL3] Failed to create a renderer, error: %s\n", SDL_GetError());
         cleanup();
         return false;
     }
@@ -264,7 +261,9 @@ bool sdl3RenderImpl::changeZoom(float newZoom)
         float scaleY = (float)displayWidth / (float)imageHeight;
 
         SDL_SetRenderScale(sdl_renderer, scaleX, scaleY);
-        SDL_SetWindowSize(sdl_window, displayWidth, displayHeight);
+        // Do not call SDL_SetWindowSize, as Qt manages the window boundaries
+        // and calling it messes up the widget layout (vertical offset) on some platforms (Wayland).
+        // SDL_SetWindowSize(sdl_window, displayWidth, displayHeight);
     }
     return true;
 }
