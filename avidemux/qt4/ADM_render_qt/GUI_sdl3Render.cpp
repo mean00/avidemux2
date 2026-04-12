@@ -136,6 +136,7 @@ bool sdl3RenderImpl::init(GUI_WindowInfo *window, uint32_t w, uint32_t h, float 
     if (admDetectQtEngine() == QT_WAYLAND_ENGINE)
     {
         SDL_SetHint(SDL_HINT_VIDEO_DRIVER, "wayland");
+        SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl,opengles2,software");
         SDL_SetHint(SDL_HINT_VIDEO_WAYLAND_ALLOW_LIBDECOR, "0");
         if (window->display)
         {
@@ -158,6 +159,8 @@ bool sdl3RenderImpl::init(GUI_WindowInfo *window, uint32_t w, uint32_t h, float 
     {
         ADM_info("[SDL3] Using Wayland backend for borderless window\n");
     }
+
+    ADM_info("[SDL3] Relative position: X=%d, Y=%d (Scaling=%.2f)\n", winfo.x, winfo.y, winfo.scalingFactor);
 
     SDL_PropertiesID props = SDL_CreateProperties();
     SDL_SetPointerProperty(props, SDL_PROP_WINDOW_CREATE_WAYLAND_WL_SURFACE_POINTER, winfo.windowOpaquePointer);
@@ -184,6 +187,7 @@ bool sdl3RenderImpl::init(GUI_WindowInfo *window, uint32_t w, uint32_t h, float 
         cleanup();
         return false;
     }
+    ADM_info("[SDL3] Renderer created successfully using driver: %s\n", SDL_GetRendererName(sdl_renderer));
 
     SDL_SetRenderScale(sdl_renderer, 1.0f, 1.0f);
 

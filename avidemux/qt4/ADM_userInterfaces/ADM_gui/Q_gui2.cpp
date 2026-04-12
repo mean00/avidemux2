@@ -3734,9 +3734,16 @@ void UI_resize(uint32_t w, uint32_t h)
     ((MainWindow *)QuiMainWindows)->calcDockWidgetDimensions(reqw, reqh);
     reqw += w;
     reqh += h;
+    uint32_t screenW = 0, screenH = 0;
+    QRect space = QGuiApplication::primaryScreen()->availableGeometry();
+    if (reqw > (uint32_t)space.width())
+        reqw = space.width();
+    if (reqh > (uint32_t)space.height())
+        reqh = space.height();
+
     UI_setBlockZoomChangesFlag(true);
     QuiMainWindows->resize(reqw, reqh);
-    ADM_info("Resizing the main window to %dx%d px\n", reqw, reqh);
+    ADM_info("Resizing the main window to %dx%d px (Screen: %dx%d)\n", reqw, reqh, space.width(), space.height());
 #ifdef _WIN32
     QRect fs = QuiMainWindows->frameGeometry();
 #if QT_VERSION < QT_VERSION_CHECK(5, 11, 0)
