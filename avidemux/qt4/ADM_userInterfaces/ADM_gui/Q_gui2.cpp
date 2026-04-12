@@ -671,8 +671,8 @@ void MainWindow::setTimeDisplaySize(void)
     if (currentStyle)
         currentStyleName = currentStyle->objectName().toLower(); // style names are case-insensitive
 
-    float stretchFactor = (0 == strcmp(currentStyleName.toUtf8().constData(), "windows11")) ?
-            1.25 : DEFAULT_CT_DISPLAY_STRETCH_FACTOR;
+    float stretchFactor =
+        (0 == strcmp(currentStyleName.toUtf8().constData(), "windows11")) ? 1.25 : DEFAULT_CT_DISPLAY_STRETCH_FACTOR;
     ui.currentTime->setFixedSize(stretchFactor * ctrect.width(), ui.currentTime->height());
 #else
     ui.currentTime->setFixedSize(DEFAULT_CT_DISPLAY_STRETCH_FACTOR * ctrect.width(), ui.currentTime->height());
@@ -883,13 +883,13 @@ MainWindow::MainWindow(const vector<IScriptEngine *> &scriptEngines) : _scriptEn
 
     setAcceptDrops(true);
 
-// clang-format off
+    // clang-format off
 #ifndef __APPLE__
     setWindowIcon(QIcon(MKICON(avidemux-icon)));
 #else
     setWindowIcon(QIcon(MKOSXICON(avidemux)));
 #endif
-// clang-format on
+    // clang-format on
 
     // Hook also the toolbar
     connect(ui.toolBar, SIGNAL(actionTriggered(QAction *)), this, SLOT(searchToolBar(QAction *)));
@@ -1918,7 +1918,7 @@ void MainWindow::setDefaultThemeSlot(bool b)
 
     if (NULL != getenv("ADM_QT_STYLE_VERBOSE"))
     {
-        QString styleName ="unknown style";
+        QString styleName = "unknown style";
         QStyle *currentStyle = qApp->style();
         if (currentStyle)
             styleName = currentStyle->objectName();
@@ -2894,12 +2894,17 @@ int UI_Init(int nargc, char **nargv)
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     ADM_info("Starting Qt5 GUI...\n");
 #else
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    ADM_info("Starting Qt6 GUI...\n");
+#else
     ADM_info("Starting Qt4 GUI...\n");
+#endif
 #endif
     initTranslator();
 
     global_argc = nargc;
     global_argv = nargv;
+
     ADM_renderLibInit(&UI_Hooks);
 #if !defined(__APPLE__) && QT_VERSION >= QT_VERSION_CHECK(5, 11, 0) && QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     // Despite HiDPI scaling being supported from Qt 5.6 on, important aspects
