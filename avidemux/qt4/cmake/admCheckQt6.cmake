@@ -38,6 +38,9 @@ MACRO(checkQt6)
       MESSAGE(STATUS "Checking for Qt6Network")
       FIND_PACKAGE(Qt6 COMPONENTS Network)
 
+      MESSAGE(STATUS "Checking for GuiPrivate") # This is needed to get the wayland window id
+      FIND_PACKAGE(Qt6 COMPONENTS GuiPrivate)
+
       IF(Qt6Core_FOUND AND Qt6Gui_FOUND AND Qt6Widgets_FOUND AND Qt6OpenGLWidgets_FOUND AND Qt6Network_FOUND)
         MESSAGE(STATUS "Qt6 found")
         SET(QT6_FOUND 1)
@@ -52,6 +55,9 @@ MACRO(checkQt6)
         SET(QT_QTGUI_LIBRARY ${Qt6Gui_LIBRARIES} ${Qt6Widgets_LIBRARIES} ${Qt6OpenGLWidgets_LIBRARIES})
 
         SET(QT_DEFINITIONS ${Qt6Core_DEFINITIONS} ${Qt6Widgets_DEFINITIONS} ${Qt6OpenGLWidgets_DEFINITIONS} ${Qt6Network_DEFINITIONS})
+        IF(Qt6GuiPrivate_FOUND)
+          SET(QT_QTGUI_LIBRARY ${QT_QTGUI_LIBRARY} Qt6::GuiPrivate)
+        ENDIF()
 
         MARK_AS_ADVANCED(LRELEASE_EXECUTABLE)
         MARK_AS_ADVANCED(QT_MKSPECS_DIR)
