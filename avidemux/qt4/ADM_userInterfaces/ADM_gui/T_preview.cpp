@@ -33,10 +33,16 @@
   #include <QGuiApplication>
   using namespace QNativeInterface;
 #endif
-/* Probably on unix/X11 ..*/
 #ifdef __APPLE__
 #include <Carbon/Carbon.h>
+#else
+//
+#ifndef _WIN32
+// Linux
+#include <QtGui/qpa/qplatformnativeinterface.h>
 #endif
+#endif
+//
 #include "ADM_assert.h"
 #include "DIA_coreToolkit.h"
 #include "GUI_render.h"
@@ -230,6 +236,7 @@ void UI_updateDrawWindowSize(void *win, uint32_t w, uint32_t h)
  */
 static void *myDisplay = NULL;
 static int mySystemWindowId = 0;
+static void *myWindowOpaque = NULL;
 /*
  * Apple, let them null
  *
@@ -270,12 +277,25 @@ static void systemWindowInfo_once()
         }
         break;
         case QT_WAYLAND_ENGINE: {
+            // make sure the windows is wayland ok
+            videoWindow->setAttribute(Qt::WA_NativeWindow);
             auto wayland = currentQApplication()->nativeInterface<QNativeInterface::QWaylandApplication>();
             if (wayland)
             {
                 ADM_info("found wayland display\n");
                 myDisplay = wayland->display();
                 mySystemWindowId = 0;
+                if (myDisplay)
+                {
+                    QPlatformNativeInterface *native = currentQApplication()->platformNativeInterface();
+                    struct wl_surface *wlSurface = static_cast<struct wl_surface *>(
+                        native->nativeResourceForWindow("surface", videoWindow->windowHandle()));
+                    myWindowOpaque = wlSurface;
+                }
+            }
+            else
+            {
+                myWindowOpaque = NULL;
             }
         }
         break;
@@ -304,6 +324,7 @@ static void systemWindowInfo(GUI_WindowInfo *xinfo)
         xinfo->scalingFactor = (double)window->devicePixelRatio();
     xinfo->systemWindowId = mySystemWindowId;
     xinfo->display = myDisplay;
+    xinfo->windowOpaquePointer = myWindowOpaque;
 }
 
 /**
@@ -314,6 +335,7 @@ void UI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
     ADM_assert(videoWindow);
     QWidget *widget = videoWindow->parentWidget();
     xinfo->widget = videoWindow;
+    // xinfo->windowOpaquePointer = myWindowOpaque;
     xinfo->systemWindowId = 0;
     xinfo->scalingFactor = 1.;
     QPoint localPoint(0, 0);
