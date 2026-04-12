@@ -106,7 +106,7 @@ ADD_SUBDIRECTORY(../common ./common)
 ADD_SUBDIRECTORY(ADM_UIs ./ADM_UIsCli)
 ADD_SUBDIRECTORY(ADM_userInterfaces ./ADM_userInterfacesCli)
 
-SDLify(../common/main.cpp)
+# SDLify(../common/main.cpp)
 IF(ADM_SUBVERSION)
   ADD_SOURCE_CFLAGS(../common/main.cpp "-DADM_SUBVERSION=\"${ADM_SUBVERSION}\"")
   ADD_SOURCE_CFLAGS(../common/main.cpp "-DFFMPEG_VERSION=\"${FFMPEG_VERSION}\"")
@@ -158,9 +158,9 @@ TARGET_LINK_LIBRARIES(avidemux3_cli PRIVATE
 TARGET_LINK_LIBRARIES(avidemux3_cli PRIVATE ADM_commonUI6_CLI)
 
 # SDL
-IF(USE_SDL)
-  TARGET_LINK_LIBRARIES(avidemux3_cli PRIVATE ${SDL2_LIBRARY} ${SDL2_MAIN})
-ENDIF()
+# IF(USE_SDL)
+# TARGET_LINK_LIBRARIES(avidemux3_cli PRIVATE ${SDL2_LIBRARY} ${SDL2_MAIN})
+# ENDIF()
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # OS Specific

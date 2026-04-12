@@ -14,6 +14,7 @@
  ***************************************************************************/
 #include "config.h"
 //
+//
 #include "ADM_coreDemuxer.h"
 #include "ADM_coreVideoFilterFunc.h"
 #include "ADM_crashdump.h"
@@ -39,6 +40,13 @@
 #include "adm_main.h"
 #include "audio_out.h"
 #include "prefs.h"
+
+#ifdef USE_SDL3
+#define SDL_MAIN_HANDLED
+#include <SDL3/SDL.h>
+#include <SDL3/SDL_main.h> // Optional,
+#endif
+
 #ifdef USE_VDPAU
 #if ADM_UI_TYPE_BUILD == ADM_UI_CLI
 bool vdpauProbe(void)
@@ -105,11 +113,13 @@ typedef struct
 
 static flavors myFlavors = {"qt4", "qt5", "qt6"};
 
+#ifndef WIN32
 #ifdef main
 extern "C"
 {
     int main(int _argc, char *_argv[]);
 }
+#endif
 #endif // main
 
 int main(int _argc, char *_argv[])

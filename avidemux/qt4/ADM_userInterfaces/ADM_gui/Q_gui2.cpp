@@ -3735,7 +3735,12 @@ void UI_resize(uint32_t w, uint32_t h)
     reqw += w;
     reqh += h;
     uint32_t screenW = 0, screenH = 0;
+#if QT_VERSION < QT_VERSION_CHECK(5, 11, 0)
+    QRect space = QApplication::desktop()->availableGeometry();
+#else
     QRect space = QGuiApplication::primaryScreen()->availableGeometry();
+#endif
+
     if (reqw > (uint32_t)space.width())
         reqw = space.width();
     if (reqh > (uint32_t)space.height())
@@ -3746,12 +3751,6 @@ void UI_resize(uint32_t w, uint32_t h)
     ADM_info("Resizing the main window to %dx%d px (Screen: %dx%d)\n", reqw, reqh, space.width(), space.height());
 #ifdef _WIN32
     QRect fs = QuiMainWindows->frameGeometry();
-#if QT_VERSION < QT_VERSION_CHECK(5, 11, 0)
-    QRect space = QApplication::desktop()->availableGeometry();
-#else
-    QRect space = QApplication::primaryScreen()->availableGeometry();
-#endif
-
     int x = fs.x() + fs.width() - space.x() - space.width();
     bool move = false;
     if (x > 0) // the right edge of the window doesn't fit into the screen
