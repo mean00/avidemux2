@@ -21,6 +21,7 @@
 #include <QPaintEngine>
 #include <QPainter>
 #include <QWindow>
+#include <QMainWindow>
 #include "ADM_qtx.h"
 #if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
   #if !defined(__APPLE__)
@@ -105,7 +106,10 @@ ADM_Qvideo::ADM_Qvideo(QFrame *z) : QWidget(z)
     doOnce = false;
     _width = _height = 0;
     hostFrame = z;
-
+    if (admDetectQtEngine() == QT_WAYLAND_ENGINE)
+    {
+        setAttribute(Qt::WA_DontCreateNativeAncestors);
+    }
 } //{setAutoFillBackground(false);}
 #endif // Haiku
 
@@ -277,8 +281,12 @@ static void systemWindowInfo_once()
         }
         break;
         case QT_WAYLAND_ENGINE: {
-            // make sure the windows is wayland ok
-            videoWindow->setAttribute(Qt::WA_NativeWindow);
+            bool changed = false;
+            if (!videoWindow->testAttribute(Qt::WA_NativeWindow))
+            {
+                videoWindow->setAttribute(Qt::WA_NativeWindow);
+                changed = true;
+            }
             auto wayland = currentQApplication()->nativeInterface<QNativeInterface::QWaylandApplication>();
             if (wayland)
             {
@@ -339,7 +347,30 @@ void UI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
     xinfo->systemWindowId = 0;
     xinfo->scalingFactor = 1.;
     QPoint localPoint(0, 0);
-    QPoint windowPoint = videoWindow->mapToGlobal(localPoint);
+    QPoint windowPoint;
+    if (admDetectQtEngine() == QT_WAYLAND_ENGINE)
+    {
+        videoWindow->winId(); // Force handle creation
+        QMainWindow *mw = qobject_cast<QMainWindow *>(videoWindow->window());
+        QWidget *ref = mw ? mw->centralWidget() : videoWindow->window();
+        if (!ref)
+            ref = videoWindow->window();
+
+        QPoint pWindow = videoWindow->mapTo(videoWindow->window(), QPoint(0, 0));
+        QWindow *handle = videoWindow->windowHandle();
+
+        // Calculate the workspace origin (below toolbars)
+        QPoint pWorkspace = ref->mapTo(videoWindow->window(), QPoint(0, 0));
+
+        // Use the X from the layout but anchor Y to the top of the central area
+        windowPoint = QPoint(pWindow.x(), pWorkspace.y());
+        if (handle)
+        {
+            handle->setPosition(windowPoint);
+        }
+    }
+    else
+        windowPoint = videoWindow->mapToGlobal(localPoint);
     xinfo->x = windowPoint.x();
     xinfo->y = windowPoint.y();
     xinfo->width = displayW;
