@@ -39,7 +39,10 @@
 
 #if ${CONFIG_HEADER_TYPE} == ADM_BUILD_GTK ||  ${CONFIG_HEADER_TYPE} == ADM_BUILD_QT4
 /* SDL detected */
+#cmakedefine USE_SDL3
+#ifndef USE_SDL3
 #cmakedefine USE_SDL
+#endif
 #endif
 
 #if ${CONFIG_HEADER_TYPE} == ADM_BUILD_GTK || ${CONFIG_HEADER_TYPE} == ADM_BUILD_QT4
