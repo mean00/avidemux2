@@ -28,3 +28,4 @@ devpod_msvc.sh
 avidemux/winInstaller/change.css
 avidemux64
 avidemux/winInstaller/Avidemux*.exe
+avidemux/qt4/xdg_data/org.avidemux.Avidemux.desktop
