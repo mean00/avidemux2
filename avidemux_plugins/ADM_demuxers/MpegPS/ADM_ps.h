@@ -24,6 +24,7 @@
 #include "ADM_audioStream.h"
 #include "dmx_io.h"
 #include "ADM_indexFile.h"
+#include "ADM_indexingFlags.h"
 #include "dmxPSPacket.h"
 #include <BVector.h>
 #include "ADM_coreDemuxerMpeg.h"
@@ -116,7 +117,6 @@ class psHeader : public vidHeader
 {
   protected:
     bool                fieldEncoded;
-    bool                loopBreaker;
     uint32_t            lastFrame;
     uint64_t            videoTrackSize;
     uint64_t            videoDuration;
@@ -129,6 +129,7 @@ class psHeader : public vidHeader
     BVector <ADM_psTrackDescriptor *> listOfAudioTracks;
     ListOfScr           listOfScrGap;
 
+    uint8_t             openInternal(const char *name, ADM_indexingType &strategy);
     bool                readVideo(indexFile *index);
     bool                readAudio(indexFile *index, const char *name);
     bool                readIndex(indexFile *index);
