@@ -109,6 +109,7 @@ ADM_Qvideo::ADM_Qvideo(QFrame *z) : QWidget(z)
     if (admDetectQtEngine() == QT_WAYLAND_ENGINE)
     {
         setAttribute(Qt::WA_DontCreateNativeAncestors);
+        setAttribute(Qt::WA_NativeWindow);
     }
 } //{setAutoFillBackground(false);}
 #endif // Haiku
@@ -263,56 +264,67 @@ static void systemWindowInfo_once()
 static void systemWindowInfo_once()
 {
 #if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
-    myDisplay = XOpenDisplay(NULL);
+    if (!myDisplay)
+        myDisplay = XOpenDisplay(NULL);
     mySystemWindowId = videoWindow->winId();
 #else
     {
-        ADM_info("Running on platform %s\n", currentQApplication()->platformName().toLatin1().data());
-        switch (admDetectQtEngine())
+        if (!myDisplay)
         {
-        case QT_X11_ENGINE: {
-            auto x11 = currentQApplication()->nativeInterface<QNativeInterface::QX11Application>();
-            if (x11)
+            ADM_info("Running on platform %s\n", currentQApplication()->platformName().toLatin1().data());
+            switch (admDetectQtEngine())
             {
-                ADM_info("found x11 display\n");
-                myDisplay = x11->display();
-                mySystemWindowId = videoWindow->winId();
+            case QT_X11_ENGINE: {
+                auto x11 = currentQApplication()->nativeInterface<QNativeInterface::QX11Application>();
+                if (x11)
+                {
+                    ADM_info("found x11 display\n");
+                    myDisplay = x11->display();
+                }
+            }
+            break;
+            case QT_WAYLAND_ENGINE: {
+                auto wayland = currentQApplication()->nativeInterface<QNativeInterface::QWaylandApplication>();
+                if (wayland)
+                {
+                    ADM_info("found wayland display\n");
+                    myDisplay = wayland->display();
+                }
+            }
+            break;
+            default:
+                break;
             }
         }
-        break;
+        // Always refresh surface and system IDs
+        switch (admDetectQtEngine())
+        {
+        case QT_X11_ENGINE:
+            mySystemWindowId = videoWindow->winId();
+            break;
         case QT_WAYLAND_ENGINE: {
-            bool changed = false;
             if (!videoWindow->testAttribute(Qt::WA_NativeWindow))
             {
                 videoWindow->setAttribute(Qt::WA_NativeWindow);
-                changed = true;
             }
-            auto wayland = currentQApplication()->nativeInterface<QNativeInterface::QWaylandApplication>();
-            if (wayland)
+            mySystemWindowId = 0;
+            if (myDisplay)
             {
-                ADM_info("found wayland display\n");
-                myDisplay = wayland->display();
-                mySystemWindowId = 0;
-                if (myDisplay)
-                {
-                    QPlatformNativeInterface *native = currentQApplication()->platformNativeInterface();
-                    struct wl_surface *wlSurface = static_cast<struct wl_surface *>(
-                        native->nativeResourceForWindow("surface", videoWindow->windowHandle()));
-                    myWindowOpaque = wlSurface;
-                }
+                QPlatformNativeInterface *native = currentQApplication()->platformNativeInterface();
+                struct wl_surface *wlSurface = static_cast<struct wl_surface *>(
+                    native->nativeResourceForWindow("surface", videoWindow->windowHandle()));
+                ADM_info("[DEBUG] videoWindow=%p, handle=%p, wl_surface=%p\n", videoWindow, videoWindow->windowHandle(),
+                         wlSurface);
+                myWindowOpaque = wlSurface;
             }
             else
-            {
                 myWindowOpaque = NULL;
-            }
         }
         break;
-        default: {
-            ADM_warning("Cannot get qt engine infos\n");
-            myDisplay = NULL;
+        default:
             mySystemWindowId = 0;
+            myWindowOpaque = NULL;
             break;
-        }
         }
     }
 #endif
@@ -324,8 +336,7 @@ static void systemWindowInfo_once()
  */
 static void systemWindowInfo(GUI_WindowInfo *xinfo)
 {
-    if (!myDisplay)
-        systemWindowInfo_once();
+    systemWindowInfo_once(); // Refresh info every time
 
     QWindow *window = QuiMainWindows->windowHandle();
     if (window)
@@ -364,6 +375,8 @@ void UI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
 
         // Use the X from the layout but anchor Y to the top of the central area
         windowPoint = QPoint(pWindow.x(), pWorkspace.y());
+        ADM_info("[DEBUG] pWindow=(%d, %d), pWorkspace.y=%d, final windowPoint=(%d, %d)\n", pWindow.x(), pWindow.y(),
+                 pWorkspace.y(), windowPoint.x(), windowPoint.y());
         if (handle)
         {
             handle->setPosition(windowPoint);

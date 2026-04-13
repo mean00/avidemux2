@@ -53,11 +53,10 @@ class sdl3RenderImpl : public VideoRenderBase
     const char *getName();
 
   protected:
+    bool init_sdl_window_once(GUI_WindowInfo *);
     bool cleanup(void);
     void rescaleDisplay(void);
     bool sdl_running;
-    SDL_Window *sdl_window;
-    SDL_Renderer *sdl_renderer;
     SDL_Texture *sdl_texture;
 };
 
@@ -68,6 +67,10 @@ VideoRenderBase *spawnSdl3Render()
 {
     return new sdl3RenderImpl();
 }
+
+static bool sdl3_video_initialized = false;
+static SDL_Window *sdl_window = NULL;
+static SDL_Renderer *sdl_renderer = NULL;
 
 /**
  * static SDL logging
@@ -83,8 +86,6 @@ static void SDL_Logger(void *userdata, int category, SDL_LogPriority priority, c
 sdl3RenderImpl::sdl3RenderImpl(void)
 {
     sdl_running = false;
-    sdl_window = NULL;
-    sdl_renderer = NULL;
     sdl_texture = NULL;
     accel = -1;
     memset(&winfo, 0, sizeof(GUI_WindowInfo));
@@ -103,8 +104,7 @@ bool sdl3RenderImpl::stop(void)
     cleanup();
     if (sdl_running)
     {
-        ADM_info("[SDL3] Video subsystem closed\n");
-        SDL_QuitSubSystem(SDL_INIT_VIDEO);
+        ADM_info("[SDL3] Video subsystem state preserved (Wayland)\n");
         sdl_running = false;
     }
     return true;
@@ -119,19 +119,19 @@ void sdl3RenderImpl::rescaleDisplay(void)
     displayWidth = (uint32_t)(dw + 0.5);
     displayHeight = (uint32_t)(dh + 0.5);
 }
-
-bool sdl3RenderImpl::init(GUI_WindowInfo *window, uint32_t w, uint32_t h, float zoom)
+/*
+ *
+ */
+bool sdl3RenderImpl::init_sdl_window_once(GUI_WindowInfo *window)
 {
-    winfo = *window;
-    baseInit(w, h, zoom);
-    rescaleDisplay();
-
-    SDL_SetLogOutputFunction(SDL_Logger, NULL);
+    if (sdl3_video_initialized && sdl_window && sdl_renderer)
+        return true;
 
     int version = SDL_GetVersion();
     ADM_info("[SDL3] Runtime SDL Version: %d.%d.%d\n", SDL_VERSIONNUM_MAJOR(version), SDL_VERSIONNUM_MINOR(version),
              SDL_VERSIONNUM_MICRO(version));
 
+    SDL_SetLogOutputFunction(SDL_Logger, NULL);
     // Bridge with qt6 window
     if (admDetectQtEngine() == QT_WAYLAND_ENGINE)
     {
@@ -152,21 +152,18 @@ bool sdl3RenderImpl::init(GUI_WindowInfo *window, uint32_t w, uint32_t h, float 
         return false;
     }
     ADM_info("[SDL3] Video subsystem init ok, using driver: %s\n", SDL_GetCurrentVideoDriver());
-
-    sdl_running = true;
-
-    ADM_info("[SDL3] Relative position: X=%d, Y=%d (Scaling=%.2f)\n", winfo.x, winfo.y, winfo.scalingFactor);
-
     SDL_PropertiesID props = SDL_CreateProperties();
     if (admDetectQtEngine() == QT_WAYLAND_ENGINE)
     {
         ADM_info("[SDL3] Using Wayland backend for borderless window\n");
-        SDL_SetPointerProperty(props, SDL_PROP_WINDOW_CREATE_WAYLAND_WL_SURFACE_POINTER, winfo.windowOpaquePointer);
+        SDL_SetPointerProperty(props, SDL_PROP_WINDOW_CREATE_WAYLAND_WL_SURFACE_POINTER, window->windowOpaquePointer);
         SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_WAYLAND_SURFACE_ROLE_CUSTOM_BOOLEAN, true);
     }
     SDL_SetStringProperty(props, SDL_PROP_WINDOW_CREATE_TITLE_STRING, "avidemux_sdl3");
-    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, (int)w);
-    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, (int)h);
+    // SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, (int)w);
+    // SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, (int)h);
+    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_X_NUMBER, 0);
+    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_Y_NUMBER, 0);
     SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_BORDERLESS_BOOLEAN, true);
     SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_OPENGL_BOOLEAN, true);
 
@@ -187,9 +184,34 @@ bool sdl3RenderImpl::init(GUI_WindowInfo *window, uint32_t w, uint32_t h, float 
         cleanup();
         return false;
     }
-    ADM_info("[SDL3] Renderer created successfully using driver: %s\n", SDL_GetRendererName(sdl_renderer));
-
+    sdl3_video_initialized = true;
     SDL_SetRenderScale(sdl_renderer, 1.0f, 1.0f);
+    return true;
+}
+/*
+ *
+ *
+ */
+bool sdl3RenderImpl::init(GUI_WindowInfo *window, uint32_t w, uint32_t h, float zoom)
+{
+    winfo = *window;
+    baseInit(w, h, zoom);
+    rescaleDisplay();
+
+    sdl_running = true;
+    if (!sdl3RenderImpl::init_sdl_window_once(window))
+    {
+        ADM_info("[SDL3] init once failed\n");
+        return false;
+    }
+
+    // Ensure the persistent window/renderer are in a fresh state for each video resolution
+    SDL_SetWindowSize(sdl_window, (int)w, (int)h);
+    SDL_SetWindowPosition(sdl_window, 0, 0);
+    SDL_SetRenderViewport(sdl_renderer, NULL);
+
+    ADM_info("[SDL3] Relative position: X=%d, Y=%d (Scaling=%.2f)\n", winfo.x, winfo.y, winfo.scalingFactor);
+    ADM_info("[SDL3] Opaque pointer (Surface): %p\n", winfo.windowOpaquePointer);
 
     sdl_texture = SDL_CreateTexture(sdl_renderer, SDL_PIXELFORMAT_YV12, SDL_TEXTUREACCESS_STREAMING, w, h);
     if (!sdl_texture)
@@ -201,6 +223,8 @@ bool sdl3RenderImpl::init(GUI_WindowInfo *window, uint32_t w, uint32_t h, float 
 
     ADM_info("[SDL3] Setting final size\n");
     changeZoom(zoom);
+    SDL_RenderClear(sdl_renderer);
+    SDL_RenderPresent(sdl_renderer);
     ADM_info("[SDL3] All init done.\n");
     return true;
 }
@@ -213,16 +237,8 @@ bool sdl3RenderImpl::cleanup()
         SDL_DestroyTexture(sdl_texture);
         sdl_texture = NULL;
     }
-    if (sdl_renderer)
-    {
-        SDL_DestroyRenderer(sdl_renderer);
-        sdl_renderer = NULL;
-    }
-    if (sdl_window)
-    {
-        SDL_DestroyWindow(sdl_window);
-        sdl_window = NULL;
-    }
+    // Window and renderer are persistent, they will be cleaned up by the next init if surface changes
+    // or eventually on exit by SDL_Quit.
     return true;
 }
 
@@ -262,8 +278,10 @@ bool sdl3RenderImpl::changeZoom(float newZoom)
     if (sdl_renderer)
     {
         float scaleX = (float)displayWidth / (float)imageWidth;
-        float scaleY = (float)displayWidth / (float)imageHeight;
+        float scaleY = (float)displayHeight / (float)imageHeight;
 
+        ADM_info("[SDL3] changeZoom: scaleX=%.2f, scaleY=%.2f (disp %ux%u, img %ux%u)\n", scaleX, scaleY, displayWidth,
+                 displayHeight, imageWidth, imageHeight);
         SDL_SetRenderScale(sdl_renderer, scaleX, scaleY);
         // Do not call SDL_SetWindowSize, as Qt manages the window boundaries
         // and calling it messes up the widget layout (vertical offset) on some platforms (Wayland).
@@ -274,5 +292,5 @@ bool sdl3RenderImpl::changeZoom(float newZoom)
 
 const char *sdl3RenderImpl::getName()
 {
-    return "SDL 3.0 HW";
+    return "SDL 3.0";
 }
