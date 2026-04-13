@@ -765,38 +765,32 @@ uint8_t mkvHeader::indexClusters(ADM_ebml_file *parser)
     const char *ss;
     uint64_t pos;
     uint8_t res=1;
-    bool indexOnDisk = true;
-    bool indexAllowOverwrite = true;
-    bool memOnly = false;
 
-    uint32_t indexingFlags = 0;
+    ADM_indexingType idxt = ADM_IDX_WRITE_TO_DISK;
+    bool indexAllowOverwrite = true;
+    uint32_t indexingFlags = ADM_IDX_FLAGS_DEFAULT;
+
     if (prefs->get(INDEXING_INDEXING_FLAGS, &indexingFlags))
     {
         indexingFlags >>= ADM_IDX_FLAGS_OFFSET_MATROSKA;
         if (!(indexingFlags & ADM_IDX_FLAG_WRITE_INDEX_FILE))
         {
-            indexOnDisk = false;
+            idxt = ADM_IDX_USE_EXISTING;
         }
         if (indexingFlags & ADM_IDX_FLAG_IGNORE_INDEX_FILE)
         {
-            indexOnDisk = false;
-            memOnly = true;
+            idxt = ADM_IDX_MEMFILE_ONLY;
             ADM_info("Mem-only indexing.\n");
         }
     }
 
     if (NULL != getenv("ADM_NOINDEX_MKV") && !strncmp(getenv("ADM_NOINDEX_MKV"), "1", 1))
-        indexOnDisk = false;
+        idxt = ADM_IDX_MEMFILE_ONLY;
 
-    if (!memOnly)
+    if (idxt != ADM_IDX_MEMFILE_ONLY && loadIndex(_idxName, parser->getFileSize()))
     {
-        if (NULL != getenv("ADM_MKV_INDEX_ALLOW_OVERWRITE") && !strncmp(getenv("ADM_MKV_INDEX_ALLOW_OVERWRITE"), "0", 1))
-            indexAllowOverwrite = false;
-        if (loadIndex(_idxName, parser->getFileSize()))
-        {
-            printf("[MKV] Video track indexing loaded from \"%s\"\n", _idxName.c_str());
-            return ADM_OK;
-        }
+        printf("[MKV] Video track index loaded from \"%s\"\n", _idxName.c_str());
+        return ADM_OK;
     }
 
     mkvIndex tmpCluster;
@@ -873,8 +867,10 @@ tryAgain:
     _work = NULL;
     //ADM_info("[MKV] Found %u clusters\n",(int)_clusters.size());
 
-    if (indexOnDisk)
+    if (idxt == ADM_IDX_WRITE_TO_DISK)
     {
+        if (NULL != getenv("ADM_MKV_INDEX_ALLOW_OVERWRITE") && !strncmp(getenv("ADM_MKV_INDEX_ALLOW_OVERWRITE"), "0", 1))
+            indexAllowOverwrite = false;
         if ((res == ADM_OK) && (!!VIDEO.index.size()))
         {
             saveIndex(_idxName, parser->getFileSize(), indexAllowOverwrite);
