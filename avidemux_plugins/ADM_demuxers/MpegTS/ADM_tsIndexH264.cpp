@@ -216,7 +216,7 @@ bool TsIndexerH264::findH264SPS(tsPacketLinearTracker *pkt,TSVideo &video)
     \fn run
     \brief Index H264 stream
 */
-uint8_t TsIndexerH264::run(const char *file, ADM_TS_TRACK *videoTrac)
+uint8_t TsIndexerH264::run(const char *file, ADM_TS_TRACK *videoTrac, bool memOnly)
 {
     bool seq_found=false;
     bool firstSps=true;
@@ -240,17 +240,23 @@ uint8_t TsIndexerH264::run(const char *file, ADM_TS_TRACK *videoTrac)
 
     memset(&data,0,sizeof(data));
     data.picStructure=pictureFrame;
-    string indexName=string(file);
-    indexName=indexName+string(".idx2");
-    index=qfopen(indexName,(const char*)"wt",true);
+    string indexName = file;
+    indexName += ".idx2";
 
-    if(!index)
+    index = memOnly ? NULL : qfopen(indexName,"wt",true);
+    if (!index)
     {
-        ADM_error("[TsIndexerH264] Cannot create %s\n",indexName.c_str());
-        mFile=mfopen(indexName,"wt");
+        if (memOnly)
+            ADM_info("Forcing in-memory indexing.\n");
+        else
+            ADM_warning("Cannot create index file \"%s\"\n", indexName.c_str());
+        mFile = mfopen(indexName,"wt");
         if (!mFile)
         {
-            printf("[TsIndexerH264] Cannot create memFile either\n");
+            if (memOnly)
+                ADM_error("Cannot create memFile!\n");
+            else
+                ADM_error("Cannot create memFile either.\n");
             return 0;
         }
     }

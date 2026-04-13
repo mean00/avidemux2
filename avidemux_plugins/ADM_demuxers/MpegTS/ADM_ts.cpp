@@ -21,33 +21,60 @@
 #include "ADM_indexFile.h"
 #include "ADM_ts.h"
 #include "ADM_videoInfoExtractor.h"
+#include "prefs.h"
 
 #define MY_CLASS tsHeader
 #include "ADM_coreDemuxerMpegTemplate.cpp.h"
 
-extern uint8_t tsIndexer(const char *file);
+extern uint8_t tsIndexer(const char *file, bool memOnly);
 
 /**
-      \fn open
-      \brief open the flv file, gather infos and build index(es).
+    \fn open
+    \brief Wrapper for openInternal to query preferences in a single location.
 */
-
 uint8_t tsHeader::open(const char *name)
+{
+    ADM_indexingType idxt = ADM_IDX_WRITE_TO_DISK;
+    uint32_t indexingFlags = ADM_IDX_FLAGS_DEFAULT;
+
+    if (prefs->get(INDEXING_INDEXING_FLAGS, &indexingFlags))
+    {
+        indexingFlags >>= ADM_IDX_FLAGS_OFFSET_MPEGTS;
+        if (!(indexingFlags & ADM_IDX_FLAG_WRITE_INDEX_FILE))
+        {
+            idxt = ADM_IDX_USE_EXISTING;
+        }
+        if (indexingFlags & ADM_IDX_FLAG_IGNORE_INDEX_FILE)
+        {
+            idxt = ADM_IDX_MEMFILE_ONLY;
+            ADM_info("Mem-only indexing.\n");
+        }
+    }
+
+    return openInternal(name, idxt);
+}
+
+/**
+    \fn openInternal
+    \brief Open given MPEG-TS file, gather infos and build index(es).
+*/
+uint8_t tsHeader::openInternal(const char *name, ADM_indexingType &strategy)
 {
     char *idxName=(char *)malloc(strlen(name)+6);
     uint8_t r=1;
 
     sprintf(idxName,"%s.idx2",name);
     ListOfIndexFiles.push_back(idxName);
-    if(!ADM_fileExist(idxName))
-        r=tsIndexer(name);
+
+    if(strategy == ADM_IDX_MEMFILE_ONLY || !ADM_fileExist(idxName))
+        r = tsIndexer(name, strategy != ADM_IDX_WRITE_TO_DISK);
     if(r!=ADM_OK)
     {
         if(r==ADM_IGN)
             ADM_warning("Indexing cancelled by the user, deleting the index file. Bye.\n");
         if(!r)
             ADM_error("Indexing of %s failed, aborting\n",name);
-        if(ADM_fileExist(idxName) && !ADM_eraseFile(idxName))
+        if(strategy == ADM_IDX_WRITE_TO_DISK && ADM_fileExist(idxName) && !ADM_eraseFile(idxName))
             ADM_warning("Could not delete %s\n",idxName);
         free(idxName);
         return r;
@@ -61,9 +88,9 @@ uint8_t tsHeader::open(const char *name)
     r=0;
 
     indexFile index;
-    if(!index.open(idxName))
+    if(!index.open(idxName, strategy == ADM_IDX_MEMFILE_ONLY))
     {
-        printf("[tsDemux] Cannot open index file %s\n",idxName);
+        printf("[tsDemux] Cannot open %s file %s\n", idxName, (strategy == ADM_IDX_MEMFILE_ONLY) ? "in-memory index" : "index", idxName);
         free(idxName);
         return false;
     }
@@ -82,6 +109,12 @@ uint8_t tsHeader::open(const char *name)
     version=index.getAsUint32("Version");
     if(version!=ADM_INDEX_FILE_VERSION)
     {
+        ADM_warning("Index file version mismatch, expected %" PRIu32", got %" PRIu32"\n", ADM_INDEX_FILE_VERSION, version);
+        if (strategy == ADM_IDX_MEMFILE_ONLY)
+        {
+            ADM_error("Index file version mismatch despite in-memory indexing, bailing out.\n");
+            goto abt;
+        }
         if(GUI_Question(QT_TRANSLATE_NOOP("tsdemuxer","This file's index has been created with an older version of avidemux.\nThe file must be re-indexed. Proceed?")))
             reindex=true;
         goto abt;
@@ -144,16 +177,25 @@ uint8_t tsHeader::open(const char *name)
     }
 abt:
     index.close();
-    if(reindex)
+    if (reindex && strategy != ADM_IDX_MEMFILE_ONLY)
     {
-        uint8_t success=ADM_eraseFile(idxName);
-        free(idxName);
-        if(success)
-            r=open(name);
+        uint8_t success = 1;
+        if (strategy == ADM_IDX_WRITE_TO_DISK)
+            success = ADM_eraseFile(idxName);
         else
-            ADM_error("Can't delete old index file.\n");
-    }else
+            strategy = ADM_IDX_MEMFILE_ONLY;
         free(idxName);
+        if (success)
+        {
+            r = openInternal(name, strategy);
+        } else
+        {
+            ADM_error("Can't delete old index file.\n");
+        }
+    } else
+    {
+        free(idxName);
+    }
     printf("[tsDemuxer] open() returned %d\n",r);
     return r;
 }

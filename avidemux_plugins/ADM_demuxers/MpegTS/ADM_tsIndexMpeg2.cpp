@@ -44,7 +44,7 @@ static const uint32_t FPS[16]={
 /**
     \fn runMpeg2
 */  
-uint8_t TsIndexerMpeg2::run(const char *file,ADM_TS_TRACK *videoTrac)
+uint8_t TsIndexerMpeg2::run(const char *file,ADM_TS_TRACK *videoTrac, bool memOnly)
 {
 uint32_t temporal_ref,val;
 bool seq_found=false;
@@ -69,21 +69,28 @@ uint8_t result=1;
 
     memset(&data,0,sizeof(data));
 
-    string indexName=string(file);
-    indexName=indexName+string(".idx2");
+    string indexName = file;
+    indexName =+ ".idx2";
     index=qfopen(indexName,"wt",true);
 
-    if(!index)
+    index = memOnly ? NULL : qfopen(indexName,"wt",true);
+    if (!index)
     {
-        printf("[TsIndexerMpeg2] Cannot create %s\n",indexName.c_str());
-        mFile=mfopen(indexName,"wt");
+        if (memOnly)
+            ADM_info("Forcing in-memory indexing.\n");
+        else
+            ADM_warning("Cannot create index file \"%s\"\n", indexName.c_str());
+        mFile = mfopen(indexName,"wt");
         if (!mFile)
         {
-            printf("[TsIndexerMpeg2] Cannot create memFile either\n");
+            if (memOnly)
+                ADM_error("Cannot create memFile!\n");
+            else
+                ADM_error("Cannot create memFile either.\n");
             return 0;
         }
     }
-    
+
     int append=0;
 #ifdef ASK_APPEND_SEQUENCED
     append=1;

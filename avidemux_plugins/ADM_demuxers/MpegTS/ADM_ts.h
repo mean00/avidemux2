@@ -24,6 +24,7 @@
 #include "ADM_audioStream.h"
 #include "dmx_io.h"
 #include "ADM_indexFile.h"
+#include "ADM_indexingFlags.h"
 #include "dmxTSPacket.h"
 #include <vector>
 #include "ADM_coreDemuxerMpeg.h"
@@ -113,29 +114,32 @@ public:
 class tsHeader         :public vidHeader
 {
   protected:
-    
-    bool    fieldEncoded;
-    bool    readVideo(indexFile *index);
-    bool    readAudio(indexFile *index,const char *name);
-    bool    readIndex(indexFile *index);
-
-    bool    processVideoIndex(char *buffer);
-    bool    processAudioIndex(char *buffer);
-
-    std::vector <dmxFrame *> ListOfFrames;
-    std::vector <std::string> ListOfIndexFiles;
-    fileParser      parser;
-    uint32_t       lastFrame;
-    tsPacketLinear *tsPacket;
-    uint64_t        timeConvert(uint64_t x);
-    bool            updatePtsDts(void);
-    bool            updateIdr(void);
+    uint32_t        videoPid;
+    uint32_t        lastFrame;
+    bool            fieldEncoded;
     bool            videoNeedEscaping;
     uint64_t        sizeOfVideoInBytes;
     uint64_t        videoDuration; // cached value in microseconds
-protected:
-    vector <ADM_tsTrackDescriptor *>listOfAudioTracks;
-    uint32_t        videoPid;             
+
+    std::vector <dmxFrame *> ListOfFrames;
+    std::vector <std::string> ListOfIndexFiles;
+    std::vector <ADM_tsTrackDescriptor *> listOfAudioTracks;
+    fileParser      parser;
+    tsPacketLinear  *tsPacket;
+
+    uint8_t         openInternal(const char *name, ADM_indexingType &strategy);
+
+    bool            readVideo(indexFile *index);
+    bool            readAudio(indexFile *index, const char *name);
+    bool            readIndex(indexFile *index);
+
+    bool            processVideoIndex(char *buffer);
+    bool            processAudioIndex(char *buffer);
+
+    uint64_t        timeConvert(uint64_t x);
+    bool            updatePtsDts(void);
+    bool            updateIdr(void);
+
   public:
 
 

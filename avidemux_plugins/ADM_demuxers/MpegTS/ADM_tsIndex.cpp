@@ -45,7 +45,7 @@ static const uint32_t FPS[16]={
       \fn TsIndexer 
       \brief main indexing loop for mpeg2 payload
 */
-uint8_t   tsIndexer(const char *file)
+uint8_t tsIndexer(const char *file, bool memOnly)
 {
     uint8_t r;
     ADM_TS_TRACK *tracks;
@@ -109,7 +109,7 @@ uint8_t   tsIndexer(const char *file)
         r=0;
     }else
     {
-        r=dx->run( file,&(tracks[0]));
+        r=dx->run(file, &(tracks[0]), memOnly);
         delete dx;
         dx=NULL;
     }

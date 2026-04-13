@@ -26,7 +26,7 @@ static const uint32_t  VC1_ar[16][2] = {  // From VLC
     \fn runVC1
     \brief Index VC1 stream
 */  
-uint8_t TsIndexerVC1::run(const char *file,ADM_TS_TRACK *videoTrac)
+uint8_t TsIndexerVC1::run(const char *file,ADM_TS_TRACK *videoTrac, bool memOnly)
 {
 uint32_t temporal_ref,val;
 uint8_t buffer[50*1024];
@@ -49,21 +49,28 @@ dmxPacketInfo info;
 
     memset(&data,0,sizeof(data));
     data.picStructure=pictureFrame;
-    
-    string indexName=string(file);
-    indexName=indexName+string(".idx2");
-    index=qfopen(indexName,"wt",true);
 
-    if(!index)
+    string indexName = file;
+    indexName += ".idx2";
+
+    index = memOnly ? NULL : qfopen(indexName,"wt",true);
+    if (!index)
     {
-        printf("[TsIndex] Cannot create %s\n",indexName.c_str());
-        mFile=mfopen(indexName,"wt");
+        if (memOnly)
+            ADM_info("Forcing in-memory indexing.\n");
+        else
+            ADM_warning("Cannot create index file \"%s\"\n", indexName.c_str());
+        mFile = mfopen(indexName,"wt");
         if (!mFile)
         {
-            printf("[TsIndex] Cannot create memFile either\n");
-            return false;
+            if (memOnly)
+                ADM_error("Cannot create memFile!\n");
+            else
+                ADM_error("Cannot create memFile either.\n");
+            return 0;
         }
     }
+
     writeSystem(file,false);
     pkt=new tsPacketLinearTracker(videoTrac->trackPid, audioTracks);
     
