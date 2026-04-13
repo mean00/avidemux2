@@ -136,7 +136,6 @@ bool sdl3RenderImpl::init(GUI_WindowInfo *window, uint32_t w, uint32_t h, float 
     if (admDetectQtEngine() == QT_WAYLAND_ENGINE)
     {
         SDL_SetHint(SDL_HINT_VIDEO_DRIVER, "wayland");
-        SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl,opengles2,software");
         SDL_SetHint(SDL_HINT_VIDEO_WAYLAND_ALLOW_LIBDECOR, "0");
         if (window->display)
         {
@@ -144,6 +143,7 @@ bool sdl3RenderImpl::init(GUI_WindowInfo *window, uint32_t w, uint32_t h, float 
                                    window->display);
         }
     }
+    SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl,opengles2,software");
 
     if (!SDL_InitSubSystem(SDL_INIT_VIDEO))
     {
@@ -155,16 +155,15 @@ bool sdl3RenderImpl::init(GUI_WindowInfo *window, uint32_t w, uint32_t h, float 
 
     sdl_running = true;
 
-    if (admDetectQtEngine() == QT_WAYLAND_ENGINE)
-    {
-        ADM_info("[SDL3] Using Wayland backend for borderless window\n");
-    }
-
     ADM_info("[SDL3] Relative position: X=%d, Y=%d (Scaling=%.2f)\n", winfo.x, winfo.y, winfo.scalingFactor);
 
     SDL_PropertiesID props = SDL_CreateProperties();
-    SDL_SetPointerProperty(props, SDL_PROP_WINDOW_CREATE_WAYLAND_WL_SURFACE_POINTER, winfo.windowOpaquePointer);
-    SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_WAYLAND_SURFACE_ROLE_CUSTOM_BOOLEAN, true);
+    if (admDetectQtEngine() == QT_WAYLAND_ENGINE)
+    {
+        ADM_info("[SDL3] Using Wayland backend for borderless window\n");
+        SDL_SetPointerProperty(props, SDL_PROP_WINDOW_CREATE_WAYLAND_WL_SURFACE_POINTER, winfo.windowOpaquePointer);
+        SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_WAYLAND_SURFACE_ROLE_CUSTOM_BOOLEAN, true);
+    }
     SDL_SetStringProperty(props, SDL_PROP_WINDOW_CREATE_TITLE_STRING, "avidemux_sdl3");
     SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, (int)w);
     SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, (int)h);
@@ -184,6 +183,7 @@ bool sdl3RenderImpl::init(GUI_WindowInfo *window, uint32_t w, uint32_t h, float 
     sdl_renderer = SDL_CreateRenderer(sdl_window, NULL);
     if (!sdl_renderer)
     {
+        ADM_warning("[SDL3] Renderer creation failed: %s\n", SDL_GetError());
         cleanup();
         return false;
     }
