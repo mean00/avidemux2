@@ -384,30 +384,29 @@ uint8_t    MP4Header::open(const char *name)
         
         _idxName = name;
         _idxName += ".idxb";
-        bool indexOnDisk = true;
-        bool indexAllowOverwrite = true;
-        bool memOnly = false;
 
-        uint32_t indexingFlags = 0;
+        ADM_indexingType idxt = ADM_IDX_WRITE_TO_DISK;
+        bool indexAllowOverwrite = true;
+        uint32_t indexingFlags = ADM_IDX_FLAGS_DEFAULT;
+
         if (prefs->get(INDEXING_INDEXING_FLAGS, &indexingFlags))
         {
             indexingFlags >>= ADM_IDX_FLAGS_OFFSET_MP4;
             if (!(indexingFlags & ADM_IDX_FLAG_WRITE_INDEX_FILE))
             {
-                indexOnDisk = false;
+                idxt = ADM_IDX_USE_EXISTING;
             }
             if (indexingFlags & ADM_IDX_FLAG_IGNORE_INDEX_FILE)
             {
-                indexOnDisk = false;
-                memOnly = true;
+                idxt = ADM_IDX_MEMFILE_ONLY;
                 ADM_info("Mem-only indexing.\n");
             }
         }
 
         if (NULL != getenv("ADM_NOINDEX_MP4") && !strncmp(getenv("ADM_NOINDEX_MP4"), "1", 1))
-            indexOnDisk = false;
+            idxt = ADM_IDX_MEMFILE_ONLY;
 
-        if (indexOnDisk)
+        if (idxt == ADM_IDX_WRITE_TO_DISK)
         {
             if (NULL != getenv("ADM_MP4_INDEX_ALLOW_OVERWRITE") && !strncmp(getenv("ADM_MP4_INDEX_ALLOW_OVERWRITE"), "0", 1))
                 indexAllowOverwrite = false;
@@ -543,7 +542,7 @@ uint8_t    MP4Header::open(const char *name)
             if(extractSPSInfo_mp4Header(VDEO.extraData,VDEO.extraDataSize,&info))
             {
                 bool indexLoadedFromDisk = false;
-                if (!memOnly)
+                if (idxt != ADM_IDX_MEMFILE_ONLY)
                 {
                     if (loadIndex(_idxName, fileSize))
                     {
@@ -667,7 +666,7 @@ uint8_t    MP4Header::open(const char *name)
                         ADM_info("Field encoded H.264 stream detected, # fields: %u\n",fields);
                     else
                         ADM_info("Probably a frame encoded H.264 stream.\n");
-                    if (indexOnDisk && !cancelled)
+                    if (idxt == ADM_IDX_WRITE_TO_DISK && !cancelled)
                     {
                         saveIndex(_idxName, fileSize, indexAllowOverwrite);
                     }
@@ -689,7 +688,7 @@ uint8_t    MP4Header::open(const char *name)
                     _video_bih.biHeight = _mainaviheader.dwHeight = info.height;
                 }
                 bool indexLoadedFromDisk = false;
-                if (!memOnly)
+                if (idxt != ADM_IDX_MEMFILE_ONLY)
                 {
                     if (loadIndex(_idxName, fileSize))
                     {
@@ -761,7 +760,7 @@ uint8_t    MP4Header::open(const char *name)
                     work=NULL;
                     delete [] bfer;
                     bfer=NULL;
-                    if (indexOnDisk && !cancelled)
+                    if (idxt == ADM_IDX_WRITE_TO_DISK && !cancelled)
                     {
                         saveIndex(_idxName, fileSize, indexAllowOverwrite);
                     }
