@@ -40,7 +40,10 @@
 //
 #ifndef _WIN32
 // Linux
+#if defined(HAVE_QPLATFORM_NATIVE)
+#define USE_NATIVE_API 
 #include <QtGui/qpa/qplatformnativeinterface.h>
+#endif
 #endif
 #endif
 //
@@ -311,11 +314,15 @@ static void systemWindowInfo_once()
             if (myDisplay)
             {
                 QPlatformNativeInterface *native = currentQApplication()->platformNativeInterface();
+#ifdef USE_NATIVE_API
                 struct wl_surface *wlSurface = static_cast<struct wl_surface *>(
                     native->nativeResourceForWindow("surface", videoWindow->windowHandle()));
                 ADM_info("[DEBUG] videoWindow=%p, handle=%p, wl_surface=%p\n", videoWindow, videoWindow->windowHandle(),
                          wlSurface);
                 myWindowOpaque = wlSurface;
+#else
+                myWindowOpaque = NULL;
+#endif
             }
             else
                 myWindowOpaque = NULL;
