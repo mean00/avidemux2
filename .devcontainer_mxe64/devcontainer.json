@@ -37,6 +37,6 @@
     "devpod": {
       "containerInactivityTimeout": "90m"
     }
-  },
-  "postCreateCommand": "bash .devcontainer_mxe64/post-create.sh"
+  }
+/*  "postCreateCommand": "bash .devcontainer_mxe64/post-create.sh" */
 }
