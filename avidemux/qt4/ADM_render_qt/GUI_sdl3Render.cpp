@@ -133,7 +133,8 @@ bool sdl3RenderImpl::init_sdl_window_once(GUI_WindowInfo *window)
 
     SDL_SetLogOutputFunction(SDL_Logger, NULL);
     // Bridge with qt6 window
-    if (admDetectQtEngine() == QT_WAYLAND_ENGINE)
+    QT_LINUX_WINDOW_ENGINE engine = admDetectQtEngine();
+    if (engine == QT_WAYLAND_ENGINE)
     {
         SDL_SetHint(SDL_HINT_VIDEO_DRIVER, "wayland");
         SDL_SetHint(SDL_HINT_VIDEO_WAYLAND_ALLOW_LIBDECOR, "0");
@@ -153,29 +154,47 @@ bool sdl3RenderImpl::init_sdl_window_once(GUI_WindowInfo *window)
     }
     ADM_info("[SDL3] Video subsystem init ok, using driver: %s\n", SDL_GetCurrentVideoDriver());
     SDL_PropertiesID props = SDL_CreateProperties();
-    if (admDetectQtEngine() == QT_WAYLAND_ENGINE)
-    {
-        ADM_info("[SDL3] Using Wayland backend for borderless window\n");
-        SDL_SetPointerProperty(props, SDL_PROP_WINDOW_CREATE_WAYLAND_WL_SURFACE_POINTER, window->windowOpaquePointer);
-        SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_WAYLAND_SURFACE_ROLE_CUSTOM_BOOLEAN, true);
-    }
     SDL_SetStringProperty(props, SDL_PROP_WINDOW_CREATE_TITLE_STRING, "avidemux_sdl3");
+    // SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_HIGH_PIXEL_DENSITY_BOOLEAN, true);
     // SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, (int)w);
     // SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, (int)h);
-    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_X_NUMBER, 0);
-    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_Y_NUMBER, 0);
+    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_X_NUMBER, 00);
+    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_Y_NUMBER, 00);
     SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_BORDERLESS_BOOLEAN, true);
-    SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_OPENGL_BOOLEAN, true);
-
+    switch (engine)
+    {
+    case QT_WAYLAND_ENGINE:
+        ADM_info("[SDL3] Using Wayland backend for borderless window\n");
+#if 1
+        SDL_SetPointerProperty(props, SDL_PROP_WINDOW_CREATE_PARENT_POINTER, window->windowOpaquePointer);
+        SDL_SetHint(SDL_HINT_VIDEO_WAYLAND_ALLOW_LIBDECOR, "0");
+#else
+        SDL_SetPointerProperty(props, SDL_PROP_WINDOW_CREATE_WAYLAND_WL_SURFACE_POINTER, window->windowOpaquePointer);
+        SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_OPENGL_BOOLEAN, true);
+        SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_WAYLAND_SURFACE_ROLE_CUSTOM_BOOLEAN, true);
+#endif
+        break;
+    case QT_X11_ENGINE:
+        ADM_info("[SDL3] Using X11 backend for borderless window\n");
+        SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_X11_WINDOW_NUMBER, winfo.systemWindowId);
+        SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_OPENGL_BOOLEAN, true);
+        break;
+    default:
+#ifdef _WIN32
+        ADM_info("[SDL3] Using WIN32 backend for borderless window\n");
+        SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_OPENGL_BOOLEAN, true);
+        SDL_SetPointerProperty(props, SDL_PROP_WINDOW_CREATE_WIN32_HWND_POINTER, (void *)winfo.systemWindowId);
+#endif
+        break;
+    }
     sdl_window = SDL_CreateWindowWithProperties(props);
     SDL_DestroyProperties(props);
-
+    SDL_SetWindowPosition(sdl_window, 0, 0);
     if (!sdl_window)
     {
         ADM_warning("[SDL3] Window creation failed: %s\n", SDL_GetError());
         return false;
     }
-
     ADM_info("[SDL3] Creating renderer\n");
     sdl_renderer = SDL_CreateRenderer(sdl_window, NULL);
     if (!sdl_renderer)
@@ -186,6 +205,7 @@ bool sdl3RenderImpl::init_sdl_window_once(GUI_WindowInfo *window)
     }
     sdl3_video_initialized = true;
     SDL_SetRenderScale(sdl_renderer, 1.0f, 1.0f);
+
     return true;
 }
 /*

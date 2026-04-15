@@ -243,7 +243,7 @@ void UI_updateDrawWindowSize(void *win, uint32_t w, uint32_t h)
  *
  */
 static void *myDisplay = NULL;
-static int mySystemWindowId = 0;
+static uint64_t mySystemWindowId = 0;
 static void *myWindowOpaque = NULL;
 /*
  * Apple, let them null
@@ -264,77 +264,57 @@ static void systemWindowInfo_once()
 }
 
 #else // linux
+typedef struct _XDisplay Display;
+extern "C" Display *XOpenDisplay(const char *display_name);
 static void systemWindowInfo_once()
 {
-#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
-    if (!myDisplay)
-        myDisplay = XOpenDisplay(NULL);
-    mySystemWindowId = videoWindow->winId();
-#else
+    if (myDisplay)
+        return;
+    // Always refresh surface and system IDs
+    switch (admDetectQtEngine())
     {
-        if (!myDisplay)
+    case QT_X11_ENGINE: {
+        auto *x11App = qApp->nativeInterface<QNativeInterface::QX11Application>();
+
+        if (x11App)
         {
-            ADM_info("Running on platform %s\n", currentQApplication()->platformName().toLatin1().data());
-            switch (admDetectQtEngine())
-            {
-            case QT_X11_ENGINE: {
-                auto x11 = currentQApplication()->nativeInterface<QNativeInterface::QX11Application>();
-                if (x11)
-                {
-                    ADM_info("found x11 display\n");
-                    myDisplay = x11->display();
-                }
-            }
-            break;
-            case QT_WAYLAND_ENGINE: {
-                auto wayland = currentQApplication()->nativeInterface<QNativeInterface::QWaylandApplication>();
-                if (wayland)
-                {
-                    ADM_info("found wayland display\n");
-                    myDisplay = wayland->display();
-                }
-            }
-            break;
-            default:
-                break;
-            }
+            // To get the Xlib Display pointer (Display*)
+            myDisplay = x11App->display();
         }
-        // Always refresh surface and system IDs
-        switch (admDetectQtEngine())
+        else
         {
-        case QT_X11_ENGINE:
-            mySystemWindowId = videoWindow->winId();
-            break;
-        case QT_WAYLAND_ENGINE: {
-            if (!videoWindow->testAttribute(Qt::WA_NativeWindow))
-            {
-                videoWindow->setAttribute(Qt::WA_NativeWindow);
-            }
-            mySystemWindowId = 0;
-            if (myDisplay)
-            {
-                QPlatformNativeInterface *native = currentQApplication()->platformNativeInterface();
-#ifdef USE_NATIVE_API
-                struct wl_surface *wlSurface = static_cast<struct wl_surface *>(
-                    native->nativeResourceForWindow("surface", videoWindow->windowHandle()));
-                ADM_info("[DEBUG] videoWindow=%p, handle=%p, wl_surface=%p\n", videoWindow, videoWindow->windowHandle(),
-                         wlSurface);
-                myWindowOpaque = wlSurface;
-#else
-                myWindowOpaque = NULL;
-#endif
-            }
-            else
-                myWindowOpaque = NULL;
+
+            myDisplay = XOpenDisplay(NULL);
         }
-        break;
-        default:
-            mySystemWindowId = 0;
-            myWindowOpaque = NULL;
-            break;
-        }
+        ADM_info("found x11 display\n");
+
+        mySystemWindowId = videoWindow->winId();
     }
+    break;
+    case QT_WAYLAND_ENGINE: {
+        mySystemWindowId = 0;
+        if (myDisplay)
+        {
+            QPlatformNativeInterface *native = currentQApplication()->platformNativeInterface();
+#ifdef USE_NATIVE_API
+            struct wl_surface *wlSurface = static_cast<struct wl_surface *>(
+                native->nativeResourceForWindow("surface", videoWindow->windowHandle()));
+            ADM_info("[DEBUG] videoWindow=%p, handle=%p, wl_surface=%p\n", videoWindow, videoWindow->windowHandle(),
+                     wlSurface);
+            myWindowOpaque = wlSurface;
+#else
+            myWindowOpaque = NULL;
 #endif
+        }
+        else
+            myWindowOpaque = NULL;
+    }
+    break;
+    default:
+        mySystemWindowId = 0;
+        myWindowOpaque = NULL;
+        break;
+    }
 }
 #endif
 /*
@@ -366,6 +346,7 @@ void UI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
     xinfo->scalingFactor = 1.;
     QPoint localPoint(0, 0);
     QPoint windowPoint;
+#if 0
     if (admDetectQtEngine() == QT_WAYLAND_ENGINE)
     {
         videoWindow->winId(); // Force handle creation
@@ -390,7 +371,8 @@ void UI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
         }
     }
     else
-        windowPoint = videoWindow->mapToGlobal(localPoint);
+#endif
+    windowPoint = videoWindow->mapToGlobal(localPoint);
     xinfo->x = windowPoint.x();
     xinfo->y = windowPoint.y();
     xinfo->width = displayW;
