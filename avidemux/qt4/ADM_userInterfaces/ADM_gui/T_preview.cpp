@@ -27,7 +27,8 @@
   #if !defined(__APPLE__)
     #include <QWindow>
     #if !defined(_WIN32)
-      extern "C" void *XOpenDisplay(char *);
+typedef struct _XDisplay Display;
+extern "C" Display *XOpenDisplay(const char *display_name);
     #endif
   #endif
 #else
