@@ -130,6 +130,14 @@ ADM_Qvideo::~ADM_Qvideo()
  */
 void ADM_Qvideo::paintEvent(QPaintEvent *ev)
 {
+    if (admDetectQtEngine() == QT_WAYLAND_ENGINE)
+    {
+        if (windowHandle() && window())
+        {
+            QPoint wp = mapTo(window(), QPoint(0, 0));
+            windowHandle()->setPosition(wp);
+        }
+    }
     // printf("Paint event\n");
     if (drawer)
     {
@@ -151,6 +159,21 @@ void ADM_Qvideo::paintEvent(QPaintEvent *ev)
     {
         renderExposeEventFromUI();
     }
+}
+
+bool ADM_Qvideo::eventFilter(QObject *obj, QEvent *event)
+{
+    if (admDetectQtEngine() == QT_WAYLAND_ENGINE)
+    {
+        if (event->type() == QEvent::Resize || event->type() == QEvent::Move || event->type() == QEvent::LayoutRequest)
+        {
+            if (windowHandle() && window())
+            {
+                windowHandle()->setPosition(mapTo(window(), QPoint(0, 0)));
+            }
+        }
+    }
+    return QWidget::eventFilter(obj, event);
 }
 /**
     \fn setADMSize
@@ -198,6 +221,17 @@ void ADM_Qvideo::setADMSize(int width, int height)
 void UI_QT4VideoWidget(QFrame *host)
 {
     videoWindow = new ADM_Qvideo(host);
+    if (admDetectQtEngine() == QT_WAYLAND_ENGINE)
+    {
+        videoWindow->winId();
+        if (videoWindow->windowHandle() && QuiMainWindows && QuiMainWindows->windowHandle())
+        {
+            videoWindow->windowHandle()->setParent(QuiMainWindows->windowHandle());
+            // Hook main window layout events to force Wayland subsurface alignment when parents dynamically map and
+            // shift
+            QuiMainWindows->installEventFilter(videoWindow);
+        }
+    }
     videoWindow->show();
 }
 //*************************
@@ -269,46 +303,55 @@ typedef struct _XDisplay Display;
 extern "C" Display *XOpenDisplay(const char *display_name);
 static void systemWindowInfo_once()
 {
-    if (myDisplay)
-        return;
     // Always refresh surface and system IDs
     switch (admDetectQtEngine())
     {
     case QT_X11_ENGINE: {
-        auto *x11App = qApp->nativeInterface<QNativeInterface::QX11Application>();
-
-        if (x11App)
+        if (!myDisplay)
         {
-            // To get the Xlib Display pointer (Display*)
-            myDisplay = x11App->display();
+            auto *x11App = qApp->nativeInterface<QNativeInterface::QX11Application>();
+            if (x11App)
+            {
+                myDisplay = x11App->display();
+            }
+            else
+            {
+                myDisplay = XOpenDisplay(NULL);
+            }
+            ADM_info("found x11 display\n");
         }
-        else
-        {
-
-            myDisplay = XOpenDisplay(NULL);
-        }
-        ADM_info("found x11 display\n");
-
         mySystemWindowId = videoWindow->winId();
     }
     break;
     case QT_WAYLAND_ENGINE: {
         mySystemWindowId = 0;
-        if (myDisplay)
-        {
-            QPlatformNativeInterface *native = currentQApplication()->platformNativeInterface();
+        QPlatformNativeInterface *native = currentQApplication()->platformNativeInterface();
 #ifdef USE_NATIVE_API
-            struct wl_surface *wlSurface = static_cast<struct wl_surface *>(
-                native->nativeResourceForWindow("surface", videoWindow->windowHandle()));
-            ADM_info("[DEBUG] videoWindow=%p, handle=%p, wl_surface=%p\n", videoWindow, videoWindow->windowHandle(),
-                     wlSurface);
-            myWindowOpaque = wlSurface;
-#else
-            myWindowOpaque = NULL;
-#endif
+        if (native && videoWindow)
+        {
+            videoWindow->winId(); // Force handle creation
+            if (videoWindow->windowHandle())
+            {
+                if (!myDisplay)
+                {
+                    myDisplay = native->nativeResourceForIntegration("display");
+                }
+                struct wl_surface *wlSurface = static_cast<struct wl_surface *>(
+                    native->nativeResourceForWindow("surface", videoWindow->windowHandle()));
+                myWindowOpaque = wlSurface;
+            }
+            else
+            {
+                myWindowOpaque = NULL;
+            }
         }
         else
+        {
             myWindowOpaque = NULL;
+        }
+#else
+        myWindowOpaque = NULL;
+#endif
     }
     break;
     default:
@@ -347,33 +390,20 @@ void UI_getWindowInfo(void *draw, GUI_WindowInfo *xinfo)
     xinfo->scalingFactor = 1.;
     QPoint localPoint(0, 0);
     QPoint windowPoint;
-#if 0
+
     if (admDetectQtEngine() == QT_WAYLAND_ENGINE)
     {
-        videoWindow->winId(); // Force handle creation
-        QMainWindow *mw = qobject_cast<QMainWindow *>(videoWindow->window());
-        QWidget *ref = mw ? mw->centralWidget() : videoWindow->window();
-        if (!ref)
-            ref = videoWindow->window();
-
-        QPoint pWindow = videoWindow->mapTo(videoWindow->window(), QPoint(0, 0));
+        windowPoint = videoWindow->mapTo(videoWindow->window(), localPoint);
         QWindow *handle = videoWindow->windowHandle();
-
-        // Calculate the workspace origin (below toolbars)
-        QPoint pWorkspace = ref->mapTo(videoWindow->window(), QPoint(0, 0));
-
-        // Use the X from the layout but anchor Y to the top of the central area
-        windowPoint = QPoint(pWindow.x(), pWorkspace.y());
-        ADM_info("[DEBUG] pWindow=(%d, %d), pWorkspace.y=%d, final windowPoint=(%d, %d)\n", pWindow.x(), pWindow.y(),
-                 pWorkspace.y(), windowPoint.x(), windowPoint.y());
         if (handle)
         {
             handle->setPosition(windowPoint);
         }
     }
     else
-#endif
-    windowPoint = videoWindow->mapToGlobal(localPoint);
+    {
+        windowPoint = videoWindow->mapToGlobal(localPoint);
+    }
     xinfo->x = windowPoint.x();
     xinfo->y = windowPoint.y();
     xinfo->width = displayW;

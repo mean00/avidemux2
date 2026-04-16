@@ -71,6 +71,7 @@ VideoRenderBase *spawnSdl3Render()
 static bool sdl3_video_initialized = false;
 static SDL_Window *sdl_window = NULL;
 static SDL_Renderer *sdl_renderer = NULL;
+static void *last_known_surface = nullptr;
 
 /**
  * static SDL logging
@@ -112,18 +113,25 @@ bool sdl3RenderImpl::stop(void)
 
 void sdl3RenderImpl::rescaleDisplay(void)
 {
-    double dw = displayWidth;
-    double dh = displayHeight;
-    dw *= winfo.scalingFactor;
-    dh *= winfo.scalingFactor;
-    displayWidth = (uint32_t)(dw + 0.5);
-    displayHeight = (uint32_t)(dh + 0.5);
+    // SDL3 natively expects window coordinates in Device Independent Pixels (DIPs).
+    // Mutating display limits with physical scalingFactor corrupts Wayland subsurface logic, projecting large offsets.
+    // displayWidth and displayHeight internally remain unscaled DIP values.
 }
 /*
  *
  */
 bool sdl3RenderImpl::init_sdl_window_once(GUI_WindowInfo *window)
 {
+    if (sdl_window && last_known_surface != window->windowOpaquePointer)
+    {
+        ADM_info("[SDL3] Surface changed! Recreating SDL window.\n");
+        cleanup();
+        if (sdl_window)
+            SDL_DestroyWindow(sdl_window);
+        sdl_window = nullptr;
+        sdl_renderer = nullptr;
+        sdl3_video_initialized = false;
+    }
     if (sdl3_video_initialized && sdl_window && sdl_renderer)
         return true;
 
@@ -165,18 +173,13 @@ bool sdl3RenderImpl::init_sdl_window_once(GUI_WindowInfo *window)
     {
     case QT_WAYLAND_ENGINE:
         ADM_info("[SDL3] Using Wayland backend for borderless window\n");
-#if 1
-        SDL_SetPointerProperty(props, SDL_PROP_WINDOW_CREATE_PARENT_POINTER, window->windowOpaquePointer);
-        SDL_SetHint(SDL_HINT_VIDEO_WAYLAND_ALLOW_LIBDECOR, "0");
-#else
         SDL_SetPointerProperty(props, SDL_PROP_WINDOW_CREATE_WAYLAND_WL_SURFACE_POINTER, window->windowOpaquePointer);
         SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_OPENGL_BOOLEAN, true);
         SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_WAYLAND_SURFACE_ROLE_CUSTOM_BOOLEAN, true);
-#endif
         break;
     case QT_X11_ENGINE:
         ADM_info("[SDL3] Using X11 backend for borderless window\n");
-        SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_X11_WINDOW_NUMBER, winfo.systemWindowId);
+        SDL_SetPointerProperty(props, SDL_PROP_WINDOW_CREATE_X11_WINDOW_NUMBER, (void *)winfo.systemWindowId);
         SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_OPENGL_BOOLEAN, true);
         break;
     default:
@@ -302,10 +305,9 @@ bool sdl3RenderImpl::changeZoom(float newZoom)
 
         ADM_info("[SDL3] changeZoom: scaleX=%.2f, scaleY=%.2f (disp %ux%u, img %ux%u)\n", scaleX, scaleY, displayWidth,
                  displayHeight, imageWidth, imageHeight);
-        SDL_SetRenderScale(sdl_renderer, scaleX, scaleY);
-        // Do not call SDL_SetWindowSize, as Qt manages the window boundaries
-        // and calling it messes up the widget layout (vertical offset) on some platforms (Wayland).
-        // SDL_SetWindowSize(sdl_window, displayWidth, displayHeight);
+        SDL_SetRenderScale(sdl_renderer, 1.0f, 1.0f);
+        // We must call SDL_SetWindowSize to resize the Wayland EGL buffer backing this window natively.
+        SDL_SetWindowSize(sdl_window, (int)displayWidth, (int)displayHeight);
     }
     return true;
 }
