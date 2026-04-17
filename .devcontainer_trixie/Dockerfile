@@ -42,7 +42,6 @@ RUN apt-get install -y \
     libglib2.0-0 \
     libncurses-dev \
     libpixman-1-0 \
-    libsdl2-2.0-0 \
     libslirp0 \
     libusb-1.0-0-dev \
     make \
@@ -91,6 +90,7 @@ RUN apt-get install -y \
     libopencore-amrwb-dev \
     libdca-dev \
     libfaad-dev  
+  RUN apt-get install  -y libsdl3-dev
 
     #libaften-dev
 

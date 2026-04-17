@@ -58,6 +58,7 @@ RUN apt-get install -y \
     libvpx-dev \
     libaom-dev \
     file \
+  && apt-get install -y libsdl3-dev \
   && apt-get autoremove -y \
   && rm -rf /var/lib/apt/lists/* \
   && update-alternatives --install /usr/bin/python python /usr/bin/python3 10 \

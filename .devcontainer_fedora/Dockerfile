@@ -39,6 +39,7 @@ RUN dnf -y  install   --skip-unavailable gcc \
   x264-devel \
   x265-devel
 RUN dnf -y install qt6-*{devel,doc}*
+RUN dnf -y install SDL3-devel 
 RUN dnf -y clean all
 
 RUN cd /tmp && git clone https://github.com/FFmpeg/nv-codec-headers.git && cd nv-codec-headers && make install
