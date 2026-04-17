@@ -482,20 +482,29 @@ uint8_t FileSel_SelectRead(const char *title, char *target, uint32_t max, const 
 */
 uint8_t FileSel_SelectDir(const char *title, char *target, uint32_t max, const char *source, const char *extension)
 {
-        QString fileName;
-        QFileDialog::Options options = QFileDialog::ShowDirsOnly;
+    QString start;
+    std::string lastRead;
+    if (source)
+    {
+        start = source;
+    } else
+    {
+        admCoreUtils::getLastReadFolder(lastRead);
+        if (lastRead.size())
+            start = lastRead.c_str();
+    }
 
-        fileName = QFileDialog::getExistingDirectory(fileSelGetParent(), title, source, options);
+    QString fileName = QFileDialog::getExistingDirectory(fileSelGetParent(), title, start, QFileDialog::ShowDirsOnly);
 
-        if (!fileName.isNull())
-        {
-                const char *s = fileName.toUtf8().constData();
-                strncpy(target, s, max);
-
-                return 1;
-        }
-
+    if (fileName.isNull())
         return 0;
+
+    const char *s = fileName.toUtf8().constData();
+    strncpy(target, s, max);
+    lastRead = s;
+    admCoreUtils::setLastReadFolder(lastRead);
+
+    return 1;
 }
 void GUI_FileSelWriteExtension(const char *label, const char *extension,SELFILE_CB cb)
 {
