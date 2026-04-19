@@ -71,6 +71,7 @@ RUN cd /tmp && git clone https://github.com/FFmpeg/nv-codec-headers.git && cd nv
 #
 #
 RUN apt-get install -y zsh neovim apt-file 
+RUN apt-get install -y qt6-base-private-dev
 #
 #
 RUN chsh  -s /usr/bin/zsh ubuntu
