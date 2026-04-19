@@ -60,35 +60,53 @@ RUN apt-get install -y \
     file \
   && apt-get install -y libsdl3-dev \
   && apt-get autoremove -y \
-  && rm -rf /var/lib/apt/lists/* \
   && update-alternatives --install /usr/bin/python python /usr/bin/python3 10 \
   && :
 
 RUN cd /tmp && git clone https://github.com/FFmpeg/nv-codec-headers.git && cd nv-codec-headers && make install
 
 
+#
+#
+RUN apt-get install -y zsh neovim apt-file qt6-base-private-dev
+#
+#
+RUN chsh  -s /usr/bin/zsh ubuntu
+RUN usermod -aG sudo ubuntu
+#
 RUN rm -f  /etc/apt/apt.conf.d/01proxy
-#
-#  Reuse Arm & Riscv toolchains
-#
+RUN apt-file update
+#RUN rm -rf /var/lib/apt/lists/* 
 
 CMD [ "/bin/bash" ]
 
 ###################################
 # Setup user env
 ###################################
+#
 USER ${USERNAME}
 RUN mkdir ~/.local &&  mkdir ~/.local/bin &&  mkdir ~/.cargo && mkdir ~/.cargo/bin
-RUN echo "export http_proxy=\"\"">> ~/.bashrc
-RUN echo "export https_proxy=\"\"">> ~/.bashrc
-RUN echo "export HTTP_PROXY=\"\"">> ~/.bashrc
-RUN echo "export HTTPS_PROXY=\"\"">> ~/.bashrc
 RUN echo "export PATH=\$PATH:\$HOME/.cargo/bin:\$HOME/.local/bin"  >> ~/.bashrc
-RUN echo ".  \$HOME/.cargo/env" >> /home/$USERNAME/.bashrc
-ENV http_proxy=""
-ENV https_proxy=""
-ENV HTTP_PROXY=""
-ENV HTTPS_PROXY=""
+#
+RUN cat <<EOF > /home/ubuntu/.zshrc
+# History Settings
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+setopt appendhistory
+setopt sharehistory
+
+# Completion System
+autoload -Uz compinit && compinit
+
+# Prompt
+PROMPT='%F{cyan}[%n@docker]%f %F{blue}%~%f %# '
+
+# Aliases
+alias ls='ls --color=auto'
+alias ll='ls -lah'
+export TERM='linux'
+EOF
 #
 
 
