@@ -69,18 +69,17 @@ makeLink("Resources/lib"  "." ${BUNDLE}/Contents/)
 #
 MESSAGE(STATUS "* Copying plugins *")
 #
-FILE(COPY "${QT_PLUGINS_DIR}/platforms" DESTINATION "${BUNDLE}/Contents/PlugIns/" DIRECTORY_PERMISSIONS
-    OWNER_WRITE OWNER_READ OWNER_EXECUTE
-    GROUP_WRITE GROUP_READ GROUP_EXECUTE
-    WORLD_WRITE WORLD_READ WORLD_EXECUTE
-    FOLLOW_SYMLINK_CHAIN)
-IF(EXISTS "${QT_PLUGINS_DIR}/styles")
-  FILE(COPY "${QT_PLUGINS_DIR}/styles" DESTINATION "${BUNDLE}/Contents/PlugIns/" DIRECTORY_PERMISSIONS
-        OWNER_WRITE OWNER_READ OWNER_EXECUTE
-        GROUP_WRITE GROUP_READ GROUP_EXECUTE
-        WORLD_WRITE WORLD_READ WORLD_EXECUTE
-        FOLLOW_SYMLINK_CHAIN)
-ENDIF()
+FILE(MAKE_DIRECTORY "${BUNDLE}/Contents/PlugIns/platforms" "${BUNDLE}/Contents/PlugIns/styles")
+FILE(GLOB platformPluginList "${QT_PLUGINS_DIR}/platforms/*.dylib")
+MESSAGE(STATUS "List of Qt platform plugins: ${platformPluginList}")
+FOREACH(plugin ${platformPluginList})
+    FILE(COPY ${plugin} DESTINATION "${BUNDLE}/Contents/PlugIns/platforms" FOLLOW_SYMLINK_CHAIN)
+ENDFOREACH()
+FILE(GLOB stylePluginList "${QT_PLUGINS_DIR}/styles/*.dylib")
+MESSAGE(STATUS "List of Qt style plugins: ${stylePluginList}")
+FOREACH(plugin ${stylePluginList})
+    FILE(COPY ${plugin} DESTINATION "${BUNDLE}/Contents/PlugIns/styles" FOLLOW_SYMLINK_CHAIN)
+ENDFOREACH()
 # Update Qt plugins
 #
 FILE(GLOB  pluginList "${BUNDLE}/Contents/PlugIns/platforms/*.dylib" "${BUNDLE}/Contents/PlugIns/styles/*.dylib")
