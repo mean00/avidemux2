@@ -289,10 +289,11 @@ bool    flyCrop::bandResized(int x,int y,int w, int h)
     }
 
     // keep aspect ratio only when dragged on the bottom-right corner
-    if (ar_select > 0 && !ignore && rightHandleMoved)
+    if (ar_select > 0 && rightHandleMoved)
     {
-        recomputeDimensions(ar,_w,_h,normX,normY,normW,normH);
-        resizeRubber=true;
+        resizeRubber = true; // keep rubberband in sync
+        if (!ignore)
+            recomputeDimensions(ar,_w,_h,normX,normY,normW,normH);
     }
 
     if(ignore)
