@@ -7,7 +7,7 @@
 
 1. Install MXE (M cross environment) build dependencies as described in
 
-    http://mxe.cc/#requirements
+    http://mxe.cc/#requirements (plus `libpcre3-dev`, `cmake`, `yasm`)
 
 for your respective Linux distribution. For Fedora, at the time of writing,
 this list doesn't mention the developer package for pcre (pcre-devel), needed
