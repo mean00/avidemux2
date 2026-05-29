@@ -70,7 +70,7 @@ uint8_t result=1;
     memset(&data,0,sizeof(data));
 
     string indexName = file;
-    indexName =+ ".idx2";
+    indexName += ".idx2";
     index=qfopen(indexName,"wt",true);
 
     index = memOnly ? NULL : qfopen(indexName,"wt",true);
