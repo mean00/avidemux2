@@ -71,7 +71,6 @@ uint8_t result=1;
 
     string indexName = file;
     indexName += ".idx2";
-    index=qfopen(indexName,"wt",true);
 
     index = memOnly ? NULL : qfopen(indexName,"wt",true);
     if (!index)
