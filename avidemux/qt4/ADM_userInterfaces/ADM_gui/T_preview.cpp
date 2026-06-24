@@ -309,6 +309,7 @@ static void systemWindowInfo_once()
     case QT_X11_ENGINE: {
         if (!myDisplay)
         {
+#ifdef USE_NATIVE_API
             auto *x11App = qApp->nativeInterface<QNativeInterface::QX11Application>();
             if (x11App)
             {
@@ -318,6 +319,10 @@ static void systemWindowInfo_once()
             {
                 myDisplay = XOpenDisplay(NULL);
             }
+#else
+            myDisplay = XOpenDisplay(NULL);
+#endif
+            ADM_assert(myDisplay);
             ADM_info("found x11 display\n");
         }
         mySystemWindowId = videoWindow->winId();
