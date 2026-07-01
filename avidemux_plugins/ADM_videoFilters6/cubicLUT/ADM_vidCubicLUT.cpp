@@ -244,6 +244,8 @@ const char * ADMVideoCubicLUT::FileToLUT(const char *filename, bool hald, uint8_
                         break;
                     if (line[0] == ' ')
                         break;
+                    if (line[0] == '\t')
+                        break;
                     if (!strncmp(line, "LUT_3D_SIZE", 11) && strlen(line) >= 13)
                     {
                         if (cubicSize)
@@ -280,11 +282,11 @@ const char * ADMVideoCubicLUT::FileToLUT(const char *filename, bool hald, uint8_
                 }
                 char * next;
                 *cne++ = strtod(line, &next);
-                if (*next!=' ')
+                if (*next!=' ' && *next!='\t')
                     break;
                 next++;
                 *cne++ = strtod(next, &next);
-                if (*next!=' ')
+                if (*next!=' ' && *next!='\t')
                     break;
                 next++;
                 *cne++ = strtod(next, NULL);
