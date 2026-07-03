@@ -493,7 +493,9 @@ enum {
 
 static int getInfoFromSei(uint32_t nalSize, uint8_t *org, uint32_t *recoveryLength, uint32_t *unregistered)
 {
-    int originalNalSize=nalSize+16;
+    if(nalSize > (uint32_t)(0x7FFFFFFF - 16 - AV_INPUT_BUFFER_PADDING_SIZE))
+        return r;
+    int originalNalSize=(int)(nalSize+16);
     uint8_t *payloadBuffer=(uint8_t *)malloc(originalNalSize+AV_INPUT_BUFFER_PADDING_SIZE);
     memset(payloadBuffer,0,originalNalSize+AV_INPUT_BUFFER_PADDING_SIZE);
     uint8_t *payload=payloadBuffer;
@@ -552,6 +554,7 @@ static int getInfoFromSei(uint32_t nalSize, uint8_t *org, uint32_t *recoveryLeng
                     ADM_info("User data too short: %u\n",sei_size);
                     break;
                 }
+                if(sei_size > (uint32_t)(0x7FFFFFFF - 17)) break;
                 char *udata=(char *)malloc(16+sei_size+1);
                 getBits bits(sei_size,payload);
                 for(uint32_t i=0; i<sei_size; i++)
@@ -601,6 +604,8 @@ abtSei:
 static bool getNalType (uint8_t *head, uint8_t *tail, uint32_t *flags, ADM_SPSInfo *sps, int *poc_lsb, int recovery)
 {
     if(tail<=head)
+        return false;
+    if((size_t)(tail-head) > (size_t)(0x7FFFFFFF - AV_INPUT_BUFFER_PADDING_SIZE))
         return false;
     uint8_t *out=(uint8_t *)malloc(tail-head+AV_INPUT_BUFFER_PADDING_SIZE);
     memset(out,0,tail-head+AV_INPUT_BUFFER_PADDING_SIZE);
