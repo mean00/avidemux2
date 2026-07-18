@@ -556,7 +556,6 @@ uint8_t    MP4Header::open(const char *name)
                     uint32_t nalSize = ADM_getNalSizeH264(VDEO.extraData,VDEO.extraDataSize);
                     uint32_t prevSpsLen=0;
                     uint8_t *prevSps=NULL, *curSps=NULL;
-#define MAX_SPS_SIZE 1024
 #define MAX_FRAME_LENGTH (1920*1080*3) // ~7 MiB, should be enough even for 4K
                     uint8_t *bfer=new uint8_t[MAX_FRAME_LENGTH];
                     ADMCompressedImage img;
@@ -582,9 +581,9 @@ uint8_t    MP4Header::open(const char *name)
                         {
                             // Check for presence of SPS in the stream. If it changes on-the-fly, we are in trouble.
                             if(!curSps)
-                                curSps=new uint8_t[MAX_SPS_SIZE];
-                            memset(curSps,0,MAX_SPS_SIZE);
-                            uint32_t curSpsLen = getRawH264SPS(img.data, img.dataLength, nalSize, curSps, MAX_SPS_SIZE);
+                                curSps = new uint8_t[MAX_H264_SPS_SIZE];
+                            memset(curSps,0,MAX_H264_SPS_SIZE);
+                            uint32_t curSpsLen = getRawH264SPS(img.data, img.dataLength, nalSize, curSps, MAX_H264_SPS_SIZE);
                             bool match=true;
                             if(curSpsLen)
                             {
@@ -594,7 +593,7 @@ uint8_t    MP4Header::open(const char *name)
                                         match=!memcmp(prevSps,curSps,(prevSpsLen>curSpsLen)? curSpsLen : prevSpsLen);
                                 }else
                                 {
-                                    prevSps=new uint8_t[MAX_SPS_SIZE];
+                                    prevSps = new uint8_t[MAX_H264_SPS_SIZE];
                                 }
                                 if(!match)
                                 {
@@ -605,7 +604,7 @@ uint8_t    MP4Header::open(const char *name)
                                     mixDump(curSps,curSpsLen);
                                 }
                                 prevSpsLen=curSpsLen;
-                                memset(prevSps,0,MAX_SPS_SIZE);
+                                memset(prevSps,0,MAX_H264_SPS_SIZE);
                                 memcpy(prevSps,curSps,prevSpsLen);
                             }
                             if(!match && curSps)
