@@ -36,6 +36,7 @@ extern int ff_h264_info(AVCodecParserContext *parser, int ticksPerFrame, ffSpsIn
 #include "ADM_videoInfoExtractor.h"
 #include "ADM_h264_tag.h"
 
+#include <climits>
 
 //#define ANNEX_B_DEBUG
 
@@ -64,7 +65,7 @@ bool ADM_SPSannexBToMP4(uint32_t dataLen,uint8_t *incoming,
                                     uint32_t *outLen, uint8_t *outData)
 {
     int p;
-    if(dataLen>200)
+    if(dataLen > MAX_H264_SPS_SIZE /* just for consistency, probably far too much, was 200 */)
     {
         ADM_warning("SPS TOO LONG\n");
         return false;
@@ -155,39 +156,42 @@ uint32_t ADM_escapeH264 (uint32_t len, uint8_t * in, uint8_t * out)
 */
 uint32_t ADM_unescapeH264 (uint32_t len, uint8_t * in, uint8_t * out)
 {
-  if (len < 3)
-    return 0;
-  uint8_t *offset = in;
-  uint8_t *firstOut=out;
-  uint32_t outlen = 0;
-  uint8_t *tail = in + len;
-  uint8_t *border=tail-3;
+    if (len < 3)
+        return 0;
 
-  while (in < border)
-  {
+    uint32_t outlen = 0;
+    uint8_t *offset = in;
+    uint8_t *end = offset + len;
+    uint8_t *border = end - 3;
+
+    while (in < border)
+    {
         if(in[1]) // cannot be 00 00 nor the next one
         {
-          in += 2;
-          continue;
+            in += 2;
+            continue;
         }
         if(!in[0] && !in[1] && in[2] == 3)
         {
-          uint32_t copy = in - offset + 2;
-          memcpy(out, offset, copy);
-          out += copy;
-          in += 3;
-          offset = in;
-          continue;
+            uint32_t copy = in - offset + 2;
+            if (out)
+            {
+                memcpy(out, offset, copy);
+                out += copy;
+            }
+            in += 3;
+            offset = in;
+            outlen += copy;
+            continue;
         }
         in++;
-  }
-  outlen=(int)(out-firstOut);
-  // copy last bytes
-  uint32_t left = tail - offset;
-  memcpy (out, offset, left);
-  outlen += left;
-  return outlen;
-
+    }
+    // copy last bytes
+    uint32_t left = end - offset;
+    if (out)
+        memcpy (out, offset, left);
+    outlen += left;
+    return outlen;
 }
 /**
     \fn hrd
@@ -491,22 +495,32 @@ enum {
     ADM_H264_SEI_TYPE_RECOVERY_POINT = 2
 };
 
-static int getInfoFromSei(uint32_t nalSize, uint8_t *org, uint32_t *recoveryLength, uint32_t *unregistered)
+static int getInfoFromSei(uint32_t nalUnitSize, uint8_t *src, uint32_t *recoveryLength, uint32_t *unregistered)
 {
-    int originalNalSize=nalSize+16;
-    uint8_t *payloadBuffer=(uint8_t *)malloc(originalNalSize+AV_INPUT_BUFFER_PADDING_SIZE);
-    memset(payloadBuffer,0,originalNalSize+AV_INPUT_BUFFER_PADDING_SIZE);
-    uint8_t *payload=payloadBuffer;
-    int r=ADM_H264_SEI_TYPE_OTHER;
-    nalSize=ADM_unescapeH264(nalSize,org,payload);
-    if(nalSize>originalNalSize)
+    int r = ADM_H264_SEI_TYPE_OTHER;
+
+    // Sanity check
+    if (nalUnitSize > MAX_H264_SEI_SIZE)
     {
-        ADM_warning("NAL is way too big : %d, while we expected %d at most\n",nalSize,originalNalSize);
-        free(payloadBuffer);
+        seiprintf("Unplausibly large SEI NALU size %" PRIu32", max. supported: %" PRIu32"\n", nalUnitSize, MAX_H264_SEI_SIZE);
         return r;
     }
 
-    uint8_t *tail=payload+nalSize;
+    // Query the buffer size we need to allocate for given escaped bitstream
+    uint32_t rawBitstreamSize = ADM_unescapeH264(nalUnitSize, src, NULL);
+    ADM_assert(rawBitstreamSize <= UINT32_MAX - AV_INPUT_BUFFER_PADDING_SIZE);
+
+    uint8_t *payloadBuffer = (uint8_t *)malloc(rawBitstreamSize + AV_INPUT_BUFFER_PADDING_SIZE);
+    if (!payloadBuffer)
+        return r;
+
+    uint8_t *payload = payloadBuffer;
+    memset(payload + rawBitstreamSize, 0, AV_INPUT_BUFFER_PADDING_SIZE);
+
+    // Now unescape it for real
+    ADM_unescapeH264(nalUnitSize, src, payload);
+
+    uint8_t *tail = payload + rawBitstreamSize;
 
     while(payload+2<tail)
     {
@@ -562,6 +576,8 @@ static int getInfoFromSei(uint32_t nalSize, uint8_t *org, uint32_t *recoveryLeng
                 {
                     ADM_info("Unregistered user data doesn't match the one expected for x264\n");
                     mixDump((uint8_t *)udata,sei_size);
+                    free(udata);
+                    udata = NULL;
                     break;
                 }
                 free(udata);
@@ -595,16 +611,21 @@ abtSei:
 }
 /**
     \fn getNalType
-    \brief Return the slice type. The stream is escaped by the function. If recovery==0
+    \brief Return the slice type for given escaped stream. If recovery==0
            or frame_num==0 I is considered IDR else as P.
 */
-static bool getNalType (uint8_t *head, uint8_t *tail, uint32_t *flags, ADM_SPSInfo *sps, int *poc_lsb, int recovery)
+static bool getNalType (uint8_t *src, uint32_t len, uint32_t *flags, ADM_SPSInfo *sps, int *poc_lsb, int recovery)
 {
-    if(tail<=head)
+    uint32_t size = ADM_unescapeH264(len, src, NULL);
+    if (size > INT_MAX - AV_INPUT_BUFFER_PADDING_SIZE)
         return false;
-    uint8_t *out=(uint8_t *)malloc(tail-head+AV_INPUT_BUFFER_PADDING_SIZE);
-    memset(out,0,tail-head+AV_INPUT_BUFFER_PADDING_SIZE);
-    int size=ADM_unescapeH264(tail-head,head,out);
+
+    uint8_t *out = (uint8_t *)malloc(size + AV_INPUT_BUFFER_PADDING_SIZE);
+    if (!out)
+        return false;
+
+    memset(out + size, 0, AV_INPUT_BUFFER_PADDING_SIZE);
+    ADM_unescapeH264(len, src, out);
 
     getBits bits(size,out);
     uint32_t sliceType;
@@ -721,7 +742,9 @@ uint8_t extractH264FrameType(uint8_t *buffer, uint32_t len, uint32_t nalSize, ui
         {
             case NAL_SEI:
                 {
-                    int sei=getInfoFromSei(length-1, head+1, &recovery, NULL);
+                    int sei = ADM_H264_SEI_TYPE_OTHER;
+                    if (length > 1)
+                        sei = getInfoFromSei(length-1, head+1, &recovery, NULL);
                     if(extRecovery)
                     {
                         if(sei & ADM_H264_SEI_TYPE_RECOVERY_POINT)
@@ -738,7 +761,7 @@ uint8_t extractH264FrameType(uint8_t *buffer, uint32_t len, uint32_t nalSize, ui
                 break;
             case NAL_IDR:
                 *flags = AVI_KEY_FRAME + AVI_IDR_FRAME;
-                if(!getNalType(head+1,head+length,flags,sps,&p,recovery))
+                if(!getNalType(head+1,length,flags,sps,&p,recovery))
                     return 0;
                 if(sps && !(*flags & AVI_IDR_FRAME))
                 {
@@ -750,7 +773,7 @@ uint8_t extractH264FrameType(uint8_t *buffer, uint32_t len, uint32_t nalSize, ui
                     *pocLsb=p;
                 return 1;
             case NAL_NON_IDR:
-                if(!getNalType(head+1,head+length,flags,sps,&p,recovery))
+                if(!getNalType(head+1,length,flags,sps,&p,recovery))
                     return 0;
                 if(!ref && (*flags & AVI_B_FRAME))
                     *flags |= AVI_NON_REF_FRAME;
@@ -834,7 +857,7 @@ uint8_t extractH264FrameType_startCode(uint8_t *buffer, uint32_t len, uint32_t *
             case NAL_SPS: case NAL_PPS: case NAL_FILLER: case NAL_AU_DELIMITER: break;
             case NAL_IDR:
                 *flags = AVI_KEY_FRAME + AVI_IDR_FRAME;
-                if(!getNalType(buffer, buffer+length, flags, sps, &p, recovery))
+                if(!getNalType(buffer, length, flags, sps, &p, recovery))
                     return 0;
                 if(sps && !(*flags & AVI_IDR_FRAME))
                 {
@@ -846,7 +869,7 @@ uint8_t extractH264FrameType_startCode(uint8_t *buffer, uint32_t len, uint32_t *
                     *pocLsb=p;
                 return 1;
             case NAL_NON_IDR:
-                if(!getNalType(buffer, buffer+length, flags, sps, &p, recovery))
+                if(!getNalType(buffer, length, flags, sps, &p, recovery))
                     return 0;
                 if(!ref && (*flags & AVI_B_FRAME))
                     *flags |= AVI_NON_REF_FRAME;
@@ -937,6 +960,9 @@ bool extractH264SEI(uint8_t *src, uint32_t inlen, uint32_t nalSize, uint8_t *des
 bool extractSPSInfo_mp4Header (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinfo)
 {
     bool r=false;
+
+    if (len > MAX_H2645_SLICE_SIZE)
+        return r;
 
     // duplicate
     int myLen=len+AV_INPUT_BUFFER_PADDING_SIZE;
@@ -1158,6 +1184,12 @@ uint32_t getRawH264SPS_startCode(uint8_t *data, uint32_t len, uint8_t *dest, uin
 */
 bool extractSPSInfoFromData(uint8_t *data, uint32_t length, ADM_SPSInfo *spsinfo)
 {
+    if (length > MAX_H264_SPS_SIZE)
+    {
+        ADM_warning("Data length %u exceeds max. supported.\n", length);
+        return false;
+    }
+
     uint32_t myExtraLen=length+8;
     uint8_t *myExtra=new uint8_t[myExtraLen];
     memset(myExtra,0,myExtraLen);
@@ -1195,7 +1227,7 @@ uint8_t extractSPSInfo_lavcodec (uint8_t * data, uint32_t len, ADM_SPSInfo *spsi
     ADM_info("converted SPS info\n");
 
     uint32_t converted;
-    uint8_t buffer[256];
+    uint8_t buffer[MAX_H264_SPS_SIZE];
     if(! ADM_SPSannexBToMP4(len,data,&converted,buffer))
     {
         ADM_warning("Cannot convert SPS\n");

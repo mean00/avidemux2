@@ -71,6 +71,12 @@ public:
 };
 
 #define MAX_H264_SPS_SIZE 2048
+/* Arbitrary upper bound for NAL SEI unit size, not the payload,
+   may be insufficient, FIXME */
+#define MAX_H264_SEI_SIZE 0xFFFF
+/* Arbitrary upper bound for H264 / HEVC frame size, based on
+   HEVC level 6.2 with 4:4:4 sampling and 12 bit depth */
+#define MAX_H2645_SLICE_SIZE 0xCC00000
 
 ADM_COREUTILS6_EXPORT bool    ADM_SPSannexBToMP4(uint32_t dataLen,uint8_t *incoming, uint32_t *outLen, uint8_t *outData);
 
