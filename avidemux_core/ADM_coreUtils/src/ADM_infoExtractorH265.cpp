@@ -274,7 +274,11 @@ bool H265Parser::parseAnnexB(ADM_SPSinfoH265 *spsinfo)
  */
 bool extractSPSInfoH265 (uint8_t * data, uint32_t len, ADM_SPSinfoH265 *spsinfo)
 {
-    
+    if (!data)
+        return false;
+    if (!len || len > MAX_H2645_SLICE_SIZE)
+        return false;
+
     bool annexB=false;
     switch(data[0])
     {
