@@ -411,7 +411,7 @@ int startAvidemux(int argc, char *argv[])
             PROBE_HW_ACCEL(libvaProbe, LIBVA, initLIBVADecoder, admLibVa_exitCleanup)
 #endif
         }
-        if (QT_WAYLAND_ENGINE != eng)
+        if (true /* QT_WAYLAND_ENGINE != eng */)
         {
 #if defined(USE_NVENC)
             PROBE_HW_ACCEL(nvDecProbe, NVDEC, initNvDecDecoder, admNvDec_exitCleanup)

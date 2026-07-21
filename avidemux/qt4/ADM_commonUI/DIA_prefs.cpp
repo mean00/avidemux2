@@ -117,7 +117,8 @@ uint8_t DIA_Preferences(void)
 #endif
 #ifdef USE_NVENC
     bool bnvdec = false;
-    NOT_WAYLAND(nvDecProbe(), nvdecAvailable);
+    //NOT_WAYLAND(nvDecProbe(), nvdecAvailable);
+    bool nvdecAvailable = nvDecProbe();
 #endif
 #ifdef USE_VIDEOTOOLBOX
     bool bvideotoolbox = false;
