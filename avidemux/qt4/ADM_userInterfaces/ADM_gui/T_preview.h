@@ -25,6 +25,7 @@ class ADM_Qvideo : public QWidget
     Q_OBJECT
     ADM_QvideoDrawer *drawer;
     bool doOnce;
+    bool onWayland;
     QFrame *hostFrame;
 
   protected:

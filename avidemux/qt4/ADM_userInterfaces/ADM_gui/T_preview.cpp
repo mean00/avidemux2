@@ -110,7 +110,8 @@ ADM_Qvideo::ADM_Qvideo(QFrame *z) : QWidget(z)
     doOnce = false;
     _width = _height = 0;
     hostFrame = z;
-    if (admDetectQtEngine() == QT_WAYLAND_ENGINE)
+    onWayland = admDetectQtEngine() == QT_WAYLAND_ENGINE;
+    if (onWayland)
     {
         setAttribute(Qt::WA_DontCreateNativeAncestors);
         setAttribute(Qt::WA_NativeWindow);
@@ -130,7 +131,7 @@ ADM_Qvideo::~ADM_Qvideo()
  */
 void ADM_Qvideo::paintEvent(QPaintEvent *ev)
 {
-    if (admDetectQtEngine() == QT_WAYLAND_ENGINE)
+    if (onWayland)
     {
         if (windowHandle() && window())
         {
@@ -163,7 +164,7 @@ void ADM_Qvideo::paintEvent(QPaintEvent *ev)
 
 bool ADM_Qvideo::eventFilter(QObject *obj, QEvent *event)
 {
-    if (admDetectQtEngine() == QT_WAYLAND_ENGINE)
+    if (onWayland)
     {
         if (event->type() == QEvent::Resize || event->type() == QEvent::Move || event->type() == QEvent::LayoutRequest)
         {
