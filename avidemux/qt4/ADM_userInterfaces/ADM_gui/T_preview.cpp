@@ -114,7 +114,7 @@ ADM_Qvideo::ADM_Qvideo(QFrame *z) : QWidget(z)
     if (onWayland)
     {
         setAttribute(Qt::WA_DontCreateNativeAncestors);
-        setAttribute(Qt::WA_NativeWindow);
+        //setAttribute(Qt::WA_NativeWindow); // The result looks broken, don't try this for now.
     }
 } //{setAutoFillBackground(false);}
 #endif // Haiku
@@ -224,7 +224,7 @@ void UI_QT4VideoWidget(QFrame *host)
     videoWindow = new ADM_Qvideo(host);
     if (admDetectQtEngine() == QT_WAYLAND_ENGINE)
     {
-        videoWindow->winId();
+        //videoWindow->winId(); // The result looks broken, don't try this for now.
         if (videoWindow->windowHandle() && QuiMainWindows && QuiMainWindows->windowHandle())
         {
             videoWindow->windowHandle()->setParent(QuiMainWindows->windowHandle());
@@ -331,8 +331,9 @@ static void systemWindowInfo_once()
     break;
     case QT_WAYLAND_ENGINE: {
         mySystemWindowId = 0;
+//#ifdef USE_NATIVE_API
+#if 0
         QPlatformNativeInterface *native = currentQApplication()->platformNativeInterface();
-#ifdef USE_NATIVE_API
         if (native && videoWindow)
         {
             videoWindow->winId(); // Force handle creation
