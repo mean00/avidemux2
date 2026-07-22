@@ -66,6 +66,12 @@ brew install cmake pkg-config nasm yasm qt xvid x264 x265 libvpx aom opus fdk-aa
 
 Build Avidemux (Apple Silicon):  
 It may be necessary to install Xcode, not just Command Line Tools, else creation of app bundle fails.
+
+For recent macOS versions (e.g., Tahoe), you may need to relax compiler checks for implicit function declarations:
+```
+bash export CFLAGS="-Wno-error=implicit-function-declaration"
+bash export CXXFLAGS="-Wno-error=implicit-function-declaration"
+```
 ```
 bash bootStrapMacOS_Monterey.arm64.sh
 ```
