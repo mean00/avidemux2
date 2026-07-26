@@ -195,7 +195,7 @@ opus \
 qttools \
 qtwinextras \
 qt6-qttools \
-sdl2 \
+sdl3 \
 vorbis \
 x264 \
 x265 \

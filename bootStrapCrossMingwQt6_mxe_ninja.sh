@@ -254,7 +254,7 @@ create_release_package() {
     libx265.dll \
     libopencore*.dll \
     libzstd.dll \
-    SDL2.dll \
+    SDL3.dll \
     xvidcore.dll \
     zlib1.dll \
     "$TARGETDIR"
