@@ -81,29 +81,29 @@ prepare_sources()
     [ -d "${MXE_ROOT_DIR}/pkg" ] || mkdir "${MXE_ROOT_DIR}/pkg" || fail "Cannot create folder for packages"
 
     # get x264 source
-    ("${SRCDIR}/${x264_script}") \
-    && cp -uv x264-*.tar.bz2 "${MXE_ROOT_DIR}/pkg/" || fail "Failed at x264 source"
+    #("${SRCDIR}/${x264_script}") \
+    #&& cp -uv x264-*.tar.bz2 "${MXE_ROOT_DIR}/pkg/" || fail "Failed at x264 source"
     # patch MXE
-    apply_patch_current x264_gen
+    #apply_patch_current x264_gen
 
     # Patch MXE to download and build more recent versions of some other codecs:
     # fdk-aac 2.0.0 --> 2.0.3
     apply_patch fdk-aac
 
     # libvpx 1.8.2 --> 1.14.1
-    apply_patch libvpx
+    #apply_patch libvpx
 
-    # opus 1.3.1 --> 1.5.2
+    # opus 1.3.1 --> 1.6.1
     apply_patch opus
 
     # x265 3.4 --> 4.1
-    apply_patch x265
+    #apply_patch x265
 
     # download.qt.io redirects to the closest mirror, and at least one of the mirrors
     # hosts corrupted files, causing download to hang (which may be a MXE bug).
     # Hardcode a known good mirror.
-    apply_patch qtbase-download-url
-    apply_patch qt6-qtbase-download-url
+    #apply_patch qtbase-download-url
+    #apply_patch qt6-qtbase-download-url
 
     # MXE update of SQLite to 3.49.0 broke its installation, revert to 3.48.0
     #backout_patch sqlite-update-to-349000
@@ -117,7 +117,7 @@ build_mxe()
     # now build MXE
     pushd "${MXE_ROOT_DIR}" > /dev/null && MXE_SILENT_NO_NETWORK= \
     make \
-    MXE_PLUGIN_DIRS="${MXE_ROOT_DIR}/plugins/gcc14" \
+    MXE_PLUGIN_DIRS="${MXE_ROOT_DIR}/plugins/gcc16" \
     $PACKAGES \
     $EXTRA_MXE_PACKAGES || fail "Failed at make"
     popd > /dev/null
@@ -125,7 +125,7 @@ build_mxe()
 install_libaom()
 {
     # get and install libaom
-    (AOM_TAG="v3.11.0" "${SRCDIR}/${libaom_script}" "${MXE_ROOT_DIR}") || fail "Failed at libaom"
+    (AOM_TAG="v3.14.1" "${SRCDIR}/${libaom_script}" "${MXE_ROOT_DIR}") || fail "Failed at libaom"
 }
 install_nvidia_headers()
 {
