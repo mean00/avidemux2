@@ -112,7 +112,8 @@ RUN chmod a+rwx /opt/
 RUN echo 'root:password' | chpasswd 
 #
 RUN apt-get install -y python3-pefile
-
+#
+#
 #
 #
 
@@ -156,6 +157,9 @@ ENV PATH="/opt/mxe/usr/bin:/usr/local/bin:/opt/mxe/bin:/opt/mxe/usr/x86_64-pc-li
 #COPY ./.devcontainer_mxe64/install-libaom.bash /tmp/
 COPY install-libaom.bash /tmp/
 RUN cd /tmp && bash install-libaom.bash /opt/mxe
+# -- nvenc
+RUN cd /tmp && git clone https://github.com/FFmpeg/nv-codec-headers.git && cd nv-codec-headers && \
+    make install DESTDIR=/opt/mxe/usr/x86_64-w64-mingw32.shared/ PREFIX=/lib/pkgconfig
 
 
 
