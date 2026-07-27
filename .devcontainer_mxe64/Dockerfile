@@ -159,7 +159,7 @@ COPY install-libaom.bash /tmp/
 RUN cd /tmp && bash install-libaom.bash /opt/mxe
 # -- nvenc
 RUN cd /tmp && git clone https://github.com/FFmpeg/nv-codec-headers.git && cd nv-codec-headers && \
-    make install DESTDIR=/opt/mxe/usr/x86_64-w64-mingw32.shared/ PREFIX=/lib/pkgconfig
+    make install DESTDIR=/opt/mxe/usr/x86_64-w64-mingw32.shared/ PREFIX=/
 
 
 
