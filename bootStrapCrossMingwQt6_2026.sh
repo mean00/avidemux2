@@ -236,7 +236,7 @@ rm -Rf avidemux64
 cp -Rap ${MINGW}/out/avidemux ./avidemux64
 find avidemux64 -name "*.a" | xargs rm -f
 rm -Rf avidemux64/include
-mv avidemux64/avidemux.exe avidemux64/avidemux_portable.exe
+cp avidemux64/avidemux.exe avidemux64/avidemux_portable.exe
 #  Copy extra QT6 files
 mkdir avidemux64/platforms
 cp ${QT_HOME}/plugins/platforms/qminimal.dll ${QT_HOME}/plugins/platforms/qwindows.dll avidemux64/platforms
