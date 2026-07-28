@@ -156,9 +156,12 @@ ENV PATH="/opt/mxe/usr/bin:/usr/local/bin:/opt/mxe/bin:/opt/mxe/usr/x86_64-pc-li
 # --- install libaom
 #COPY ./.devcontainer_mxe64/install-libaom.bash /tmp/
 COPY install-libaom.bash /tmp/
-RUN cd /tmp && bash install-libaom.bash /opt/mxe
+RUN cd /tmp && \
+    AOM_TAG="v3.14.1" \
+    bash install-libaom.bash /opt/mxe
 # -- nvenc
 RUN cd /tmp && git clone https://github.com/FFmpeg/nv-codec-headers.git && cd nv-codec-headers && \
+    git checkout sdk/11.1 \
     make install DESTDIR=/opt/mxe/usr/x86_64-w64-mingw32.shared/ PREFIX=/
 
 
