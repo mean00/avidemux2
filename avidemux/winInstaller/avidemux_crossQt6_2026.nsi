@@ -32,9 +32,9 @@ Section "Install"
 
     # Shortcuts
     CreateDirectory "$SMPROGRAMS\Avidemux64"
-    CreateShortcut "$SMPROGRAMS\Avidemux64\Avidemux.lnk" "$INSTDIR\avidemux_portable.exe"
+    CreateShortcut "$SMPROGRAMS\Avidemux64\Avidemux.lnk" "$INSTDIR\avidemux.exe"
     CreateShortcut "$SMPROGRAMS\Avidemux64\Uninstall.lnk" "$INSTDIR\uninstall.exe"
-    CreateShortcut "$DESKTOP\Avidemux.lnk" "$INSTDIR\avidemux_portable.exe"
+    CreateShortcut "$DESKTOP\Avidemux.lnk" "$INSTDIR\avidemux.exe"
 
     # Add to "Apps & Features" (Add/Remove Programs) for 64-bit
     WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Avidemux64" \
