@@ -161,7 +161,7 @@ RUN cd /tmp && \
     bash install-libaom.bash /opt/mxe
 # -- nvenc
 RUN cd /tmp && git clone https://github.com/FFmpeg/nv-codec-headers.git && cd nv-codec-headers && \
-    git checkout sdk/11.1 \
+    git checkout "sdk/11.1"  && \
     make install DESTDIR=/opt/mxe/usr/x86_64-w64-mingw32.shared/ PREFIX=/
 
 
