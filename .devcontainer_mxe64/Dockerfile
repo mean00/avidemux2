@@ -149,8 +149,7 @@ EOF
 RUN cd /opt && git clone https://github.com/mxe/mxe.git && cd mxe \
     && echo "MXE_TARGETS := x86_64-w64-mingw32.shared" > settings.mk \
     && echo "JOBS := 4" >> settings.mk \
-    && echo "MXE_SILENT_NO_NETWORK :=" >> settings.mk \
-    && echo "override MXE_PLUGIN_DIRS += /opt/mxe/plugins/gcc16" >> settings.mk
+    && echo "MXE_SILENT_NO_NETWORK :=" >> settings.mk
 
 WORKDIR /opt/mxe
 
@@ -167,7 +166,6 @@ RUN make \
     lame \
     libass \
     libvpx \
-    nsis \
     ogg \
     opencore-amr \
     opus \
