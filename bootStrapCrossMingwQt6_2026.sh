@@ -248,7 +248,7 @@ mkdir avidemux64/etc
 cp -rvL "${MINGW}"/etc/fonts avidemux64/etc
 
 #
-python3 mxe_scan_deps.py \
+python3 "${SRCTOP}/mxe_scan_deps.py" \
   avidemux64 \
   --sources \
   ${MINGW}/bin \
