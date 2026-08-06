@@ -146,23 +146,50 @@ alias ll='ls -lah'
 
 EOF
 # Split the build in two to avoid timeouts, not sure that helps
-RUN cd /opt &&  git clone https://github.com/mxe/mxe.git && cd mxe && \
-     echo "MXE_TARGETS := x86_64-w64-mingw32.shared" > settings.mk \
-    && echo "JOBS := 4" >> settings.mk && make  qt6-qtbase
-RUN cd /opt/mxe && make qt6
-RUN cd /opt/mxe && make opencore-amr  && make fdk-aac && make sdl3
-RUN echo Done
+RUN cd /opt && git clone https://github.com/mxe/mxe.git && cd mxe \
+    && echo "MXE_TARGETS := x86_64-w64-mingw32.shared" > settings.mk \
+    && echo "JOBS := 4" >> settings.mk \
+    && echo "MXE_SILENT_NO_NETWORK :=" >> settings.mk \
+    && echo "override MXE_PLUGIN_DIRS += /opt/mxe/plugins/gcc16" >> settings.mk
+
+WORKDIR /opt/mxe
+
+COPY fdk-aac.patch /tmp/
+RUN patch -p1 --dry-run < /tmp/fdk-aac.patch \
+    && patch -p1 < /tmp/fdk-aac.patch || :
+
+COPY opus.patch /tmp/
+RUN patch -p1 --dry-run < /tmp/opus.patch \
+    && patch -p1 < /tmp/opus.patch || :
+
+RUN make \
+    fdk-aac \
+    lame \
+    libass \
+    libvpx \
+    nsis \
+    ogg \
+    opencore-amr \
+    opus \
+    sdl3 \
+    vorbis \
+    x264 \
+    x265 \
+    xvidcore
+
+RUN make qt6-qttools && echo Done
+
 ENV PATH="/opt/mxe/usr/bin:/usr/local/bin:/opt/mxe/bin:/opt/mxe/usr/x86_64-pc-linux-gnu/qt6/bin/:${PATH}"
 # --- install libaom
 #COPY ./.devcontainer_mxe64/install-libaom.bash /tmp/
+
+WORKDIR /tmp
+
 COPY install-libaom.bash /tmp/
-RUN cd /tmp && \
-    AOM_TAG="v3.14.1" \
+RUN AOM_TAG="v3.14.1" \
     bash install-libaom.bash /opt/mxe
 # -- nvenc
-RUN cd /tmp && git clone https://github.com/FFmpeg/nv-codec-headers.git && cd nv-codec-headers && \
-    git checkout "sdk/11.1"  && \
-    make install DESTDIR=/opt/mxe/usr/x86_64-w64-mingw32.shared/ PREFIX=/
-
-
+RUN git clone https://github.com/FFmpeg/nv-codec-headers.git && cd nv-codec-headers \
+    && git checkout "sdk/11.1" \
+    && make install DESTDIR=/opt/mxe/usr/x86_64-w64-mingw32.shared/ PREFIX=/
 
