@@ -18,7 +18,7 @@ directory has to be located on a case-sensitive file system either.
 To get Avidemux source code from the main repository and the translations,
 run the following command:
 ```
-git clone --recursive https://github.com/mean00/avidemux2.git && cd avidemux2
+git clone --depth 1 --branch master --single-branch --recursive https://github.com/mean00/avidemux2.git && cd avidemux2
 ```
 
 
