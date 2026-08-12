@@ -225,7 +225,7 @@ void UI_QT4VideoWidget(QFrame *host)
     if (admDetectQtEngine() == QT_WAYLAND_ENGINE)
     {
         videoWindow->winId();
-        if (videoWindow->windowHandle() && QuiMainWindows->windowHandle())
+        if (videoWindow->windowHandle() && QuiMainWindows && QuiMainWindows->windowHandle())
         {
             videoWindow->windowHandle()->setParent(QuiMainWindows->windowHandle());
             // Hook main window layout events to force Wayland subsurface alignment when parents dynamically map and
@@ -336,7 +336,7 @@ static void systemWindowInfo_once()
         if (native && videoWindow)
         {
             videoWindow->winId(); // Force handle creation
-            if (videoWindow && videoWindow->windowHandle())
+            if (videoWindow->windowHandle())
             {
                 if (!myDisplay)
                 {
