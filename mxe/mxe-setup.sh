@@ -94,7 +94,7 @@ prepare_sources()
     #apply_patch libvpx
 
     # opus 1.3.1 --> 1.6.1
-    apply_patch opus
+    #apply_patch opus
 
     # x265 3.4 --> 4.1
     #apply_patch x265

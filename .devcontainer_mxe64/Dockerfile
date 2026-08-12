@@ -157,10 +157,6 @@ COPY fdk-aac.patch /tmp/
 RUN patch -p1 --dry-run < /tmp/fdk-aac.patch \
     && patch -p1 < /tmp/fdk-aac.patch || :
 
-COPY opus.patch /tmp/
-RUN patch -p1 --dry-run < /tmp/opus.patch \
-    && patch -p1 < /tmp/opus.patch || :
-
 RUN make \
     fdk-aac \
     lame \
