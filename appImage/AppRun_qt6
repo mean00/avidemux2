@@ -13,11 +13,17 @@ if [ "x${ADM_APPIMAGE_USE_SYSTEM_FONT_LIBS}" != "x1" ]; then
 else
   echo "Using system freetype, fontconfig and fribidi."
 fi
-export LD_LIBRARY_PATH="${HERE}/usr/lib/:${HERE}/usr/lib/qt5:${LD_LIBRARY_PATH}"
+export LD_LIBRARY_PATH="${HERE}/usr/lib/:${HERE}/usr/lib/qt6:${LD_LIBRARY_PATH}"
 export PATH="${HERE}/usr/bin:${PATH}"
 export QT_PLUGIN_PATH="$HERE/usr/plugins"
 export QML2_IMPORT_PATH="$HERE/usr/qml"
 export QT_QPA_PLATFORM_PLUGIN_PATH="$HERE/usr/plugins/platforms"
 export XDG_DATA_DIRS="$HERE/usr/share:$XDG_DATA_DIRS"
-"${HERE}/usr/bin/avidemux3_portable" "$@"
+# choose binary depending on substrings "_jobs" or "_cli" in the name appImage is called by
+if [[ "${ARGV0##*/}" =~ _jobs ]]
+then "${HERE}/usr/bin/avidemux3_jobs_portable" "${args[@]}"
+elif [[ "${ARGV0##*/}" =~ _cli ]]
+then "${HERE}/usr/bin/avidemux3_cli_portable" "${args[@]}"
+else "${HERE}/usr/bin/avidemux3_portable" "${args[@]}"
+fi
 cd -
