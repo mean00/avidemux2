@@ -152,7 +152,14 @@ bool sdl3RenderImpl::init_sdl_window_once(GUI_WindowInfo *window)
                                    window->display);
         }
     }
-    SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl,opengles2,software");
+
+    SDL_SetHint(SDL_HINT_RENDER_DRIVER,
+#ifdef _WIN32
+    "direct3d12,direct3d11,opengles2,software"
+#else
+    "opengl,opengles2,software"
+#endif
+    );
 
     if (!SDL_InitSubSystem(SDL_INIT_VIDEO))
     {
@@ -160,7 +167,8 @@ bool sdl3RenderImpl::init_sdl_window_once(GUI_WindowInfo *window)
         ADM_warning("[SDL3] Video subsystem init failed, error: %s\n", (err && *err) ? err : "Unknown");
         return false;
     }
-    ADM_info("[SDL3] Video subsystem init ok, using driver: %s\n", SDL_GetCurrentVideoDriver());
+    ADM_info("[SDL3] Video subsystem init ok, using driver \"%s\" and renderer \"%s\"\n",
+            SDL_GetCurrentVideoDriver(), SDL_GetRenderDriver(0));
     SDL_PropertiesID props = SDL_CreateProperties();
     SDL_SetStringProperty(props, SDL_PROP_WINDOW_CREATE_TITLE_STRING, "avidemux_sdl3");
     // SDL_SetBooleanProperty(props, SDL_PROP_WINDOW_CREATE_HIGH_PIXEL_DENSITY_BOOLEAN, true);
