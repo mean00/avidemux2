@@ -45,7 +45,7 @@ uint8_t DIA_builtin(void)
 #ifdef USE_VDPAU
     adm_vdpau = 1;
 #endif
-#ifdef USE_FONTCONFIG
+#ifdef HAVE_FONTCONFIG
     adm_fontconfig = 1;
 #endif
 
