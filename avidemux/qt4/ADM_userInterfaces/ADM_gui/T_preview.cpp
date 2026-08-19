@@ -267,12 +267,18 @@ void UI_updateDrawWindowSize(void *win, uint32_t w, uint32_t h)
     {
         UI_setNeedsResizingFlag(true);
     }
+    QSize restore = QuiMainWindows->size();
     videoWindow->setADMSize(w, h);
     if (!w || !h)
         QuiMainWindows->update(); // clean up the space previously occupied by the video window on closing
     UI_purge();
 
     printf("[RDR] Resizing to %u x %u\n", displayW, displayH);
+    if (QuiMainWindows->size() != restore)
+    {
+        //ADM_info("Restoring main window size from %d x %d to %d x %d\n", QuiMainWindows->width(), QuiMainWindows->height(), restore.width(), restore.height());
+        QuiMainWindows->resize(restore);
+    }
 }
 /**
  *
