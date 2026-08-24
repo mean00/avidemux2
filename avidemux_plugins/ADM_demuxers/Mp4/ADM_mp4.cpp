@@ -276,6 +276,8 @@ MP4Header::~MP4Header()
     {
         delete audioStream[audio];
         delete audioAccess[audio];
+        audioStream[audio] = NULL;
+        audioAccess[audio] = NULL;
     }
     for(int i = 0; i < nbTrex; i++)
     {
@@ -309,6 +311,12 @@ MP4Header::MP4Header(void)
         nbTrex=0;
         for(int i=0;i<_3GP_MAX_TRACKS;i++)
             _trexData[i]=NULL;
+
+    for(int i = 0; i < _3GP_MAX_TRACKS - 1; i++)
+    {
+        audioStream[i] = NULL;
+        audioAccess[i] = NULL;
+    }
 }
 /**
     \fn getAudioInfo
