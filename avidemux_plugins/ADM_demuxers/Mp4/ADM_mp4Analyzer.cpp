@@ -382,6 +382,22 @@ void MP4Header::parseMvhd(adm_atom *tom)
 }
 
 /**
+    \fn checkRemaning
+    \brief Check whether atom is large enough to avoid reading past the end.
+*/
+static bool checkRemaining(adm_atom *tom, uint64_t bytesNeeded)
+{
+    int64_t bytesLeft = tom->getRemainingSize();
+    if (bytesLeft < bytesNeeded)
+    {
+        ADM_warning("Atom too small, need: %" PRId64", left: %" PRId64", damaged file?\n", bytesNeeded, bytesLeft);
+        tom->skipAtom();
+        return false;
+    }
+    return true;
+}
+
+/**
     \fn parseTrex
     \brief Some iso5 files specify dts increment via trex box only.
 */
@@ -716,13 +732,32 @@ uint8_t MP4Header::parseElst(adm_atom *tom, int64_t *delay, int64_t *skip)
     uint32_t playbackSpeed;
     int version=tom->read();
     tom->skipBytes(3);
-    uint32_t nb=tom->read32();
+    uint32_t nb, realNb = tom->read32();
+    const int maxElst = 2;
+
+    ADM_info("Found %" PRIu32" entries in edit list of version %d\n", realNb, version);
+
+    if (!realNb)
+    {
+        ADM_warning("Invalid empty elst.\n");
+        return 0;
+    }
+    if (realNb > maxElst)
+    {
+        ADM_warning("Edit lists with more than %d entries are ignored.\n", maxElst);
+        return 0;
+    }
+
+    if (realNb > maxElst)
+        nb = maxElst;
+    else
+        nb = realNb;
+
     int64_t *editDuration=new int64_t[nb];
     int64_t *mediaTime=new int64_t[nb];
     int64_t dlay=0;
     int64_t adv=0;
-    
-    ADM_info("[ELST] Found %" PRIu32" entries in list, version=%d\n",nb,version);
+
     for(int i=0;i<nb;i++)
     {
         if(1==version)
@@ -734,8 +769,8 @@ uint8_t MP4Header::parseElst(adm_atom *tom, int64_t *delay, int64_t *skip)
             editDuration[i]=(int32_t)tom->read32();
             mediaTime[i]=(int32_t)tom->read32();
         }
-            playbackSpeed=tom->read32();
-            ADM_info("Duration : %d, mediaTime:%d speed=%d \n",(int)editDuration[i],(int)mediaTime[i],(int)playbackSpeed);
+        playbackSpeed = tom->read32();
+        ADM_info("Duration: %" PRId64", mediaTime: %" PRId64", speed: %" PRIu32"\n", editDuration[i], mediaTime[i], playbackSpeed);
     }
 
     switch(nb)
@@ -875,8 +910,18 @@ static void parseStss(adm_atom *tom, MPsampleinfo *info)
         tom->skipAtom();
         return;
     }
+    if(info->nbSz && info->nbSync > info->nbSz)
+    {
+        ADM_warning("# of sync samples %" PRIu32" exceeds # of frames %" PRIu32", damaged file?\n", info->nbSync, info->nbSz);
+        tom->skipAtom();
+        return;
+    }
+
+    if (!checkRemaining(tom, info->nbSync * sizeof(uint32_t)))
+        return;
+
     info->Sync = new uint32_t[info->nbSync];
-    for(int i=0; i < info->nbSync; i++)
+    for(uint32_t i = 0; i < info->nbSync; i++)
     {
         info->Sync[i] = tom->read32();
     }
@@ -903,13 +948,21 @@ static void parseStts(adm_atom *tom, MPsampleinfo *info)
         tom->skipAtom();
         return;
     }
+    if (info->nbSz && info->nbStts > info->nbSz)
+    {
+        ADM_warning("# of entries in stts exceeds # of frames: %" PRIu32" vs %" PRIu32", damaged file?\n", info->nbStts, info->nbSz);
+    }
+
+    if (!checkRemaining(tom, info->nbStts * sizeof(uint32_t) * 2))
+        return;
+
     info->SttsN = new uint32_t[info->nbStts];
     info->SttsC = new uint32_t[info->nbStts];
-    for(int i=0; i < info->nbStts; i++)
+    for(uint32_t i = 0; i < info->nbStts; i++)
     {
         info->SttsN[i] = tom->read32();
         info->SttsC[i] = tom->read32();
-        aprintf("stts entry %d, count: %" PRIu32", unscaled size: %" PRIu32"\n", i, info->SttsN[i], info->SttsC[i]);
+        aprintf("stts entry %" PRIu32", count: %" PRIu32", unscaled size: %" PRIu32"\n", i, info->SttsN[i], info->SttsC[i]);
     }
     tom->skipAtom();
 }
@@ -934,14 +987,24 @@ static void parseStsc(adm_atom *tom, MPsampleinfo *info)
         tom->skipAtom();
         return;
     }
+    if (info->nbSz && info->nbSc > info->nbSz)
+    {
+        ADM_warning("Chunk count %" PRIu32" exceeds # of frames %" PRIu32", damaged file?\n", info->nbSc, info->nbSz);
+        tom->skipAtom();
+        return;
+    }
+
+    if (!checkRemaining(tom, info->nbSc * sizeof(uint32_t) * 2))
+        return;
+
     info->Sc = new uint32_t[info->nbSc];
     info->Sn = new uint32_t[info->nbSc];
-    for(int i=0; i < info->nbSc; i++)
+    for(uint32_t i=0; i < info->nbSc; i++)
     {
         info->Sc[i] = tom->read32();
         info->Sn[i] = tom->read32();
         tom->read32(); // sample description ID
-        aprintf("stsc entry %d: first chunk: %" PRIu32", chunk count: %" PRIu32"\n", i, info->Sc[i], info->Sn[i]);
+        aprintf("stsc entry %" PRIu32": first chunk: %" PRIu32", chunk count: %" PRIu32"\n", i, info->Sc[i], info->Sn[i]);
     }
     tom->skipAtom();
 }
@@ -968,8 +1031,11 @@ static void parseStsz(adm_atom *tom, MPsampleinfo *info)
         info->Sz = NULL;
     } else
     { // Frames of different size, read the table.
+        if (!checkRemaining(tom, info->nbSz * sizeof(uint32_t)))
+            return;
+
         info->Sz = new uint32_t[info->nbSz];
-        for(int i=0; i < info->nbSz; i++)
+        for(uint32_t i = 0; i < info->nbSz; i++)
         {
             info->Sz[i] = tom->read32();
         }
@@ -993,15 +1059,26 @@ static void parseCtts(adm_atom *tom, MPsampleinfo *info)
     uint32_t n,i,j,k;
 
     n = tom->read32();
-    ADM_info("Found composition-time-to-sample atom (ctts) with %" PRIu32" entries.\n", info->nbSz);
+    ADM_info("Found composition-time-to-sample atom (ctts) with %" PRIu32" entries.\n", n);
     ADM_info("ctts version: %" PRIu32", flags: %" PRIu32"\n", fourbytes >> 6, fourbytes && 0xFFFFFF);
     if(n <= 1) // all the same or invalid, ignore
     {
         tom->skipAtom();
         return;
     }
+    if (info->nbSz && n > info->nbSz) // early validity check
+    {
+        ADM_warning("# of ctts entries %" PRIu32" exceeds # of frames %" PRIu32", damaged file?\n", n, info->nbSz);
+        tom->skipAtom();
+        return;
+    }
+
+    if (!checkRemaining(tom, n * sizeof(uint32_t) * 2))
+        return;
+
     uint32_t *values=new uint32_t [n];
     uint32_t *count=new uint32_t [n];
+    uint64_t sum = 0;
     for(i=0;i<n;i++)
     {
         count[i] = tom->read32();
@@ -1011,8 +1088,20 @@ static void parseCtts(adm_atom *tom, MPsampleinfo *info)
             ADM_warning("Count at entry %" PRIu32" is equal zero, damaged file?\n", i);
             continue;
         }
-        info->nbCtts += count[i];
+        sum += count[i];
+        if (info->nbSz && sum > (uint64_t)info->nbSz)
+        {
+            ADM_error("Total count at entry %" PRIu32" exceeds number of frames %" PRIu32", damaged file?\n", i, info->nbSz);
+            sum = 0;
+            break;
+        } else if (sum > UINT32_MAX)
+        {
+            ADM_error("Total count exceeds UINT32_MAX, damaged file?\n");
+            sum = 0;
+            break;
+        }
     }
+    info->nbCtts = sum & 0xFFFFFFFF;
     if (!info->nbCtts)
     {
         ADM_warning("Invalid ctts.\n");
@@ -1061,6 +1150,16 @@ static void parseStco32(adm_atom *tom, MPsampleinfo *info)
         tom->skipAtom();
         return;
     }
+    if (info->nbSz && info->nbCo > info->nbSz)
+    {
+        ADM_warning("# of chunk offsets %" PRIu32" exceeds # of frames %" PRIu32", damaged file?\n", info->nbCo, info->nbSz);
+        tom->skipAtom();
+        return;
+    }
+
+    if (!checkRemaining(tom, info->nbCo * sizeof(uint32_t)))
+        return;
+
     info->Co = new uint64_t[info->nbCo];
     for(i = 0; i < info->nbCo; i++)
     {
@@ -1093,6 +1192,16 @@ static void parseStco64(adm_atom *tom, MPsampleinfo *info)
         tom->skipAtom();
         return;
     }
+    if (info->nbSz && info->nbCo > info->nbSz)
+    {
+        ADM_warning("# of chunk offsets %" PRIu32" exceeds # of frames %" PRIu32", damaged file?\n", info->nbCo, info->nbSz);
+        tom->skipAtom();
+        return;
+    }
+
+    if (!checkRemaining(tom, info->nbCo * sizeof(uint64_t)))
+        return;
+
     info->Co = new uint64_t[info->nbCo];
     for(i = 0; i < info->nbCo; i++)
     {

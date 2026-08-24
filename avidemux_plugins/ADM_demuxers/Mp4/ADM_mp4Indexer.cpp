@@ -331,17 +331,33 @@ uint8_t MP4Header::indexify( MP4Track *track,
     }
     // if no sample to chunk we map directly
     // first build the # of sample per chunk table
-    uint32_t totalchunk=0;
+    uint64_t totalchunk=0;
 
     // Search the maximum
     if(info->nbSc)
     {
+        int64_t s = 0;
         for(i=0;i<info->nbSc-1;i++)
-            totalchunk+=(info->Sc[i+1]-info->Sc[i])*info->Sn[i];
-
-        totalchunk+=(info->nbCo-info->Sc[info->nbSc-1]+1)*info->Sn[info->nbSc-1];
+        {
+            s = info->Sc[i+1];
+            s -= info->Sc[i];
+            s *= info->Sn[i];
+            totalchunk += s;
+        }
+        s = info->nbCo + 1;
+        s -= info->Sc[info->nbSc - 1];
+        s *= info->Sn[info->nbSc - 1];
+        totalchunk += s;
     }
-    aprintf("# of chunks %d, max # of samples %d\n",info->nbCo, totalchunk);
+    aprintf("# of chunks: %" PRIu32", max # of samples: %" PRId64"\n", info->nbCo, totalchunk);
+
+    if (totalchunk > info->nbSz)
+    {
+        ADM_warning("# of data chunks %" PRId64" exceeds # of frames %" PRIu32", damaged file?\n", totalchunk, info->nbSz);
+        delete [] track->index;
+        track->index = NULL;
+        return 0;
+    }
 
     uint32_t *chunkCount = new uint32_t[totalchunk+1];
 #if 0
@@ -359,14 +375,18 @@ uint8_t MP4Header::indexify( MP4Track *track,
     {
         for(i=0;i<info->nbSc-1;i++)
         {
-            int mn=info->Sc[i]-1;
-            int mx=info->Sc[i+1]-1;
-            if(mn<0 || mx<0 || mn>totalchunk || mx > totalchunk || mx<mn)
+            uint32_t mn = info->Sc[i];
+            uint32_t mx = info->Sc[i+1];
+            if(!mn || !mx || mn >= totalchunk || mx >= totalchunk || mx < mn)
             {
                 ADM_warning("Corrupted file\n");
+                delete [] chunkCount;
+                chunkCount = NULL;
+                delete [] track->index;
+                track->index = NULL;
                 return false;
             }
-            for(j=mn;j<mx;j++)
+            for(j = mn - 1; j < mx - 1; j++)
             {
                 chunkCount[j]=info->Sn[i];
                 ADM_assert(j<=totalchunk);
@@ -390,6 +410,7 @@ uint8_t MP4Header::indexify( MP4Track *track,
         aprintf("--starting at %lu , %lu to go\n",info->Co[j],chunkCount[j]);
         for(uint32_t k=0;k<chunkCount[j];k++)
         {
+            ADM_assert(cur < totalchunk);
             track->index[cur].offset=info->Co[j]+tail;
             tail+=track->index[cur].size;
             aprintf(" sample : %d offset : %lu\n",cur,track->index[cur].offset);
@@ -398,6 +419,7 @@ uint8_t MP4Header::indexify( MP4Track *track,
         }
     }
     delete [] chunkCount;
+    chunkCount = NULL;
     track->nbIndex=cur;
 
     // Now deal with duration
