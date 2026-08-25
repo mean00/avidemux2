@@ -712,14 +712,17 @@ uint8_t entryWalk(ADM_ebml_file *head,uint32_t headlen,entryDesc *entry)
         case MKV_LANGUAGE_IETF:
                 {
                  if(ietfLanguageTagFound) break;
-                 char s[100];
-                 s[99]=0;
-                 father.readString(s,len);
+#define LANG_DESC_BUF_LEN 100
+                 char s[LANG_DESC_BUF_LEN];
+                 s[LANG_DESC_BUF_LEN - 1] = 0;
+                 uint64_t sublen = (len < LANG_DESC_BUF_LEN) ? len : LANG_DESC_BUF_LEN - 1;
+                 father.readString(s, sublen);
                  if(!strlen(s))
                      strcpy(s,"eng"); // english is default
                  if(!strcmp(s,"unknown")) // we were using "unknown", which is not a valid ISO 639 code
                  {
-                     memset(s,'\0',100);
+                     memset(s, 0, LANG_DESC_BUF_LEN);
+#undef LANG_DESC_BUF_LEN
                      std::string und=ADM_UNKNOWN_LANGUAGE;
                      strcpy(s,und.c_str());
                      ADM_info("Found 'unknown' as language code, replacing it with '%s'\n",und.c_str());

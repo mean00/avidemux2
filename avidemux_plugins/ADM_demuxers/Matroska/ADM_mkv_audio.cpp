@@ -21,6 +21,7 @@
 #include "ADM_dcainfo.h"
 
 #include "ADM_vidMisc.h"
+#include <climits>
 #if 0
 #define vprintf printf
 #else
@@ -244,7 +245,7 @@ bool    mkvAccess::getPacket(uint8_t *dest, uint32_t *packlen, uint32_t maxSize,
     // Else we start a new lace (or no lacing at all)
     goToBlock(_currentBlock);
     mkvIndex *dex=&(_track->index[_currentBlock]);
-    uint64_t size=dex->size-3;
+    int64_t size = (dex->size > 3) ? dex->size - 3 : 0;
     uint64_t time=dex->Dts;
     if(!time && _currentBlock) time=ADM_AUDIO_NO_DTS;
     vprintf("[MKV] Time :%lu block:%u\n",time,_currentBlock);
@@ -283,7 +284,7 @@ bool    mkvAccess::getPacket(uint8_t *dest, uint32_t *packlen, uint32_t maxSize,
                           size-=v;
                           _Laces[i]=lce;
                         }
-
+                        ADM_assert(size > 0 && size < UINT32_MAX);
                         // The first one has Dts
                         *packlen= readAndRepeat(dest, _Laces[0],maxSize);              
                         _Laces[nbLaces-1]=size;
@@ -297,6 +298,7 @@ bool    mkvAccess::getPacket(uint8_t *dest, uint32_t *packlen, uint32_t maxSize,
                       {
                         int nbLaces=_parser->readu8()+1;
                         size--;
+                        ADM_assert(size > 0 && size / nbLaces < INT_MAX);
                         int bsize=size/nbLaces;
                         vprintf("NbLaces :%u lacesize:%u\n",nbLaces,bsize);
                         ADM_assert(nbLaces<MKV_MAX_LACES);
@@ -316,29 +318,29 @@ bool    mkvAccess::getPacket(uint8_t *dest, uint32_t *packlen, uint32_t maxSize,
                 {
                         uint64_t head=_parser->tell();
                         int nbLaces=_parser->readu8()+1;
-                        int32_t curSize=_parser->readEBMCode();
-                        int32_t delta;
-                        uint32_t sum;
+                        uint64_t curSize = _parser->readEBMCode();
+                        int64_t delta;
+                        uint64_t sum;
 
 
-                        vprintf("Ebml nbLaces :%u lacesize(0):%u\n",nbLaces,curSize);
-
+                        vprintf("Ebml nbLaces :%u lacesize(0):%" PRIu64"\n",nbLaces,curSize);
+                        ADM_assert(curSize <= UINT32_MAX);
                         _Laces[0]=curSize;
                         sum=curSize;
                         ADM_assert(nbLaces<MKV_MAX_LACES);
                         for(int i=1;i<nbLaces-1;i++)
                         {
                           delta=_parser->readEBMCode_Signed();
-                          vprintf("Ebml delta :%d lacesize[%d]->:%d\n",delta,i,curSize+delta);
+                          vprintf("Ebml delta :%" PRId64" lacesize[%d]->:%" PRIu64"\n",delta,i,curSize+delta);
                           curSize+=delta;
-                          ADM_assert(curSize>0);
+                          ADM_assert(curSize > 0 && curSize <= UINT32_MAX);
                           _Laces[i]=curSize;
                           sum+=curSize;
 
                         }
                         uint64_t tail=_parser->tell();
                         uint64_t consumed=head+size-tail;
-
+                        ADM_assert(consumed >= sum && consumed - sum <= UINT32_MAX);
                         _Laces[nbLaces-1]=consumed-sum;
 
                           // Take the 1st laces, it has timestamp

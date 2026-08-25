@@ -1133,7 +1133,7 @@ uint8_t  mkvHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
         ADM_warning("Frame %u size %u exceeds max %u, truncating.\n",framenum,sz,ADM_COMPRESSED_MAX_DATA_LENGTH);
         sz = ADM_COMPRESSED_MAX_DATA_LENGTH;
   }
-  img->dataLength=readAndRepeat(0,img->data, sz-3);
+  img->dataLength = readAndRepeat(0, img->data, (sz > 3)? sz - 3 : 0);
   ADM_assert(img->dataLength <= ADM_COMPRESSED_MAX_DATA_LENGTH);
   // ProRes frames may have their container atom stripped, in this case we need to recreate it.
   if(isProRes(_videostream.fccHandler) && !fourCC::check(img->data + 4, (uint8_t *)"icpf"))

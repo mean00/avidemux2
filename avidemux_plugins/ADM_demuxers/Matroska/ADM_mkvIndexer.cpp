@@ -83,7 +83,7 @@ uint8_t mkvHeader::indexLastCluster(ADM_ebml_file *parser)
                 cluster.skip(len);
                 break;
             case MKV_SIMPLE_BLOCK:
-                indexBlock(parser,len,cdx->Dts);
+                res = indexBlock(parser,len,cdx->Dts);
                 break;
             case MKV_BLOCK_GROUP:
             {
@@ -107,13 +107,15 @@ uint8_t mkvHeader::indexLastCluster(ADM_ebml_file *parser)
                             break;
                         case MKV_BLOCK:
                         case MKV_SIMPLE_BLOCK:
-                            indexBlock(&blockGroup,len,cdx->Dts);
+                            res = indexBlock(&blockGroup,len,cdx->Dts);
                             break;
                     }
                 }
             }
             break; // Block Group
         }
+        if (!res)
+            break;
     }
     //printf("[MKV] ending cluster at 0x%" PRIx64"\n",parser->tell());
     return res;
@@ -122,7 +124,7 @@ uint8_t mkvHeader::indexLastCluster(ADM_ebml_file *parser)
       \fn indexBlock
       \brief index a block, identify it and update index
 */
-uint8_t mkvHeader::indexBlock(ADM_ebml_file *parser,uint32_t len,uint32_t clusterTimeCodeMs)
+uint8_t mkvHeader::indexBlock(ADM_ebml_file *parser, uint64_t len, uint32_t clusterTimeCodeMs)
 {
     uint64_t tail=parser->tell()+len;
     // Read Track id
@@ -145,9 +147,13 @@ uint8_t mkvHeader::indexBlock(ADM_ebml_file *parser,uint32_t len,uint32_t cluste
 
     uint32_t entryFlags = (flags & 0x80)? AVI_KEY_FRAME : 0;
 
-    addIndexEntry(track,parser,blockBegin,tail-blockBegin,entryFlags,clusterTimeCodeMs+timecode);
+    uint8_t ret = 0;
+    if (tail - blockBegin > UINT32_MAX)
+        ADM_error("Block size %" PRIu64" exceeds max. supported, bailing out.\n", tail - blockBegin);
+    else
+        ret = addIndexEntry(track,parser,blockBegin,tail-blockBegin,entryFlags,clusterTimeCodeMs+timecode);
     parser->seek(tail);
-    return 1;
+    return ret;
 }
 /**
  *
@@ -199,24 +205,35 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
     uint32_t rpt=_tracks[0].headerRepeatSize;
     uint32_t frameNo = Track->index.size();
 
+    uint64_t want = (uint64_t)size + rpt;
+    if (want > UINT32_MAX)
+    {
+        ADM_error("Index entry size %" PRIu32" for track %" PRIu32" exceeds max. supported, bailing out.\n", size, track);
+        return 0;
+    }
+
     // expand buffer if needed
     if(size + rpt > readBufferSize)
     {
-        ADM_info("Expanding read buffer for frame %" PRIu32" of size %" PRIu32" in track %" PRIu32" from %" PRIu32" to %" PRIu32" bytes.\n",
-            frameNo, size, track, readBufferSize, rpt + size*2);
+        want = (uint64_t)size * 2 + rpt;
+        if (want > UINT32_MAX)
+            want = UINT32_MAX;
+        ADM_info("Expanding read buffer for frame %" PRIu32" of size %" PRIu32" in track %" PRIu32" from %" PRIu32" to %" PRIu64" bytes.\n",
+            frameNo, size, track, readBufferSize, want);
         delete [] readBuffer;
-        readBufferSize = rpt + size*2;
+        readBufferSize = want & 0xFFFFFFFF;
         readBuffer=new uint8_t[readBufferSize];
         memset(readBuffer,0,readBufferSize);
     }
     if(!track)
     {
         aprintf("adding image at 0x%llx , time = %d\n",where,timecodeMS);
-        if(Track->_needExtraData > 0 && (flags & AVI_KEY_FRAME))
+        if(Track->_needExtraData > 0 && (flags & AVI_KEY_FRAME) && size)
         {
             if(rpt)
                 memcpy(readBuffer,_tracks[0].headerRepeat,rpt);
-            parser->readBin(readBuffer+rpt,size-3);
+            if(size > 3)
+                parser->readBin(readBuffer+rpt,size-3);
             uint8_t *dest = NULL;
             int l = ADM_extractVideoExtraData(_videostream.fccHandler, size, readBuffer, &dest);
             if(l < 0)
@@ -234,13 +251,14 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
     // For the 2 most common cases : mp4 & h264.
     // Hackish, we already read the 3 bytes header
     // But they are already taken into account in the size part
-    if(!track && canRederiveFrameType(_videostream.fccHandler)) // Track 0 is video
+    if(!track && rpt + size > 3 && canRederiveFrameType(_videostream.fccHandler)) // Track 0 is video
     {
         if( isMpeg4Compatible(_videostream.fccHandler))
         {
             if(rpt)
                 memcpy(readBuffer,_tracks[0].headerRepeat,rpt);
-            parser->readBin(readBuffer+rpt,size-3);
+            if(size > 3)
+                parser->readBin(readBuffer+rpt,size-3);
 
             // Search the frame type...
             uint32_t timeIncBits=0;
@@ -272,10 +290,11 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
 
             if(rpt)
                 memcpy(readBuffer,_tracks[0].headerRepeat,rpt);
-            parser->readBin(readBuffer+rpt,size-3);
+            if(size > 3)
+                parser->readBin(readBuffer+rpt,size-3);
             // Deal with Matroska files containing Annex-B type of H.264 stream
             bool AnnexB=false;
-            if(!_tracks[0].extraDataLen && rpt+size > 3 && !readBuffer[0] && !readBuffer[1])
+            if(!_tracks[0].extraDataLen && !readBuffer[0] && !readBuffer[1])
             {
                 uint32_t mark=(readBuffer[2] << 8) + readBuffer[3];
                 if(mark == 1 || (mark > 0xFF && mark < 0x200 && rpt+size-3 != mark+4))
@@ -379,11 +398,12 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
 
             if(rpt)
                 memcpy(readBuffer,_tracks[0].headerRepeat,rpt);
-            parser->readBin(readBuffer+rpt,size-3);
+            if(size > 3)
+                parser->readBin(readBuffer+rpt,size-3);
 
             // Deal with Matroska files containing Annex-B type of HEVC stream
             bool AnnexB=false;
-            if(!_tracks[0].extraDataLen && rpt+size > 3 && !readBuffer[0] && !readBuffer[1])
+            if(!_tracks[0].extraDataLen && !readBuffer[0] && !readBuffer[1])
             {
                 uint32_t mark=(readBuffer[2] << 8) + readBuffer[3];
                 if(mark == 1 || (mark > 0xFF && mark < 0x200 && rpt+size-3 != mark+4))
@@ -420,7 +440,8 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
         {
             if(rpt)
                 memcpy(readBuffer,_tracks[0].headerRepeat,rpt);
-            parser->readBin(readBuffer+rpt,size-3);
+            if(size > 3)
+                parser->readBin(readBuffer+rpt,size-3);
             uint8_t *begin=readBuffer;
             uint8_t *end=readBuffer+size-3+rpt;
             bool following=false;
@@ -493,7 +514,10 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
             uint8_t *begin=readBuffer;
             uint8_t *end=readBuffer+size-3+rpt;
             int frameType;
-            if(ADM_VC1getFrameType(begin, (int)(end-begin),&frameType))
+            if(size + rpt > INT_MAX + 3)
+            {
+                ADM_warning("Index entry too large to determine VC1 frame type.\n");
+            } else if(ADM_VC1getFrameType(begin, (int)(end-begin), &frameType))
             {
                 ix.flags=frameType;
             }

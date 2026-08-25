@@ -169,7 +169,7 @@ protected:
 
     uint8_t                     goToBlock(uint32_t x);
     bool                        initLaces(uint32_t nbLaces,uint64_t time);
-     int              readAndRepeat(uint8_t *buffer, uint32_t len, uint32_t max)
+    uint32_t                    readAndRepeat(uint8_t *buffer, uint32_t len, uint32_t max)
                         {
                              uint32_t rpt=_track->headerRepeatSize;
                              if(rpt+len>max)
@@ -177,7 +177,8 @@ protected:
                                  ADM_error("Overflow in reading  mkv audio : %u (%u) max was %d\n",rpt+len,rpt,max);
                                  ADM_assert(0);
                                }
-                              _parser->readBin(buffer+rpt,len);
+                              if(len)
+                                _parser->readBin(buffer+rpt,len);
                               if(rpt)
                                 memcpy(buffer,_track->headerRepeat,rpt);
                               return len+rpt;
@@ -262,7 +263,7 @@ class mkvHeader         :public vidHeader
     void                    saveIndex(const std::string &idxName, uint64_t fileSize, bool overwrite);
     uint8_t                 indexClusters(ADM_ebml_file *parser);
     uint8_t                 indexLastCluster(ADM_ebml_file *parser);
-    uint8_t                 indexBlock(ADM_ebml_file *parser,uint32_t count,uint32_t timecodeMS);
+    uint8_t                 indexBlock(ADM_ebml_file *parser, uint64_t size, uint32_t timecodeMS);
 
     uint8_t                 rescaleTrack(mkvTrak *track,uint32_t durationMs);
 
@@ -287,14 +288,16 @@ class mkvHeader         :public vidHeader
 // AVI io
     virtual uint8_t  open(const char *name);
     virtual uint8_t  close(void) ;
-    int              readAndRepeat(int index,uint8_t *buffer, uint32_t len)
-                        {
-                             uint32_t rpt=_tracks[index].headerRepeatSize;
-                              _parser->readBin(buffer+rpt,len);
-                              if(rpt)
-                                memcpy(buffer,_tracks[index].headerRepeat,rpt);
-                              return len+rpt;
-                        }
+    uint32_t         readAndRepeat(int index, uint8_t *buffer, uint32_t len)
+                     {
+                        uint32_t rpt = _tracks[index].headerRepeatSize;
+                        ADM_assert((uint64_t)rpt + len <= UINT32_MAX);
+                        if (len)
+                            _parser->readBin(buffer+rpt,len);
+                        if (rpt)
+                            memcpy(buffer,_tracks[index].headerRepeat,rpt);
+                        return len+rpt;
+                     }
   //__________________________
   //  Info
   //__________________________
@@ -326,6 +329,6 @@ virtual   bool       setPtsDts(uint32_t frame,uint64_t pts,uint64_t dts);
         // Temporary buffer for indexing
 private:
         uint8_t *readBuffer;
-        int     readBufferSize;
+        uint32_t readBufferSize;
 };
 #endif
