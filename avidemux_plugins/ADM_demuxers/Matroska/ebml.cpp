@@ -177,16 +177,23 @@ int64_t    ADM_ebml::readSignedInt(uint32_t nb)
   return val;
 
 }
-uint8_t     ADM_ebml::readString(char *string, uint32_t maxLen)
+/**
+    \fn readString
+    \brief Read no more than maxLen bytes from the file and write
+           at most maxLen+1 bytes into buffer pointed to by string.
+*/
+uint32_t ADM_ebml::readString(char *string, uint32_t maxLen)
 {
   uint8_t v;
+  uint32_t bytes = 0;
   while(maxLen--)
   {
     v=*string++=readu8();
-    if(!v) return 1;
+    bytes++;
+    if(!v) return bytes;
   }
   *string=0;
-  return 1;
+  return bytes;
 }
 /******************
   Low level read
@@ -306,6 +313,8 @@ bool  ADM_ebml_file::open(const char *name)
   _begin=0;
   _fileSize=_size=ftello(fp);
   fseeko(fp,0,SEEK_SET);
+  // Safeguard against wraparound in finished()
+  if(_fileSize < 2) return 0;
   return 1;
 }
 /**
@@ -325,14 +334,17 @@ bool  ADM_ebml_file::readBin(uint8_t *whereto,uint32_t len)
  * @param vv
  * @return 
  */
-bool ADM_ebml_file::skip(uint32_t vv)
+bool ADM_ebml_file::skip(uint64_t vv)
 {
+  ADM_assert(vv <= INT64_MAX);
   fseeko(fp,vv,SEEK_CUR);
   return 1;
 }
 uint64_t ADM_ebml_file::tell(void)
 {
-  return ftello(fp);
+  int64_t off = ftello(fp);
+  ADM_assert(off >= 0);
+  return off;
 }
 /**
  * 
@@ -341,6 +353,7 @@ uint64_t ADM_ebml_file::tell(void)
  */
 bool ADM_ebml_file::seek(uint64_t pos)
 {
+  ADM_assert(pos <= INT64_MAX);
   fseeko(fp,pos,SEEK_SET);
   return 1;
 }

@@ -23,7 +23,7 @@ class ADM_ebml
         int64_t     readSignedInt(uint32_t nb);
         uint64_t    readUnsignedInt(uint32_t nb);
         float       readFloat(uint32_t n);
-        uint8_t     readString(char *string, uint32_t maxLen);
+        uint32_t    readString(char *string, uint32_t maxLen);
         uint8_t     readUTF8(char *string, uint32_t maxLen);
         uint8_t     readElemId(uint64_t *code,uint64_t *len);
         uint64_t    readEBMCode(void);
@@ -40,7 +40,7 @@ class ADM_ebml
              int32_t  reads32(void);
         /***********************************/
         virtual     bool     readBin(uint8_t *whereto,uint32_t len)=0;
-        virtual     bool     skip(uint32_t nbBytes)=0;
+        virtual     bool     skip(uint64_t nbBytes)=0;
         virtual     uint64_t tell(void)=0;
 };
 /**
@@ -59,7 +59,7 @@ class ADM_ebml_file : public ADM_ebml
                     bool      open(const char *fn);
        
         virtual     bool      readBin(uint8_t *whereto,uint32_t len);
-        virtual     bool      skip(uint32_t nbBytes);
+        virtual     bool      skip(uint64_t nbBytes);
                     uint64_t  tell(void);
                     bool      seek(uint64_t pos);
                     bool      finished(void);
