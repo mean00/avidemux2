@@ -331,6 +331,8 @@ uint8_t  mp2Buffer[MP2_PROBE_SIZE*2];
                 return false;
             }
             int left=pes.payloadSize-pes.offset;
+            if (limit + left > MP2_PROBE_SIZE * 2)
+                break;
             memcpy(mp2Buffer+limit,pes.payload+pes.offset,left);
             limit+=left;
         }
