@@ -350,35 +350,42 @@ uint8_t  tsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
 {
     if(frame>=ListOfFrames.size()) return 0;
     dmxFrame *pk=ListOfFrames[frame];
+    if(pk->len > ADM_COMPRESSED_MAX_DATA_LENGTH)
+    {
+        ADM_error("Frame %" PRIu32" size %" PRIu32" exceeds max. supported.\n", frame, pk->len);
+        return 0;
+    }
     // next frame
     if((lastFrame != TS_INVALID) && (frame == lastFrame + 1) && !isKeyFrame(pk->type))
     {
         lastFrame++;
-        bool r=tsPacket->read(pk->len,img->data);
-             img->dataLength=pk->len;
-             img->demuxerFrameNo=frame;
-             img->demuxerDts=pk->dts;
-             img->demuxerPts=pk->pts;
-             //printf("[>>>] %d:%02x %02x %02x %02x\n",frame,img->data[0],img->data[1],img->data[2],img->data[3]);
-             getFlags(frame,&(img->flags));
-             UNESCAPE();
-             return r;
+        if (!tsPacket->read(pk->len,img->data))
+            return 0;
+        img->dataLength = pk->len;
+        img->demuxerFrameNo = frame;
+        img->demuxerDts = pk->dts;
+        img->demuxerPts = pk->pts;
+        //printf("[>>>] %d:%02x %02x %02x %02x\n",frame,img->data[0],img->data[1],img->data[2],img->data[3]);
+        getFlags(frame,&(img->flags));
+        //UNESCAPE();
+        return 1;
     }
     // Intra ?
     if(isKeyFrame(pk->type))
     {
-        if(!tsPacket->seek(pk->startAt,pk->index)) return false;
-         bool r=tsPacket->read(pk->len,img->data);
-             img->dataLength=pk->len;
-             img->demuxerFrameNo=frame;
-             img->demuxerDts=pk->dts;
-             img->demuxerPts=pk->pts;
-             getFlags(frame,&(img->flags));
-             //printf("[>>>] %d:%02x %02x %02x %02x\n",frame,img->data[0],img->data[1],img->data[2],img->data[3]);
-             lastFrame=frame;
-             UNESCAPE();
-             return r;
-
+        if (!tsPacket->seek(pk->startAt,pk->index))
+            return 0;
+        if (!tsPacket->read(pk->len,img->data))
+            return 0;
+        img->dataLength = pk->len;
+        img->demuxerFrameNo = frame;
+        img->demuxerDts = pk->dts;
+        img->demuxerPts = pk->pts;
+        getFlags(frame,&(img->flags));
+        //printf("[>>>] %d:%02x %02x %02x %02x\n",frame,img->data[0],img->data[1],img->data[2],img->data[3]);
+        lastFrame = frame;
+        //UNESCAPE();
+        return 1;
     }
     
     // Random frame
@@ -411,15 +418,16 @@ uint8_t  tsHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
     }
     pk=ListOfFrames[frame];
     lastFrame++;
-    bool r=tsPacket->read(pk->len,img->data);
-         img->dataLength=pk->len;
-         img->demuxerFrameNo=frame;
-         img->demuxerDts=pk->dts;
-         img->demuxerPts=pk->pts;
-         //printf("[>>>] %d:%02x %02x %02x %02x\n",frame,img->data[0],img->data[1],img->data[2],img->data[3]);
-         getFlags(frame,&(img->flags));
-         UNESCAPE();
-         return r;
+    if (!tsPacket->read(pk->len,img->data))
+        return 0;
+    img->dataLength = pk->len;
+    img->demuxerFrameNo = frame;
+    img->demuxerDts = pk->dts;
+    img->demuxerPts = pk->pts;
+    //printf("[>>>] %d:%02x %02x %02x %02x\n",frame,img->data[0],img->data[1],img->data[2],img->data[3]);
+    getFlags(frame,&(img->flags));
+    //UNESCAPE();
+    return 1;
 }
 
 
