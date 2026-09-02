@@ -282,6 +282,11 @@ bool TS_scanPmt(tsPacket *t,uint32_t pid,listOfTsTracks *list)
     if(t->getNextPSI(pid,&psi)==true)
      {
         len=psi.payloadSize;
+        if (len < 4)
+        {
+            ADM_warning("PSI payload too short: %d\n", len);
+            return false;
+        }
         // We should be protected by CRC here
         int packLen=len;
         printf("[TsDemuxer] PCR 0x%x, len=%d\n",((r[0]<<8)+r[1])&0x1fff,packLen);
@@ -291,9 +296,9 @@ bool TS_scanPmt(tsPacket *t,uint32_t pid,listOfTsTracks *list)
         r+=2;
         packLen-=4;
         // Program Descriptor
-        printf("[PMT]--Decoding Program info--\n");
         if(programInfoLength && programInfoLength<=packLen)
         {
+            printf("[PMT]--Decoding Program info--\n");
             decodeProgrameDescriptor(r, programInfoLength,trk.language);
             packLen-=programInfoLength;
             r+=programInfoLength;
@@ -309,9 +314,13 @@ bool TS_scanPmt(tsPacket *t,uint32_t pid,listOfTsTracks *list)
 
             size&=0xfff;
             pid&=0x1fff;
+            if (packLen < size + 5)
+            {
+                printf("[PMT] Incomplete ES descriptor, need: %d, available: %d bytes.\n", size+5, packLen);
+                break;
+            }
             uint8_t *base=r+5;
             r+=size+5;
-            if(packLen < size+5) break;
             packLen-=5+size;
             printf("[PMT]          Type=0x%x pid=%x size=%d\n",type,pid,size);
             const char *str;
@@ -323,17 +332,22 @@ bool TS_scanPmt(tsPacket *t,uint32_t pid,listOfTsTracks *list)
             uint8_t *tail=r;
             while(head<tail)
             {
-               uint8_t tag=head[0];
-               uint8_t tag_len=head[1];
-               printf("[PMT]     Tag 0x%x , len %d, ",tag,tag_len);
-               for(int i=0;i<tag_len;i++) printf(" %02x",head[2+i]);
+               uint8_t tag = *head++;
+               uint8_t tag_len = *head++;
+               printf("[PMT]     Tag 0x%02x, len %d, ",tag,tag_len);
+               if (head + tag_len > tail)
+               {
+                   printf("Tag length out of bounds, skipping.\n");
+                   break;
+               }
+               for(int i=0;i<tag_len;i++) printf(" %02x",head[i]);
                printf("\n");
                switch(tag)
                {
                case 0x05: // registration descriptor
-                   if(fourCC::check(head+2,(uint8_t *)"HEVC"))
+                   if (tag_len >= 4 && fourCC::check(head, (uint8_t *)"HEVC"))
                    {
-                       printf("[PMT} HEVC tag found\n");
+                       printf("[PMT] HEVC tag found\n");
                        type=0x24;
                    }
                    break;
@@ -344,17 +358,17 @@ bool TS_scanPmt(tsPacket *t,uint32_t pid,listOfTsTracks *list)
                    int langCodeLen = (tag_len>3)? 3 : tag_len;
                    for(int i=0; i<langCodeLen; i++)
                    {
-                       lan[i]=head[2+i];
+                       lan[i] = head[i];
                    }
                    lan[langCodeLen]=0;
-                   trk.language=std::string(lan);
-                   break;                        
+                   trk.language = lan;
+                   break;
                }
                case 0x7A: if(type==6) type=0x84;break; 
                case 0x6A: if(type==6) type=0x81;break; // AC3
                    default:break;
                }
-               head+=2+tag_len;
+               head += tag_len;
             }
             
             if(type==0xea)
