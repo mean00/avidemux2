@@ -16,7 +16,7 @@
 #ifndef ADM_TS_GETBITS
 #define ADM_TS_GETBITS
 #include "dmxTSPacket.h"
-#define MAX_GETBITS_BUFFER 64
+#define MAX_GETBITS_BUFFER 192
 /**
     \class tsGetBits
     
