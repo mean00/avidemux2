@@ -335,30 +335,39 @@ uint8_t psHeader::close(void)
 uint8_t  psHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
 {
     if(frame>=ListOfFrames.size()) return 0;
-    getFlags(frame,&(img->flags));
     dmxFrame *pk=ListOfFrames[frame];
+    if(pk->len > ADM_COMPRESSED_MAX_DATA_LENGTH)
+    {
+        ADM_error("Frame %" PRIu32" size %" PRIu32" exceeds max. supported.\n", frame, pk->len);
+        return 0;
+    }
     if(lastFrame != PS_INVALID && (frame == lastFrame+1) && pk->type!=1) // the next frame, not an intra
     {
         lastFrame++;
-        bool r=psPacket->read(pk->len,img->data);
-             img->dataLength=pk->len;
-             img->demuxerFrameNo=frame;
-             img->demuxerDts=pk->dts;
-             img->demuxerPts=pk->pts;
-             //printf("[>>>] %d:%02x %02x %02x %02x\n",frame,img->data[0],img->data[1],img->data[2],img->data[3]);
-             return r;
+        if(!psPacket->read(pk->len,img->data))
+            return 0;
+        img->dataLength = pk->len;
+        img->demuxerFrameNo = frame;
+        img->demuxerDts = pk->dts;
+        img->demuxerPts = pk->pts;
+        //printf("[>>>] %d:%02x %02x %02x %02x\n",frame,img->data[0],img->data[1],img->data[2],img->data[3]);
+        getFlags(frame,&(img->flags));
+        return 1;
     }
     if(pk->type==1) // an intra
     {
-        if(!psPacket->seek(pk->startAt,pk->index)) return false;
-         bool r=psPacket->read(pk->len,img->data);
-             img->dataLength=pk->len;
-             img->demuxerFrameNo=frame;
-             img->demuxerDts=pk->dts;
-             img->demuxerPts=pk->pts;
-             //printf("[>>>] %d:%02x %02x %02x %02x\n",frame,img->data[0],img->data[1],img->data[2],img->data[3]);
-             lastFrame=frame;
-             return r;
+        if(!psPacket->seek(pk->startAt,pk->index))
+            return 0;
+        if(!psPacket->read(pk->len,img->data))
+            return 0;
+        img->dataLength = pk->len;
+        img->demuxerFrameNo = frame;
+        img->demuxerDts = pk->dts;
+        img->demuxerPts = pk->pts;
+        //printf("[>>>] %d:%02x %02x %02x %02x\n",frame,img->data[0],img->data[1],img->data[2],img->data[3]);
+        getFlags(frame,&(img->flags));
+        lastFrame = frame;
+        return 1;
     }
 
     // a random frame: need to rewind first, then seek forward
@@ -390,14 +399,16 @@ uint8_t  psHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
     pk=ListOfFrames[frame];
     lastFrame++;
 
-    bool r=psPacket->read(pk->len,img->data);
+    if(!psPacket->read(pk->len,img->data))
+        return 0;
 
     img->dataLength=pk->len;
     img->demuxerFrameNo=frame;
     img->demuxerDts=pk->dts;
     img->demuxerPts=pk->pts;
     //printf("[>>>] %d:%02x %02x %02x %02x\n",frame,img->data[0],img->data[1],img->data[2],img->data[3]);
-    return r;
+    getFlags(frame,&(img->flags));
+    return 1;
 }
 
 /**
