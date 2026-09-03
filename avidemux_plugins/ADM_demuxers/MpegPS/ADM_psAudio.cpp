@@ -208,7 +208,7 @@ bool    ADM_psAccess::setScrGapList(const ListOfScr *list)
             {
                 timeOffset=((*list)[index].timeOffset);
                 index++;
-                if(index>(*list).size()) pivot=0x8000000000000LL;
+                if(index>=(*list).size()) pivot=0x8000000000000LL;
                         else pivot=(*list)[index].position;
             }
         }
