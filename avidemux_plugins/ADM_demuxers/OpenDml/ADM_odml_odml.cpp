@@ -23,10 +23,13 @@
 #include "fourcc.h"
 #include "ADM_openDML.h"
 
-
-#define aprintf(...) {}
-
 //#define OPENDML_VERBOSE
+#ifdef OPENDML_VERBOSE
+    #define aprintf(...) printf
+#else
+    #define aprintf(...) {}
+#endif
+
 #ifdef _MSC_VER
         #define ADM_PACKED(c,n)   __pragma( pack(push, 1) ) c n  __pragma( pack(pop) )
 #else
@@ -225,7 +228,16 @@ uint32_t 	i,j;
 			printf("[AVI]Problem reading secondary index (%u/%u) trying to continue \n",i,masterIndex.nbEntryInUse);
 			goto _cntue;
 		}
-		total+=second.nbEntryInUse;
+		uint64_t check = total;
+		check += second.nbEntryInUse;
+		if (check > UINT32_MAX)
+		{
+			ADM_error("Number of frames out of bounds, bailing out.\n");
+			free(superEntries);
+			superEntries = NULL;
+			return 0;
+		}
+		total = check;
 	}
 _cntue:
 	printf("Found a grand total of %" PRIu32" frames\n",total);
@@ -239,10 +251,12 @@ _cntue:
 		fseeko(_fd,superEntries[i].offset,SEEK_SET);
 		fcc=read32();
 		len=read32();
+#ifdef OPENDML_VERBOSE
                 aprintf("subindex : %" PRIu32" size %" PRIu32" (%lx)",i,len,len);
 
                 aprintf("Seeking to %" PRIx64"\n",superEntries[i].offset);
 		fourCC::print(fcc);aprintf("\n");
+#endif
 		//if(1!=fread(&second,sizeof(second),1,_fd))
                 if(!readSecondary(&second,_fd))
 		{
