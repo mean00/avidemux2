@@ -266,7 +266,7 @@ uint8_t    OpenDMLHeader::open(const char *name)
 uint8_t badAvi=0;
 uint32_t rd;
 
-	printf("** opening OpenDML files **");	
+	printf("** opening OpenDML files **\n");
         
 	_fd=ADM_fopen(name,"rb");
 	if(!_fd)
@@ -923,12 +923,13 @@ void OpenDMLHeader::walk(riffParser *p)
 							walk(n);
 							delete n;
 						}
-						p->curPos=ftello(p->fd);
 					if(MKFCC('s','t','r','l')==sub)
 					{
+						ADM_assert(_nbTrack < ADM_ODML_MAX_TRACKS);
  						_nbTrack++;
 					}
-					
+					p->curPos = ftello(p->fd);
+					if(p->curPos & 1) p->skip(1); // ???
 				}
 				break;
 		default:

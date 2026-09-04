@@ -41,7 +41,6 @@ uint8_t riffParser::read(uint32_t len, uint8_t *data)
 }
 uint8_t riffParser::skip(uint32_t s)
 {
-	if(s&1) s++;
 	fseeko(fd,s,SEEK_CUR);
 	curPos+=s;
 	if(curPos>endPos)

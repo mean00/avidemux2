@@ -17,6 +17,9 @@
 #include "ADM_Video.h"
 #include "ADM_riff.h"
 #include "ADM_audioStream.h"
+
+#define ADM_ODML_MAX_TRACKS 10
+
 class AVDMGenericAudioStream;
 
 typedef struct odmlIndex
@@ -82,7 +85,7 @@ protected:
 	  //_________________________________________
 	  // This is temporary stuff to read the avi
 	  //_________________________________________
-	  odmlTrack			_Tracks[10];
+	  odmlTrack			_Tracks[ADM_ODML_MAX_TRACKS];
 	  odmlIndex			_regularIndex;
 	  odmlIndex			_movi;
 	  //_________________________________________
