@@ -143,7 +143,6 @@ uint8_t OpenDMLHeader::unpackPacked( void )
 		// more than one vop, do up to the n-1th
 		// the 1st image starts at 0
 		myVops[0].offset=0;
-		myVops[nbVop].offset=image.dataLength;
 
                 //if(nbVop>2)
                 {
@@ -161,7 +160,9 @@ uint8_t OpenDMLHeader::unpackPacked( void )
                                 newIndex[targetIndex].intra=myVops[j].type;
                         else
                                 newIndex[targetIndex].intra=AVI_B_FRAME;
-                        newIndex[targetIndex].size=myVops[j+1].offset-myVops[j].offset;
+                        uint32_t sz = (j+1 < nbVop)? myVops[j+1].offset : image.dataLength;
+                        sz -= myVops[j].offset;
+                        newIndex[targetIndex].size = sz;
                         newIndex[targetIndex].offset=_idx[img].offset+myVops[j].offset;
 
                         if(j)
