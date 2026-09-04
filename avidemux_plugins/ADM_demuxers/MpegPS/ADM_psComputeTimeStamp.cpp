@@ -36,6 +36,7 @@ bool psHeader::updatePtsDts(void)
         {
 
             BVector          <ADM_mpgAudioSeekPoint > *seekPoints=&(listOfAudioTracks[i]->access->seekPoints);
+            if(seekPoints->empty()) continue;
             uint64_t dts=(*seekPoints)[0].dts;
             if(dts!=ADM_NO_PTS) continue;
             ADM_warning("[PS] Audio track %d has no timestamp for first seek point, guessing...\n",i);
@@ -102,6 +103,7 @@ next:
         for(int i=0;i<listOfAudioTracks.size();i++)
         {
             BVector          <ADM_mpgAudioSeekPoint > *seekPoints=&(listOfAudioTracks[i]->access->seekPoints);
+            if(seekPoints->empty()) continue;
             uint64_t secondDts=(*seekPoints)[0].dts;
             uint64_t secondSize=(*seekPoints)[0].size;
             if(secondSize && listOfAudioTracks[i]->header.byterate)
