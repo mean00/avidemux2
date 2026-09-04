@@ -64,10 +64,11 @@ char buffer[TS_MAX_LINE];
 bool tsHeader::processAudioIndex(char *buffer)
 {
     int64_t startAt,dts;
-    uint32_t size;
-    uint32_t pes;
+    uint32_t size, pes;
+    uint32_t totalAudioTracks = listOfAudioTracks.size();
+    uint32_t trackNb = 0;
     char *head,*tail;
-    int trackNb=0;
+
         sscanf(buffer,"bf:%" PRIx64,&startAt);
         head=strstr(buffer," ");
         if(!head) return false;
@@ -78,6 +79,7 @@ bool tsHeader::processAudioIndex(char *buffer)
             {
 // qfprintf(index,"Pes:%x:%08" PRIx64":%" PRIi32":%PRId64 ",e,s->startAt,s->startSize,s->startDts);
                 printf("[tsHeader::processAudioIndex] Reading index %s failed\n",buffer);
+                return false;
             }
             head=tail+1;
             ADM_tsAccess *track=listOfAudioTracks[trackNb]->access;
@@ -89,6 +91,7 @@ bool tsHeader::processAudioIndex(char *buffer)
             trackNb++;
             //printf("[%s] => %" PRIx32" Dts:%" PRId64" Size:%" PRId64"\n",buffer,pes,dts,size);
             if(strlen(head)<4) break;
+            if(trackNb >= totalAudioTracks) break;
         }
         return true;
 
