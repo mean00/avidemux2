@@ -52,6 +52,11 @@ bool firstAudio=true;
                     processAudioIndex(buffer+6);
             }
         }
+    if (ListOfFrames.empty())
+    {
+        ADM_error("Index contains no frames.\n");
+        return false;
+    }
     return true;
 }
 /**
@@ -61,10 +66,11 @@ bool firstAudio=true;
 bool psHeader::processAudioIndex(char *buffer)
 {
     int64_t startAt,dts;
-    uint32_t size;
-    uint32_t pes;
+    uint32_t size, pes;
+    uint32_t totalAudioTracks = listOfAudioTracks.size();
+    uint32_t trackNb = 0;
     char *head,*tail;
-    int trackNb=0;
+
         sscanf(buffer,"bf:%" PRIx64,&startAt);
         head=strstr(buffer," ");
         if(!head) return false;
@@ -75,6 +81,7 @@ bool psHeader::processAudioIndex(char *buffer)
             {
 // qfprintf(index,"Pes:%x:%08" PRIx64":%" PRIi32":%PRId64 ",e,s->startAt,s->startSize,s->startDts);
                 printf("[PsHeader::processAudioIndex] Reading index %s failed\n",buffer);
+                return false;
             }
             head=tail+1;
             ADM_psAccess *track=listOfAudioTracks[trackNb]->access;
@@ -83,6 +90,7 @@ bool psHeader::processAudioIndex(char *buffer)
             trackNb++;
             //printf("[%s] => %" PRIx32" Dts:%" PRId64" Size:%" PRId64"\n",buffer,pes,dts,size);
             if(strlen(head)<4) break;
+            if(trackNb >= totalAudioTracks) break;
         }
         return true;
 
