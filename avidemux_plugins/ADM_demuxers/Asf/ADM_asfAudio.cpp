@@ -129,6 +129,13 @@ bool  asfAudioAccess::getPacket(uint8_t *dest, uint32_t *len, uint32_t maxSize,u
       bit=readQueue.front();
       readQueue.pop_front();
       // still same sequence ...add
+      if(bit->len > maxSize)
+      {
+         ADM_error("Packet size %u out of bounds, max: %u\n", bit->len, maxSize);
+         storageQueue.push_back(bit);
+         bit = NULL;
+         return 0;
+      }
       memcpy(dest,bit->data,bit->len);
       *len=bit->len;
       *dts=bit->pts; // for audio PTS=DTS...
@@ -142,6 +149,8 @@ bool  asfAudioAccess::getPacket(uint8_t *dest, uint32_t *len, uint32_t maxSize,u
       bit=NULL;
       return 1;
     }
+    if(_packet->finished())
+        break;
     r=_packet->nextPacket(_streamId);
     _packet->skipPacket();
     if(!r)
