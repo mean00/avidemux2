@@ -135,6 +135,12 @@ bool      ADM_flvAccess::getPacket(uint8_t *buffer, uint32_t *osize, uint32_t ma
         return false;
     }
     x=&(_track->_index[currentBlock]);
+    currentBlock++;
+    if (x->size > maxSize)
+    {
+        ADM_error("Packet %u / %u too large: %u, max: %s\n", currentBlock, _track->_nbIndex, x->size, maxSize);
+        return false;
+    }
 #ifdef USE_BUFFERED_IO
     aparser->read32(x->size,buffer);
 #else
@@ -142,9 +148,8 @@ bool      ADM_flvAccess::getPacket(uint8_t *buffer, uint32_t *osize, uint32_t ma
 #endif
     *osize=x->size;
     *dts=((uint64_t)x->dtsUs);
-    
-    currentBlock++;
-    return 1;
+
+    return true;
 }
 /**
     \fn goToBlock
