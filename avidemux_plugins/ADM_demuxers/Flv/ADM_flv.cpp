@@ -1506,6 +1506,11 @@ uint8_t  flvHeader::getFrame(uint32_t frame,ADMCompressedImage *img)
 {
      if(frame>=videoTrack->_nbIndex) return 0;
      flvIndex *idx=&(videoTrack->_index[frame]);
+     if(idx->size > ADM_COMPRESSED_MAX_DATA_LENGTH)
+     {
+         ADM_error("Frame %u size %u exceeds max. supported.\n", frame, idx->size);
+         return 0;
+     }
 #ifdef USE_BUFFERED_IO
      parser->setpos(idx->pos);
      if(!read(idx->size,img->data))
