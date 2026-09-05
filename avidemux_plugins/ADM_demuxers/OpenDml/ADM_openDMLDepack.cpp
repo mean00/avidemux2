@@ -60,7 +60,12 @@ uint8_t OpenDMLHeader::unpackPacked( void )
 
 	// now we are ready to rumble
 	// First get a unpack buffe
-	uint8_t *buffer=new uint8_t [2*getWidth()*getHeight()];
+	if (getWidth() > MAXIMUM_SIZE || getWidth() > MAXIMUM_SIZE)
+		return 0;
+	uint32_t bufferSize = 2 * getWidth() * getHeight();
+	if (bufferSize > ADM_COMPRESSED_MAX_DATA_LENGTH)
+		bufferSize = ADM_COMPRESSED_MAX_DATA_LENGTH;
+	uint8_t *buffer = new uint8_t [bufferSize];
 
 	// For each frame we lookup x times the VOP header
 	// the first one become frame n, the second one becomes frame N+1
@@ -91,6 +96,13 @@ uint8_t OpenDMLHeader::unpackPacked( void )
 	{
         ADM_assert(nbDuped<2);
 		working->update(img,nbFrame);
+		uint32_t frameSize;
+		getFrameSize(img,&frameSize);
+		if(frameSize > bufferSize)
+		{
+			ADM_error("Abnormally large unpacked frame %" PRIu32"\n", img);
+			goto _abortUnpack;
+		}
 		if(!getFrame(img,&image))
         {
             printf("[Avi] Error could not get frame %" PRIu32"\n",img);
