@@ -93,18 +93,32 @@ uint8_t OpenDMLHeader::getExtraHeaderData(uint32_t *len, uint8_t **data)
 uint8_t  OpenDMLHeader::getFrame(uint32_t framenum,ADMCompressedImage *img)
 {
     if(framenum>= (uint32_t)_videostream.dwLength) return 0;
-uint64_t offset=_idx[framenum].offset; //+_mdatOffset;
-	
- 	fseeko(_fd,offset,SEEK_SET);
- 	fread(img->data, _idx[framenum].size, 1, _fd);
-  	img->dataLength=_idx[framenum].size;
-        img->flags=_idx[framenum].intra;
-        img->demuxerDts=_idx[framenum].dts; // FIXME
-        img->demuxerPts=_idx[framenum].pts;
-        
-	aprintf("Size: %lu\n",_idx[framenum].size);
+    odmlIndex *dx = &(_idx[framenum]);
+    // Truncating a compressed image may result in massive damage
+    // initially going unnoticed, better fail right away.
+    if (dx->size > ADM_COMPRESSED_MAX_DATA_LENGTH)
+    {
+        ADM_error("Abnormally large frame %" PRIu32" size %" PRIu32", bailing out.\n", framenum, dx->size);
+        return 0;
+    }
+    if (0 != fseeko(_fd, dx->offset, SEEK_SET))
+    {
+        ADM_error("Seek to 0x%" PRIx64" for frame %" PRIu32" failed.\n", dx->offset, framenum);
+        return 0;
+    }
+    if (1 != fread(img->data, dx->size, 1, _fd))
+    {
+        ADM_error("Reading frame %" PRIu32" failed.\n", framenum);
+        return 0;
+    }
+    img->dataLength = dx->size;
+    img->flags = dx->intra;
+    img->demuxerDts = dx->dts; // FIXME
+    img->demuxerPts = dx->pts;
+
+    aprintf("Frame %lu size: %lu\n", dx->size);
 //	if(offset & 1) printf("odd!\n");
- 	return 1;
+    return 1;
 }
 /**
     \fn getFrame
@@ -551,7 +565,8 @@ uint32_t rd;
                 printf("\nOpenDML file successfully read..\n");
                 if(ret==1) 
                 {
-                    ret = computePtsDts();
+                    if (!computePtsDts())
+                        return 0;
                     removeEmptyFrames();
                 }
                 ADM_info("PtsAvailable : %d\n",(int)ptsAvailable);
