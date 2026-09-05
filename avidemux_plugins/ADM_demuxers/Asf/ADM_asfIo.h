@@ -3,7 +3,6 @@
         uint64_t lo,hi;
         lo=read32();
         hi=read32();
-        _offset+=8;
         ADM_assert(_offset<=pakSize);
         return lo+(hi<<32); 
         
