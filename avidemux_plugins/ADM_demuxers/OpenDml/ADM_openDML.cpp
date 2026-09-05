@@ -551,7 +551,7 @@ uint32_t rd;
                 printf("\nOpenDML file successfully read..\n");
                 if(ret==1) 
                 {
-                    computePtsDts();
+                    ret = computePtsDts();
                     removeEmptyFrames();
                 }
                 ADM_info("PtsAvailable : %d\n",(int)ptsAvailable);
@@ -608,7 +608,11 @@ bool OpenDMLHeader::removeEmptyFrames(void)
 uint8_t OpenDMLHeader::computePtsDts(void)
 {
     // if it is mpeg4-sp, removed packet bitstream & reindex
-    if(isMpeg4Compatible(_videostream.fccHandler))  OpenDMLHeader::unpackPacked(  );
+    if(isMpeg4Compatible(_videostream.fccHandler))
+    {
+        if (ADM_OK != OpenDMLHeader::unpackPacked())
+            return 0;
+    }
     // Now if we have B frames, it is properly tagged
     // Begin by putting PTS=DTS i.e. no B-frames
     for(int i=0;i<_videostream.dwLength;i++)
