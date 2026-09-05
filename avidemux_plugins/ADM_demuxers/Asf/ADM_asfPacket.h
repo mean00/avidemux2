@@ -51,6 +51,7 @@ class asfPacket
     uint8_t         skip( uint32_t how);
     FILE            *_fd;
     uint64_t        packetStart;
+    int64_t         fileSize;
     uint8_t         segmentId;
     uint32_t        pakSize;
     queueOfAsfBits  *queue;
@@ -70,7 +71,7 @@ class asfPacket
   
     uint8_t   nextPacket(uint8_t streamWanted);
     uint8_t   skipPacket(void);
-    
+    uint8_t   finished(void);
     uint64_t  getPos(void);
     uint32_t  getPayloadLen(void);
 #ifdef ASF_INLINE

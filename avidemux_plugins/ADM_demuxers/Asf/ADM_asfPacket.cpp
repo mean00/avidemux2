@@ -54,11 +54,16 @@ bool freeQueue(queueOfAsfBits *q)
 asfPacket::asfPacket(FILE *f,uint64_t nb,uint32_t pSize,queueOfAsfBits *q,queueOfAsfBits *s,uint64_t startDataOffset)
  {
    _fd=f;
+   ADM_assert(_fd);
    pakSize=pSize;
    ADM_assert(pakSize);
    packetStart=ftello(f);
+   ADM_assert(packetStart >= 0);
+   ADM_assert(!fseeko(f, 0, SEEK_END));
+   fileSize = ftello(f);
+   ADM_assert(fileSize > 0);
+   ADM_assert(!fseeko(f, packetStart, SEEK_SET));
    aprintf("Packet created at %" PRIx64"\n",packetStart);
-   ADM_assert(_fd);
    queue=q;
    storage=s;
    ADM_assert(q);
@@ -73,6 +78,18 @@ asfPacket::asfPacket(FILE *f,uint64_t nb,uint32_t pSize,queueOfAsfBits *q,queueO
  {
 	 
  }
+/**
+    \fn finished
+*/
+uint8_t asfPacket::finished(void)
+{
+    int64_t pos = ftello(_fd);
+    if (pos < 0) return 1;
+    // we need at least 5 bytes (1 marker + 2 always zero + 1 length flags + 1 prop. flags)
+    if (pos + 5 >= fileSize) return 1;
+
+    return 0;
+}
  /**
     \fn goToPacket
 */
@@ -80,7 +97,8 @@ asfPacket::asfPacket(FILE *f,uint64_t nb,uint32_t pSize,queueOfAsfBits *q,queueO
  {
    uint64_t offset=_startDataOffset+packet*pakSize;
    aprintf("[asfPacket::goToPacket] offset = %" PRIu64", packet = %" PRIu64", packet size = %" PRIu32"\n",offset,packet,pakSize);
-   fseeko(_fd,offset,SEEK_SET);
+   if(fseeko(_fd,offset,SEEK_SET))
+        return 0;
    currentPacket=packet;
    purge();
    return 1;
@@ -312,7 +330,10 @@ uint8_t   asfPacket::nextPacket(uint8_t streamWanted)
    // Do some sanity check
    if(_offset+paddingLen!=pakSize)
    {
-     ADM_warning("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! %d+%d!=%d\n",_offset,paddingLen,pakSize);
+     // Padding length equal zero is allowed with multiple payloads
+     // by specification, should be inferred from packet size then.
+     if(paddingLen)
+         ADM_warning("Bogus padding length: %u + %u != %u\n", _offset, paddingLen, pakSize);
      if(pakSize>(_offset+paddingLen))
      {
         skip(pakSize-_offset-paddingLen);
