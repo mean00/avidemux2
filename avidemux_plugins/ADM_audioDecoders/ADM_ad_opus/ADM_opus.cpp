@@ -55,26 +55,27 @@ ADM_AudiocodecOpus::ADM_AudiocodecOpus(uint32_t fourcc, WAVHeader *info, uint32_
     opus_multistream_handle=NULL;
     int er,nbStreams,nbCoupled;
     uint8_t *mapping;
-    if(info->channels>2)
+    if(wavHeader.channels > 2)
     {
-        if(l>=OPUS_HEADER_SIZE+2+info->channels)
+        if(l >= OPUS_HEADER_SIZE + 2 + wavHeader.channels)
         {
             nbStreams=d[OPUS_HEADER_SIZE];
             nbCoupled=d[OPUS_HEADER_SIZE+1];
-            if((nbStreams+nbCoupled) != info->channels)
-                ADM_warning("Inconsistent channel mapping: %d streams, %d coupled, but %d channels.\n",nbStreams,nbCoupled,info->channels);
+            if((nbStreams+nbCoupled) != wavHeader.channels)
+                ADM_warning("Inconsistent channel mapping: %d streams, %d coupled, but %d channels.\n",nbStreams,nbCoupled,wavHeader.channels);
             mapping=d+OPUS_HEADER_SIZE+2;
         }else
         {
             ADM_error("We have more than 2 channels, but not enough opus extradata (%d), crashing.\n",l);
             ADM_assert(0);
         }
-        opus_multistream_handle=opus_multistream_decoder_create(info->frequency,info->channels,nbStreams,nbCoupled,mapping,&er);
+        opus_multistream_handle = opus_multistream_decoder_create(wavHeader.frequency, wavHeader.channels, nbStreams, nbCoupled, mapping, &er);
         if(opus_multistream_handle)
-            ADM_info("Created opus decoder for %d streams (%d coupled), %d channels, mapping = %d\n",nbStreams,nbCoupled,info->channels,(int)(*mapping));
+            ADM_info("Created opus decoder for %d streams (%d coupled), %d channels, mapping = %d\n",
+                    nbStreams, nbCoupled, wavHeader.channels, (int)(*mapping));
     }else
     {
-        opus_handle=opus_decoder_create(info->frequency,info->channels,&er);
+        opus_handle = opus_decoder_create(wavHeader.frequency, wavHeader.channels, &er);
     }
     if(!opus_handle && !opus_multistream_handle)
     {
@@ -83,7 +84,7 @@ ADM_AudiocodecOpus::ADM_AudiocodecOpus(uint32_t fourcc, WAVHeader *info, uint32_
     }
     CHANNEL_TYPE *p_ch_type = channelMapping;
 #define DOIT(y) *(p_ch_type++)=ADM_CH_##y;
-    switch(info->channels)
+    switch(wavHeader.channels)
     {
         case 1:
             DOIT(MONO)
