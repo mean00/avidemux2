@@ -22,6 +22,13 @@ ADM_Audiocodec	*getAudioCodec(uint32_t fourcc,WAVHeader *info,uint32_t extra,uin
 {
 ADM_Audiocodec *out = NULL;
 
+    if (info->channels > MAX_CHANNELS)
+    {
+        ADM_warning("# of channels %u provided by demuxer exceeds max. supported, using dummy decoder.\n", info->channels);
+        out = (ADM_Audiocodec *) new ADM_AudiocodecUnknown(fourcc,*info);
+        return out;
+    }
+
     // fake codec for 8 bits
     if(fourcc==WAV_PCM)
     {
