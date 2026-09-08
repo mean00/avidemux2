@@ -127,8 +127,8 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
  ADM_AudiocoderLavcodec::ADM_AudiocoderLavcodec(uint32_t fourcc,WAVHeader *info,uint32_t l,uint8_t *d)
        :  ADM_Audiocodec(fourcc,*info)
  {
-    ADM_info(" [ADM_AD_LAV] Using decoder for type 0x%x\n",info->encoding);
-    ADM_info(" [ADM_AD_LAV] #of channels %d\n",info->channels);
+    ADM_info("Using decoder for type 0x%x\n", wavHeader.encoding);
+    ADM_info("# of channels %d\n", wavHeader.channels);
     _tail=_head=0;
     _paddedExtraData=NULL;
     _blockalign=0;
@@ -140,8 +140,8 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
     ADM_assert(_pkt);
 
     AVCodecID codecID = AV_CODEC_ID_NONE;
-    outputFrequency=info->frequency;
-    channels=info->channels;
+    outputFrequency = wavHeader.frequency;
+    channels = wavHeader.channels;
     frequencyChecked=false;
     nbChannelsChecked=false;
     switch(fourcc)
@@ -214,12 +214,12 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
 
     // Fills in some values...
     _context->codec_type=AVMEDIA_TYPE_AUDIO;
-    _context->sample_rate = info->frequency;
+    _context->sample_rate = wavHeader.frequency;
 
-    av_channel_layout_default(&_context->ch_layout, info->channels);
+    av_channel_layout_default(&_context->ch_layout, wavHeader.channels);
 
-    _context->block_align = info->blockalign;
-    _context->bit_rate = info->byterate*8;
+    _context->block_align = wavHeader.blockalign;
+    _context->bit_rate = wavHeader.byterate*8;
     _context->sample_fmt=AV_SAMPLE_FMT_FLT;
     _context->request_sample_fmt=AV_SAMPLE_FMT_FLT;
 
@@ -311,9 +311,9 @@ DECLARE_AUDIO_DECODER(ADM_AudiocoderLavcodec,						// Class
             _context->sample_rate,outputFrequency);
         reconfigureNeeded=true;
     }
-    if(_context->ch_layout.nb_channels != info->channels)
+    if(_context->ch_layout.nb_channels != wavHeader.channels)
     {
-        ADM_warning("Decoder and demuxer disagree about # of channels: %d / %d\n", _context->ch_layout.nb_channels, info->channels);
+        ADM_warning("Decoder and demuxer disagree about # of channels: %d / %d\n", _context->ch_layout.nb_channels, wavHeader.channels);
         reconfigureNeeded=true;
     }
 }
@@ -550,6 +550,11 @@ uint8_t ADM_AudiocoderLavcodec::run(uint8_t *inptr, uint32_t nbIn, float *outptr
             }
             if(_context->ch_layout.nb_channels != channels)
             {
+                if(_context->ch_layout.nb_channels > MAX_CHANNELS)
+                {
+                    ADM_error("# of channels %d as seen by decoder > max. supported, crashing.\n", _context->ch_layout.nb_channels);
+                    ADM_assert(0);
+                }
                 if(!nbChannelsChecked)
                 {
                     ADM_warning("Decoder and demuxer disagree about # of channels: %d vs %u\n",
@@ -626,11 +631,12 @@ bool ADM_AudiocoderLavcodec::setChannelMapping(void)
 {
     memset(channelMapping,0,sizeof(CHANNEL_TYPE) * MAX_CHANNELS);
 
+    uint32_t counter = 0;
     CHANNEL_TYPE *p_ch_type = channelMapping;
     if(!_context->ch_layout.nb_channels) // ??
         av_channel_layout_default(&_context->ch_layout, channels);
 #define HAVE(chan) (av_channel_layout_index_from_channel(&_context->ch_layout, AV_CHAN_ ##chan) >= 0)
-#define MAPIT(chan) *(p_ch_type++)=ADM_CH_ ##chan;
+#define MAPIT(chan) { if (counter >= MAX_CHANNELS) return false; counter++; *(p_ch_type++)=ADM_CH_ ##chan; }
 #define DOIT(x,y) if HAVE(x) MAPIT(y)
     DOIT(FRONT_LEFT,FRONT_LEFT)
     DOIT(FRONT_RIGHT,FRONT_RIGHT)
