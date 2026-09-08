@@ -223,6 +223,15 @@ ADM_AudiocodecMsAdpcm::ADM_AudiocodecMsAdpcm( uint32_t fourcc, WAVHeader *info, 
         _me=info->encoding;
         _channels=info->channels;
 
+    switch(_channels)
+    {
+        case 1: case 2: break;
+        default:
+            ADM_error("Unsupported # of channels %u, crashing.\n", _channels);
+            ADM_assert(0);
+            break;
+    }
+
          if (info->encoding == WAV_MSADPCM      )
         {
               ss_div = info->blockalign -   (MS_ADPCM_PREAMBLE_SIZE * info->channels) * 2;
