@@ -137,6 +137,15 @@ ADM_AudiocodecImaAdpcm::ADM_AudiocodecImaAdpcm( uint32_t fourcc, WAVHeader *info
         _me=info->encoding;
         _channels=info->channels;
 
+    switch(_channels)
+    {
+        case 1: case 2: break;
+        default:
+            ADM_error("Unsupported # of channels %u, crashing.\n", _channels);
+            ADM_assert(0);
+            break;
+    }
+
          if ((info->encoding == WAV_IMAADPCM) || (info->encoding == 0x61) 
         //||      (info->encoding == (uint16_t)0x1100736d)
         )
