@@ -39,6 +39,7 @@ class ADM_Audiocodec
             UNUSED_ARG(fourcc);
             _init=0;
             wavHeader=info;
+            if (wavHeader.channels > MAX_CHANNELS) wavHeader.channels = MAX_CHANNELS;
             reconfigureNeeded=false;
             memset(channelMapping,0,sizeof(CHANNEL_TYPE)*MAX_CHANNELS);
         };
