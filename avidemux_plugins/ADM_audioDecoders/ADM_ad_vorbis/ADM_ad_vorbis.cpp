@@ -41,6 +41,7 @@ class ADM_vorbis : public     ADM_Audiocodec
 {
     protected:
         oggVorbis           _context;
+        void                cleanup(void);
 
     public:
                             ADM_vorbis(uint32_t fourcc, WAVHeader *info, uint32_t l, uint8_t *d);
@@ -63,15 +64,21 @@ DECLARE_AUDIO_DECODER(ADM_vorbis,                        // Class
 //********************************************************
 
 
- ADM_vorbis::~ADM_vorbis()
- {
+ADM_vorbis::~ADM_vorbis()
+{
+    cleanup();
+}
+
+void ADM_vorbis::cleanup(void)
+{
     if(_init)
     {
         vorbis_block_clear(&(_context.vblock));
         vorbis_info_clear(&(_context.vinfo));
     }
-    _init=false;
- }
+    _init = 0;
+}
+
  /**
   * 
   * @param name
@@ -132,7 +139,6 @@ VERR(OV_ENOSEEK    )
      _init=0;
      ADM_info("Trying to initialize vorbis codec with %d bytes of header data\n",(int)extra);
 
-     _init=false;
     memset(&(_context),0,sizeof(_context));
 
     uint8_t *packets[3];
@@ -192,6 +198,12 @@ VERR(OV_ENOSEEK    )
     ADM_info("Vorbis init successfull\n");
     _context.ampscale=1;
     _init=1;
+    if (_context.vinfo.channels > MAX_CHANNELS)
+    {
+        ADM_warning("# of channels %d as seen by decoder > max. supported, uniniting.\n", _context.vinfo.channels);
+        cleanup();
+        return;
+    }
   CHANNEL_TYPE *p_ch_type = channelMapping;
 #define DOIT(y) *(p_ch_type++)=ADM_CH_##y;
     switch(_context.vinfo.channels)
@@ -271,6 +283,9 @@ int    nb_synth;
 */
   bool    ADM_vorbis::resetAfterSeek(void) 
   {
+    if (!_init)
+        return false;
+
   float **sample_pcm;
   ogg_packet packet;
 
