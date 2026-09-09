@@ -127,16 +127,22 @@ static int ms_adpcm_decode_block(unsigned short *output, unsigned char *input,
 
   // fetch the header information, in stereo if both channels are present
   if (input[stream_ptr] > 6)
-    printf( "MS ADPCM: coefficient (%d) out of range (should be [0..6])\n",
+  {
+    ADM_warning("MS ADPCM: coefficient (%d) out of range (should be [0..6])\n",
       input[stream_ptr]);
+    goto invalid_data;
+  }
   coeff1[0] = ms_adapt_coeff1[input[stream_ptr]];
   coeff2[0] = ms_adapt_coeff2[input[stream_ptr]];
   stream_ptr++;
   if (channels == 2)
   {
     if (input[stream_ptr] > 6)
-     printf( "MS ADPCM: coefficient (%d) out of range (should be [0..6])\n",
-       input[stream_ptr]);
+    {
+      ADM_warning("MS ADPCM: coefficient (%d) out of range (should be [0..6])\n",
+        input[stream_ptr]);
+      goto invalid_data;
+    }
     coeff1[1] = ms_adapt_coeff1[input[stream_ptr]];
     coeff2[1] = ms_adapt_coeff2[input[stream_ptr]];
     stream_ptr++;
@@ -211,6 +217,7 @@ static int ms_adpcm_decode_block(unsigned short *output, unsigned char *input,
     current_channel ^= channels - 1;
   }
 
+invalid_data:
   return (block_size - (MS_ADPCM_PREAMBLE_SIZE * channels)) * 2;
 }
 /**
@@ -238,7 +245,8 @@ ADM_AudiocodecMsAdpcm::ADM_AudiocodecMsAdpcm( uint32_t fourcc, WAVHeader *info, 
               ss_mul = info->blockalign;
         }
   _tail=_head=0;
-  printf("Block size: %d\n",ss_mul);
+  memset(scratchPad, 0, SCRATCH_PAD_SIZE);
+  ADM_info("Block size: %d\n", ss_mul);
 }
 /**
     \fn 
