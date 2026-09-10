@@ -377,7 +377,7 @@ uint8_t MP4Header::indexify( MP4Track *track,
         {
             uint32_t mn = info->Sc[i];
             uint32_t mx = info->Sc[i+1];
-            if(!mn || !mx || mn >= totalchunk || mx >= totalchunk || mx < mn)
+            if(!mn || !mx || mn > totalchunk || mx > totalchunk || mx < mn)
             {
                 ADM_warning("Corrupted file\n");
                 delete [] chunkCount;
