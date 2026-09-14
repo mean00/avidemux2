@@ -132,6 +132,17 @@ static void createAACExtraData(const char *codec,entryDesc *entry)
 }
 
 /**
+    \fn audioCodecIdToString
+    \brief Smuggle AAC LATM into codec names known to the core
+*/
+static const char *audioCodecIdToString(uint32_t codec)
+{
+    if (codec == MKV_MUX_LATM)
+        return "AAC LATM";
+    return getStrFromAudioCodec(codec);
+}
+
+/**
     \fn entryDesc::dump
     \brief Dump the track entry
 */
@@ -340,7 +351,7 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
                     ptr += wavSize + 6; // offset of GUID
                     typedef struct { uint32_t data1; uint16_t data2; uint16_t data3; uint8_t data4[8]; } msGuid;
                     typedef struct { uint16_t tag; msGuid guid; } tag2guid;
-#define NB_GUIDS 7
+#define NB_GUIDS 8
                     const tag2guid supportedGuids[NB_GUIDS] = {
                         { WAV_PCM,      { 0x1,0x0,0x10, { 0x80,0x0,0x0,0xaa,0x0,0x38,0x9b,0x71 } } /* KSDATAFORMAT_SUBTYPE_PCM */ },
                         { WAV_MSADPCM,  { 0x2,0x0,0x10, { 0x80,0x0,0x0,0xaa,0x0,0x38,0x9b,0x71 } } /* KSDATAFORMAT_SUBTYPE_ADPCM */ },
@@ -348,7 +359,8 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
                         { WAV_ULAW,     { 0x7,0x0,0x10, { 0x80,0x0,0x0,0xaa,0x0,0x38,0x9b,0x71 } } /* KSDATAFORMAT_SUBTYPE_MULAW */ },
                         { WAV_LPCM,     { 0xe06d8032,0xdb46,0x11cf, { 0xb4,0xd1,0x0,0x80,0x5f,0x6c,0xbb,0xea } } /* KSDATAFORMAT_SUBTYPE_LPCM_AUDIO */ },
                         { WAV_AC3,      { 0xe06d802c,0xdb46,0x11cf, { 0xb4,0xd1,0x0,0x80,0x5f,0x6c,0xbb,0xea } } /* KSDATAFORMAT_SUBTYPE_AC3_AUDIO */ },
-                        { WAV_MP2,      { 0xe06d802b,0xdb46,0x11cf, { 0xb4,0xd1,0x0,0x80,0x5f,0x6c,0xbb,0xea } } /* ,KSDATAFORMAT_SUBTYPE_MPEG2_AUDIO */ }
+                        { WAV_MP2,      { 0xe06d802b,0xdb46,0x11cf, { 0xb4,0xd1,0x0,0x80,0x5f,0x6c,0xbb,0xea } } /* ,KSDATAFORMAT_SUBTYPE_MPEG2_AUDIO */ },
+                        { MKV_MUX_LATM, { 0x1602,0x0,0x10, { 0x80,0x0,0x0,0xaa,0x0,0x38,0x9b,0x71 } } /* MEDIASUBTYPE_MPEG_LOAS */ }
                     };
                     for(int i=0; i < NB_GUIDS; i++)
                     {
@@ -357,7 +369,7 @@ uint8_t mkvHeader::analyzeOneTrack(void *head,uint32_t headlen)
                         if(v1->data1 == v2->data1 && v1->data2 == v2->data2 && !memcmp(v1->data4,v2->data4,8))
                         {
                             t->wavHeader.encoding = supportedGuids[i].tag;
-                            ADM_info("Encoding set from SubFormat GUID to 0x%x (%s)\n",t->wavHeader.encoding,getStrFromAudioCodec(t->wavHeader.encoding));
+                            ADM_info("Encoding set from SubFormat GUID to 0x%x (%s)\n", t->wavHeader.encoding, audioCodecIdToString(t->wavHeader.encoding));
                             break;
                         }
                     }
