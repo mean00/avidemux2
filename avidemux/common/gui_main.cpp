@@ -1513,10 +1513,10 @@ int A_delete(uint32_t start, uint32_t end)
     ReSync();
     return 1;
 }
-extern int DIA_getMPParams(uint32_t *pplevel, uint32_t *ppstrength, bool *swap);
-//
 
-//
+#ifdef USE_LIBPOSTPROC
+extern int DIA_getMPParams(uint32_t *pplevel, uint32_t *ppstrength, bool *swap);
+
 void A_setPostproc(void)
 {
     uint32_t type, strength;
@@ -1534,7 +1534,7 @@ void A_setPostproc(void)
         return;
     }
 }
-
+#endif
 //
 extern int DIA_getHDRParams(uint32_t *toneMappingMethod, float *saturationAdjust, float *boostAdjust, bool *adaptiveRGB,
                             uint32_t *gamutMethod);

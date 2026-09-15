@@ -15,7 +15,10 @@
 #include "ADM_default.h"
 #include "config.h"
 
+#ifdef USE_LIBPOSTPROC
 #include "ADM_pp.h"
+#endif
+
 #include "ADM_qtx.h"
 #include "GUI_render.h"
 #include "audio_out.h"
@@ -91,9 +94,10 @@ uint8_t DIA_Preferences(void)
     bool swapUpDown = false;
     bool swapWheel = false;
 
+#ifdef USE_LIBPOSTPROC
     uint32_t pp_type = 3;
     uint32_t pp_value = 5;
-
+#endif
     bool useCustomFragmentSize = false;
     uint32_t customFragmentSize = 4000;
     bool loadPicsInReverseOrder = false;
@@ -155,6 +159,7 @@ uint8_t DIA_Preferences(void)
     prefs->get(FEATURES_CAP_REFRESH_ENABLED, &refreshCapEnabled);
     prefs->get(FEATURES_CAP_REFRESH_VALUE, &refreshCapValue);
 
+#ifdef USE_LIBPOSTPROC
     // Default pp
     if (!prefs->get(DEFAULT_POSTPROC_TYPE, &pp_type))
         pp_type = 0;
@@ -165,7 +170,7 @@ uint8_t DIA_Preferences(void)
     DOME(ADM_POSTPROC_HORIZ_DEBLOCK, hzd)
     DOME(ADM_POSTPROC_VERT_DEBLOCK, vzd)
     DOME(ADM_POSTPROC_DERING, dring)
-
+#endif
 // Cpu caps
 #define CPU_CAPS(x)                                                                                                    \
     if ((cpuCaps & cpuMask) & ADM_CPUCAP_##x)                                                                          \
@@ -682,6 +687,7 @@ uint8_t DIA_Preferences(void)
 #endif
 
     /* Post-Processing */
+#ifdef USE_LIBPOSTPROC
     diaElemToggle fhzd(&hzd, QT_TRANSLATE_NOOP("adm", "_Horizontal deblocking"));
     diaElemToggle fvzd(&vzd, QT_TRANSLATE_NOOP("adm", "_Vertical deblocking"));
     diaElemToggle fdring(&dring, QT_TRANSLATE_NOOP("adm", "De_ringing"));
@@ -692,7 +698,7 @@ uint8_t DIA_Preferences(void)
     framePP.swallow(&fvzd);
     framePP.swallow(&fdring);
     framePP.swallow(&postProcStrength);
-
+#endif
     // HDR
     diaMenuEntry toneMapEntries[] = {
         {0, QT_TRANSLATE_NOOP("adm", "Disabled"), NULL},
@@ -719,7 +725,12 @@ uint8_t DIA_Preferences(void)
     frameHDR.swallow(&menuOutOfGamutHDR);
     frameHDR.swallow(&floatTargetLumHDR);
 
-    diaElem *diaPostProc[] = {&framePP, &frameHDR};
+    diaElem *diaPostProc[] = {
+#ifdef USE_LIBPOSTPROC
+        &framePP,
+#endif
+        &frameHDR
+    };
     diaElemTabs tabPostProc(QT_TRANSLATE_NOOP("adm", "Post-Processing"), NB_ELEM(diaPostProc), diaPostProc);
 
     /* Display */
@@ -888,7 +899,7 @@ uint8_t DIA_Preferences(void)
         //
         prefs->set(FEATURES_CAP_REFRESH_ENABLED, refreshCapEnabled);
         prefs->set(FEATURES_CAP_REFRESH_VALUE, refreshCapValue);
-
+#ifdef USE_LIBPOSTPROC
 // Postproc
 #undef DOME
 #define DOME(x, y)                                                                                                     \
@@ -900,7 +911,7 @@ uint8_t DIA_Preferences(void)
         DOME(ADM_POSTPROC_DERING, dring)
         prefs->set(DEFAULT_POSTPROC_TYPE, pp_type);
         prefs->set(DEFAULT_POSTPROC_VALUE, pp_value);
-
+#endif
         // Alsa
 #ifdef ALSA_SUPPORT
         if (alsaDevice)

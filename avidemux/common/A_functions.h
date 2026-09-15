@@ -14,7 +14,9 @@ void    A_openBrokenAvi (const char *name);
 int     A_openVideo2 (const char *name, uint8_t mode);
 int     A_appendVideo (const char *name);
 void    A_videoCheck( void);
+#ifdef USE_LIBPOSTPROC
 void	A_setPostproc( void );
+#endif
 void	A_setHDRConfig( void );
 void    A_Resync(void);
 void    A_addJob(void);

@@ -545,9 +545,11 @@ void MainWindow::actionSlot(Action a)
         case ACT_SetHDRConfig:
             a = ACT_Refresh;
             break;
+#ifdef USE_LIBPOSTPROC
         case ACT_SetPostProcessing:
             a = ACT_Refresh;
             break;
+#endif
         case ACT_SelectTime:
             a = ACT_GotoTime;
             break;
@@ -1550,7 +1552,9 @@ void MainWindow::updateCodecWidgetControlsState(void)
         strcmp(video_body->getVideoDecoderName(), "LIBVA") && strcmp(video_body->getVideoDecoderName(), "DXVA2"))
         // VideoToolbox decoder always downloads decoded image immediately
         b = true;
+#ifdef USE_LIBPOSTPROC
     ENABLE(Video, ACT_SetPostProcessing, b)
+#endif
     // HDR tone mapper settings action in the menu "Video" and the toolbar button
     b = video_body->possibleHdrContent();
     ENABLE(Video, ACT_SetHDRConfig, b)

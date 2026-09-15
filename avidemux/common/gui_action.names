@@ -11,7 +11,9 @@ ACT(StopAvi)
 // Run the first stage, GUI may call the second one
 ACT(STAGED_BEGIN)
 ACT(SetHDRConfig)
+#ifdef USE_LIBPOSTPROC
 ACT(SetPostProcessing)
+#endif
 ACT(SelectTime)
 ACT(STAGED_END)
 

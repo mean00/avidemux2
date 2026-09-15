@@ -39,7 +39,9 @@ static void A_timedError(bool *first, const char *s);
 
 extern uint8_t DIA_gotoTime(uint32_t *hh, uint32_t *mm, uint32_t *ss, uint32_t *ms);
 extern void A_setHDRConfig(void);
+#ifdef USE_LIBPOSTPROC
 extern void A_setPostproc(void);
+#endif
 
 static uint32_t jumpTarget[4] = {0};
 
@@ -61,9 +63,11 @@ void HandleAction_Staged(Action action)
     case ACT_SetHDRConfig:
         A_setHDRConfig();
         break;
+#ifdef USE_LIBPOSTPROC
     case ACT_SetPostProcessing:
         A_setPostproc();
         break;
+#endif
     case ACT_SelectTime: {
         stagedActionSuccess = 0;
         // Get current time
