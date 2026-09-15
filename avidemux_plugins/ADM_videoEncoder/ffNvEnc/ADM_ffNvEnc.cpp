@@ -57,8 +57,8 @@ ADM_ffNvEncEncoder::ADM_ffNvEncEncoder(ADM_coreVideoFilter *src,bool globalHeade
 */
 bool ADM_ffNvEncEncoder::configureContext(void)
 {
-    _context->bit_rate = -1;
-    _context->rc_max_rate = -1;
+    _context->bit_rate = 0;
+    _context->rc_max_rate = 0;
 
     switch(NvEncSettings.preset)
     {
