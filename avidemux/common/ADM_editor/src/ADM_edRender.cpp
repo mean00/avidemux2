@@ -29,7 +29,9 @@
 #define SET_CURRENT_PTS(x) {_currentPts=x;}
 #endif
 
+#ifdef USE_LIBPOSTPROC
 #include "ADM_pp.h"
+#endif
 #include "ADM_toneMapper.h"
 
 /**
@@ -584,12 +586,14 @@ uint8_t ADM_Composer::dupe(ADMImage *src,ADMImage *dst,_VIDEOS *vid)
 */
 uint8_t ADM_Composer::setPostProc( uint32_t type, uint32_t strength, bool swapuv)
 {
+#ifdef USE_LIBPOSTPROC
 	if(!_segments.getNbRefVideos()) return 0;
     if(!_pp) return false;
 	_pp->postProcType=type;
 	_pp->postProcStrength=strength;
     _pp->swapuv=swapuv;
 	_pp->update(); // DeletePostproc/ini missing ?
+#endif
 	return 1;
 }
 /**
@@ -598,11 +602,17 @@ uint8_t ADM_Composer::setPostProc( uint32_t type, uint32_t strength, bool swapuv
 
 uint8_t ADM_Composer::getPostProc( uint32_t *type, uint32_t *strength, bool *swapuv)
 {
+#ifdef USE_LIBPOSTPROC
 	if(!_segments.getNbRefVideos()) return 0;
     if(!_pp) return false;
 	*type=_pp->postProcType;
 	*strength=_pp->postProcStrength;
 	*swapuv=_pp->swapuv;
+#else
+    *type = 0;
+    *strength = 0;
+    *swapuv = false;
+#endif
 	return 1;
 }
 /**

@@ -46,7 +46,9 @@
 */
 ADM_Composer::ADM_Composer (void)
 {
+#ifdef USE_LIBPOSTPROC
   _pp=NULL;
+#endif
   _hdrConfig=NULL;
   _imageBuffer=NULL;
   _internalFlags=0;
@@ -126,9 +128,10 @@ ADM_Composer::~ADM_Composer ()
 {
 
     cleanup();
-
+#ifdef USE_LIBPOSTPROC
     if(_pp) delete _pp;
     _pp=NULL;
+#endif
     if (_hdrConfig) delete _hdrConfig;
     _hdrConfig=NULL;
    
@@ -585,6 +588,7 @@ uint8_t ADM_Composer::addFile (const char *name)
   // 1st if it is our first video we update postproc
     if(first)
     {
+#ifdef USE_LIBPOSTPROC
         uint32_t type=0,value=0;
         prefs->get(DEFAULT_POSTPROC_TYPE,&type);
         prefs->get(DEFAULT_POSTPROC_VALUE,&value);
@@ -595,7 +599,7 @@ uint8_t ADM_Composer::addFile (const char *name)
         _pp->postProcStrength=value;
         _pp->forcedQuant=0;
         _pp->update();
-        
+#endif
         if (_hdrConfig) delete _hdrConfig;
         _hdrConfig=new ADMToneMapperConfig(true);
 

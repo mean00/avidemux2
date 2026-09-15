@@ -20,7 +20,6 @@
 #include "ADM_codec.h"
 #include "ADM_image.h"
 #include "ADM_edCache.h"
-#include "ADM_pp.h"
 #include "ADM_colorspace.h"
 #include "ADM_vidMisc.h"
 #include "ADM_audiocodec.h"

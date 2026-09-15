@@ -34,7 +34,9 @@
  #include "ADM_codec.h"
  #include "ADM_image.h"
  #include "ADM_edCache.h"
+#ifdef USE_LIBPOSTPROC
  #include "ADM_pp.h"
+#endif
  #include "ADM_colorspace.h"
  #include "ADM_toneMapper.h"
 
@@ -161,7 +163,9 @@ protected:
                     ADM_EditorSegment _segments;
                     uint8_t     dupe(ADMImage *src,ADMImage *dst,_VIDEOS *vid);
                     uint32_t	_internalFlags;  // Flags :
+#ifdef USE_LIBPOSTPROC
                     ADM_PP      *_pp;             // Postprocessing settings
+#endif
                     ADMToneMapperConfig    *_hdrConfig;
                     ADMImage	*_imageBuffer;   // Temp buffer used for decoding
                     uint64_t    _currentPts;        // Current image PTS

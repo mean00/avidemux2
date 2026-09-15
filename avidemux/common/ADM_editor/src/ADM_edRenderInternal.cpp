@@ -28,7 +28,9 @@
 #define aprintf(...) {}// printf
 #endif
 
+#ifdef USE_LIBPOSTPROC
 #include "ADM_pp.h"
+#endif
 
 /**
     \fn seektoFrame
@@ -278,7 +280,14 @@ bool ADM_Composer::DecodeNextPicture(uint32_t ref)
             img.demuxerPts,
             img.demuxerPts/1000);
     }
-    if(!decompressImage(result,&img,ref))
+    bool success = decompressImage(result,&img,ref);
+    // Handle libavcodec issue that both avcodec_send_packet()
+    // and subsequent avcodec_receive_frame() may return EAGAIN.
+    // In this case, retry with the same compressed image just once.
+    if (!success && vid->decoder->getSendAgain())
+        success = decompressImage(result,&img,ref);
+
+    if (!success)
     {
         if(false==vid->decoder->keepFeeding())
             ADM_info("Error decoding frame %" PRIu32"\n",frame);
@@ -339,7 +348,7 @@ bool ADM_Composer::DecodeNextPicture(uint32_t ref)
         if(vid->lastDecodedPts > vid->firstFramePts)
         {
             stats.nbPtsgoingBack++;
-            ADM_warning(">>>>> PTS going backward by %" PRId64" ms\n",(old-vid->lastDecodedPts)/1000);
+            ADM_warning(">>>>> PTS going backward by %" PRId64" us\n",old-vid->lastDecodedPts);
             ADM_warning("Dropping frame!\n");
         }
         cache->invalidate(result);
@@ -453,6 +462,9 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
         aprintf("[decompressImage] : hw pic\n");
         return true;
     }
+
+    dupe(tmpImage, out, v);
+#ifdef USE_LIBPOSTPROC
     // Do postprocessing if any
     // Pp deactivated ?
     if(!_pp->postProcType || (!(_pp->postProcType & ADM_POSTPROC_DEINT) && !_pp->postProcStrength) || tmpImage->_pixfrmt != ADM_PIXFRMT_YV12)
@@ -465,6 +477,7 @@ bool ADM_Composer::decompressImage(ADMImage *out,ADMCompressedImage *in,uint32_t
     out->copyInfo(tmpImage);
     /* Do it!*/
     _pp->process(tmpImage,out);
+#endif
     return true;
 }
 //#define EDITOR_DEBUG_FRAME_TYPE
@@ -605,7 +618,10 @@ bool ADM_Composer::DecodePictureUpToIntra(uint32_t ref,uint32_t frame)
         }
         aprintf("[Decoder] Demuxer Frame %" PRIu32" pts=%" PRIu64" ms, %" PRIu64" us\n",vid->lastSentFrame,img.demuxerPts/1000,
                                                                     img.demuxerPts);
-        if(!decompressImage(result,&img,ref))
+        bool success = decompressImage(result,&img,ref);
+        if (!success && vid->decoder->getSendAgain())
+            success = decompressImage(result,&img,ref);
+        if (!success)
         {
             cache->invalidate(result);
             //cache->dump();
