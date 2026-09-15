@@ -7,6 +7,11 @@ MACRO(xadd opt)
   ENDIF()
 ENDMACRO()
 INCLUDE(admFFmpegVersion)
+
+IF(${FFMPEG_VERSION} VERSION_LESS "7.1")
+  SET(USE_LIBPOSTPROC True)
+ENDIF()
+
 OPTION(FF_INHERIT_BUILD_ENV "" ON)
 FIND_PACKAGE(Patch)
 
@@ -43,9 +48,12 @@ SET(FFMPEG_BSFS         h264_mp4toannexb hevc_mp4toannexb aac_adtstoasc extract_
 #
 #
 MACRO(ADM_FF_SET_DEFAULT)
-  xadd("--enable-shared --disable-static --disable-everything --disable-avfilter --enable-hwaccels --enable-postproc --enable-gpl")
+  xadd("--enable-shared --disable-static --disable-everything --disable-avfilter --enable-hwaccels --enable-gpl")
   xadd("--enable-runtime-cpudetect --disable-network ")
   xadd("--enable-swscale --disable-swresample")
+  IF(USE_LIBPOSTPROC)
+    xadd("--enable-postproc")
+  ENDIF()
   xadd("--disable-doc --disable-programs")
 
   FIND_HEADER_AND_LIB(_X265 x265.h)
@@ -171,7 +179,9 @@ MACRO(ADM_FF_INSTALL_LIBS_AND_HEADERS)
   SET(FF_SHORT_INSTALL_DIR ${AVIDEMUX_INSTALL_INCLUDE_DIR}/avidemux/${AVIDEMUX_MAJOR_MINOR})
 
   ADM_INSTALL_LIB_FILES("${FFMPEG_BINARY_DIR}/libswscale/${LIBSWSCALE_LIB}")
-  ADM_INSTALL_LIB_FILES("${FFMPEG_BINARY_DIR}/libpostproc/${LIBPOSTPROC_LIB}")
+  IF(USE_LIBPOSTPROC)
+    ADM_INSTALL_LIB_FILES("${FFMPEG_BINARY_DIR}/libpostproc/${LIBPOSTPROC_LIB}")
+  ENDIF()
   ADM_INSTALL_LIB_FILES("${FFMPEG_BINARY_DIR}/libavutil/${LIBAVUTIL_LIB}")
   ADM_INSTALL_LIB_FILES("${FFMPEG_BINARY_DIR}/libavcodec/${LIBAVCODEC_LIB}")
   ADM_INSTALL_LIB_FILES("${FFMPEG_BINARY_DIR}/libavformat/${LIBAVFORMAT_LIB}")
@@ -233,9 +243,11 @@ MACRO(ADM_FF_INSTALL_LIBS_AND_HEADERS)
             DESTINATION "${FF_SHORT_INSTALL_DIR}/libavutil"
             COMPONENT dev)
 
-  INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libpostproc/postprocess.h"   DESTINATION "${FF_SHORT_INSTALL_DIR}/libpostproc" COMPONENT dev)
-  INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libpostproc/version.h"       DESTINATION "${FF_SHORT_INSTALL_DIR}/libpostproc" COMPONENT dev)
-  INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libpostproc/version_major.h" DESTINATION "${FF_SHORT_INSTALL_DIR}/libpostproc" COMPONENT dev)
+  IF(USE_LIBPOSTPROC)
+    INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libpostproc/postprocess.h"   DESTINATION "${FF_SHORT_INSTALL_DIR}/libpostproc" COMPONENT dev)
+    INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libpostproc/version.h"       DESTINATION "${FF_SHORT_INSTALL_DIR}/libpostproc" COMPONENT dev)
+    INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libpostproc/version_major.h" DESTINATION "${FF_SHORT_INSTALL_DIR}/libpostproc" COMPONENT dev)
+  ENDIF()
   INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libswscale/swscale.h"        DESTINATION "${FF_SHORT_INSTALL_DIR}/libswscale" COMPONENT dev)
   INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libswscale/version.h"        DESTINATION "${FF_SHORT_INSTALL_DIR}/libswscale" COMPONENT dev)
   INSTALL(FILES "${FFMPEG_SOURCE_DIR}/libswscale/version_major.h"  DESTINATION "${FF_SHORT_INSTALL_DIR}/libswscale" COMPONENT dev)

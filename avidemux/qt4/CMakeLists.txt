@@ -180,6 +180,10 @@ ENDIF()
 ADD_SOURCE_CFLAGS(../common/main.cpp "-DADM_VERSION=\"${AVIDEMUX_VERSION}\"")
 ADD_SOURCE_CFLAGS(../common/main.cpp "-DQT_FLAVOR=\"${QT_EXTENSION}\"")
 
+IF(USE_LIBPOSTPROC)
+  TARGET_COMPILE_DEFINITIONS(avidemux3_${QT_EXTENSION} PRIVATE "USE_LIBPOSTPROC")
+ENDIF()
+
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Icon for windows
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
