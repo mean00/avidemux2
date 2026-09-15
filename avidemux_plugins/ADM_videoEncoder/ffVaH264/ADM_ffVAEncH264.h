@@ -26,7 +26,7 @@
 
 #define VAENC_CONF_DEFAULT \
 { \
-    FF_PROFILE_H264_HIGH, \
+    AV_PROFILE_H264_HIGH, \
     100, /* gopsize */ \
     2, /* bframes */ \
     4000, /* bitrate */ \

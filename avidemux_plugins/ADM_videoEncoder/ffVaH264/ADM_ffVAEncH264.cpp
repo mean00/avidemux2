@@ -56,7 +56,7 @@ bool ADM_ffVAEncH264Encoder::configureContext(void)
     ADM_info("Our display: %#x\n",admLibVA::getDisplay());
     switch(VaEncSettings.profile)
     {
-#define SAY(x) case FF_PROFILE_H264_##x: _context->profile=FF_PROFILE_H264_##x; break;
+#define SAY(x) case AV_PROFILE_H264_##x: _context->profile=AV_PROFILE_H264_##x; break;
         SAY(CONSTRAINED_BASELINE)
         SAY(MAIN)
         SAY(HIGH)
@@ -331,9 +331,9 @@ bool         ffVAEncConfigure(void)
     ffvaenc_encoder *conf=&VaEncSettings;
 
     diaMenuEntry h264Profile[]={
-        {FF_PROFILE_H264_CONSTRAINED_BASELINE,QT_TRANSLATE_NOOP("ffVAEncH264","Baseline"),NULL},
-        {FF_PROFILE_H264_MAIN,QT_TRANSLATE_NOOP("ffVAEncH264","Main"),NULL},
-        {FF_PROFILE_H264_HIGH,QT_TRANSLATE_NOOP("ffVAEncH264","High"),NULL}
+        {AV_PROFILE_H264_CONSTRAINED_BASELINE,QT_TRANSLATE_NOOP("ffVAEncH264","Baseline"),NULL},
+        {AV_PROFILE_H264_MAIN,QT_TRANSLATE_NOOP("ffVAEncH264","Main"),NULL},
+        {AV_PROFILE_H264_HIGH,QT_TRANSLATE_NOOP("ffVAEncH264","High"),NULL}
     };
     diaMenuEntry rateControlMode[]={
         {ADM_FFVAENC_RC_CRF,QT_TRANSLATE_NOOP("ffVAEncH264","Constant Rate Factor"),NULL},
@@ -353,7 +353,7 @@ bool         ffVAEncConfigure(void)
 #endif
     diaElemUInteger gopSize(PX(gopsize),QT_TRANSLATE_NOOP("ffVAEncH264","GOP Size:"),1,250);
 
-    if(conf->profile==FF_PROFILE_H264_CONSTRAINED_BASELINE)
+    if (conf->profile == AV_PROFILE_H264_CONSTRAINED_BASELINE)
         conf->bframes=0;
 
     diaElemUInteger maxBframes(PX(bframes),QT_TRANSLATE_NOOP("ffVAEncH264","Maximum Consecutive B-Frames:"),0,4);
