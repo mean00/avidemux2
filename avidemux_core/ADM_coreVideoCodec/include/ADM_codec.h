@@ -83,6 +83,11 @@ public:
   {
     return false;
   }
+  virtual bool getSendAgain(void) // (Try to) pop a decoded pic, then resubmit the same compressed image.
+  {
+    return false;
+  }
+  virtual void setSendAgain(bool yesno) { UNUSED_ARG(yesno); }
   virtual bool endOfStreamReached(void)
   {
     return false;

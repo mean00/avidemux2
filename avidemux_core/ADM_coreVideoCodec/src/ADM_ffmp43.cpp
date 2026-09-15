@@ -323,6 +323,7 @@ decoderFF::decoderFF (uint32_t w, uint32_t h,uint32_t fcc, uint32_t extraDataLen
   _drain=false;
   _done=false;
   _keepFeeding=false;
+  _sendAgain = false;
   _endOfStream=false;
   _setBpp=false;
   _setFcc=false;
@@ -852,12 +853,13 @@ bool   decoderFF::uncompress (ADMCompressedImage * in, ADMImage * out)
             return false;
         }
 
-        if(ret)
+        if(ret && ret != AVERROR(EAGAIN))
         {
             char er[AV_ERROR_MAX_STRING_SIZE]={0};
             av_make_error_string(er, AV_ERROR_MAX_STRING_SIZE, ret);
             ADM_warning("Ignoring error %d submitting packet to decoder (\"%s\")\n",ret,er);
         }
+        _sendAgain = (ret == AVERROR(EAGAIN));
 
         av_packet_unref(_packet);
 

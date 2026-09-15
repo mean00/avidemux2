@@ -109,7 +109,7 @@ uint32_t ADM_acceleratedDecoderFF::admFrameTypeFromLav (AVFrame *pic)
                 break;
         case AV_PICTURE_TYPE_I:
                 SET (AVI_KEY_FRAME);
-                if (!pic->key_frame)
+                if (!(pic->flags & AV_FRAME_FLAG_KEY))
                   {
                     if (_context->codec_id == AV_CODEC_ID_H264)
                         SET (AVI_P_FRAME)
@@ -125,10 +125,10 @@ uint32_t ADM_acceleratedDecoderFF::admFrameTypeFromLav (AVFrame *pic)
                 break;
     }
     outFlags&=~AVI_STRUCTURE_TYPE_MASK;
-    if(pic->interlaced_frame)
+    if(pic->flags & AV_FRAME_FLAG_INTERLACED)
     {
         SET_ADD(AVI_FIELD_STRUCTURE)
-        if(pic->top_field_first)
+        if(pic->flags & AV_FRAME_FLAG_TOP_FIELD_FIRST)
             SET_ADD(AVI_TOP_FIELD)
         else
             SET_ADD(AVI_BOTTOM_FIELD)
