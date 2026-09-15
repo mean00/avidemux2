@@ -1,6 +1,6 @@
---- libavcodec/encode.h.orig	2023-02-27 21:43:45.000000000 +0100
-+++ libavcodec/encode.h	2023-05-12 21:21:59.181534934 +0200
-@@ -90,9 +90,12 @@
+--- libavcodec/encode.h.orig	2026-08-04 00:14:47.000000000 +0200
++++ libavcodec/encode.h	2026-09-12 22:39:12.931581119 +0200
+@@ -93,9 +93,12 @@
  static av_always_inline int64_t ff_samples_to_time_base(const AVCodecContext *avctx,
                                                          int64_t samples)
  {
