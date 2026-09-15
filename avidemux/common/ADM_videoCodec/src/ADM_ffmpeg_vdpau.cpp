@@ -312,12 +312,13 @@ extern "C"
 bool decoderFFVDPAU::initVdpContext()
 {
     _context->slice_flags = SLICE_FLAG_CODED_ORDER | SLICE_FLAG_ALLOW_FIELD;
+#if 0
     AVVDPAUContext *v = av_alloc_vdpaucontext();
     ;
     _context->hwaccel_context = v;
     v->render = NULL;
     v->decoder = VDP_INVALID_HANDLE;
-
+#endif
     if (0 > av_vdpau_bind_context(_context, (VdpDevice)(uint64_t)admVdpau::getVdpDevice(), vdpGetProcAddressWrapper,
                                   AV_HWACCEL_FLAG_IGNORE_LEVEL))
     {
@@ -447,12 +448,13 @@ bool decoderFFVDPAU::uncompress(ADMCompressedImage *in, ADMImage *out)
             pkt->flags = 0;
 
         ret = avcodec_send_packet(_context, pkt);
-        if (ret)
+        if (ret && ret != AVERROR(EAGAIN))
         {
             char er[AV_ERROR_MAX_STRING_SIZE] = {0};
             av_make_error_string(er, AV_ERROR_MAX_STRING_SIZE, ret);
             ADM_warning("Ignoring error %d submitting packet to decoder (\"%s\")\n", ret, er);
         }
+        _parent->setSendAgain(ret == AVERROR(EAGAIN));
         av_packet_unref(pkt);
     }
     else

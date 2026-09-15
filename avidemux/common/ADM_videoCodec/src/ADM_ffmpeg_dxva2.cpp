@@ -521,12 +521,13 @@ bool decoderFFDXVA2::uncompress(ADMCompressedImage *in, ADMImage *out)
             pkt->flags = 0;
 
         ret = avcodec_send_packet(_context, pkt);
-        if (ret)
+        if (ret && ret != AVERROR(EAGAIN))
         {
             char er[AV_ERROR_MAX_STRING_SIZE] = {0};
             av_make_error_string(er, AV_ERROR_MAX_STRING_SIZE, ret);
             ADM_warning("Ignoring error %d submitting packet to decoder (\"%s\")\n", ret, er);
         }
+        _parent->setSendAgain(ret == AVERROR(EAGAIN));
         av_packet_unref(pkt);
     }
     else
