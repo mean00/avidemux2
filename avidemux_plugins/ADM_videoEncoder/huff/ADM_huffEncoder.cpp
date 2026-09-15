@@ -88,7 +88,7 @@ bool         ADM_huffEncoder::encode (ADMBitstream * out)
 
     out->len=sz;
     out->pts=out->dts=image->Pts;
-    if(_frame->key_frame)
+    if (_frame->flags & AV_FRAME_FLAG_KEY)
         out->flags=AVI_KEY_FRAME;
     else
         out->flags=0;
