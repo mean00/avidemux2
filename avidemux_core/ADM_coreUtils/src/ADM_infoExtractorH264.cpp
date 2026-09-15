@@ -966,7 +966,8 @@ bool extractSPSInfo_mp4Header (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinf
 
     // duplicate
     int myLen=len+AV_INPUT_BUFFER_PADDING_SIZE;
-    uint8_t *myData=new uint8_t[myLen];
+    uint8_t *myData = (uint8_t *)av_malloc(myLen);
+    ADM_assert(myData);
     memset(myData,0x2,myLen);
     memcpy(myData,data,len);
     myData[len]=0; // stop ff_h264_decode_extradata() from trying to parse the remaining buffer content as PPS
@@ -976,6 +977,7 @@ bool extractSPSInfo_mp4Header (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinf
     AVCodecContext *ctx=NULL;
     const AVCodec *codec=NULL;
     uint8_t *d=NULL;
+    int ticksPerFrame = 1;
 
     if(!parser)
     {
@@ -996,10 +998,12 @@ bool extractSPSInfo_mp4Header (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinf
         ADM_error("cannot create h264 context\n");
         goto theEnd;
     }
-
-    ADM_info("Context created, ticks_per_frame = %d\n",ctx->ticks_per_frame);
+    if (ctx->codec_descriptor && (ctx->codec_descriptor->props & AV_CODEC_PROP_FIELDS))
+        ticksPerFrame = 2;
+    ADM_info("Context created, ticks per frame: %d\n", ticksPerFrame);
     //2- Parse, let's add SPS prefix + Filler postfix to make life easier for libavcodec parser
     ctx->extradata=myData;
+    myData = NULL; // will be freed by avcodec_free_context()
     ctx->extradata_size=len;
      {
          uint8_t *outptr=NULL;
@@ -1018,7 +1022,13 @@ bool extractSPSInfo_mp4Header (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinf
     //ADM_info("Height : %d\n",ctx->height);
     {
         ffSpsInfo nfo;
-        if(!ff_h264_info(parser,ctx->ticks_per_frame,&nfo))
+        ticksPerFrame = 1;
+        if (ctx->codec_descriptor)
+        {
+            if (ctx->codec_descriptor->props & AV_CODEC_PROP_FIELDS)
+                ticksPerFrame = 2;
+        }
+        if(!ff_h264_info(parser, ticksPerFrame, &nfo))
         {
             ADM_error("Cannot get sps info from lavcodec\n");
             r=false;
@@ -1043,16 +1053,12 @@ bool extractSPSInfo_mp4Header (uint8_t * data, uint32_t len, ADM_SPSInfo *spsinf
      }
     // cleanup
 theEnd:
-    if(ctx)
-    {
-        avcodec_close(ctx);
-
-        av_free(ctx);
-    }
+    avcodec_free_context(&ctx);
     if(parser)
         av_parser_close(parser);
 
-    delete [] myData;
+    if (myData)
+        av_freep(&myData);
 
     return r;
 }

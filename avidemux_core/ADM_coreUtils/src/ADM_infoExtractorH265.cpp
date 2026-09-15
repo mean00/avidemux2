@@ -30,8 +30,8 @@
 extern "C"
 {
 #include "libavcodec/parser.h"
-#include "libavcodec/hevc.h"
-#include "libavcodec/hevc_ps.h"
+#include "libavcodec/hevc/hevc.h"
+#include "libavcodec/hevc/ps.h"
 #include "libavcodec/avcodec.h"
 #include "libavcodec/ff_spsinfo.h"
 #include "libavutil/mem.h"
@@ -71,7 +71,8 @@ H265Parser::H265Parser  (int len,uint8_t *data)
     originalLength=len;
 #define NAL_H265_CRA_NUT_LENGTH 10
     myLen=len+AV_INPUT_BUFFER_PADDING_SIZE+NAL_H265_CRA_NUT_LENGTH;
-    myData=new uint8_t[myLen];
+    myData = (uint8_t *)av_malloc(myLen);
+    ADM_assert(myData);
     memset(myData,0,myLen);
     memcpy(myData,data,len);
     parser=NULL;
@@ -80,24 +81,14 @@ H265Parser::H265Parser  (int len,uint8_t *data)
 }
 H265Parser::~H265Parser()
 {
-    if(myData)
-    {
-        delete [] myData;
-        myData=NULL;
-    }
-    //-
-    if(ctx)
-    {
-        avcodec_close(ctx);
-        av_free(ctx);
-        ctx=NULL;
-    }    
+    avcodec_free_context(&ctx);
     if(parser)
     {
         av_parser_close(parser);
         parser=NULL;
     }
-    
+    if (myData)
+        av_freep(&myData);
 }
 
 bool H265Parser::init()
@@ -159,12 +150,13 @@ static bool spsInfoFromParserContext(AVCodecParserContext *parser, ADM_SPSinfoH2
         spsinfo->height=sps->height-ow->top_offset-ow->bottom_offset;
         spsinfo->fps1000=23976;
         spsinfo->log2_max_poc_lsb=sps->log2_max_poc_lsb;
-        spsinfo->separate_colour_plane_flag=sps->separate_colour_plane_flag;
         spsinfo->dependent_slice_segments_enabled_flag=0;
         spsinfo->address_coding_length=bitsNeeded(sps->ctb_width*sps->ctb_height);
         printf("VPS = %d  x %d ** %d\n",sps->ctb_width,sps->ctb_height, sps->ctb_size);
         uint32_t timeBaseNum=0;
         uint32_t timeBaseDen=0;
+        if(vps)
+            spsinfo->separate_colour_plane_flag = vps->rep_format.separate_colour_plane_flag;
         if(vps && vps->vps_timing_info_present_flag)
         {
             printf("VPS timescale = %u\n",vps->vps_time_scale);
@@ -215,6 +207,7 @@ bool H265Parser::parseMpeg4(ADM_SPSinfoH265 *spsinfo)
     int outsize=0;
 
     ctx->extradata=myData;
+    myData = NULL; // will be freed in dtor by avcodec_free_context()
     ctx->extradata_size=myLen;
     // no use to evaluate the return value, it will be always 0
     av_parser_parse2(parser, ctx, &outptr, &outsize, NULL, 0, 0, 0,0);
@@ -227,7 +220,7 @@ bool H265Parser::parseMpeg4(ADM_SPSinfoH265 *spsinfo)
  */
 bool H265Parser::parseAnnexB(ADM_SPSinfoH265 *spsinfo)
 {
-    
+    ADM_assert(myData);
     uint8_t *start=myData;
     int   toConsume=myLen;
 #if 1    
