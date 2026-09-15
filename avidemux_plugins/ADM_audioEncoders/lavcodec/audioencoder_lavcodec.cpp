@@ -154,14 +154,18 @@ bool AUDMEncoder_Lavcodec::initialize(void)
         return false;
     }
     // Does the encoder support a sample format we do?
-    const AVSampleFormat *sfmt = codec->sample_fmts;
-    while(*sfmt != AV_SAMPLE_FMT_NONE)
+    const void *outFmts = NULL;
+    int nbFmts = 0;
+    avcodec_get_supported_config(NULL, codec, AV_CODEC_CONFIG_SAMPLE_FORMAT, 0, &outFmts, &nbFmts);
+    const AVSampleFormat *sfmt = (AVSampleFormat *)outFmts;
+    while(nbFmts > 0 && *sfmt != AV_SAMPLE_FMT_NONE)
     {
 #define MATCH(x,y) if(*sfmt == AV_SAMPLE_FMT_ ##x) { outputFlavor = as ##y; break; }
         MATCH(FLTP,FloatPlanar)
         MATCH(FLT,Float)
         MATCH(S16,Int16)
         sfmt++;
+        nbFmts--;
     }
     if(outputFlavor == unsupported)
     {
