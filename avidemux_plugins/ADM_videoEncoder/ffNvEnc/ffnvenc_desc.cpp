@@ -2,6 +2,7 @@
 extern const ADM_paramList ffnvenc_encoder_param[]={
  {"preset",offsetof(ffnvenc_encoder,preset),"uint32_t",ADM_param_uint32_t},
  {"profile",offsetof(ffnvenc_encoder,profile),"uint32_t",ADM_param_uint32_t},
+ {"tune",offsetof(ffnvenc_encoder,tune),"uint32_t",ADM_param_uint32_t},
  {"rc_mode",offsetof(ffnvenc_encoder,rc_mode),"uint32_t",ADM_param_uint32_t},
  {"quality",offsetof(ffnvenc_encoder,quality),"uint32_t",ADM_param_uint32_t},
  {"bitrate",offsetof(ffnvenc_encoder,bitrate),"uint32_t",ADM_param_uint32_t},

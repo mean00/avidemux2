@@ -4,6 +4,7 @@
 typedef struct {
 uint32_t preset;
 uint32_t profile;
+uint32_t tune;
 uint32_t rc_mode;
 uint32_t quality;
 uint32_t bitrate;
