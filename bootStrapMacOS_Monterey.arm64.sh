@@ -312,7 +312,20 @@ else
         echo -e "****************************************************************\n"
         exit 1
     fi
-    export QTDIR="/opt/homebrew/opt/qt@6"
+    if [ -d "/opt/homebrew/opt/qt@6" ]; then
+        export QTDIR="/opt/homebrew/opt/qt@6"
+    elif [ -d "/opt/homebrew/opt/qt6" ]; then
+        export QTDIR="/opt/homebrew/opt/qt6"
+    fi
+    if [ -z "$QTDIR" ]; then
+        echo -e "\n****************************************************************"
+        echo -e "Qt6 from Homebrew not found at expected locations"
+        echo -e "/opt/homebrew/opt/qt@6"
+        echo -e "/opt/homebrew/opt/qt6"
+        echo -e "Please provide the true location via MYQT env variable."
+        echo -e "****************************************************************\n"
+        exit 1
+    fi
 fi
 export PATH="$PATH":"${QTDIR}/bin"
 if $(which -s qmake) && [ -f "${QTDIR}/bin/qmake" ]; then
