@@ -11,7 +11,7 @@ IF(USE_NVENC)
   xadd("--enable-nvenc")
   xadd("--enable-nvdec")
   xadd("--extra-cflags=-I${NVENC_INCLUDE_DIR}")
-  SET(FFMPEG_ENCODERS  ${FFMPEG_ENCODERS} h264_nvenc hevc_nvenc)
+  SET(FFMPEG_ENCODERS  ${FFMPEG_ENCODERS} h264_nvenc hevc_nvenc av1_nvenc)
 ENDIF()
 
 #@@

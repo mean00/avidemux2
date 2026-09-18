@@ -22,7 +22,7 @@
 enum FF_NVencTune
 {
   NV_FF_TUNE_HQ = 1,
-#ifdef H265_ENCODER
+#if defined(H265_ENCODER) || defined(AV1_ENCODER)
   NV_FF_TUNE_UHQ = 5,
 #endif
   NV_FF_TUNE_LL = 2,
@@ -46,6 +46,8 @@ enum FF_NVencProfile
 #ifdef H265_ENCODER
   NV_FF_PROFILE_MAIN=0,
   NV_FF_PROFILE_MAIN10=1
+#elif defined(AV1_ENCODER)
+  // AV1 does not have profile options
 #else
   NV_FF_PROFILE_BASELINE=0,
   NV_FF_PROFILE_MAIN=1,
@@ -55,10 +57,10 @@ enum FF_NVencProfile
 
 enum FF_NVencRateControl
 {
-  NV_FF_RC_AUTO=0,    // controlled by preset
-  NV_FF_RC_CONSTQP=1, // by qp setting
-  NV_FF_RC_CBR=2,     // by set bitrate
-  NV_FF_RC_VBR=5      // by cq and bitrate settings
+  NV_FF_RC_AUTO=0, // controlled by preset
+  NV_FF_RC_CONSTQP=1,
+  NV_FF_RC_CBR=2,
+  NV_FF_RC_VBR=5
 };
 
 // B-frames as references require SDK 8.1 (driver >= 390.77 on Windows) and Turing+
@@ -77,6 +79,26 @@ enum FF_NVencBframeRefMode
   NV_FF_TUNE_HQ, /* tune */ \
   NV_FF_RC_AUTO, /* rc_mode */ \
   20,    /* quality */ \
+  5000, /* bitrate */ \
+  10000, /* max_bitrate */ \
+  100,   /* gopsize */ \
+  0, /* refs */ \
+  2, /* bframes */ \
+  2, /* b_ref_mode */ \
+  0, /* lookahead */ \
+  8, /* aq_strength */ \
+  0, /* spatial_aq */ \
+  0, /* temporal_aq */ \
+  0  /* weighted_pred */ \
+}
+#elif defined(AV1_ENCODER)
+#   define NVENC_CONF_DEFAULT \
+{ \
+  NV_FF_PRESET_P4, /* preset */ \
+  0, /* AV1 does not have profile options */ \
+  NV_FF_TUNE_HQ, /* tune */ \
+  NV_FF_RC_AUTO, /* rc_mode */ \
+  25,    /* quality */ \
   5000, /* bitrate */ \
   10000, /* max_bitrate */ \
   100,   /* gopsize */ \

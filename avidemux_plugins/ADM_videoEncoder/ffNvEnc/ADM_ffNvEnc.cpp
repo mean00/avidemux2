@@ -44,6 +44,8 @@ ADM_ffNvEncEncoder::ADM_ffNvEncEncoder(ADM_coreVideoFilter *src,bool globalHeade
     //targetColorSpace=ADM_COLOR_YUV422P;
 #ifdef H265_ENCODER
     ADM_info("(HEVC) Creating.\n");
+#elif defined(AV1_ENCODER)
+    ADM_info("(AV1) Creating.\n");
 #else
     ADM_info("(H264) Creating.\n");
 #endif
@@ -75,7 +77,7 @@ bool ADM_ffNvEncEncoder::configureContext(void)
     _context->gop_size = NvEncSettings.gopsize;
     _context->refs = NvEncSettings.refs;
     _context->max_b_frames =
-#ifdef H265_ENCODER
+#if defined(H265_ENCODER) || defined(AV1_ENCODER)
         NvEncSettings.bframes;
 #else
         (NvEncSettings.profile != NV_FF_PROFILE_BASELINE)? NvEncSettings.bframes : 0;
@@ -135,6 +137,8 @@ bool ADM_ffNvEncEncoder::configureContext(void)
 #ifdef H265_ENCODER
         MIAOU(MAIN,"main")
         MIAOU(MAIN10,"main10")
+#elif defined(AV1_ENCODER)
+        // AV1 NVENC does not have profile options
 #else
         MIAOU(BASELINE,"baseline")
         MIAOU(MAIN,"main")
@@ -146,7 +150,7 @@ bool ADM_ffNvEncEncoder::configureContext(void)
 
     switch(NvEncSettings.tune) {
         case NV_FF_TUNE_HQ:       av_dict_set(&_options, "tune", "hq", 0); break;
-#ifdef H265_ENCODER
+#if defined(H265_ENCODER) || defined(AV1_ENCODER)
         case NV_FF_TUNE_UHQ:      av_dict_set(&_options, "tune", "uhq", 0); break;
 #endif
         case NV_FF_TUNE_LL:       av_dict_set(&_options, "tune", "ll", 0); break;
@@ -212,6 +216,8 @@ bool ADM_ffNvEncEncoder::setup(void)
 #define MKSTRING(x) STR(x)
 #ifdef H265_ENCODER
 #   define LAVC_ENCODER_NAME hevc_nvenc
+#elif defined(AV1_ENCODER)
+#   define LAVC_ENCODER_NAME av1_nvenc
 #else
 #   define LAVC_ENCODER_NAME h264_nvenc
 #endif
@@ -252,6 +258,8 @@ const char *ADM_ffNvEncEncoder::getFourcc(void)
 {
 #ifdef H265_ENCODER
     return "HEVC";
+#elif defined(AV1_ENCODER)
+    return "av01";
 #else
     return "H264";
 #endif
@@ -322,7 +330,7 @@ bool ffNvEncConfigure(void)
 
     diaMenuEntry meTune[]={
         {NV_FF_TUNE_HQ,         QT_TRANSLATE_NOOP("ffnvenc","High Quality"),NULL},
-#ifdef H265_ENCODER
+#if defined(H265_ENCODER) || defined(AV1_ENCODER)
         {NV_FF_TUNE_UHQ,        QT_TRANSLATE_NOOP("ffnvenc","Ultra High Quality"),NULL},
 #endif
         {NV_FF_TUNE_LL,         QT_TRANSLATE_NOOP("ffnvenc","Low Latency"),NULL},
@@ -334,6 +342,8 @@ bool ffNvEncConfigure(void)
 #ifdef H265_ENCODER
         {NV_FF_PROFILE_MAIN,    QT_TRANSLATE_NOOP("ffnvenc","Main"),NULL},
         {NV_FF_PROFILE_MAIN10,  QT_TRANSLATE_NOOP("ffnvenc","Main10"),NULL},
+#elif defined(AV1_ENCODER)
+        // AV1 does not have profile options
 #else
         {NV_FF_PROFILE_BASELINE,QT_TRANSLATE_NOOP("ffnvenc","Baseline"),NULL},
         {NV_FF_PROFILE_MAIN,    QT_TRANSLATE_NOOP("ffnvenc","Main"),NULL},
@@ -369,12 +379,20 @@ bool ffNvEncConfigure(void)
     diaElemMenu bFrameRef(PX(b_ref_mode),QT_TRANSLATE_NOOP("ffnvenc","Use B-Frames as References:"),MZ(meBframeRef),meBframeRef);
     diaElemMenu maxRefs(PX(refs),QT_TRANSLATE_NOOP("ffnvenc","Maximum Reference Frames:"),MZ(meNumRef),meNumRef);
 
+#ifdef AV1_ENCODER
+    diaElemUInteger qual(PX(quality),QT_TRANSLATE_NOOP("ffnvenc","Quality:"),0,63);
+#else
     diaElemUInteger qual(PX(quality),QT_TRANSLATE_NOOP("ffnvenc","Quality:"),0,51);
+#endif
     diaElemUInteger bitrate(PX(bitrate),QT_TRANSLATE_NOOP("ffnvenc","Bitrate (kbps):"),1,500000);
     diaElemUInteger maxBitrate(PX(max_bitrate),QT_TRANSLATE_NOOP("ffnvenc","Max Bitrate (kbps):"),1,500000);
 
     diaElemUInteger gopSize(PX(gopsize),QT_TRANSLATE_NOOP("ffnvenc","GOP Size:"),0,1000);
+#ifdef AV1_ENCODER
+    diaElemUInteger maxBframes(PX(bframes),QT_TRANSLATE_NOOP("ffnvenc","Maximum Consecutive B-Frames:"),0,31);
+#else
     diaElemUInteger maxBframes(PX(bframes),QT_TRANSLATE_NOOP("ffnvenc","Maximum Consecutive B-Frames:"),0,5);
+#endif
 
     diaElemUInteger lookAhead(PX(lookahead),QT_TRANSLATE_NOOP("ffnvenc","Lookahead:"),0,NV_MX_LOOKAHEAD);
     diaElemUInteger aqStrength(PX(aq_strength),QT_TRANSLATE_NOOP("ffnvenc","AQ Strength:"),1,15);
@@ -385,6 +403,8 @@ bool ffNvEncConfigure(void)
 #ifdef H265_ENCODER
     diaElemReadOnlyText hintBasic(QT_TRANSLATE_NOOP("ffnvenc","Even with HEVC encoding support present, "
         "lossless presets and B-frames may be unavailable with older hardware"),NULL);
+#elif defined(AV1_ENCODER)
+    diaElemReadOnlyText hintBasic(QT_TRANSLATE_NOOP("ffnvenc","AV1 encoding requires Ada or newer hardware"),NULL);
 #else
     diaElemReadOnlyText hintBasic(QT_TRANSLATE_NOOP("ffnvenc","Even with H.264 encoding support present, "
         "lossless presets may be unavailable with older hardware"),NULL);
@@ -410,7 +430,7 @@ bool ffNvEncConfigure(void)
     rcmode.link(meRcMode+3,1,&bitrate);
     rcmode.link(meRcMode+3,1,&maxBitrate);
 
-#ifdef H265_ENCODER
+#if defined(H265_ENCODER) || defined(AV1_ENCODER)
 #else // h264 baseline has no B frames
     profile.link(meProfile+1,1,&maxBframes);
     profile.link(meProfile+2,1,&maxBframes);
@@ -426,7 +446,9 @@ bool ffNvEncConfigure(void)
 #define NB_ELEM(x) sizeof(x)/sizeof(diaElem *)
     /* First Tab : basic settings */
     diaElem *basics[]={
+#if !defined(AV1_ENCODER)
         &profile,
+#endif
         &rateControl,
         &frameControl,
         &hintBasic
@@ -450,6 +472,8 @@ bool ffNvEncConfigure(void)
     if(diaFactoryRunTabs(
 #ifdef H265_ENCODER
             QT_TRANSLATE_NOOP("ffnvenc","NVENC HEVC configuration"),
+#elif defined(AV1_ENCODER)
+            QT_TRANSLATE_NOOP("ffnvenc","NVENC AV1 configuration"),
 #else
             QT_TRANSLATE_NOOP("ffnvenc","NVENC H.264 configuration"),
 #endif

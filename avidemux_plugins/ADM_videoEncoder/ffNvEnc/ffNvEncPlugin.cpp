@@ -89,6 +89,17 @@ ADM_DECLARE_VIDEO_ENCODER_MAIN_EX("ffNvEncHEVC",
                                 &NvEncSettings,NULL,NULL, // conf var
                                 nvEncProbe
 );
+#elif defined(AV1_ENCODER)
+ADM_DECLARE_VIDEO_ENCODER_MAIN_EX("ffNvEncAV1",
+                               "Nvidia AV1",
+                               "Nvidia hw encoder",
+                                ffNvEncConfigure, // configuration
+                                ADM_UI_ALL,
+                                1,0,0,
+                                ffnvenc_encoder_param, // conf template
+                                &NvEncSettings,NULL,NULL, // conf var
+                                nvEncProbe
+);
 #else
 ADM_DECLARE_VIDEO_ENCODER_MAIN_EX("ffNvEncH264",
                                "Nvidia H264",
