@@ -284,7 +284,7 @@ while [ $# != 0 ]; do
   esac
   shift
 done
-if [  "x$do_qt" = "x1" ]; then
+if [  "x$do_qt" = "x1" -a "x$qt_ext" = "xQt6" ]; then
     if [ -z "$QTDIR" -a -d "/usr/lib/qt6" ]; then
         export QTDIR="/usr/lib/qt6"
     fi
