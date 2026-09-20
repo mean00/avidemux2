@@ -23,7 +23,7 @@ default_install_prefix="/usr"
 qt_ext=Qt6
 QT_FLAVOR="-DENABLE_QT6=True"
 COMPILER=""
-export QT_SELECT=qt6 # default for ubuntu, harmless for others
+export QT_SELECT=
 install_prefix="$default_install_prefix"
 # -lc is required to build libADM_ae_lav* audio encoder plugins on 32 bit ubuntu
 need_ae_lav_build_quirk=""
@@ -257,7 +257,6 @@ while [ $# != 0 ]; do
     do_asan=1
     ;;
   --with-qt)
-    do_qt=1
     ;;
   --with-cli)
     do_cli=1
@@ -285,6 +284,24 @@ while [ $# != 0 ]; do
   esac
   shift
 done
+if [  "x$do_qt" = "x1" ]; then
+    if [ -z "$QTDIR" -a -d "/usr/lib/qt6" ]; then
+        export QTDIR="/usr/lib/qt6"
+    fi
+    if [ -n "$QTDIR" ]; then
+        export PATH="${QTDIR}/bin:${PATH}"
+    fi
+    if [ -x "$(command -v qmake)" -a "$(qmake -query QT_VERSION)" \> 6 ];
+    then
+        echo "Found Qt-$(qmake -query QT_VERSION) at ${QTDIR}."
+    else
+        echo "Suitable Qt6 not found. Is \"qt6-l10n-tools\" installed?"
+        echo "Alternatively, for a custom Qt6 installation, try setting"
+        echo "QTDIR in the environment to the directory containing"
+        echo "\"bin/qmake\" before re-running this script; aborting."
+        fail "Qt6 not found!"
+    fi
+fi
 config
 echo "**BootStrapping avidemux **"
 
