@@ -58,6 +58,7 @@ RUN apt-get install -y \
     libvpx-dev \
     libaom-dev \
     file \
+    nasm \
   && apt-get install -y libsdl3-dev \
   && apt-get autoremove -y \
   && update-alternatives --install /usr/bin/python python /usr/bin/python3 10 \

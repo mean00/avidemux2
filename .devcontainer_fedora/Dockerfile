@@ -46,7 +46,7 @@ RUN dnf -y install \
   qt6-qtbase-devel \
   qt6-qtbase-private-devel \
   qt6-linguist
-RUN dnf -y install SDL3-devel 
+RUN dnf -y install SDL3-devel  nasm
 RUN dnf -y clean all
 
 # We've already got ffnvcodec headers from Fedora repositories.

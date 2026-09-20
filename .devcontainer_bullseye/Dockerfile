@@ -55,7 +55,7 @@ RUN apt-get install -y \
     squashfs-tools 
     # app image
   RUN apt-get install -y  desktop-file-utils fakeroot fuse  patchelf python3-pip python3-setuptools squashfs-tools strace util-linux zsync 
-  RUN apt-get install -y  zsh neovim
+  RUN apt-get install -y  zsh neovim nasm
 
   RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 10 \
   && :
