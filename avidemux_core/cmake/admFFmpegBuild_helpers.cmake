@@ -303,6 +303,15 @@ MACRO(ADM_FF_BUILD_UNIX_STYLE)
   find_package(Bourne)
   find_package(GnuMake)
 
+  IF(ADM_CPU_X86)
+    find_program(NETWIDE_ASSEMBLER_EXECUTABLE nasm)
+    IF(NOT NETWIDE_ASSEMBLER_EXECUTABLE)
+      MESSAGE(FATAL_ERROR "NASM, required to compile FFmpeg libraries, was not found.")
+    ELSE()
+      MESSAGE(STATUS "NASM has been found as ${NETWIDE_ASSEMBLER_EXECUTABLE}")
+    ENDIF()
+  ENDIF()
+
   MESSAGE(STATUS "Configuring FFmpeg")
   SET(LAST_FFMPEG_FLAGS "${FFMPEG_FLAGS}" CACHE STRING "" FORCE)
 
@@ -328,10 +337,10 @@ MACRO(ADM_FF_BUILD_UNIX_STYLE)
 
   IF(ADM_CPU_X86)
     FILE(READ ${FFMPEG_BINARY_DIR}/config.h FF_CONFIG_H)
-    STRING(REGEX MATCH "#define[ ]+HAVE_X86ASM[ ]+1" FF_YASM "${FF_CONFIG_H}")
+    STRING(REGEX MATCH "#define[ ]+HAVE_X86ASM[ ]+1" FF_NASM "${FF_CONFIG_H}")
 
-    IF(NOT FF_YASM)
-      MESSAGE(FATAL_ERROR "Yasm was not found.")
+    IF(NOT FF_NASM)
+      MESSAGE(FATAL_ERROR "NASM was not found.")
     ENDIF()
   ENDIF()
 
