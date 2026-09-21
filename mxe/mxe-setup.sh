@@ -108,6 +108,11 @@ prepare_sources()
     # MXE update of SQLite to 3.49.0 broke its installation, revert to 3.48.0
     #backout_patch sqlite-update-to-349000
     #backout_patch sqlite-correct-library-extension
+
+    # MXE commit 1e9a550c43531ae9ce0c53fb07cf949ee36cc06d has added a link time
+    # dependency on libdeflate without explicitly requiring the latter.
+    # This has broken qt6-qtimageformats build as of 2026-09-21 / 215428b.
+    apply_patch qt6-qtimageformats-deps
 }
 build_mxe()
 {

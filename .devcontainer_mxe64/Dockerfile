@@ -60,7 +60,7 @@ RUN apt-get install -y \
     usbutils \
     wget \
     zip \
-    build-essential pkg-config yasm \
+    build-essential nasm pkg-config yasm \
     file  \
     desktop-file-utils fakeroot \
     fuse  patchelf python3-pip python3-setuptools squashfs-tools strace \
@@ -91,6 +91,7 @@ RUN apt-get install -y \
     python3-packaging \
     python3-pkg-resources \
     python3-setuptools \
+    python3-yaml \
     python-is-python3 \
     sed \
     sqlite3 \
@@ -156,6 +157,10 @@ WORKDIR /opt/mxe
 COPY fdk-aac.patch /tmp/
 RUN patch -p1 --dry-run < /tmp/fdk-aac.patch \
     && patch -p1 < /tmp/fdk-aac.patch || :
+
+COPY qt6-qtimageformats-deps.patch /tmp/
+RUN patch -p1 --dry-run < /tmp/qt6-qtimageformats-deps.patch \
+    && patch -p1 < /tmp/qt6-qtimageformats-deps.patch || :
 
 RUN make \
     fdk-aac \
