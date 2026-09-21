@@ -25,6 +25,7 @@ gcc-c++ \
 make \
 cmake \
 yasm \
+nasm \
 pkgconf-pkg-config \
 fakeroot \
 bzip2 \

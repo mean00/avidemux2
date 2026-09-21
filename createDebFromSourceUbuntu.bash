@@ -21,7 +21,7 @@ install_deps() {
   echo "This will install all the packages necessary to build avidemux"
   echo "You will be asked to enter your password because installing build dependencies requires root permissions"
   # gcc, g++ and make get installed as dependencies of build-essential
-  sudo apt-get update && sudo apt-get install build-essential cmake pkg-config yasm \
+  sudo apt-get update && sudo apt-get install build-essential cmake pkg-config nasm yasm \
     libsqlite3-dev \
     libxv-dev libvdpau-dev libva-dev libglu1-mesa-dev \
     libasound2-dev libpulse-dev \
