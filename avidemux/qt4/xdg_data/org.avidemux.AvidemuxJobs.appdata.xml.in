@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2017 Adrien Vergé -->
+<component type="desktop">
+    <id>org.avidemux.AvidemuxJobs</id>
+    <metadata_license>CC0</metadata_license>
+    <project_license>GPL-2.0+</project_license>
+    <name>Avidemux Jobs</name>
+    <summary>Execute jobs queued by the Avidemux video editing and processing software</summary>
+    <description>
+        <p>
+            Avidemux is a free open-source program designed for multi-purpose
+            video editing and processing, which can be used on almost all known
+            operating systems and computer platforms.
+        </p>
+    </description>
+    <categories>
+        <category>AudioVideo</category>
+        <category>AudioVideoEditing</category>
+        <category>Video</category>
+    </categories>
+    <url type="homepage">https://www.avidemux.org/</url>
+    <provides>
+        <binary>avidemux3_jobs_${QT_EXTENSION}</binary>
+    </provides>
+    <update_contact>Avidemux team -- avidemux.org/smif/</update_contact>
+    <screenshots>
+        <screenshot type="default">http://fixounet.free.fr/avidemux/index_files/screenshot1.png</screenshot>
+        <screenshot type="default">http://fixounet.free.fr/avidemux/index_files/screenshot2.png</screenshot>
+    </screenshots>
+    <content_rating type="oars-1.1"/>
+    <releases>
+        <release version="${AVIDEMUX_VERSION}" date="2022-09-15"/>
+    </releases>
+</component>
