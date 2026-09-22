@@ -6,7 +6,26 @@ ARG USER_GID=1000
 ARG USERNAME=bullseye
 
 #RUN echo 'Acquire::http::Proxy "http://192.168.0.9:3142";' > /etc/apt/apt.conf.d/01proxy
-RUN sed -i 's/ main / main contrib non-free non-free-firmware/' /etc/apt/sources.list
+# bullseye reached end-of-LTS on 2026-08-31 and Debian deleted the whole
+# bullseye-security *pool*: the dists/ index is still served, but every .deb it
+# points at now returns 404 (libc6-dev, libcurl4, openssl, libexpat1, cmake-latest,
+# ...), so plain "apt-get install" fails in this image.  Note this is not only about
+# cmake-latest: the image ships the LTS-updated runtime libraries (glibc
+# 2.31-13+deb11u14, ...) and their matching -dev packages only ever existed in
+# bullseye-security, so the suite cannot just be dropped - apt then reports
+# "libc6-dev : Depends: libc6 (= 2.31-13+deb11u11) but 2.31-13+deb11u14 is to be
+# installed" and refuses to downgrade.
+# The suite is therefore served from snapshot.debian.org at the timestamp this base
+# image was built from (debuerreotype records it in the image's own sources.list),
+# which gives apt exactly the versions that are already installed.  The archived
+# Release file is expired forever, hence check-valid-until=no.
+# Everything else comes from the live archive; when deb.debian.org retires bullseye,
+# switch those two lines to http://archive.debian.org/debian (no Valid-Until there).
+RUN printf '%s\n' \
+      'deb http://deb.debian.org/debian bullseye main contrib non-free' \
+      'deb http://deb.debian.org/debian bullseye-updates main contrib non-free' \
+      'deb [check-valid-until=no] http://snapshot.debian.org/archive/debian-security/20260824T000000Z bullseye-security main' \
+      > /etc/apt/sources.list
 RUN echo "deb http://archive.debian.org/debian bullseye-backports main contrib non-free" > /etc/apt/sources.list.d/bullseye-backports.list
 RUN apt-get update 
 RUN apt-get install -y \
