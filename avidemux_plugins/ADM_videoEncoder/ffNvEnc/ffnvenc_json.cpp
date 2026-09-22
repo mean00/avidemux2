@@ -7,6 +7,7 @@ bool  ffnvenc_encoder_jserialize(const char *file, const ffnvenc_encoder *key){
 admJson json;
 json.addUint32("preset",key->preset);
 json.addUint32("profile",key->profile);
+json.addUint32("tune",key->tune);
 json.addUint32("rc_mode",key->rc_mode);
 json.addUint32("quality",key->quality);
 json.addUint32("bitrate",key->bitrate);
