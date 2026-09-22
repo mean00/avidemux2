@@ -163,6 +163,7 @@ RUN patch -p1 --dry-run < /tmp/qt6-qtimageformats-deps.patch \
     && patch -p1 < /tmp/qt6-qtimageformats-deps.patch || :
 
 RUN make \
+    nasm \
     fdk-aac \
     lame \
     libass \
