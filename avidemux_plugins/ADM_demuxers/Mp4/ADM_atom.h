@@ -29,7 +29,7 @@ public:
 				adm_atom(adm_atom *atom);
 		adm_atom        *duplicate();                                
 		bool	        skipAtom( void );
-                uint32_t        getStartPos(void) {return _atomStart;}
+                uint64_t        getStartPos(void) {return _atomStart;}
 		uint32_t	getFCC( void );
 		int64_t         getRemainingSize( void );
 		bool		readPayload( uint8_t *whereto, uint32_t rd );
