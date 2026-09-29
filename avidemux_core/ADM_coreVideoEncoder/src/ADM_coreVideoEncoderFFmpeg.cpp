@@ -424,7 +424,7 @@ bool ADM_coreVideoEncoderFFmpeg::setupInternal(const AVCodec *codec)
     } else
     {
         int maxClockFreq = 0x7FFFFFFF;
-        usSecondsToFrac(info->frameIncrement, &(_context->framerate.num), &(_context->framerate.den), maxClockFreq);
+        usSecondsToFrac(info->frameIncrement, &(_context->framerate.den), &(_context->framerate.num), maxClockFreq);
         switch(codec->id)
         {
             case AV_CODEC_ID_MPEG4:
