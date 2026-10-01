@@ -204,6 +204,13 @@ bool ADM_ffNvEncEncoder::configureContext(void)
     targetPixFrmt = ADM_PIXFRMT_NV12;
 #endif
 
+    // Set encoder delay
+    int mult = (_context->max_b_frames > 0) ? 2 : 0;
+    if (_context->max_b_frames > 1 && (NvEncSettings.b_ref_mode == NV_FF_BFRAME_REF_EACH || NvEncSettings.b_ref_mode == NV_FF_BFRAME_REF_MIDDLE))
+        mult += 1;
+    encoderDelay = frameIncrement * mult;
+    ADM_info("Encoder delay set to %d frames = %" PRIu64" us.\n", mult, encoderDelay);
+
     // Print nvenc options
     {
         AVDictionaryEntry *t = NULL;
@@ -258,17 +265,6 @@ bool ADM_ffNvEncEncoder::setup(void)
     ADM_info("[ffMpeg] Setup ok\n");
 
     return true;
-}
-
-/**
-    \fn getEncoderDelay
-*/
-uint64_t ADM_ffNvEncEncoder::getEncoderDelay(void)
-{
-    uint64_t delay=0;
-    if(NvEncSettings.bframes)
-        delay = frameIncrement * ((NvEncSettings.b_ref_mode == NV_FF_BFRAME_REF_DISABLED)? 2 : 3); // excessive?
-    return delay;
 }
 
 /**

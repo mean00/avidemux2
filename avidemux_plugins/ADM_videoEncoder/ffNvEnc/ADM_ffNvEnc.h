@@ -149,6 +149,5 @@ virtual        bool        configureContext(void);
 virtual        bool        setup(void);
 virtual        bool        encode (ADMBitstream * out);
 virtual const  char        *getFourcc(void);
-virtual        uint64_t     getEncoderDelay(void);
 };
 
