@@ -238,7 +238,7 @@ bool ADM_ffNvEncEncoder::configureContext(void)
 
     // Set encoder delay
     int mult = (_context->max_b_frames > 0) ? 2 : 0;
-    if (_context->max_b_frames > 1 && (NvEncSettings.b_ref_mode == NV_FF_BFRAME_REF_EACH || NvEncSettings.b_ref_mode == NV_FF_BFRAME_REF_MIDDLE))
+    if (_context->max_b_frames > 1)
         mult += 1;
     encoderDelay = frameIncrement * mult;
     ADM_info("Encoder delay set to %d frames = %" PRIu64" us.\n", mult, encoderDelay);
