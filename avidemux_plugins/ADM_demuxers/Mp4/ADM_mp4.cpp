@@ -580,6 +580,11 @@ uint8_t    MP4Header::open(const char *name)
                             cancelled = true;
                             break; // cancelling frame type decoding is non-fatal
                         }
+                        if(VDEO.index[i].size > MAX_FRAME_LENGTH)
+                        {
+                            ADM_warning("Frame %u too large (%" PRIu64" bytes) while decoding H.264 frame type, skipping.\n",i,VDEO.index[i].size);
+                            continue;
+                        }
                         if(!getFrame(i,&img))
                         {
                             ADM_warning("Could not get frame %u while decoding H.264 frame type.\n",i);
@@ -721,6 +726,11 @@ uint8_t    MP4Header::open(const char *name)
                         {
                             cancelled = true;
                             break; // cancelling frame type decoding is non-fatal
+                        }
+                        if(VDEO.index[i].size > MAX_FRAME_LENGTH)
+                        {
+                            ADM_warning("Frame %u too large (%" PRIu64" bytes) while decoding HEVC frame type, skipping.\n",i,VDEO.index[i].size);
+                            continue;
                         }
                         if(!getFrame(i,&img))
                         {
