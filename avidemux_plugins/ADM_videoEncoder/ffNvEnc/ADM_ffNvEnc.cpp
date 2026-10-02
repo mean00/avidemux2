@@ -76,6 +76,33 @@ bool ADM_ffNvEncEncoder::configureContext(void)
 
     _context->gop_size = NvEncSettings.gopsize;
     _context->refs = NvEncSettings.refs;
+#ifdef AV1_ENCODER
+    // Hierarchical wants the number of b-frames in form 2^n - 1 where n is 1...5
+    if(NvEncSettings.b_ref_mode == NV_FF_BFRAME_REF_HIERARCHICAL && NvEncSettings.bframes > 0)
+    {
+        if((NvEncSettings.bframes & (NvEncSettings.bframes + 1)) != 0)
+        {
+            int bfvalid = 1;
+            for (int i = 1; i <= 5; i++)
+            {
+                int bfcandidate = (1u << i) - 1;
+                if (bfcandidate <= NvEncSettings.bframes)
+                    bfvalid = bfcandidate;
+                else
+                    break;
+            }
+            ADM_warning("Hierarchical must have bframes in form 2^n - 1 (got %u), setting to %u.\n",
+                        NvEncSettings.bframes, bfvalid);
+            NvEncSettings.bframes = bfvalid;
+        }
+    }
+    else if(NvEncSettings.bframes > 7)
+    {
+        ADM_warning("b-frames limited to <=7 for non-hierarchical (got %u), setting to 7.\n",
+                    NvEncSettings.bframes);
+        NvEncSettings.bframes = 7;
+    }
+#endif
     _context->max_b_frames =
 #if defined(H265_ENCODER) || defined(AV1_ENCODER)
         NvEncSettings.bframes;
@@ -95,6 +122,11 @@ bool ADM_ffNvEncEncoder::configureContext(void)
             case NV_FF_BFRAME_REF_MIDDLE:
                 av_dict_set(&_options,"b_ref_mode","middle",0);
                 break;
+#ifdef AV1_ENCODER
+            case NV_FF_BFRAME_REF_HIERARCHICAL:
+                av_dict_set(&_options,"b_ref_mode","hierarchical",0);
+                break;
+#endif
             default:
                 ADM_warning("b_ref_mode %u is invalid, ignoring.\n",NvEncSettings.b_ref_mode);
                 break;
@@ -206,7 +238,7 @@ bool ADM_ffNvEncEncoder::configureContext(void)
 
     // Set encoder delay
     int mult = (_context->max_b_frames > 0) ? 2 : 0;
-    if (_context->max_b_frames > 1 && (NvEncSettings.b_ref_mode == NV_FF_BFRAME_REF_EACH || NvEncSettings.b_ref_mode == NV_FF_BFRAME_REF_MIDDLE))
+    if (_context->max_b_frames > 1)
         mult += 1;
     encoderDelay = frameIncrement * mult;
     ADM_info("Encoder delay set to %d frames = %" PRIu64" us.\n", mult, encoderDelay);
@@ -390,6 +422,9 @@ bool ffNvEncConfigure(void)
         {NV_FF_BFRAME_REF_DISABLED,QT_TRANSLATE_NOOP("ffnvenc","Disabled"),NULL},
         {NV_FF_BFRAME_REF_EACH,QT_TRANSLATE_NOOP("ffnvenc","Each"),NULL},
         {NV_FF_BFRAME_REF_MIDDLE,QT_TRANSLATE_NOOP("ffnvenc","Middle"),NULL}
+#ifdef AV1_ENCODER
+        ,{NV_FF_BFRAME_REF_HIERARCHICAL,QT_TRANSLATE_NOOP("ffnvenc","Hierarchical"),NULL}
+#endif
     };
 
     ffnvenc_encoder *conf=&NvEncSettings;
