@@ -27,8 +27,6 @@
 #define aprintf printf
 #endif
 
-#define NV_MX_LOOKAHEAD 31
-
 extern "C"
 {
     #include "libavutil/opt.h"
@@ -200,21 +198,10 @@ bool ADM_ffNvEncEncoder::configureContext(void)
         default: break;
     };
 
-    if(NvEncSettings.lookahead)
+    if(NvEncSettings.lookahead > 0)
     {
-        int range = NvEncSettings.lookahead;
-        const int maxr = (_context->gop_size > NV_MX_LOOKAHEAD - _context->max_b_frames)?
-            NV_MX_LOOKAHEAD - _context->max_b_frames : _context->gop_size;
-        if(range > maxr)
-        {
-            ADM_warning("Specified lookahead value %d exceeds maximum %d, clamping down.\n",range,maxr);
-            range = maxr;
-        }
-        snprintf(buf, OPTION_BUFFER_SIZE, "%d", range);
+        snprintf(buf, OPTION_BUFFER_SIZE, "%d", NvEncSettings.lookahead);
         av_dict_set(&_options,"rc-lookahead",buf,0);
-        // set sufficient delay else lavc will disable lookahead
-        snprintf(buf, OPTION_BUFFER_SIZE, "%d", range+5);
-        av_dict_set(&_options,"delay",buf,0);
     }
 
     if(NvEncSettings.spatial_aq)
@@ -464,7 +451,7 @@ bool ffNvEncConfigure(void)
     diaElemUInteger maxBframes(PX(bframes),QT_TRANSLATE_NOOP("ffnvenc","Maximum Consecutive B-Frames:"),0,5);
 #endif
 
-    diaElemUInteger lookAhead(PX(lookahead),QT_TRANSLATE_NOOP("ffnvenc","Lookahead:"),0,NV_MX_LOOKAHEAD);
+    diaElemUInteger lookAhead(PX(lookahead),QT_TRANSLATE_NOOP("ffnvenc","Lookahead:"),0,64);
     diaElemUInteger aqStrength(PX(aq_strength),QT_TRANSLATE_NOOP("ffnvenc","AQ Strength:"),1,15);
 
     diaElemToggle spatAq(PX(spatial_aq),QT_TRANSLATE_NOOP("ffnvenc","Spatial AQ"));
