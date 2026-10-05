@@ -163,6 +163,7 @@ bool ADM_coreVideoEncoder::getRealPtsFromInternal(uint64_t val,uint64_t *dts,uin
         if(mapper[i].internalTS==val)
         {
             *pts=mapper[i].realTS;
+            *pts += encoderDelay;
             mapper.erase(mapper.begin()+i);
             // Now get DTS, it is min (lastDTS+inc, PTS-delay)
             ADM_assert(queueOfDts.size());

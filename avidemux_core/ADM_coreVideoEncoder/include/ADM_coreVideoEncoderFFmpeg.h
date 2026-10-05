@@ -55,8 +55,10 @@ typedef enum {
                bool             _globalHeader;
                int              timeScalerNum,timeScalerDen;
                bool             _hasSettings;
+               bool             _firstOut;
                int64_t          lastLavPts;
                int64_t          lavPtsFromPacket;
+               int64_t          lavDtsFromPacket;
                ADM_encoderState encoderState;
 
                bool             loadStatFile(const char *file);

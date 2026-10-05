@@ -78,12 +78,14 @@ _hasSettings=false;
     timeScalerDen=0;
 
     uint64_t inc=source->getInfo()->frameIncrement;
-    if(_hasSettings && LAVS(max_b_frames))
+    if(false /* _hasSettings && LAVS(max_b_frames) */) // let encoder figure out the required reorder delay
         encoderDelay=inc*2;
     else
         encoderDelay=0;
     ADM_info("[Lavcodec] Using a video encoder delay of %d ms\n",(int)(encoderDelay/1000));
     lastLavPts = AV_NOPTS_VALUE;
+    lavPtsFromPacket = lavDtsFromPacket = AV_NOPTS_VALUE;
+    _firstOut = true;
     encoderState = ADM_ENCODER_STATE_FEEDING;
 }
 /**
@@ -273,7 +275,7 @@ bool             ADM_coreVideoEncoderFFmpeg::preEncode(void)
     uint64_t p=image->Pts;
     queueOfDts.push_back(p);
     aprintf("Incoming frame PTS=%" PRIu64", delay=%" PRIu64"\n",p,getEncoderDelay());
-    p+=getEncoderDelay();
+    // p+=getEncoderDelay(); // will be added during conversion from lav to us later
     _frame->pts= timingToLav(p);    //
     if(_frame->pts!=AV_NOPTS_VALUE && lastLavPts!=AV_NOPTS_VALUE && _frame->pts==lastLavPts)
     {
@@ -360,6 +362,7 @@ int ADM_coreVideoEncoderFFmpeg::encodeWrapper(AVFrame *in,ADMBitstream *out)
     ADM_assert(out->bufferSize >= _pkt->size);
     memcpy(out->data, _pkt->data, _pkt->size);
     lavPtsFromPacket = _pkt->pts;
+    lavDtsFromPacket = _pkt->dts;
     out->flags = (_pkt->flags & AV_PKT_FLAG_KEY)? AVI_KEY_FRAME : AVI_P_FRAME;
     out->out_quantizer = (int)floor(_frame->quality / (float) FF_QP2LAMBDA); // fallback
 
@@ -597,6 +600,19 @@ bool ADM_coreVideoEncoderFFmpeg::postEncode(ADMBitstream *out, uint32_t size)
         return false;
 
     out->dts = queueOfDts[0];
+    if (_firstOut)
+    {
+        if (lavDtsFromPacket != AV_NOPTS_VALUE && lavPtsFromPacket != AV_NOPTS_VALUE && lavDtsFromPacket < 0)
+        {
+            int64_t lavReorderDelay = lavPtsFromPacket - lavDtsFromPacket;
+            encoderDelay = lavToTiming(lavReorderDelay);
+            ADM_info("Updating encoderDelay based on negative lavc DTS %" PRId64" to %" PRIu64" us.\n", lavDtsFromPacket, encoderDelay);
+        } else
+        {
+            ADM_info("Leaving encoderDelay unchanged at %" PRIu64"\n", encoderDelay);
+        }
+        _firstOut = false;
+    }
 
     // Update PTS/Dts
     if(!_context->max_b_frames)
