@@ -187,7 +187,9 @@ bool ADM_ffNvEncEncoder::configureContext(void)
 #endif
         case NV_FF_TUNE_LL:       av_dict_set(&_options, "tune", "ll", 0); break;
         case NV_FF_TUNE_ULL:      av_dict_set(&_options, "tune", "ull", 0); break;
+#if !defined(AV1_ENCODER)
         case NV_FF_TUNE_LOSSLESS: av_dict_set(&_options, "tune", "lossless", 0); break;
+#endif
         default: break;
     };
 
@@ -390,8 +392,10 @@ bool ffNvEncConfigure(void)
         {NV_FF_TUNE_UHQ,        QT_TRANSLATE_NOOP("ffnvenc","Ultra High Quality"),NULL},
 #endif
         {NV_FF_TUNE_LL,         QT_TRANSLATE_NOOP("ffnvenc","Low Latency"),NULL},
-        {NV_FF_TUNE_ULL,        QT_TRANSLATE_NOOP("ffnvenc","Ultra Low Latency"),NULL},
-        {NV_FF_TUNE_LOSSLESS,   QT_TRANSLATE_NOOP("ffnvenc","Lossless"),NULL}
+        {NV_FF_TUNE_ULL,        QT_TRANSLATE_NOOP("ffnvenc","Ultra Low Latency"),NULL}
+#if !defined(AV1_ENCODER)
+        ,{NV_FF_TUNE_LOSSLESS,  QT_TRANSLATE_NOOP("ffnvenc","Lossless"),NULL}
+#endif
     };
 
     diaMenuEntry meProfile[]={
