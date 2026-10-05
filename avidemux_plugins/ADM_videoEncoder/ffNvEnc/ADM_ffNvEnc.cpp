@@ -142,6 +142,13 @@ bool ADM_ffNvEncEncoder::configureContext(void)
             _context->bit_rate=NvEncSettings.bitrate*1000;
             break;
         case NV_FF_RC_CONSTQP:
+#ifdef AV1_ENCODER
+            if(NvEncSettings.quality == 0)
+            {
+                ADM_warning("Lossless is not supported with AV1, bumping qp up to 1.\n");
+                NvEncSettings.quality = 1;
+            }
+#endif
             _context->qmin = _context->qmax = NvEncSettings.quality;
             av_dict_set(&_options,"rc","constqp",0);
             snprintf(buf, OPTION_BUFFER_SIZE, "%d", NvEncSettings.quality);
