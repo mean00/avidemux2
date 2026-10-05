@@ -27,8 +27,6 @@
 #define aprintf printf
 #endif
 
-#define NV_MX_LOOKAHEAD 31
-
 extern "C"
 {
     #include "libavutil/opt.h"
@@ -142,6 +140,13 @@ bool ADM_ffNvEncEncoder::configureContext(void)
             _context->bit_rate=NvEncSettings.bitrate*1000;
             break;
         case NV_FF_RC_CONSTQP:
+#ifdef AV1_ENCODER
+            if(NvEncSettings.quality == 0)
+            {
+                ADM_warning("Lossless is not supported with AV1, bumping qp up to 1.\n");
+                NvEncSettings.quality = 1;
+            }
+#endif
             _context->qmin = _context->qmax = NvEncSettings.quality;
             av_dict_set(&_options,"rc","constqp",0);
             snprintf(buf, OPTION_BUFFER_SIZE, "%d", NvEncSettings.quality);
@@ -187,25 +192,16 @@ bool ADM_ffNvEncEncoder::configureContext(void)
 #endif
         case NV_FF_TUNE_LL:       av_dict_set(&_options, "tune", "ll", 0); break;
         case NV_FF_TUNE_ULL:      av_dict_set(&_options, "tune", "ull", 0); break;
+#if !defined(AV1_ENCODER)
         case NV_FF_TUNE_LOSSLESS: av_dict_set(&_options, "tune", "lossless", 0); break;
+#endif
         default: break;
     };
 
-    if(NvEncSettings.lookahead)
+    if(NvEncSettings.lookahead > 0)
     {
-        int range = NvEncSettings.lookahead;
-        const int maxr = (_context->gop_size > NV_MX_LOOKAHEAD - _context->max_b_frames)?
-            NV_MX_LOOKAHEAD - _context->max_b_frames : _context->gop_size;
-        if(range > maxr)
-        {
-            ADM_warning("Specified lookahead value %d exceeds maximum %d, clamping down.\n",range,maxr);
-            range = maxr;
-        }
-        snprintf(buf, OPTION_BUFFER_SIZE, "%d", range);
+        snprintf(buf, OPTION_BUFFER_SIZE, "%d", NvEncSettings.lookahead);
         av_dict_set(&_options,"rc-lookahead",buf,0);
-        // set sufficient delay else lavc will disable lookahead
-        snprintf(buf, OPTION_BUFFER_SIZE, "%d", range+5);
-        av_dict_set(&_options,"delay",buf,0);
     }
 
     if(NvEncSettings.spatial_aq)
@@ -390,8 +386,10 @@ bool ffNvEncConfigure(void)
         {NV_FF_TUNE_UHQ,        QT_TRANSLATE_NOOP("ffnvenc","Ultra High Quality"),NULL},
 #endif
         {NV_FF_TUNE_LL,         QT_TRANSLATE_NOOP("ffnvenc","Low Latency"),NULL},
-        {NV_FF_TUNE_ULL,        QT_TRANSLATE_NOOP("ffnvenc","Ultra Low Latency"),NULL},
-        {NV_FF_TUNE_LOSSLESS,   QT_TRANSLATE_NOOP("ffnvenc","Lossless"),NULL}
+        {NV_FF_TUNE_ULL,        QT_TRANSLATE_NOOP("ffnvenc","Ultra Low Latency"),NULL}
+#if !defined(AV1_ENCODER)
+        ,{NV_FF_TUNE_LOSSLESS,  QT_TRANSLATE_NOOP("ffnvenc","Lossless"),NULL}
+#endif
     };
 
     diaMenuEntry meProfile[]={
@@ -453,7 +451,7 @@ bool ffNvEncConfigure(void)
     diaElemUInteger maxBframes(PX(bframes),QT_TRANSLATE_NOOP("ffnvenc","Maximum Consecutive B-Frames:"),0,5);
 #endif
 
-    diaElemUInteger lookAhead(PX(lookahead),QT_TRANSLATE_NOOP("ffnvenc","Lookahead:"),0,NV_MX_LOOKAHEAD);
+    diaElemUInteger lookAhead(PX(lookahead),QT_TRANSLATE_NOOP("ffnvenc","Lookahead:"),0,64);
     diaElemUInteger aqStrength(PX(aq_strength),QT_TRANSLATE_NOOP("ffnvenc","AQ Strength:"),1,15);
 
     diaElemToggle spatAq(PX(spatial_aq),QT_TRANSLATE_NOOP("ffnvenc","Spatial AQ"));
