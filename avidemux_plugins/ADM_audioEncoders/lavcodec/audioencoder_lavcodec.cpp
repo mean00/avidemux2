@@ -298,6 +298,7 @@ bool AUDMEncoder_Lavcodec::fillFrame(int count)
             }
             bufSize = count * sizeof(float);
             format = AV_SAMPLE_FMT_FLTP;
+            _frame->linesize[0] = ADM_LAV_SAMPLE_PER_P;
             break;
         default:
             ADM_assert(0);
