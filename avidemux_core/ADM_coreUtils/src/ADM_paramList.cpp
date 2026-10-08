@@ -179,6 +179,7 @@ static bool compressReadFromString(COMPRES_PARAMS *params,const char *str)
     if(!strcasecmp(tmp,"2PASS")) {params->mode=COMPRESS_2PASS;params->finalsize=val;return true;}
     if(!strcasecmp(tmp,"2PASSBITRATE")) {params->mode=COMPRESS_2PASS_BITRATE;params->avg_bitrate=val;return true;}
     if(!strcasecmp(tmp,"AQ")) {params->mode=COMPRESS_AQ;params->qz=val;return true;}
+    if(!strcasecmp(tmp,"LOSSLESS")) {params->mode=COMPRESS_LOSSLESS;return true;}
     ADM_error("Unknown mode :%s\n",tmp);
     return false;
 
@@ -197,8 +198,9 @@ bool ADM_compressWriteToString(COMPRES_PARAMS *params,  char **str)
         case COMPRESS_SAME:  sprintf(tmp,"SAME");break;
         case COMPRESS_2PASS_BITRATE: sprintf(tmp,"2PASSBITRATE=%" PRIu32,params->avg_bitrate);break;
         case COMPRESS_AQ:    sprintf(tmp,"AQ=%" PRIu32,params->qz);break;
+        case COMPRESS_LOSSLESS: sprintf(tmp,"LOSSLESS=1");break;
         default:
-            ADM_error("Unknown compressin mode \n");
+            ADM_error("Unknown compression mode \n");
             return false;
     }
     *str=ADM_strdup(tmp);
