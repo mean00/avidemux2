@@ -47,11 +47,14 @@ enum FF_NVencProfile
   NV_FF_PROFILE_MAIN=0,
   NV_FF_PROFILE_MAIN10=1
 #elif defined(AV1_ENCODER)
-  // AV1 does not have profile options
+  NV_FF_PROFILE_MAIN=0 // AV1 does not have profile options
 #else
   NV_FF_PROFILE_BASELINE=0,
   NV_FF_PROFILE_MAIN=1,
-  NV_FF_PROFILE_HIGH=2
+  NV_FF_PROFILE_HIGH=2,
+  NV_FF_PROFILE_HIGH10=3,
+  NV_FF_PROFILE_HIGH422=4,
+  NV_FF_PROFILE_HIGH444=5
 #endif
 };
 
@@ -98,7 +101,8 @@ enum FF_NVencTfLevel
   NV_FF_TF_DEFAULT, /* tf_level */ \
   0, /* spatial_aq */ \
   0, /* temporal_aq */ \
-  0  /* weighted_pred */ \
+  0, /* weighted_pred */ \
+  0  /* highbitdepth */ \
 }
 #elif defined(AV1_ENCODER)
 #   define NVENC_CONF_DEFAULT \
@@ -119,7 +123,8 @@ enum FF_NVencTfLevel
   NV_FF_TF_DEFAULT, /* tf_level */ \
   0, /* spatial_aq */ \
   0, /* temporal_aq */ \
-  0  /* weighted_pred */ \
+  0, /* weighted_pred */ \
+  0  /* highbitdepth */ \
 }
 #else
 #   define NVENC_CONF_DEFAULT \
@@ -140,7 +145,8 @@ enum FF_NVencTfLevel
   NV_FF_TF_DEFAULT, /* tf_level */ \
   0, /* spatial_aq */ \
   0, /* temporal_aq */ \
-  0  /* weighted_pred */ \
+  0, /* weighted_pred */ \
+  0  /* highbitdepth */ \
 }
 #endif
 

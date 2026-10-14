@@ -209,6 +209,9 @@ bool ADM_ffNvEncEncoder::configureContext(void)
         MIAOU(BASELINE,"baseline")
         MIAOU(MAIN,"main")
         MIAOU(HIGH,"high")
+        MIAOU(HIGH10,"high10")
+        MIAOU(HIGH422,"high422")
+        MIAOU(HIGH444,"high444p")
 #endif
         default:break;
 #undef MIAOU
@@ -256,6 +259,9 @@ bool ADM_ffNvEncEncoder::configureContext(void)
         else
             av_dict_set(&_options,"weighted_pred","1",0);
     }
+
+    if(NvEncSettings.highbitdepth)
+        av_dict_set(&_options,"highbitdepth","1",0);
 
 #ifdef USE_NV12
     targetPixFrmt = ADM_PIXFRMT_NV12;
@@ -424,13 +430,16 @@ bool ffNvEncConfigure(void)
     diaMenuEntry meProfile[]={
 #ifdef H265_ENCODER
         {NV_FF_PROFILE_MAIN,    QT_TRANSLATE_NOOP("ffnvenc","Main"),NULL},
-        {NV_FF_PROFILE_MAIN10,  QT_TRANSLATE_NOOP("ffnvenc","Main10"),NULL},
+        {NV_FF_PROFILE_MAIN10,  QT_TRANSLATE_NOOP("ffnvenc","Main10"),NULL}
 #elif defined(AV1_ENCODER)
-        // AV1 does not have profile options
+        {NV_FF_PROFILE_MAIN,    QT_TRANSLATE_NOOP("ffnvenc","Main"),NULL}
 #else
         {NV_FF_PROFILE_BASELINE,QT_TRANSLATE_NOOP("ffnvenc","Baseline"),NULL},
         {NV_FF_PROFILE_MAIN,    QT_TRANSLATE_NOOP("ffnvenc","Main"),NULL},
-        {NV_FF_PROFILE_HIGH,    QT_TRANSLATE_NOOP("ffnvenc","High"),NULL}
+        {NV_FF_PROFILE_HIGH,    QT_TRANSLATE_NOOP("ffnvenc","High"),NULL},
+        {NV_FF_PROFILE_HIGH10,  QT_TRANSLATE_NOOP("ffnvenc","High10"),NULL},
+        {NV_FF_PROFILE_HIGH422, QT_TRANSLATE_NOOP("ffnvenc","High422"),NULL},
+        {NV_FF_PROFILE_HIGH444, QT_TRANSLATE_NOOP("ffnvenc","High444p"),NULL}
 #endif
     };
 
@@ -492,6 +501,10 @@ bool ffNvEncConfigure(void)
     diaElemToggle spatAq(PX(spatial_aq),QT_TRANSLATE_NOOP("ffnvenc","Spatial AQ"));
     diaElemToggle tempAq(PX(temporal_aq),QT_TRANSLATE_NOOP("ffnvenc","Temporal AQ"));
     diaElemToggle wPred(PX(weighted_pred),QT_TRANSLATE_NOOP("ffnvenc","Weighted Prediction"));
+    diaElemToggle highBitDepth(PX(highbitdepth),QT_TRANSLATE_NOOP("ffnvenc","High Bit Depth (10-bit output)"));
+#if !defined(AV1_ENCODER) && !defined(H265_ENCODER)
+    diaElemReadOnlyText hintHighBitDepth(QT_TRANSLATE_NOOP("ffnvenc","10-bit requires Blackwell or newer"),NULL);
+#endif
     diaElemMenu tfLevel(PX(tf_level),QT_TRANSLATE_NOOP("ffnvenc","Temporal Filtering Strength:"),MZ(meTfLevel),meTfLevel);
 #ifdef H265_ENCODER
     diaElemReadOnlyText hintBasic(QT_TRANSLATE_NOOP("ffnvenc","Even with HEVC encoding support present, "
@@ -523,12 +536,18 @@ bool ffNvEncConfigure(void)
     rcmode.link(meRcMode+3,1,&bitrate);
     rcmode.link(meRcMode+3,1,&maxBitrate);
 
-#if defined(H265_ENCODER) || defined(AV1_ENCODER)
-#else // h264 baseline has no B frames
+#if !defined(H265_ENCODER) && !defined(AV1_ENCODER)
+    // h264 baseline has no B frames
     profile.link(meProfile+1,1,&maxBframes);
     profile.link(meProfile+2,1,&maxBframes);
+    profile.link(meProfile+3,1,&maxBframes);
+    profile.link(meProfile+4,1,&maxBframes);
+    profile.link(meProfile+5,1,&maxBframes);
     profile.link(meProfile+1,1,&tfLevel);
     profile.link(meProfile+2,1,&tfLevel);
+    profile.link(meProfile+3,1,&tfLevel);
+    profile.link(meProfile+4,1,&tfLevel);
+    profile.link(meProfile+5,1,&tfLevel);
 #endif
     spatAq.link(1,&aqStrength);
 
@@ -542,9 +561,7 @@ bool ffNvEncConfigure(void)
 #define NB_ELEM(x) sizeof(x)/sizeof(diaElem *)
     /* First Tab : basic settings */
     diaElem *basics[]={
-#if !defined(AV1_ENCODER)
         &profile,
-#endif
         &rateControl,
         &frameControl,
         &hintBasic
@@ -556,6 +573,10 @@ bool ffNvEncConfigure(void)
         &refControl,
         &wPred,
         &hintWeightedPred,
+        &highBitDepth,
+#if !defined(AV1_ENCODER) && !defined(H265_ENCODER)
+        &hintHighBitDepth,
+#endif
         &spatAq,
         &aqStrength,
         &tempAq,

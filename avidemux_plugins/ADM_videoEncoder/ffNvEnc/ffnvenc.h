@@ -19,4 +19,5 @@ uint32_t tf_level;
 bool spatial_aq;
 bool temporal_aq;
 bool weighted_pred;
+bool highbitdepth;
 }ffnvenc_encoder;

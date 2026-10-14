@@ -17,5 +17,6 @@ extern const ADM_paramList ffnvenc_encoder_param[]={
  {"spatial_aq",offsetof(ffnvenc_encoder,spatial_aq),"bool",ADM_param_bool},
  {"temporal_aq",offsetof(ffnvenc_encoder,temporal_aq),"bool",ADM_param_bool},
  {"weighted_pred",offsetof(ffnvenc_encoder,weighted_pred),"bool",ADM_param_bool},
+ {"highbitdepth",offsetof(ffnvenc_encoder,highbitdepth),"bool",ADM_param_bool},
 {NULL,0,NULL}
 };
