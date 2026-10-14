@@ -284,7 +284,7 @@ bool ADM_ffNvEncEncoder::configureContext(void)
     // Print ffmpeg options
     {
         char buf[1024] = "";
-        snprintf(buf, sizeof(buf), "bit_rate=%d rc_max_rate=%d gop_size=%d refs=%d max_b_frames=%d rc_buffer_size=%d",
+        snprintf(buf, sizeof(buf), "bit_rate=%ld rc_max_rate=%ld gop_size=%d refs=%d max_b_frames=%d rc_buffer_size=%d",
                  _context->bit_rate, _context->rc_max_rate, _context->gop_size,
                  _context->refs, _context->max_b_frames, _context->rc_buffer_size);
         ADM_info("[ffNvEnc] FFmpeg options: %s\n", buf);
