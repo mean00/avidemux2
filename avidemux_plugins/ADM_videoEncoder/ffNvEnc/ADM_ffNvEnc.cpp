@@ -122,6 +122,17 @@ bool ADM_ffNvEncEncoder::configureContext(void)
                 break;
 #ifdef AV1_ENCODER
             case NV_FF_BFRAME_REF_HIERARCHICAL:
+                if(NvEncSettings.lookahead > 0)
+                {
+                    ADM_warning("Disabling Adaptive-I and Adaptive-B due to Hierarchical-GOP with lookahead\n");
+                    av_dict_set(&_options,"no-scenecut","1",0);
+                    av_dict_set(&_options,"b_adapt","0",0);
+                }
+                if(_context->max_b_frames == 31)
+                {
+                    ADM_warning("Setting lookahead level to 0 due to Hierarchical-GOP with 31 B-frames\n");
+                    av_dict_set(&_options,"lookahead_level","0",0);
+                }
                 av_dict_set(&_options,"b_ref_mode","hierarchical",0);
                 break;
 #endif
