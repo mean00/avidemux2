@@ -196,7 +196,8 @@ bool ADM_videoFilterBridge::goToTime(uint64_t usSeek, bool fineSeek)
             // When fine-seeking to a time very close to marker positions,
             // substitute it with the closest marker as filters which modify
             // timing may introduce loss of precision. Marker A has priority.
-#define MAGNETIC_RANGE 100
+            // Difference must be less than 1ms
+#define MAGNETIC_RANGE 1000
             uint64_t markerDiff =
                 (usSeek > bridgeInfo.markerA) ? usSeek - bridgeInfo.markerA : bridgeInfo.markerA - usSeek;
             if (markerDiff < MAGNETIC_RANGE)
