@@ -82,6 +82,14 @@ enum FF_NVencTfLevel
   NV_FF_TF_MAX=4
 };
 
+enum FF_NVencMultipass
+{
+  NV_FF_MP_DEFAULT=0,
+  NV_FF_MP_DISABLED=1,
+  NV_FF_MP_QRES=2,
+  NV_FF_MP_FULLRES=3
+};
+
 #ifdef H265_ENCODER
 #   define NVENC_CONF_DEFAULT \
 { \
@@ -99,6 +107,7 @@ enum FF_NVencTfLevel
   0, /* lookahead */ \
   8, /* aq_strength */ \
   NV_FF_TF_DEFAULT, /* tf_level */ \
+  0, /* multipass */ \
   0, /* spatial_aq */ \
   0, /* temporal_aq */ \
   0, /* weighted_pred */ \
@@ -121,6 +130,7 @@ enum FF_NVencTfLevel
   0, /* lookahead */ \
   8, /* aq_strength */ \
   NV_FF_TF_DEFAULT, /* tf_level */ \
+  0, /* multipass */ \
   0, /* spatial_aq */ \
   0, /* temporal_aq */ \
   0, /* weighted_pred */ \
@@ -143,6 +153,7 @@ enum FF_NVencTfLevel
   0, /* lookahead */ \
   8, /* aq_strength */ \
   NV_FF_TF_DEFAULT, /* tf_level */ \
+  0, /* multipass */ \
   0, /* spatial_aq */ \
   0, /* temporal_aq */ \
   0, /* weighted_pred */ \

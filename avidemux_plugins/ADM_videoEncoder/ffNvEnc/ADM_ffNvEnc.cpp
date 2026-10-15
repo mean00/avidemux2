@@ -263,6 +263,13 @@ bool ADM_ffNvEncEncoder::configureContext(void)
     if(NvEncSettings.highbitdepth)
         av_dict_set(&_options,"highbitdepth","1",0);
 
+    switch(NvEncSettings.multipass) {
+        case NV_FF_MP_QRES:     av_dict_set(&_options,"multipass","qres",0);     break;
+        case NV_FF_MP_FULLRES:  av_dict_set(&_options,"multipass","fullres",0);  break;
+        case NV_FF_MP_DISABLED: av_dict_set(&_options,"multipass","disabled",0); break;
+        default: break;
+    };
+
 #ifdef USE_NV12
     targetPixFrmt = ADM_PIXFRMT_NV12;
 #endif
@@ -469,6 +476,13 @@ bool ffNvEncConfigure(void)
 #endif
     };
 
+    diaMenuEntry meMultipass[]={
+        {NV_FF_MP_DEFAULT, QT_TRANSLATE_NOOP("ffnvenc","Default"),NULL},
+        {NV_FF_MP_DISABLED,QT_TRANSLATE_NOOP("ffnvenc","Disabled"),NULL},
+        {NV_FF_MP_QRES,    QT_TRANSLATE_NOOP("ffnvenc","Quarter"),NULL},
+        {NV_FF_MP_FULLRES, QT_TRANSLATE_NOOP("ffnvenc","Full"),NULL}
+    };
+
     ffnvenc_encoder *conf=&NvEncSettings;
 
 #define PX(x) &conf->x
@@ -506,6 +520,7 @@ bool ffNvEncConfigure(void)
     diaElemReadOnlyText hintHighBitDepth(QT_TRANSLATE_NOOP("ffnvenc","10-bit requires Blackwell or newer"),NULL);
 #endif
     diaElemMenu tfLevel(PX(tf_level),QT_TRANSLATE_NOOP("ffnvenc","Temporal Filtering Strength:"),MZ(meTfLevel),meTfLevel);
+    diaElemMenu multiPass(PX(multipass),QT_TRANSLATE_NOOP("ffnvenc","Multipass resolution:"),MZ(meMultipass),meMultipass);
 #ifdef H265_ENCODER
     diaElemReadOnlyText hintBasic(QT_TRANSLATE_NOOP("ffnvenc","Even with HEVC encoding support present, "
         "lossless presets and B-frames may be unavailable with older hardware"),NULL);
@@ -553,6 +568,7 @@ bool ffNvEncConfigure(void)
 
     frameControl.swallow(&gopSize);
     frameControl.swallow(&maxBframes);
+    frameControl.swallow(&multiPass);
     frameControl.swallow(&tfLevel);
 
     refControl.swallow(&bFrameRef);

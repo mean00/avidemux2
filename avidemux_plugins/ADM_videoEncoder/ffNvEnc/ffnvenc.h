@@ -16,6 +16,7 @@ uint32_t b_ref_mode;
 uint32_t lookahead;
 uint32_t aq_strength;
 uint32_t tf_level;
+uint32_t multipass;
 bool spatial_aq;
 bool temporal_aq;
 bool weighted_pred;
