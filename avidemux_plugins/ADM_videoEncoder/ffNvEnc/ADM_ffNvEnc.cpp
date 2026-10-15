@@ -94,6 +94,12 @@ bool ADM_ffNvEncEncoder::configureContext(void)
         av_dict_set(&_options,"tf_level",buf,0);
     }
 
+    if(NvEncSettings.lookahead_level != NV_FF_LAL_DEFAULT)
+    {
+        snprintf(buf,OPTION_BUFFER_SIZE,"%d",NvEncSettings.lookahead_level);
+        av_dict_set(&_options,"lookahead_level",buf,0);
+    }
+
 #ifdef AV1_ENCODER
     // Hierarchical wants the number of b-frames in form 2^n - 1 where n is 1...5
     if(NvEncSettings.b_ref_mode == NV_FF_BFRAME_REF_HIERARCHICAL && NvEncSettings.bframes > 0)
@@ -467,6 +473,15 @@ bool ffNvEncConfigure(void)
         {7,QT_TRANSLATE_NOOP("ffnvenc","7"),NULL}
     };
 
+    diaMenuEntry meLookaheadLevel[]={
+        {NV_FF_LAL_DEFAULT,QT_TRANSLATE_NOOP("ffnvenc","Default"),NULL},
+        {NV_FF_LAL_AUTO,   QT_TRANSLATE_NOOP("ffnvenc","Auto"),NULL},
+        {0,                QT_TRANSLATE_NOOP("ffnvenc","0"),NULL},
+        {1,                QT_TRANSLATE_NOOP("ffnvenc","1"),NULL},
+        {2,                QT_TRANSLATE_NOOP("ffnvenc","2"),NULL},
+        {3,                QT_TRANSLATE_NOOP("ffnvenc","3"),NULL}
+    };
+
     diaMenuEntry meBframeRef[]={
         {NV_FF_BFRAME_REF_DISABLED,QT_TRANSLATE_NOOP("ffnvenc","Disabled"),NULL},
         {NV_FF_BFRAME_REF_EACH,QT_TRANSLATE_NOOP("ffnvenc","Each"),NULL},
@@ -493,6 +508,7 @@ bool ffNvEncConfigure(void)
     diaElemMenu profile(PX(profile),QT_TRANSLATE_NOOP("ffnvenc","Profile:"),MZ(meProfile),meProfile);
     diaElemMenu bFrameRef(PX(b_ref_mode),QT_TRANSLATE_NOOP("ffnvenc","Use B-Frames as References:"),MZ(meBframeRef),meBframeRef);
     diaElemMenu maxRefs(PX(refs),QT_TRANSLATE_NOOP("ffnvenc","Maximum Reference Frames:"),MZ(meNumRef),meNumRef);
+    diaElemMenu lookaheadLevel(PX(lookahead_level),QT_TRANSLATE_NOOP("ffnvenc","Lookahead Level:"),MZ(meLookaheadLevel),meLookaheadLevel);
 
 #ifdef AV1_ENCODER
     diaElemUInteger qual(PX(quality),QT_TRANSLATE_NOOP("ffnvenc","Quality:"),0,63);
@@ -597,6 +613,7 @@ bool ffNvEncConfigure(void)
         &aqStrength,
         &tempAq,
         &lookAhead,
+        &lookaheadLevel,
         &hintAdvanced
     };
     diaElemTabs tabAdvanced(QT_TRANSLATE_NOOP("ffnvenc","Advanced Settings"),NB_ELEM(advanced),advanced);

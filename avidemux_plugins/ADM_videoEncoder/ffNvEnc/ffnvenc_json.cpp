@@ -17,6 +17,7 @@ json.addUint32("refs",key->refs);
 json.addUint32("bframes",key->bframes);
 json.addUint32("b_ref_mode",key->b_ref_mode);
 json.addUint32("lookahead",key->lookahead);
+json.addUint32("lookahead_level",key->lookahead_level);
 json.addUint32("aq_strength",key->aq_strength);
 json.addUint32("tf_level",key->tf_level);
 json.addUint32("multipass",key->multipass);

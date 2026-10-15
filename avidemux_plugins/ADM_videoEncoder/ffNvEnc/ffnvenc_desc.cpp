@@ -12,6 +12,7 @@ extern const ADM_paramList ffnvenc_encoder_param[]={
  {"bframes",offsetof(ffnvenc_encoder,bframes),"uint32_t",ADM_param_uint32_t},
  {"b_ref_mode",offsetof(ffnvenc_encoder,b_ref_mode),"uint32_t",ADM_param_uint32_t},
  {"lookahead",offsetof(ffnvenc_encoder,lookahead),"uint32_t",ADM_param_uint32_t},
+ {"lookahead_level",offsetof(ffnvenc_encoder,lookahead_level),"uint32_t",ADM_param_uint32_t},
  {"aq_strength",offsetof(ffnvenc_encoder,aq_strength),"uint32_t",ADM_param_uint32_t},
  {"tf_level",offsetof(ffnvenc_encoder,tf_level),"uint32_t",ADM_param_uint32_t},
  {"multipass",offsetof(ffnvenc_encoder,multipass),"uint32_t",ADM_param_uint32_t},

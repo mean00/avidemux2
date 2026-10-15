@@ -14,6 +14,7 @@ uint32_t refs;
 uint32_t bframes;
 uint32_t b_ref_mode;
 uint32_t lookahead;
+uint32_t lookahead_level;
 uint32_t aq_strength;
 uint32_t tf_level;
 uint32_t multipass;

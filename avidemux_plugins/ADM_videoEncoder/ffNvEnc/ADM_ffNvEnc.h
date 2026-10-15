@@ -90,6 +90,12 @@ enum FF_NVencMultipass
   NV_FF_MP_FULLRES=3
 };
 
+enum FF_NVencLookaheadLevel
+{
+  NV_FF_LAL_DEFAULT=16,
+  NV_FF_LAL_AUTO=15
+};
+
 #ifdef H265_ENCODER
 #   define NVENC_CONF_DEFAULT \
 { \
@@ -105,6 +111,7 @@ enum FF_NVencMultipass
   2, /* bframes */ \
   2, /* b_ref_mode */ \
   0, /* lookahead */ \
+  NV_FF_LAL_DEFAULT, /* lookahead level */ \
   8, /* aq_strength */ \
   NV_FF_TF_DEFAULT, /* tf_level */ \
   0, /* multipass */ \
@@ -128,6 +135,7 @@ enum FF_NVencMultipass
   2, /* bframes */ \
   2, /* b_ref_mode */ \
   0, /* lookahead */ \
+  NV_FF_LAL_DEFAULT, /* lookahead level */ \
   8, /* aq_strength */ \
   NV_FF_TF_DEFAULT, /* tf_level */ \
   0, /* multipass */ \
@@ -151,6 +159,7 @@ enum FF_NVencMultipass
   2, /* bframes */ \
   1, /* b_ref_mode */ \
   0, /* lookahead */ \
+  NV_FF_LAL_DEFAULT, /* lookahead level */ \
   8, /* aq_strength */ \
   NV_FF_TF_DEFAULT, /* tf_level */ \
   0, /* multipass */ \
