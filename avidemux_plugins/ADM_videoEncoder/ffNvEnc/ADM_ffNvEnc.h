@@ -69,10 +69,11 @@ enum FF_NVencRateControl
 // B-frames as references require SDK 8.1 (driver >= 390.77 on Windows) and Turing+
 enum FF_NVencBframeRefMode
 {
-  NV_FF_BFRAME_REF_DISABLED=0,
-  NV_FF_BFRAME_REF_EACH=1,
-  NV_FF_BFRAME_REF_MIDDLE=2,
-  NV_FF_BFRAME_REF_HIERARCHICAL=3
+  NV_FF_BFRAME_REF_AUTO=0,
+  NV_FF_BFRAME_REF_DISABLED=1,
+  NV_FF_BFRAME_REF_EACH=2,
+  NV_FF_BFRAME_REF_MIDDLE=3,
+  NV_FF_BFRAME_REF_HIERARCHICAL=4
 };
 
 enum FF_NVencTfLevel
@@ -106,10 +107,10 @@ enum FF_NVencLookaheadLevel
   20,    /* quality */ \
   5000, /* bitrate */ \
   10000, /* max_bitrate */ \
-  100,   /* gopsize */ \
+  -1,   /* gopsize */ \
   0, /* refs */ \
-  2, /* bframes */ \
-  2, /* b_ref_mode */ \
+  -1, /* bframes */ \
+  NV_FF_BFRAME_REF_AUTO, /* b_ref_mode */ \
   0, /* lookahead */ \
   NV_FF_LAL_DEFAULT, /* lookahead level */ \
   8, /* aq_strength */ \
@@ -130,10 +131,10 @@ enum FF_NVencLookaheadLevel
   25,    /* quality */ \
   5000, /* bitrate */ \
   10000, /* max_bitrate */ \
-  100,   /* gopsize */ \
+  -1,   /* gopsize */ \
   0, /* refs */ \
-  2, /* bframes */ \
-  2, /* b_ref_mode */ \
+  -1, /* bframes */ \
+  NV_FF_BFRAME_REF_AUTO, /* b_ref_mode */ \
   0, /* lookahead */ \
   NV_FF_LAL_DEFAULT, /* lookahead level */ \
   8, /* aq_strength */ \
@@ -154,10 +155,10 @@ enum FF_NVencLookaheadLevel
   20,    /* quality */ \
   10000, /* bitrate */ \
   20000, /* max_bitrate */ \
-  100,   /* gopsize */ \
+  -1,   /* gopsize */ \
   0, /* refs */ \
-  2, /* bframes */ \
-  1, /* b_ref_mode */ \
+  -1, /* bframes */ \
+  NV_FF_BFRAME_REF_AUTO, /* b_ref_mode */ \
   0, /* lookahead */ \
   NV_FF_LAL_DEFAULT, /* lookahead level */ \
   8, /* aq_strength */ \

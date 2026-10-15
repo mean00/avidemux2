@@ -86,7 +86,7 @@ bool ADM_ffNvEncEncoder::configureContext(void)
     {
         if(NvEncSettings.bframes < 4 && NvEncSettings.tf_level == NV_FF_TF_MAX)
         {
-            ADM_warning("Temporal filtering requires at least 4 B-frames (got %u), setting to 4.\n",
+            ADM_warning("Temporal filtering requires at least 4 B-frames (got %d), setting to 4.\n",
                         NvEncSettings.bframes);
             NvEncSettings.bframes = 4;
         }
@@ -102,28 +102,15 @@ bool ADM_ffNvEncEncoder::configureContext(void)
 
 #ifdef AV1_ENCODER
     // Hierarchical wants the number of b-frames in form 2^n - 1 where n is 1...5
-    if(NvEncSettings.b_ref_mode == NV_FF_BFRAME_REF_HIERARCHICAL && NvEncSettings.bframes > 0)
+    if(NvEncSettings.b_ref_mode == NV_FF_BFRAME_REF_HIERARCHICAL)
     {
-        if((NvEncSettings.bframes & (NvEncSettings.bframes + 1)) != 0)
-        {
-            int bfvalid = 31;
-            for (int i = 1; i <= 5; i++)
-            {
-                int bfcandidate = (1u << i) - 1;
-                if (bfcandidate >= NvEncSettings.bframes)
-                {
-                    bfvalid = bfcandidate;
-                    break;
-                }
-            }
-            ADM_warning("Hierarchical must have bframes in form 2^n - 1 (got %u), setting to %u.\n",
-                        NvEncSettings.bframes, bfvalid);
-            NvEncSettings.bframes = bfvalid;
-        }
+        if(NvEncSettings.bframes <= 7) NvEncSettings.bframes = 7;
+        else if(NvEncSettings.bframes <= 15) NvEncSettings.bframes = 15;
+        else NvEncSettings.bframes = 31;
     }
     else if(NvEncSettings.bframes > 7)
     {
-        ADM_warning("b-frames limited to <=7 for non-hierarchical (got %u), setting to 7.\n",
+        ADM_warning("b-frames limited to <=7 for non-hierarchical (got %d), setting to 7.\n",
                     NvEncSettings.bframes);
         NvEncSettings.bframes = 7;
     }
@@ -133,13 +120,18 @@ bool ADM_ffNvEncEncoder::configureContext(void)
         NvEncSettings.bframes;
 #else
         (NvEncSettings.profile != NV_FF_PROFILE_BASELINE)? NvEncSettings.bframes : 0;
+        if(NvEncSettings.profile == NV_FF_PROFILE_BASELINE)
+            NvEncSettings.b_ref_mode = NV_FF_BFRAME_REF_AUTO;
 #endif
 
-    if(_context->max_b_frames > 1)
+    if(_context->max_b_frames != 0)
     {
         switch(NvEncSettings.b_ref_mode)
         {
+            case NV_FF_BFRAME_REF_AUTO:
+                break;
             case NV_FF_BFRAME_REF_DISABLED:
+                av_dict_set(&_options,"b_ref_mode","disabled",0);
                 break;
             case NV_FF_BFRAME_REF_EACH:
                 av_dict_set(&_options,"b_ref_mode","each",0);
@@ -279,13 +271,6 @@ bool ADM_ffNvEncEncoder::configureContext(void)
 #ifdef USE_NV12
     targetPixFrmt = ADM_PIXFRMT_NV12;
 #endif
-
-    // Set encoder delay
-    int mult = (_context->max_b_frames > 0) ? 2 : 0;
-    if (_context->max_b_frames > 1)
-        mult += 1;
-    encoderDelay = frameIncrement * mult;
-    ADM_info("Encoder delay set to %d frames = %" PRIu64" us.\n", mult, encoderDelay);
 
     // Print nvenc options
     {
@@ -483,6 +468,7 @@ bool ffNvEncConfigure(void)
     };
 
     diaMenuEntry meBframeRef[]={
+        {NV_FF_BFRAME_REF_AUTO,QT_TRANSLATE_NOOP("ffnvenc","Automatic"),NULL},
         {NV_FF_BFRAME_REF_DISABLED,QT_TRANSLATE_NOOP("ffnvenc","Disabled"),NULL},
         {NV_FF_BFRAME_REF_EACH,QT_TRANSLATE_NOOP("ffnvenc","Each"),NULL},
         {NV_FF_BFRAME_REF_MIDDLE,QT_TRANSLATE_NOOP("ffnvenc","Middle"),NULL}
@@ -518,11 +504,11 @@ bool ffNvEncConfigure(void)
     diaElemUInteger bitrate(PX(bitrate),QT_TRANSLATE_NOOP("ffnvenc","Bitrate (kbps):"),1,500000);
     diaElemUInteger maxBitrate(PX(max_bitrate),QT_TRANSLATE_NOOP("ffnvenc","Max Bitrate (kbps):"),1,500000);
 
-    diaElemUInteger gopSize(PX(gopsize),QT_TRANSLATE_NOOP("ffnvenc","GOP Size:"),0,1000);
+    diaElemInteger gopSize(PX(gopsize),QT_TRANSLATE_NOOP("ffnvenc","GOP Size:"),-1,1000);
 #ifdef AV1_ENCODER
-    diaElemUInteger maxBframes(PX(bframes),QT_TRANSLATE_NOOP("ffnvenc","Maximum Consecutive B-Frames:"),0,31);
+    diaElemInteger maxBframes(PX(bframes),QT_TRANSLATE_NOOP("ffnvenc","Maximum Consecutive B-Frames:"),-1,31);
 #else
-    diaElemUInteger maxBframes(PX(bframes),QT_TRANSLATE_NOOP("ffnvenc","Maximum Consecutive B-Frames:"),0,5);
+    diaElemInteger maxBframes(PX(bframes),QT_TRANSLATE_NOOP("ffnvenc","Maximum Consecutive B-Frames:"),-1,5);
 #endif
 
     diaElemUInteger lookAhead(PX(lookahead),QT_TRANSLATE_NOOP("ffnvenc","Lookahead:"),0,64);
