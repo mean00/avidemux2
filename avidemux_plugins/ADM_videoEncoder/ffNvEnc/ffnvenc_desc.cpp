@@ -13,6 +13,7 @@ extern const ADM_paramList ffnvenc_encoder_param[]={
  {"b_ref_mode",offsetof(ffnvenc_encoder,b_ref_mode),"uint32_t",ADM_param_uint32_t},
  {"lookahead",offsetof(ffnvenc_encoder,lookahead),"uint32_t",ADM_param_uint32_t},
  {"aq_strength",offsetof(ffnvenc_encoder,aq_strength),"uint32_t",ADM_param_uint32_t},
+ {"tf_level",offsetof(ffnvenc_encoder,tf_level),"uint32_t",ADM_param_uint32_t},
  {"spatial_aq",offsetof(ffnvenc_encoder,spatial_aq),"bool",ADM_param_bool},
  {"temporal_aq",offsetof(ffnvenc_encoder,temporal_aq),"bool",ADM_param_bool},
  {"weighted_pred",offsetof(ffnvenc_encoder,weighted_pred),"bool",ADM_param_bool},

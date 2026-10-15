@@ -72,6 +72,13 @@ enum FF_NVencBframeRefMode
   NV_FF_BFRAME_REF_HIERARCHICAL=3
 };
 
+enum FF_NVencTfLevel
+{
+  NV_FF_TF_DEFAULT=15,
+  NV_FF_TF_DISABLED=0,
+  NV_FF_TF_MAX=4
+};
+
 #ifdef H265_ENCODER
 #   define NVENC_CONF_DEFAULT \
 { \
@@ -88,6 +95,7 @@ enum FF_NVencBframeRefMode
   2, /* b_ref_mode */ \
   0, /* lookahead */ \
   8, /* aq_strength */ \
+  NV_FF_TF_DEFAULT, /* tf_level */ \
   0, /* spatial_aq */ \
   0, /* temporal_aq */ \
   0  /* weighted_pred */ \
@@ -108,6 +116,7 @@ enum FF_NVencBframeRefMode
   2, /* b_ref_mode */ \
   0, /* lookahead */ \
   8, /* aq_strength */ \
+  NV_FF_TF_DEFAULT, /* tf_level */ \
   0, /* spatial_aq */ \
   0, /* temporal_aq */ \
   0  /* weighted_pred */ \
@@ -128,6 +137,7 @@ enum FF_NVencBframeRefMode
   1, /* b_ref_mode */ \
   0, /* lookahead */ \
   8, /* aq_strength */ \
+  NV_FF_TF_DEFAULT, /* tf_level */ \
   0, /* spatial_aq */ \
   0, /* temporal_aq */ \
   0  /* weighted_pred */ \

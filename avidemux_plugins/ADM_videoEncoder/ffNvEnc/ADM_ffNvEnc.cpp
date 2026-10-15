@@ -74,20 +74,41 @@ bool ADM_ffNvEncEncoder::configureContext(void)
 
     _context->gop_size = NvEncSettings.gopsize;
     _context->refs = NvEncSettings.refs;
+
+#define OPTION_BUFFER_SIZE 64
+    char buf[OPTION_BUFFER_SIZE];
+
+#if defined(H265_ENCODER) || defined(AV1_ENCODER)
+    if(NvEncSettings.tf_level < NV_FF_TF_DEFAULT)
+#else
+    if(NvEncSettings.tf_level < NV_FF_TF_DEFAULT && NvEncSettings.profile != NV_FF_PROFILE_BASELINE)
+#endif
+    {
+        if(NvEncSettings.bframes < 4 && NvEncSettings.tf_level == NV_FF_TF_MAX)
+        {
+            ADM_warning("Temporal filtering requires at least 4 B-frames (got %u), setting to 4.\n",
+                        NvEncSettings.bframes);
+            NvEncSettings.bframes = 4;
+        }
+        snprintf(buf, OPTION_BUFFER_SIZE, "%d", NvEncSettings.tf_level);
+        av_dict_set(&_options,"tf_level",buf,0);
+    }
+
 #ifdef AV1_ENCODER
     // Hierarchical wants the number of b-frames in form 2^n - 1 where n is 1...5
     if(NvEncSettings.b_ref_mode == NV_FF_BFRAME_REF_HIERARCHICAL && NvEncSettings.bframes > 0)
     {
         if((NvEncSettings.bframes & (NvEncSettings.bframes + 1)) != 0)
         {
-            int bfvalid = 1;
+            int bfvalid = 31;
             for (int i = 1; i <= 5; i++)
             {
                 int bfcandidate = (1u << i) - 1;
-                if (bfcandidate <= NvEncSettings.bframes)
+                if (bfcandidate >= NvEncSettings.bframes)
+                {
                     bfvalid = bfcandidate;
-                else
                     break;
+                }
             }
             ADM_warning("Hierarchical must have bframes in form 2^n - 1 (got %u), setting to %u.\n",
                         NvEncSettings.bframes, bfvalid);
@@ -141,9 +162,6 @@ bool ADM_ffNvEncEncoder::configureContext(void)
                 break;
         }
     }
-
-#define OPTION_BUFFER_SIZE 64
-    char buf[OPTION_BUFFER_SIZE];
 
     switch(NvEncSettings.rc_mode)
     {
@@ -416,6 +434,12 @@ bool ffNvEncConfigure(void)
 #endif
     };
 
+    diaMenuEntry meTfLevel[]={
+        {NV_FF_TF_DEFAULT,      QT_TRANSLATE_NOOP("ffnvenc","Default"),NULL},
+        {NV_FF_TF_DISABLED,     QT_TRANSLATE_NOOP("ffnvenc","Disabled"),NULL},
+        {NV_FF_TF_MAX,          QT_TRANSLATE_NOOP("ffnvenc","Max"),NULL}
+    };
+
     diaMenuEntry meNumRef[]={
         {0,QT_TRANSLATE_NOOP("ffnvenc","Autoselect"),NULL},
         {1,QT_TRANSLATE_NOOP("ffnvenc","1"),NULL},
@@ -468,6 +492,7 @@ bool ffNvEncConfigure(void)
     diaElemToggle spatAq(PX(spatial_aq),QT_TRANSLATE_NOOP("ffnvenc","Spatial AQ"));
     diaElemToggle tempAq(PX(temporal_aq),QT_TRANSLATE_NOOP("ffnvenc","Temporal AQ"));
     diaElemToggle wPred(PX(weighted_pred),QT_TRANSLATE_NOOP("ffnvenc","Weighted Prediction"));
+    diaElemMenu tfLevel(PX(tf_level),QT_TRANSLATE_NOOP("ffnvenc","Temporal Filtering Strength:"),MZ(meTfLevel),meTfLevel);
 #ifdef H265_ENCODER
     diaElemReadOnlyText hintBasic(QT_TRANSLATE_NOOP("ffnvenc","Even with HEVC encoding support present, "
         "lossless presets and B-frames may be unavailable with older hardware"),NULL);
@@ -502,11 +527,14 @@ bool ffNvEncConfigure(void)
 #else // h264 baseline has no B frames
     profile.link(meProfile+1,1,&maxBframes);
     profile.link(meProfile+2,1,&maxBframes);
+    profile.link(meProfile+1,1,&tfLevel);
+    profile.link(meProfile+2,1,&tfLevel);
 #endif
     spatAq.link(1,&aqStrength);
 
     frameControl.swallow(&gopSize);
     frameControl.swallow(&maxBframes);
+    frameControl.swallow(&tfLevel);
 
     refControl.swallow(&bFrameRef);
     refControl.swallow(&maxRefs);

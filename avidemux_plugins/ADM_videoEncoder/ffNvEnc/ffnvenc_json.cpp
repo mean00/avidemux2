@@ -18,6 +18,7 @@ json.addUint32("bframes",key->bframes);
 json.addUint32("b_ref_mode",key->b_ref_mode);
 json.addUint32("lookahead",key->lookahead);
 json.addUint32("aq_strength",key->aq_strength);
+json.addUint32("tf_level",key->tf_level);
 json.addBool("spatial_aq",key->spatial_aq);
 json.addBool("temporal_aq",key->temporal_aq);
 json.addBool("weighted_pred",key->weighted_pred);
