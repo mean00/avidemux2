@@ -552,6 +552,8 @@ bool ffNvEncConfigure(void)
     diaElemFrame rateControl(QT_TRANSLATE_NOOP("ffnvenc","Rate Control"));
     diaElemFrame frameControl(QT_TRANSLATE_NOOP("ffnvenc","Frame Control"));
     diaElemFrame refControl(QT_TRANSLATE_NOOP("ffnvenc","References"));
+    diaElemFrame adaptiveQ(QT_TRANSLATE_NOOP("ffnvenc","Adaptive Quantization"));
+    diaElemFrame lookaheadFrame(QT_TRANSLATE_NOOP("ffnvenc","Rate Control Lookahead"));
 
     rateControl.swallow(&rcmode);
     rateControl.swallow(&qzPreset);
@@ -582,13 +584,20 @@ bool ffNvEncConfigure(void)
 #endif
     spatAq.link(1,&aqStrength);
 
+    frameControl.swallow(&multiPass);
     frameControl.swallow(&gopSize);
     frameControl.swallow(&maxBframes);
-    frameControl.swallow(&multiPass);
     frameControl.swallow(&tfLevel);
 
     refControl.swallow(&bFrameRef);
     refControl.swallow(&maxRefs);
+
+    adaptiveQ.swallow(&spatAq);
+    adaptiveQ.swallow(&aqStrength);
+    adaptiveQ.swallow(&tempAq);
+
+    lookaheadFrame.swallow(&lookAhead);
+    lookaheadFrame.swallow(&lookaheadLevel);
 
 #define NB_ELEM(x) sizeof(x)/sizeof(diaElem *)
     /* First Tab : basic settings */
@@ -603,17 +612,14 @@ bool ffNvEncConfigure(void)
     /* 2nd Tab : advanced*/
     diaElem *advanced[]={
         &refControl,
+        &adaptiveQ,
+        &lookaheadFrame,
         &wPred,
         &hintWeightedPred,
         &highBitDepth,
 #if !defined(AV1_ENCODER) && !defined(H265_ENCODER)
         &hintHighBitDepth,
 #endif
-        &spatAq,
-        &aqStrength,
-        &tempAq,
-        &lookAhead,
-        &lookaheadLevel,
         &hintAdvanced
     };
     diaElemTabs tabAdvanced(QT_TRANSLATE_NOOP("ffnvenc","Advanced Settings"),NB_ELEM(advanced),advanced);
