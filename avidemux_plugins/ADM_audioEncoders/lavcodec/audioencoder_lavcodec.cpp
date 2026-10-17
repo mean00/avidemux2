@@ -125,11 +125,8 @@ AUDMEncoder_Lavcodec::~AUDMEncoder_Lavcodec()
         avcodec_free_context(&_context);
     if (_frame)
         av_frame_free(&_frame);
-    if (planarBuffer)
-    {
-        delete [] planarBuffer;
-    }
-    planarBuffer = NULL;
+
+    av_freep(&planarBuffer);
 }
 
 /**
@@ -224,17 +221,17 @@ bool AUDMEncoder_Lavcodec::initialize(void)
         return false;
     }
 
-    ret = av_frame_get_buffer(_frame, 0);
-    if(ret < 0)
+    if (outputFlavor == asFloatPlanar)
     {
-        printError("av_frame_get_buffer",ret);
-        return false;
-    }
-
-    if(outputFlavor != asInt16)
-    {
-        planarBuffer = new float[_chunk];
-        planarBufferSize = _chunk;
+        ret = av_samples_get_buffer_size(NULL, wavheader.channels, ADM_LAV_SAMPLE_PER_P, AV_SAMPLE_FMT_FLTP, 0);
+        if (ret < 0)
+        {
+            printError("av_samples_get_buffer_size", ret);
+            return false;
+        }
+        planarBufferSize = ret;
+        planarBuffer = (float *)av_mallocz(planarBufferSize);
+        ADM_assert(planarBuffer);
     }
     ADM_info("[Lavcodec]Incoming : fq : %" PRIu32", channel : %" PRIu32" bitrate: %" PRIu32" \n",
                 wavheader.frequency,wavheader.channels,_config.bitrate);
@@ -296,9 +293,8 @@ bool AUDMEncoder_Lavcodec::fillFrame(int count)
             {
                 buffer = (uint8_t *)i2p(count);
             }
-            bufSize = count * sizeof(float);
+            bufSize = planarBufferSize;
             format = AV_SAMPLE_FMT_FLTP;
-            _frame->linesize[0] = ADM_LAV_SAMPLE_PER_P;
             break;
         default:
             ADM_assert(0);
