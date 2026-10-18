@@ -85,6 +85,7 @@ bool MOVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack,
 {
     bool wrongVideo = false;
     bool wrongAudio = false;
+    bool delayMoov = false;
     std::string msg;
 #define FCC_IS_NOT(x) !fourCC::check(fcc,(const uint8_t *)x)
     uint32_t fcc=s->getFCC();
@@ -131,6 +132,14 @@ bool MOVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack,
                 msg += str;
                 msg += "\n";
                 wrongAudio = true;
+            }
+            switch(acc)
+            {
+                case WAV_AC3:
+                case WAV_EAC3:
+                case WAV_DTS:
+                    delayMoov = true;
+                default: break;
             }
         }
     }
@@ -299,9 +308,12 @@ bool MOVCLASS::open(const char *file, ADM_videoStream *s, uint32_t nbAudioTrack,
                 break;
 #ifndef MUXER_IS_MOV
             case(MP4_MUXER_OPT_FRAGMENT):
-                av_dict_set(&dict, "movflags", "frag_keyframe+empty_moov", 0);
+            {
+                const char *movf = delayMoov ? "frag_keyframe+empty_moov+delay_moov" : "frag_keyframe+empty_moov";
+                av_dict_set(&dict, "movflags", movf, 0);
                 av_dict_set(&dict, "min_frag_duration", "2000000", 0); // 2 seconds, an arbitrary value
                 break;
+            }
 #endif
             default: break;
         }
