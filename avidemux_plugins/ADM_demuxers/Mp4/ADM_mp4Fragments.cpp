@@ -184,7 +184,7 @@ bool MP4Header::parseTrun(int trackNo,adm_atom &tom,const mp4TrafInfo &info)
     std::vector <mp4Fragment>   &fragList=_tracks[trackNo].fragments;
     if(flags & 0x1)
     {
-            firstOffset+=tom.read32(); // Signed!
+            firstOffset+=(int32_t)tom.read32(); // Signed!
     }
     if(flags & 0x4)    
             firstSampleFlags=tom.read32(); // Signed!

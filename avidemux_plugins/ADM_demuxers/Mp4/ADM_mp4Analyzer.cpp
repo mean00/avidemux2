@@ -298,7 +298,7 @@ uint8_t MP4Header::lookupMainAtoms(adm_atom *tom)
                 case ADM_MP4_MVHD: parseMvhd(&son);break;
                 case ADM_MP4_MVEX:
                     {
-                        ADM_info("Found mvex at position %u of size %u\n",son.getStartPos(),son.getRemainingSize());
+                        ADM_info("Found mvex at position %" PRIu64" of size %" PRId64"\n",son.getStartPos(),son.getRemainingSize());
                         parseTrex(&son);
                     }
                     break;
