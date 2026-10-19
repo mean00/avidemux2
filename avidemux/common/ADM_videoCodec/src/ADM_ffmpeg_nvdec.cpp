@@ -627,6 +627,7 @@ static bool checkNvDec(void)
     // Code compiled from libavutil/hwcontext_cuda.c and libavcodec/nvdec.c
     int r;
     bool fatal;
+    CUresult err;
     CudaFunctions *cudaFunc;
     CuvidFunctions *cuvidFunc;
     CUVIDDECODECAPS caps;
@@ -646,39 +647,31 @@ static bool checkNvDec(void)
 
     r = cuda_load_functions(&cudaFunc, NULL);
 
-    if(r < 0 || !cudaFunc)
+    if(r < 0)
     {
         ADM_info("Cannot load CUDA functions, NVDEC is not available.\n");
         return false;
     }
 
-    if(!cudaFunc->cuInit || !cudaFunc->cuDeviceGet ||
-       !cudaFunc->cuCtxCreate || !cudaFunc->cuCtxDestroy ||
-       !cudaFunc->cuCtxPushCurrent || !cudaFunc->cuCtxPopCurrent)
-    {
-        ADM_warning("Necessary CUDA functions not found, bailing out.\n");
-        goto fail2;
-    }
+    err = cudaFunc->cuInit(0);
 
-    r = cudaFunc->cuInit(0);
-
-    if(r != CUDA_SUCCESS)
+    if(err != CUDA_SUCCESS)
     {
         ADM_warning("Cannot init CUDA, NVDEC is not available.\n");
         goto fail2;
     }
 
-    r = cudaFunc->cuDeviceGet(&dev, 0);
+    err = cudaFunc->cuDeviceGet(&dev, 0);
 
-    if(r != CUDA_SUCCESS)
+    if(err != CUDA_SUCCESS)
     {
         ADM_warning("Cannot get CUDA device, NVDEC is not available.\n");
         goto fail2;
     }
 
-    r = cudaFunc->cuCtxCreate(&ctx, CU_CTX_SCHED_BLOCKING_SYNC, dev);
+    err = cudaFunc->cuCtxCreate(&ctx, CU_CTX_SCHED_BLOCKING_SYNC, dev);
 
-    if(r != CUDA_SUCCESS)
+    if(err != CUDA_SUCCESS)
     {
         ADM_warning("Cannot create CUDA context, NVDEC is not available.\n");
         goto fail2;
@@ -702,9 +695,9 @@ static bool checkNvDec(void)
         goto fail2;
     }
 
-    r = cudaFunc->cuCtxPushCurrent(ctx);
+    err = cudaFunc->cuCtxPushCurrent(ctx);
 
-    if(r != CUDA_SUCCESS)
+    if(err != CUDA_SUCCESS)
     {
         ADM_warning("Cannot push CUDA context, bailing out.\n");
         cuvid_free_functions(&cuvidFunc);
@@ -720,8 +713,8 @@ static bool checkNvDec(void)
     caps.eChromaFormat   = cudaVideoChromaFormat_##chroma; \
     caps.nBitDepthMinus8 = bit_depth - 8; \
     ADM_info("Checking " #codec " %d bits %s\n", bit_depth, chromaFormatDesc(caps.eChromaFormat)); \
-    r = cuvidFunc->cuvidGetDecoderCaps(&caps); \
-    if(r != CUDA_SUCCESS) \
+    err = cuvidFunc->cuvidGetDecoderCaps(&caps); \
+    if(err != CUDA_SUCCESS) \
     { \
         ADM_warning("Quering decoder capabilities for " #codec " has failed.\n"); \
         if(fatal) \
