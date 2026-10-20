@@ -74,29 +74,43 @@ bool ADM_ffNvEncEncoder::configureContext(void)
 
     _context->gop_size = NvEncSettings.gopsize;
     _context->refs = NvEncSettings.refs;
+
+#define OPTION_BUFFER_SIZE 64
+    char buf[OPTION_BUFFER_SIZE];
+
+#if defined(H265_ENCODER) || defined(AV1_ENCODER)
+    if(NvEncSettings.tf_level < NV_FF_TF_DEFAULT)
+#else
+    if(NvEncSettings.tf_level < NV_FF_TF_DEFAULT && NvEncSettings.profile != NV_FF_PROFILE_BASELINE)
+#endif
+    {
+        if(NvEncSettings.bframes < 4 && NvEncSettings.tf_level == NV_FF_TF_MAX)
+        {
+            ADM_warning("Temporal filtering requires at least 4 B-frames (got %d), setting to 4.\n",
+                        NvEncSettings.bframes);
+            NvEncSettings.bframes = 4;
+        }
+        snprintf(buf, OPTION_BUFFER_SIZE, "%d", NvEncSettings.tf_level);
+        av_dict_set(&_options,"tf_level",buf,0);
+    }
+
+    if(NvEncSettings.lookahead_level != NV_FF_LAL_DEFAULT)
+    {
+        snprintf(buf,OPTION_BUFFER_SIZE,"%d",NvEncSettings.lookahead_level);
+        av_dict_set(&_options,"lookahead_level",buf,0);
+    }
+
 #ifdef AV1_ENCODER
     // Hierarchical wants the number of b-frames in form 2^n - 1 where n is 1...5
-    if(NvEncSettings.b_ref_mode == NV_FF_BFRAME_REF_HIERARCHICAL && NvEncSettings.bframes > 0)
+    if(NvEncSettings.b_ref_mode == NV_FF_BFRAME_REF_HIERARCHICAL)
     {
-        if((NvEncSettings.bframes & (NvEncSettings.bframes + 1)) != 0)
-        {
-            int bfvalid = 1;
-            for (int i = 1; i <= 5; i++)
-            {
-                int bfcandidate = (1u << i) - 1;
-                if (bfcandidate <= NvEncSettings.bframes)
-                    bfvalid = bfcandidate;
-                else
-                    break;
-            }
-            ADM_warning("Hierarchical must have bframes in form 2^n - 1 (got %u), setting to %u.\n",
-                        NvEncSettings.bframes, bfvalid);
-            NvEncSettings.bframes = bfvalid;
-        }
+        if(NvEncSettings.bframes <= 7) NvEncSettings.bframes = 7;
+        else if(NvEncSettings.bframes <= 15) NvEncSettings.bframes = 15;
+        else NvEncSettings.bframes = 31;
     }
     else if(NvEncSettings.bframes > 7)
     {
-        ADM_warning("b-frames limited to <=7 for non-hierarchical (got %u), setting to 7.\n",
+        ADM_warning("b-frames limited to <=7 for non-hierarchical (got %d), setting to 7.\n",
                     NvEncSettings.bframes);
         NvEncSettings.bframes = 7;
     }
@@ -106,13 +120,18 @@ bool ADM_ffNvEncEncoder::configureContext(void)
         NvEncSettings.bframes;
 #else
         (NvEncSettings.profile != NV_FF_PROFILE_BASELINE)? NvEncSettings.bframes : 0;
+        if(NvEncSettings.profile == NV_FF_PROFILE_BASELINE)
+            NvEncSettings.b_ref_mode = NV_FF_BFRAME_REF_AUTO;
 #endif
 
-    if(_context->max_b_frames > 1)
+    if(_context->max_b_frames != 0)
     {
         switch(NvEncSettings.b_ref_mode)
         {
+            case NV_FF_BFRAME_REF_AUTO:
+                break;
             case NV_FF_BFRAME_REF_DISABLED:
+                av_dict_set(&_options,"b_ref_mode","disabled",0);
                 break;
             case NV_FF_BFRAME_REF_EACH:
                 av_dict_set(&_options,"b_ref_mode","each",0);
@@ -122,6 +141,17 @@ bool ADM_ffNvEncEncoder::configureContext(void)
                 break;
 #ifdef AV1_ENCODER
             case NV_FF_BFRAME_REF_HIERARCHICAL:
+                if(NvEncSettings.lookahead > 0)
+                {
+                    ADM_warning("Disabling Adaptive-I and Adaptive-B due to Hierarchical-GOP with lookahead\n");
+                    av_dict_set(&_options,"no-scenecut","1",0);
+                    av_dict_set(&_options,"b_adapt","0",0);
+                }
+                if(_context->max_b_frames == 31)
+                {
+                    ADM_warning("Setting lookahead level to 0 due to Hierarchical-GOP with 31 B-frames\n");
+                    av_dict_set(&_options,"lookahead_level","0",0);
+                }
                 av_dict_set(&_options,"b_ref_mode","hierarchical",0);
                 break;
 #endif
@@ -130,9 +160,6 @@ bool ADM_ffNvEncEncoder::configureContext(void)
                 break;
         }
     }
-
-#define OPTION_BUFFER_SIZE 64
-    char buf[OPTION_BUFFER_SIZE];
 
     switch(NvEncSettings.rc_mode)
     {
@@ -180,6 +207,9 @@ bool ADM_ffNvEncEncoder::configureContext(void)
         MIAOU(BASELINE,"baseline")
         MIAOU(MAIN,"main")
         MIAOU(HIGH,"high")
+        MIAOU(HIGH10,"high10")
+        MIAOU(HIGH422,"high422")
+        MIAOU(HIGH444,"high444p")
 #endif
         default:break;
 #undef MIAOU
@@ -228,16 +258,19 @@ bool ADM_ffNvEncEncoder::configureContext(void)
             av_dict_set(&_options,"weighted_pred","1",0);
     }
 
+    if(NvEncSettings.highbitdepth)
+        av_dict_set(&_options,"highbitdepth","1",0);
+
+    switch(NvEncSettings.multipass) {
+        case NV_FF_MP_QRES:     av_dict_set(&_options,"multipass","qres",0);     break;
+        case NV_FF_MP_FULLRES:  av_dict_set(&_options,"multipass","fullres",0);  break;
+        case NV_FF_MP_DISABLED: av_dict_set(&_options,"multipass","disabled",0); break;
+        default: break;
+    };
+
 #ifdef USE_NV12
     targetPixFrmt = ADM_PIXFRMT_NV12;
 #endif
-
-    // Set encoder delay
-    int mult = (_context->max_b_frames > 0) ? 2 : 0;
-    if (_context->max_b_frames > 1)
-        mult += 1;
-    encoderDelay = frameIncrement * mult;
-    ADM_info("Encoder delay set to %d frames = %" PRIu64" us.\n", mult, encoderDelay);
 
     // Print nvenc options
     {
@@ -255,7 +288,7 @@ bool ADM_ffNvEncEncoder::configureContext(void)
     // Print ffmpeg options
     {
         char buf[1024] = "";
-        snprintf(buf, sizeof(buf), "bit_rate=%d rc_max_rate=%d gop_size=%d refs=%d max_b_frames=%d rc_buffer_size=%d",
+        snprintf(buf, sizeof(buf), "bit_rate=%ld rc_max_rate=%ld gop_size=%d refs=%d max_b_frames=%d rc_buffer_size=%d",
                  _context->bit_rate, _context->rc_max_rate, _context->gop_size,
                  _context->refs, _context->max_b_frames, _context->rc_buffer_size);
         ADM_info("[ffNvEnc] FFmpeg options: %s\n", buf);
@@ -395,14 +428,23 @@ bool ffNvEncConfigure(void)
     diaMenuEntry meProfile[]={
 #ifdef H265_ENCODER
         {NV_FF_PROFILE_MAIN,    QT_TRANSLATE_NOOP("ffnvenc","Main"),NULL},
-        {NV_FF_PROFILE_MAIN10,  QT_TRANSLATE_NOOP("ffnvenc","Main10"),NULL},
+        {NV_FF_PROFILE_MAIN10,  QT_TRANSLATE_NOOP("ffnvenc","Main10"),NULL}
 #elif defined(AV1_ENCODER)
-        // AV1 does not have profile options
+        {NV_FF_PROFILE_MAIN,    QT_TRANSLATE_NOOP("ffnvenc","Main"),NULL}
 #else
         {NV_FF_PROFILE_BASELINE,QT_TRANSLATE_NOOP("ffnvenc","Baseline"),NULL},
         {NV_FF_PROFILE_MAIN,    QT_TRANSLATE_NOOP("ffnvenc","Main"),NULL},
-        {NV_FF_PROFILE_HIGH,    QT_TRANSLATE_NOOP("ffnvenc","High"),NULL}
+        {NV_FF_PROFILE_HIGH,    QT_TRANSLATE_NOOP("ffnvenc","High"),NULL},
+        {NV_FF_PROFILE_HIGH10,  QT_TRANSLATE_NOOP("ffnvenc","High10"),NULL},
+        {NV_FF_PROFILE_HIGH422, QT_TRANSLATE_NOOP("ffnvenc","High422"),NULL},
+        {NV_FF_PROFILE_HIGH444, QT_TRANSLATE_NOOP("ffnvenc","High444p"),NULL}
 #endif
+    };
+
+    diaMenuEntry meTfLevel[]={
+        {NV_FF_TF_DEFAULT,      QT_TRANSLATE_NOOP("ffnvenc","Default"),NULL},
+        {NV_FF_TF_DISABLED,     QT_TRANSLATE_NOOP("ffnvenc","Disabled"),NULL},
+        {NV_FF_TF_MAX,          QT_TRANSLATE_NOOP("ffnvenc","Max"),NULL}
     };
 
     diaMenuEntry meNumRef[]={
@@ -416,13 +458,30 @@ bool ffNvEncConfigure(void)
         {7,QT_TRANSLATE_NOOP("ffnvenc","7"),NULL}
     };
 
+    diaMenuEntry meLookaheadLevel[]={
+        {NV_FF_LAL_DEFAULT,QT_TRANSLATE_NOOP("ffnvenc","Default"),NULL},
+        {NV_FF_LAL_AUTO,   QT_TRANSLATE_NOOP("ffnvenc","Auto"),NULL},
+        {0,                QT_TRANSLATE_NOOP("ffnvenc","0"),NULL},
+        {1,                QT_TRANSLATE_NOOP("ffnvenc","1"),NULL},
+        {2,                QT_TRANSLATE_NOOP("ffnvenc","2"),NULL},
+        {3,                QT_TRANSLATE_NOOP("ffnvenc","3"),NULL}
+    };
+
     diaMenuEntry meBframeRef[]={
+        {NV_FF_BFRAME_REF_AUTO,QT_TRANSLATE_NOOP("ffnvenc","Automatic"),NULL},
         {NV_FF_BFRAME_REF_DISABLED,QT_TRANSLATE_NOOP("ffnvenc","Disabled"),NULL},
         {NV_FF_BFRAME_REF_EACH,QT_TRANSLATE_NOOP("ffnvenc","Each"),NULL},
         {NV_FF_BFRAME_REF_MIDDLE,QT_TRANSLATE_NOOP("ffnvenc","Middle"),NULL}
 #ifdef AV1_ENCODER
         ,{NV_FF_BFRAME_REF_HIERARCHICAL,QT_TRANSLATE_NOOP("ffnvenc","Hierarchical"),NULL}
 #endif
+    };
+
+    diaMenuEntry meMultipass[]={
+        {NV_FF_MP_DEFAULT, QT_TRANSLATE_NOOP("ffnvenc","Default"),NULL},
+        {NV_FF_MP_DISABLED,QT_TRANSLATE_NOOP("ffnvenc","Disabled"),NULL},
+        {NV_FF_MP_QRES,    QT_TRANSLATE_NOOP("ffnvenc","Quarter"),NULL},
+        {NV_FF_MP_FULLRES, QT_TRANSLATE_NOOP("ffnvenc","Full"),NULL}
     };
 
     ffnvenc_encoder *conf=&NvEncSettings;
@@ -435,6 +494,7 @@ bool ffNvEncConfigure(void)
     diaElemMenu profile(PX(profile),QT_TRANSLATE_NOOP("ffnvenc","Profile:"),MZ(meProfile),meProfile);
     diaElemMenu bFrameRef(PX(b_ref_mode),QT_TRANSLATE_NOOP("ffnvenc","Use B-Frames as References:"),MZ(meBframeRef),meBframeRef);
     diaElemMenu maxRefs(PX(refs),QT_TRANSLATE_NOOP("ffnvenc","Maximum Reference Frames:"),MZ(meNumRef),meNumRef);
+    diaElemMenu lookaheadLevel(PX(lookahead_level),QT_TRANSLATE_NOOP("ffnvenc","Lookahead Level:"),MZ(meLookaheadLevel),meLookaheadLevel);
 
 #ifdef AV1_ENCODER
     diaElemUInteger qual(PX(quality),QT_TRANSLATE_NOOP("ffnvenc","Quality:"),0,63);
@@ -444,11 +504,11 @@ bool ffNvEncConfigure(void)
     diaElemUInteger bitrate(PX(bitrate),QT_TRANSLATE_NOOP("ffnvenc","Bitrate (kbps):"),1,500000);
     diaElemUInteger maxBitrate(PX(max_bitrate),QT_TRANSLATE_NOOP("ffnvenc","Max Bitrate (kbps):"),1,500000);
 
-    diaElemUInteger gopSize(PX(gopsize),QT_TRANSLATE_NOOP("ffnvenc","GOP Size:"),0,1000);
+    diaElemInteger gopSize(PX(gopsize),QT_TRANSLATE_NOOP("ffnvenc","GOP Size:"),-1,1000);
 #ifdef AV1_ENCODER
-    diaElemUInteger maxBframes(PX(bframes),QT_TRANSLATE_NOOP("ffnvenc","Maximum Consecutive B-Frames:"),0,31);
+    diaElemInteger maxBframes(PX(bframes),QT_TRANSLATE_NOOP("ffnvenc","Maximum Consecutive B-Frames:"),-1,31);
 #else
-    diaElemUInteger maxBframes(PX(bframes),QT_TRANSLATE_NOOP("ffnvenc","Maximum Consecutive B-Frames:"),0,5);
+    diaElemInteger maxBframes(PX(bframes),QT_TRANSLATE_NOOP("ffnvenc","Maximum Consecutive B-Frames:"),-1,5);
 #endif
 
     diaElemUInteger lookAhead(PX(lookahead),QT_TRANSLATE_NOOP("ffnvenc","Lookahead:"),0,64);
@@ -457,6 +517,12 @@ bool ffNvEncConfigure(void)
     diaElemToggle spatAq(PX(spatial_aq),QT_TRANSLATE_NOOP("ffnvenc","Spatial AQ"));
     diaElemToggle tempAq(PX(temporal_aq),QT_TRANSLATE_NOOP("ffnvenc","Temporal AQ"));
     diaElemToggle wPred(PX(weighted_pred),QT_TRANSLATE_NOOP("ffnvenc","Weighted Prediction"));
+    diaElemToggle highBitDepth(PX(highbitdepth),QT_TRANSLATE_NOOP("ffnvenc","High Bit Depth (10-bit output)"));
+#if !defined(AV1_ENCODER) && !defined(H265_ENCODER)
+    diaElemReadOnlyText hintHighBitDepth(QT_TRANSLATE_NOOP("ffnvenc","10-bit requires Blackwell or newer"),NULL);
+#endif
+    diaElemMenu tfLevel(PX(tf_level),QT_TRANSLATE_NOOP("ffnvenc","Temporal Filtering Strength:"),MZ(meTfLevel),meTfLevel);
+    diaElemMenu multiPass(PX(multipass),QT_TRANSLATE_NOOP("ffnvenc","Multipass resolution:"),MZ(meMultipass),meMultipass);
 #ifdef H265_ENCODER
     diaElemReadOnlyText hintBasic(QT_TRANSLATE_NOOP("ffnvenc","Even with HEVC encoding support present, "
         "lossless presets and B-frames may be unavailable with older hardware"),NULL);
@@ -472,6 +538,8 @@ bool ffNvEncConfigure(void)
     diaElemFrame rateControl(QT_TRANSLATE_NOOP("ffnvenc","Rate Control"));
     diaElemFrame frameControl(QT_TRANSLATE_NOOP("ffnvenc","Frame Control"));
     diaElemFrame refControl(QT_TRANSLATE_NOOP("ffnvenc","References"));
+    diaElemFrame adaptiveQ(QT_TRANSLATE_NOOP("ffnvenc","Adaptive Quantization"));
+    diaElemFrame lookaheadFrame(QT_TRANSLATE_NOOP("ffnvenc","Rate Control Lookahead"));
 
     rateControl.swallow(&rcmode);
     rateControl.swallow(&qzPreset);
@@ -487,25 +555,40 @@ bool ffNvEncConfigure(void)
     rcmode.link(meRcMode+3,1,&bitrate);
     rcmode.link(meRcMode+3,1,&maxBitrate);
 
-#if defined(H265_ENCODER) || defined(AV1_ENCODER)
-#else // h264 baseline has no B frames
+#if !defined(H265_ENCODER) && !defined(AV1_ENCODER)
+    // h264 baseline has no B frames
     profile.link(meProfile+1,1,&maxBframes);
     profile.link(meProfile+2,1,&maxBframes);
+    profile.link(meProfile+3,1,&maxBframes);
+    profile.link(meProfile+4,1,&maxBframes);
+    profile.link(meProfile+5,1,&maxBframes);
+    profile.link(meProfile+1,1,&tfLevel);
+    profile.link(meProfile+2,1,&tfLevel);
+    profile.link(meProfile+3,1,&tfLevel);
+    profile.link(meProfile+4,1,&tfLevel);
+    profile.link(meProfile+5,1,&tfLevel);
 #endif
     spatAq.link(1,&aqStrength);
 
+    frameControl.swallow(&multiPass);
     frameControl.swallow(&gopSize);
     frameControl.swallow(&maxBframes);
+    frameControl.swallow(&tfLevel);
 
     refControl.swallow(&bFrameRef);
     refControl.swallow(&maxRefs);
 
+    adaptiveQ.swallow(&spatAq);
+    adaptiveQ.swallow(&aqStrength);
+    adaptiveQ.swallow(&tempAq);
+
+    lookaheadFrame.swallow(&lookAhead);
+    lookaheadFrame.swallow(&lookaheadLevel);
+
 #define NB_ELEM(x) sizeof(x)/sizeof(diaElem *)
     /* First Tab : basic settings */
     diaElem *basics[]={
-#if !defined(AV1_ENCODER)
         &profile,
-#endif
         &rateControl,
         &frameControl,
         &hintBasic
@@ -515,12 +598,14 @@ bool ffNvEncConfigure(void)
     /* 2nd Tab : advanced*/
     diaElem *advanced[]={
         &refControl,
+        &adaptiveQ,
+        &lookaheadFrame,
         &wPred,
         &hintWeightedPred,
-        &spatAq,
-        &aqStrength,
-        &tempAq,
-        &lookAhead,
+        &highBitDepth,
+#if !defined(AV1_ENCODER) && !defined(H265_ENCODER)
+        &hintHighBitDepth,
+#endif
         &hintAdvanced
     };
     diaElemTabs tabAdvanced(QT_TRANSLATE_NOOP("ffnvenc","Advanced Settings"),NB_ELEM(advanced),advanced);

@@ -47,11 +47,14 @@ enum FF_NVencProfile
   NV_FF_PROFILE_MAIN=0,
   NV_FF_PROFILE_MAIN10=1
 #elif defined(AV1_ENCODER)
-  // AV1 does not have profile options
+  NV_FF_PROFILE_MAIN=0 // AV1 does not have profile options
 #else
   NV_FF_PROFILE_BASELINE=0,
   NV_FF_PROFILE_MAIN=1,
-  NV_FF_PROFILE_HIGH=2
+  NV_FF_PROFILE_HIGH=2,
+  NV_FF_PROFILE_HIGH10=3,
+  NV_FF_PROFILE_HIGH422=4,
+  NV_FF_PROFILE_HIGH444=5
 #endif
 };
 
@@ -66,10 +69,32 @@ enum FF_NVencRateControl
 // B-frames as references require SDK 8.1 (driver >= 390.77 on Windows) and Turing+
 enum FF_NVencBframeRefMode
 {
-  NV_FF_BFRAME_REF_DISABLED=0,
-  NV_FF_BFRAME_REF_EACH=1,
-  NV_FF_BFRAME_REF_MIDDLE=2,
-  NV_FF_BFRAME_REF_HIERARCHICAL=3
+  NV_FF_BFRAME_REF_AUTO=0,
+  NV_FF_BFRAME_REF_DISABLED=1,
+  NV_FF_BFRAME_REF_EACH=2,
+  NV_FF_BFRAME_REF_MIDDLE=3,
+  NV_FF_BFRAME_REF_HIERARCHICAL=4
+};
+
+enum FF_NVencTfLevel
+{
+  NV_FF_TF_DEFAULT=15,
+  NV_FF_TF_DISABLED=0,
+  NV_FF_TF_MAX=4
+};
+
+enum FF_NVencMultipass
+{
+  NV_FF_MP_DEFAULT=0,
+  NV_FF_MP_DISABLED=1,
+  NV_FF_MP_QRES=2,
+  NV_FF_MP_FULLRES=3
+};
+
+enum FF_NVencLookaheadLevel
+{
+  NV_FF_LAL_DEFAULT=16,
+  NV_FF_LAL_AUTO=15
 };
 
 #ifdef H265_ENCODER
@@ -82,15 +107,19 @@ enum FF_NVencBframeRefMode
   20,    /* quality */ \
   5000, /* bitrate */ \
   10000, /* max_bitrate */ \
-  100,   /* gopsize */ \
+  -1,   /* gopsize */ \
   0, /* refs */ \
-  2, /* bframes */ \
-  2, /* b_ref_mode */ \
+  -1, /* bframes */ \
+  NV_FF_BFRAME_REF_AUTO, /* b_ref_mode */ \
   0, /* lookahead */ \
+  NV_FF_LAL_DEFAULT, /* lookahead level */ \
   8, /* aq_strength */ \
+  NV_FF_TF_DEFAULT, /* tf_level */ \
+  0, /* multipass */ \
   0, /* spatial_aq */ \
   0, /* temporal_aq */ \
-  0  /* weighted_pred */ \
+  0, /* weighted_pred */ \
+  0  /* highbitdepth */ \
 }
 #elif defined(AV1_ENCODER)
 #   define NVENC_CONF_DEFAULT \
@@ -102,15 +131,19 @@ enum FF_NVencBframeRefMode
   25,    /* quality */ \
   5000, /* bitrate */ \
   10000, /* max_bitrate */ \
-  100,   /* gopsize */ \
+  -1,   /* gopsize */ \
   0, /* refs */ \
-  2, /* bframes */ \
-  2, /* b_ref_mode */ \
+  -1, /* bframes */ \
+  NV_FF_BFRAME_REF_AUTO, /* b_ref_mode */ \
   0, /* lookahead */ \
+  NV_FF_LAL_DEFAULT, /* lookahead level */ \
   8, /* aq_strength */ \
+  NV_FF_TF_DEFAULT, /* tf_level */ \
+  0, /* multipass */ \
   0, /* spatial_aq */ \
   0, /* temporal_aq */ \
-  0  /* weighted_pred */ \
+  0, /* weighted_pred */ \
+  0  /* highbitdepth */ \
 }
 #else
 #   define NVENC_CONF_DEFAULT \
@@ -122,15 +155,19 @@ enum FF_NVencBframeRefMode
   20,    /* quality */ \
   10000, /* bitrate */ \
   20000, /* max_bitrate */ \
-  100,   /* gopsize */ \
+  -1,   /* gopsize */ \
   0, /* refs */ \
-  2, /* bframes */ \
-  1, /* b_ref_mode */ \
+  -1, /* bframes */ \
+  NV_FF_BFRAME_REF_AUTO, /* b_ref_mode */ \
   0, /* lookahead */ \
+  NV_FF_LAL_DEFAULT, /* lookahead level */ \
   8, /* aq_strength */ \
+  NV_FF_TF_DEFAULT, /* tf_level */ \
+  0, /* multipass */ \
   0, /* spatial_aq */ \
   0, /* temporal_aq */ \
-  0  /* weighted_pred */ \
+  0, /* weighted_pred */ \
+  0  /* highbitdepth */ \
 }
 #endif
 
