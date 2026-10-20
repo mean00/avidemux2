@@ -26,6 +26,8 @@ extern "C" {
 
 static uint32_t nvEncCodecSupportFlags = ADM_NVENC_NOT_PROBED;
 
+// Code stolen from libavcodec/nvenc.{c,h}
+
 #define LAVC_NVENCAPI_CHECK_VERSION(major, minor) \
     ((major) < NVENCAPI_MAJOR_VERSION || \
     ((major) == NVENCAPI_MAJOR_VERSION && (minor) <= NVENCAPI_MINOR_VERSION))
