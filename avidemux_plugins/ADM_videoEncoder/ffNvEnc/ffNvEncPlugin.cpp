@@ -19,6 +19,7 @@
 #include "ADM_default.h"
 #include "ADM_ffNvEnc.h"
 #include "ADM_coreVideoEncoderInternal.h"
+#include "ADM_coreNvenc.h"
 #include "ffnvenc_desc.cpp"
 extern bool            ffNvEncConfigure(void);
 extern ffnvenc_encoder NvEncSettings;
@@ -30,51 +31,24 @@ void resetConfigurationData()
 	memcpy(&NvEncSettings, &defaultConf, sizeof(ffnvenc_encoder));
 }
 
-
-/**
- *  \fn nvCheckDll
- */
-
-static bool nvCheckDll(const char *zwin64, const char *zwin32, const char *zlinux)
-{
-        const char *dll;
-#ifdef _WIN32
-        #ifdef _WIN64
-            dll=zwin64;
-        #else
-            dll=zwin32;
-        #endif
-#else
-        dll=zlinux;
-#endif
-        
-        ADM_LibWrapper wrapper;
-        bool r=wrapper.loadLibrary(dll);
-        ADM_info("\t checking %s-> %d\n",dll,r);
-        return r;
-}
 /**
  * \fn nvEncProbe
  */
-extern "C"
+static bool nvEncProbe(void)
 {
-    static bool nvEncProbe(void)
-    {
-        // Step 1 : Try to load cuda
-        if(!nvCheckDll("nvcuda.dll","nvcuda.dll","libcuda.so"))
-        {
-            ADM_warning("Cannot load cuda dll\n");
-            return false;
-        }
-        // Step 2 : Try to load encoder
+    uint32_t flags;
+    if (false == ADM_getNvencCodecSupportFlags(&flags))
+        return false;
 
-        if(!nvCheckDll("nvEncodeAPI64.dll","nvEncodeAPI.dll","libnvidia-encode.so.1"))
-        {
-            ADM_warning("Cannot load nvidia encode dll\n");
-            return false;
-        }
-        return true;
-    }
+    return (flags &
+#ifdef H265_ENCODER
+        ADM_NVENC_HEVC_IS_SUPPORTED
+#elif defined(AV1_ENCODER)
+        ADM_NVENC_AV1_IS_SUPPORTED
+#else
+        ADM_NVENC_H264_IS_SUPPORTED
+#endif
+    );
 }
 
 ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(ADM_ffNvEncEncoder);
