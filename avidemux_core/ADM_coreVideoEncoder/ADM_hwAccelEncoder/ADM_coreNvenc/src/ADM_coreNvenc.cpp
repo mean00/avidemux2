@@ -26,6 +26,10 @@ extern "C" {
 
 static uint32_t nvEncCodecSupportFlags = ADM_NVENC_NOT_PROBED;
 
+static admNvencCaps nvEncH264Caps;
+static admNvencCaps nvEncHEVCCaps;
+static admNvencCaps nvEncAV1Caps;
+
 // Code stolen from libavcodec/nvenc.{c,h}
 
 #define LAVC_NVENCAPI_CHECK_VERSION(major, minor) \
@@ -66,6 +70,245 @@ static void nvencPrintDriverReq(void)
 # endif
 #endif
     ADM_error("The minimum required NVIDIA driver for NVENC is %s\n", minVersion);
+}
+
+static int checkCap(NV_ENCODE_API_FUNCTION_LIST *list, void *instance, GUID encGuid, NV_ENC_CAPS cap)
+{
+    NV_ENC_CAPS_PARAM caps;
+    int val = 0;
+    memset(&caps, 0, sizeof(caps));
+    caps.version = NV_ENC_CAPS_PARAM_VER;
+    caps.capsToQuery = cap;
+    NVENCSTATUS r = list->nvEncGetEncodeCaps(instance, encGuid, &caps, &val);
+
+    return (r == NV_ENC_SUCCESS) ? val : -1;
+}
+
+static void checkH264Caps(NV_ENCODE_API_FUNCTION_LIST *list, void *instance)
+{
+    memset(&nvEncH264Caps, 0, sizeof(admNvencCaps));
+
+    if (!(nvEncCodecSupportFlags & ADM_NVENC_H264_IS_SUPPORTED))
+        return;
+
+    nvEncH264Caps.codecId = ADM_NVENC_H264_IS_SUPPORTED;
+
+    int v;
+
+#define QUERY_CAP(x,y) v = checkCap(list, instance, NV_ENC_CODEC_H264_GUID, x); \
+    if (v >= 0) \
+    { \
+        nvEncH264Caps.y = v; \
+        ADM_info(#y " = %d\n", v); \
+    };
+
+    QUERY_CAP(NV_ENC_CAPS_SUPPORTED_RATECONTROL_MODES, rcMask)
+    QUERY_CAP(NV_ENC_CAPS_WIDTH_MAX, maxWidth)
+    QUERY_CAP(NV_ENC_CAPS_HEIGHT_MAX, maxHeight)
+    QUERY_CAP(NV_ENC_CAPS_NUM_MAX_BFRAMES, maxBframes)
+
+#undef QUERY_CAP
+#define QUERY_CAP(x,y) v = checkCap(list, instance, NV_ENC_CODEC_H264_GUID, x); \
+    if (v > 0) \
+    { \
+        nvEncH264Caps.y = true; \
+        ADM_info(#y " = true\n"); \
+    };
+
+    QUERY_CAP(NV_ENC_CAPS_SUPPORT_LOSSLESS_ENCODE, lossless)
+    QUERY_CAP(NV_ENC_CAPS_SUPPORT_TEMPORAL_AQ, temporalAq)
+    QUERY_CAP(NV_ENC_CAPS_SUPPORT_WEIGHTED_PREDICTION, weightedPred)
+    QUERY_CAP(NV_ENC_CAPS_SUPPORT_10BIT_ENCODE, highBitDepth)
+
+#undef QUERY_CAP
+
+    v = checkCap(list, instance, NV_ENC_CODEC_H264_GUID, NV_ENC_CAPS_SUPPORT_BFRAME_REF_MODE);
+    if (v > 0)
+    {
+        nvEncH264Caps.bframeRef = v & 3;
+        ADM_info("bframeRef raw mask = %d\n", v);
+        v = checkCap(list, instance, NV_ENC_CODEC_H264_GUID, NV_ENC_CAPS_SUPPORT_HIERARCHICAL_BFRAMES);
+        if (v > 0)
+        {
+            nvEncH264Caps.bframeRef |= (1<<3);
+            ADM_info("Hierarchical B-frames are supported.\n");
+        }
+    }
+
+    v = checkCap(list, instance, NV_ENC_CODEC_H264_GUID, NV_ENC_CAPS_SUPPORT_LOOKAHEAD);
+    if (v > 0)
+    {
+        nvEncH264Caps.lookahead = 1;
+        ADM_info("lookahead = true\n");
+#if LAVC_NVENCAPI_CHECK_VERSION(12, 2)
+        v = checkCap(list, instance, NV_ENC_CODEC_H264_GUID, NV_ENC_CAPS_SUPPORT_LOOKAHEAD_LEVEL);
+        if (v > 0)
+        {
+            switch(v)
+            {
+                case NV_ENC_LOOKAHEAD_LEVEL_1:
+                case NV_ENC_LOOKAHEAD_LEVEL_2:
+                case NV_ENC_LOOKAHEAD_LEVEL_3:
+                case NV_ENC_LOOKAHEAD_LEVEL_AUTOSELECT:
+                    nvEncH264Caps.lookahead |= (v << 1);
+                    ADM_info("Raw max lookahead level = %d\n", v);
+                default: break; // invalid
+            }
+        }
+#endif
+    }
+}
+
+static void checkHEVCCaps(NV_ENCODE_API_FUNCTION_LIST *list, void *instance)
+{
+    memset(&nvEncHEVCCaps, 0, sizeof(admNvencCaps));
+
+    if (!(nvEncCodecSupportFlags & ADM_NVENC_HEVC_IS_SUPPORTED))
+        return;
+
+    nvEncHEVCCaps.codecId = ADM_NVENC_HEVC_IS_SUPPORTED;
+
+    int v;
+
+#define QUERY_CAP(x,y) v = checkCap(list, instance, NV_ENC_CODEC_HEVC_GUID, x); \
+    if (v >= 0) \
+    { \
+        nvEncHEVCCaps.y = v; \
+        ADM_info(#y " = %d\n", v); \
+    };
+
+    QUERY_CAP(NV_ENC_CAPS_SUPPORTED_RATECONTROL_MODES, rcMask)
+    QUERY_CAP(NV_ENC_CAPS_WIDTH_MAX, maxWidth)
+    QUERY_CAP(NV_ENC_CAPS_HEIGHT_MAX, maxHeight)
+    QUERY_CAP(NV_ENC_CAPS_NUM_MAX_BFRAMES, maxBframes)
+
+#undef QUERY_CAP
+#define QUERY_CAP(x,y) v = checkCap(list, instance, NV_ENC_CODEC_HEVC_GUID, x); \
+    if (v > 0) \
+    { \
+        nvEncHEVCCaps.y = true; \
+        ADM_info(#y " = true\n"); \
+    };
+
+    QUERY_CAP(NV_ENC_CAPS_SUPPORT_LOSSLESS_ENCODE, lossless)
+    QUERY_CAP(NV_ENC_CAPS_SUPPORT_TEMPORAL_AQ, temporalAq)
+    QUERY_CAP(NV_ENC_CAPS_SUPPORT_WEIGHTED_PREDICTION, weightedPred)
+    QUERY_CAP(NV_ENC_CAPS_SUPPORT_10BIT_ENCODE, highBitDepth)
+
+#undef QUERY_CAP
+
+    v = checkCap(list, instance, NV_ENC_CODEC_HEVC_GUID, NV_ENC_CAPS_SUPPORT_BFRAME_REF_MODE);
+    if (v > 0)
+    {
+        nvEncHEVCCaps.bframeRef = v & 3;
+        ADM_info("bframeRef raw mask = %d\n", v);
+        v = checkCap(list, instance, NV_ENC_CODEC_HEVC_GUID, NV_ENC_CAPS_SUPPORT_HIERARCHICAL_BFRAMES);
+        if (v > 0)
+        {
+            nvEncHEVCCaps.bframeRef |= (1<<3);
+            ADM_info("Hierarchical B-frames are supported.\n");
+        }
+    }
+
+    v = checkCap(list, instance, NV_ENC_CODEC_HEVC_GUID, NV_ENC_CAPS_SUPPORT_LOOKAHEAD);
+    if (v > 0)
+    {
+        nvEncHEVCCaps.lookahead = 1;
+        ADM_info("lookahead = true\n");
+#if LAVC_NVENCAPI_CHECK_VERSION(12, 2)
+        v = checkCap(list, instance, NV_ENC_CODEC_HEVC_GUID, NV_ENC_CAPS_SUPPORT_LOOKAHEAD_LEVEL);
+        if (v > 0)
+        {
+            switch(v)
+            {
+                case NV_ENC_LOOKAHEAD_LEVEL_1:
+                case NV_ENC_LOOKAHEAD_LEVEL_2:
+                case NV_ENC_LOOKAHEAD_LEVEL_3:
+                case NV_ENC_LOOKAHEAD_LEVEL_AUTOSELECT:
+                    nvEncHEVCCaps.lookahead |= (v << 1);
+                    ADM_info("Raw max lookahead level = %d\n", v);
+                default: break; // invalid
+            }
+        }
+#endif
+    }
+}
+
+static void checkAV1Caps(NV_ENCODE_API_FUNCTION_LIST *list, void *instance)
+{
+    memset(&nvEncAV1Caps, 0, sizeof(admNvencCaps));
+
+#if LAVC_NVENCAPI_CHECK_VERSION(12, 0)
+    if (!(nvEncCodecSupportFlags & ADM_NVENC_AV1_IS_SUPPORTED))
+        return;
+
+    nvEncAV1Caps.codecId = ADM_NVENC_AV1_IS_SUPPORTED;
+
+    int v;
+
+#define QUERY_CAP(x,y) v = checkCap(list, instance, NV_ENC_CODEC_AV1_GUID, x); \
+    if (v >= 0) \
+    { \
+        nvEncAV1Caps.y = v; \
+        ADM_info(#y " = %d\n", v); \
+    };
+
+    QUERY_CAP(NV_ENC_CAPS_SUPPORTED_RATECONTROL_MODES, rcMask)
+    QUERY_CAP(NV_ENC_CAPS_WIDTH_MAX, maxWidth)
+    QUERY_CAP(NV_ENC_CAPS_HEIGHT_MAX, maxHeight)
+    QUERY_CAP(NV_ENC_CAPS_NUM_MAX_BFRAMES, maxBframes)
+
+#undef QUERY_CAP
+#define QUERY_CAP(x,y) v = checkCap(list, instance, NV_ENC_CODEC_AV1_GUID, x); \
+    if (v > 0) \
+    { \
+        nvEncAV1Caps.y = true; \
+        ADM_info(#y " = true\n"); \
+    };
+
+    QUERY_CAP(NV_ENC_CAPS_SUPPORT_LOSSLESS_ENCODE, lossless)
+    QUERY_CAP(NV_ENC_CAPS_SUPPORT_TEMPORAL_AQ, temporalAq)
+    QUERY_CAP(NV_ENC_CAPS_SUPPORT_WEIGHTED_PREDICTION, weightedPred)
+    QUERY_CAP(NV_ENC_CAPS_SUPPORT_10BIT_ENCODE, highBitDepth)
+
+#undef QUERY_CAP
+
+    v = checkCap(list, instance, NV_ENC_CODEC_AV1_GUID, NV_ENC_CAPS_SUPPORT_BFRAME_REF_MODE);
+    if (v > 0)
+    {
+        nvEncAV1Caps.bframeRef = v & 3;
+        ADM_info("bframeRef raw mask = %d\n", v);
+        v = checkCap(list, instance, NV_ENC_CODEC_AV1_GUID, NV_ENC_CAPS_SUPPORT_HIERARCHICAL_BFRAMES);
+        if (v > 0)
+        {
+            nvEncAV1Caps.bframeRef |= (1<<3);
+            ADM_info("Hierarchical B-frames are supported.\n");
+        }
+    }
+
+    v = checkCap(list, instance, NV_ENC_CODEC_AV1_GUID, NV_ENC_CAPS_SUPPORT_LOOKAHEAD);
+    if (v > 0)
+    {
+        nvEncAV1Caps.lookahead = 1;
+        ADM_info("lookahead = true\n");
+#if LAVC_NVENCAPI_CHECK_VERSION(12, 2)
+        v = checkCap(list, instance, NV_ENC_CODEC_AV1_GUID, NV_ENC_CAPS_SUPPORT_LOOKAHEAD_LEVEL);
+        if (v > 0)
+        {
+            switch(v)
+            {
+                case NV_ENC_LOOKAHEAD_LEVEL_1:
+                case NV_ENC_LOOKAHEAD_LEVEL_2:
+                case NV_ENC_LOOKAHEAD_LEVEL_3:
+                case NV_ENC_LOOKAHEAD_LEVEL_AUTOSELECT:
+                    nvEncAV1Caps.lookahead |= (v << 1);
+                    ADM_info("Raw max lookahead level = %d\n", v);
+                default: break; // invalid
+            }
+        }
+#endif
+    }
+#endif
 }
 
 static bool checkNvEnc(void)
@@ -281,20 +524,29 @@ static bool checkNvEnc(void)
 
         for (int j = 0; j < nbGuids; j++)
         {
-             for (int k = 0; k < sizeof(allGuids) / sizeof(namedGuid); k++)
-             {
-                 if (!memcmp(&(guids[j]), &(allGuids[k].guid), sizeof(*guids)))
-                 {
-                     ADM_info("%s is supported.\n", allGuids[k].name);
-                     if (!strcmp("H264", allGuids[k].name))
-                         nvEncCodecSupportFlags |= ADM_NVENC_H264_IS_SUPPORTED;
-                     else if (!strcmp("HEVC", allGuids[k].name))
-                         nvEncCodecSupportFlags |= ADM_NVENC_HEVC_IS_SUPPORTED;
-                     else if (!strcmp("AV1", allGuids[k].name))
-                         nvEncCodecSupportFlags |= ADM_NVENC_AV1_IS_SUPPORTED;
-                 }
-             }
+            for (int k = 0; k < sizeof(allGuids) / sizeof(namedGuid); k++)
+            {
+                if (!memcmp(&(guids[j]), &(allGuids[k].guid), sizeof(*guids)))
+                {
+                    ADM_info("%s is supported.\n", allGuids[k].name);
+                    if (!strcmp("H264", allGuids[k].name))
+                        nvEncCodecSupportFlags |= ADM_NVENC_H264_IS_SUPPORTED;
+                    else if (!strcmp("HEVC", allGuids[k].name))
+                        nvEncCodecSupportFlags |= ADM_NVENC_HEVC_IS_SUPPORTED;
+                    else if (!strcmp("AV1", allGuids[k].name))
+                        nvEncCodecSupportFlags |= ADM_NVENC_AV1_IS_SUPPORTED;
+                }
+            }
         }
+
+        if (nvEncCodecSupportFlags & ADM_NVENC_H264_IS_SUPPORTED)
+            checkH264Caps(&nvencFunc, encoder);
+
+        if (nvEncCodecSupportFlags & ADM_NVENC_HEVC_IS_SUPPORTED)
+            checkHEVCCaps(&nvencFunc, encoder);
+
+        if (nvEncCodecSupportFlags & ADM_NVENC_AV1_IS_SUPPORTED)
+            checkAV1Caps(&nvencFunc, encoder);
 
         ADM_dealloc(guids);
         guids = NULL;
@@ -319,11 +571,33 @@ fail:
     return (nvEncCodecSupportFlags & (ADM_NVENC_H264_IS_SUPPORTED + ADM_NVENC_HEVC_IS_SUPPORTED + ADM_NVENC_AV1_IS_SUPPORTED));
 }
 
-bool ADM_getNvencCodecSupportFlags(uint32_t *flags)
+bool ADM_getNvencCodecSupportFlags(admNvencCaps *caps)
 {
     bool r = checkNvEnc();
-    if (flags)
-        *flags = nvEncCodecSupportFlags & 0xFFFF;
+    if (caps)
+    {
+        if (!r)
+        {
+            memset(caps, 0, sizeof(admNvencCaps));
+            return r;
+        }
+        switch(caps->codecId)
+        {
+            case ADM_NVENC_H264_IS_SUPPORTED:
+                memcpy(caps, &nvEncH264Caps, sizeof(admNvencCaps));
+                break;
+            case ADM_NVENC_HEVC_IS_SUPPORTED:
+                memcpy(caps, &nvEncHEVCCaps, sizeof(admNvencCaps));
+                break;
+            case ADM_NVENC_AV1_IS_SUPPORTED:
+                memcpy(caps, &nvEncAV1Caps, sizeof(admNvencCaps));
+                break;
+            default:
+                memset(caps, 0, sizeof(admNvencCaps));
+                break;
+        }
+    }
+
     return r;
 }
 

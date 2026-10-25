@@ -36,19 +36,20 @@ void resetConfigurationData()
  */
 static bool nvEncProbe(void)
 {
-    uint32_t flags;
-    if (false == ADM_getNvencCodecSupportFlags(&flags))
+    admNvencCaps caps;
+    caps.codecId =
+#ifdef H265_ENCODER
+        ADM_NVENC_HEVC_IS_SUPPORTED;
+#elif defined(AV1_ENCODER)
+        ADM_NVENC_AV1_IS_SUPPORTED;
+#else
+        ADM_NVENC_H264_IS_SUPPORTED;
+#endif
+
+    if (false == ADM_getNvencCodecSupportFlags(&caps))
         return false;
 
-    return (flags &
-#ifdef H265_ENCODER
-        ADM_NVENC_HEVC_IS_SUPPORTED
-#elif defined(AV1_ENCODER)
-        ADM_NVENC_AV1_IS_SUPPORTED
-#else
-        ADM_NVENC_H264_IS_SUPPORTED
-#endif
-    );
+    return !!caps.codecId;
 }
 
 ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(ADM_ffNvEncEncoder);

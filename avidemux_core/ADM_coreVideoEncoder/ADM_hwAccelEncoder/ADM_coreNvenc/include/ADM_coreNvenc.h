@@ -16,12 +16,29 @@
  ***************************************************************************/
 #pragma once
 #include "ADM_default.h"
-#include "ADM_coreVideoEncoder6_export.h"
 
 #define ADM_NVENC_H264_IS_SUPPORTED 1
 #define ADM_NVENC_HEVC_IS_SUPPORTED (1<<1)
 #define ADM_NVENC_AV1_IS_SUPPORTED  (1<<2)
 
-ADM_COREVIDEOENCODER6_EXPORT bool ADM_getNvencCodecSupportFlags(uint32_t *flags);
+typedef struct {
+    // The caller should set codecId to 1, 2 or 4 for H264, HEVC or AV1 respectively.
+    // This bit will be cleared if the codec is not supported. In this case other
+    // fields must be ignored. If more than one bit is set in codecId by the caller,
+    // codecId will be set to zero and other fields must be considered invalid.
+    uint32_t codecId;
+    uint32_t rcMask;
+    uint32_t maxWidth;
+    uint32_t maxHeight;
+    int maxBframes;
+    uint32_t bframeRef; // if (bframeRef >> 2) hierarchical = true; /* H264 only */
+    uint32_t lookahead; // if (lookahead & 1) level = (lookahead >> 1) & 0xF;
+    bool lossless;
+    bool temporalAq;
+    bool weightedPred;
+    bool highBitDepth;
+} admNvencCaps;
+
+bool ADM_getNvencCodecSupportFlags(admNvencCaps *caps);
 
 // EOF
