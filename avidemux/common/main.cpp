@@ -98,6 +98,7 @@ bool nvDecProbe(void)
 #else
 extern bool nvDecProbe(void);
 #endif
+#include "ADM_coreNvenc.h"
 extern bool initNvDecDecoder(void);
 extern bool admNvDec_exitCleanup(void);
 #endif
@@ -415,6 +416,7 @@ int startAvidemux(int argc, char *argv[])
         {
 #if defined(USE_NVENC)
             PROBE_HW_ACCEL(nvDecProbe, NVDEC, initNvDecDecoder, admNvDec_exitCleanup)
+            ADM_getNvencCodecSupportFlags(NULL); // Calling it here to keep the lib loaded, plugins will use cached results.
 #endif
         }
     }

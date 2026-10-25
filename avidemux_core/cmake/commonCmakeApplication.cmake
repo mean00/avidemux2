@@ -63,6 +63,11 @@ SET(ADM_EXE_SRCS
 # # # # # # # # # # # # # # # # # # # # # # # # ################
 INCLUDE_DIRECTORIES("${ADM_HEADER_DIR}/ffmpeg")
 
+# NVENC helper
+IF(USE_NVENC)
+  INCLUDE_DIRECTORIES(${ADM_HEADER_DIR}/ADM_coreNvenc)
+ENDIF()
+
 # # # # # # # # # # # # # # # # # # # # # # # # #####################
 # Add core libs
 # # # # # # # # # # # # # # # # # # # # # # # # #####################
@@ -106,6 +111,7 @@ ADD_LIB_IF(USE_DXVA2 ADM_coreDxva26)
 ADD_LIB_IF(USE_VDPAU ADM_coreVDPAU6)
 ADD_LIB_IF(USE_XVBA ADM_coreXvba6)
 ADD_LIB_IF(USE_LIBVA ADM_coreLibVA6 ADM_coreLibVAEnc6)
+ADD_LIB_IF(USE_NVENC ADM_coreNvenc6)
 
 LIST(APPEND commonLibs1 ADM_libavcodec ADM_libavutil)
 
