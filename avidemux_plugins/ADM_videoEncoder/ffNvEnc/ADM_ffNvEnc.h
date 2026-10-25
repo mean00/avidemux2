@@ -17,6 +17,7 @@
  ***************************************************************************/
 #pragma once
 #include "ADM_coreVideoEncoderFFmpeg.h"
+#include "ADM_coreNvenc.h"
 #include "ffnvenc.h"
 
 enum FF_NVencTune
@@ -78,15 +79,15 @@ enum FF_NVencBframeRefMode
   NV_FF_PRESET_P4, /* preset */ \
   NV_FF_PROFILE_MAIN, /* profile */ \
   NV_FF_TUNE_HQ, /* tune */ \
-  NV_FF_RC_AUTO, /* rc_mode */ \
+  NV_FF_RC_CONSTQP, /* rc_mode */ \
   20,    /* quality */ \
   5000, /* bitrate */ \
   10000, /* max_bitrate */ \
-  100,   /* gopsize */ \
+  250,   /* gopsize */ \
   0, /* refs */ \
   2, /* bframes */ \
   2, /* b_ref_mode */ \
-  0, /* lookahead */ \
+  8, /* lookahead */ \
   8, /* aq_strength */ \
   0, /* spatial_aq */ \
   0, /* temporal_aq */ \
@@ -98,15 +99,15 @@ enum FF_NVencBframeRefMode
   NV_FF_PRESET_P4, /* preset */ \
   0, /* AV1 does not have profile options */ \
   NV_FF_TUNE_HQ, /* tune */ \
-  NV_FF_RC_AUTO, /* rc_mode */ \
+  NV_FF_RC_CONSTQP, /* rc_mode */ \
   25,    /* quality */ \
   5000, /* bitrate */ \
   10000, /* max_bitrate */ \
-  100,   /* gopsize */ \
+  250,   /* gopsize */ \
   0, /* refs */ \
   2, /* bframes */ \
   2, /* b_ref_mode */ \
-  0, /* lookahead */ \
+  8, /* lookahead */ \
   8, /* aq_strength */ \
   0, /* spatial_aq */ \
   0, /* temporal_aq */ \
@@ -118,15 +119,15 @@ enum FF_NVencBframeRefMode
   NV_FF_PRESET_P4, /* preset */ \
   NV_FF_PROFILE_HIGH, /* profile */ \
   NV_FF_TUNE_HQ,       /* tune */ \
-  NV_FF_RC_AUTO, /* rc_mode */ \
+  NV_FF_RC_CONSTQP, /* rc_mode */ \
   20,    /* quality */ \
   10000, /* bitrate */ \
   20000, /* max_bitrate */ \
-  100,   /* gopsize */ \
+  250,   /* gopsize */ \
   0, /* refs */ \
   2, /* bframes */ \
   1, /* b_ref_mode */ \
-  0, /* lookahead */ \
+  8, /* lookahead */ \
   8, /* aq_strength */ \
   0, /* spatial_aq */ \
   0, /* temporal_aq */ \
@@ -150,5 +151,19 @@ virtual        bool        configureContext(void);
 virtual        bool        setup(void);
 virtual        bool        encode (ADMBitstream * out);
 virtual const  char        *getFourcc(void);
+};
+
+/**
+    \class encCapsHelper
+    \brief Get hardware capabilities
+*/
+class encCapsHelper
+{
+protected:
+    admNvencCaps    encoderCapabilities;
+public:
+                    encCapsHelper();
+                    ~encCapsHelper() { };
+    bool            getCaps(admNvencCaps *target);
 };
 

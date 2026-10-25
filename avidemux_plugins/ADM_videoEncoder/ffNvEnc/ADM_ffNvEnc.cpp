@@ -18,6 +18,7 @@
 
 #include "ADM_default.h"
 #include "ADM_ffNvEnc.h"
+#include "ADM_coreNvenc.h"
 #undef ADM_MINIMAL_UI_INTERFACE // we need the full UI
 #include "DIA_factory.h"
 //#define USE_NV12
@@ -137,7 +138,7 @@ bool ADM_ffNvEncEncoder::configureContext(void)
     switch(NvEncSettings.rc_mode)
     {
         case NV_FF_RC_AUTO:
-            _context->bit_rate=NvEncSettings.bitrate*1000;
+            _context->bit_rate = 0;
             break;
         case NV_FF_RC_CONSTQP:
 #ifdef AV1_ENCODER
@@ -231,13 +232,6 @@ bool ADM_ffNvEncEncoder::configureContext(void)
 #ifdef USE_NV12
     targetPixFrmt = ADM_PIXFRMT_NV12;
 #endif
-
-    // Set encoder delay
-    int mult = (_context->max_b_frames > 0) ? 2 : 0;
-    if (_context->max_b_frames > 1)
-        mult += 1;
-    encoderDelay = frameIncrement * mult;
-    ADM_info("Encoder delay set to %d frames = %" PRIu64" us.\n", mult, encoderDelay);
 
     // Print nvenc options
     {
@@ -358,11 +352,50 @@ link:
 }
 
 /**
+    \fn ctor
+ */
+encCapsHelper::encCapsHelper(void)
+{
+    encoderCapabilities.codecId =
+#ifdef H265_ENCODER
+        ADM_NVENC_HEVC_IS_SUPPORTED;
+#elif defined(AV1_ENCODER)
+        ADM_NVENC_AV1_IS_SUPPORTED;
+#else
+        ADM_NVENC_H264_IS_SUPPORTED;
+#endif
+
+    if (false == ADM_getNvencCodecSupportFlags(&encoderCapabilities))
+        encoderCapabilities.codecId = 0;
+}
+/**
+    \fn getCaps
+    \brief Copy caps to provided target. Return true if codec is supported and caps are valid.
+ */
+bool encCapsHelper::getCaps(admNvencCaps *tgt)
+{
+    if (!encoderCapabilities.codecId)
+        return false;
+    if (tgt)
+        memcpy(tgt, &encoderCapabilities, sizeof(admNvencCaps));
+    return true;
+}
+
+/**
     \fn ffNvEncConfigure
     \brief Show configuration dialog
 */
 bool ffNvEncConfigure(void)
 {
+    encCapsHelper helper;
+    admNvencCaps caps;
+    caps.codecId = 0;
+    if (!helper.getCaps(&caps))
+    {
+        ADM_warning("Configuring encoder not supported by interface and hardware!\n");
+        caps.codecId = 0;
+    }
+
     diaMenuEntry meRcMode[]={
         {NV_FF_RC_AUTO,         QT_TRANSLATE_NOOP("ffnvenc","Controlled by Preset"),NULL},
         {NV_FF_RC_CONSTQP,      QT_TRANSLATE_NOOP("ffnvenc","Constant Quantizer"),NULL},
@@ -445,13 +478,16 @@ bool ffNvEncConfigure(void)
     diaElemUInteger maxBitrate(PX(max_bitrate),QT_TRANSLATE_NOOP("ffnvenc","Max Bitrate (kbps):"),1,500000);
 
     diaElemUInteger gopSize(PX(gopsize),QT_TRANSLATE_NOOP("ffnvenc","GOP Size:"),0,1000);
-#ifdef AV1_ENCODER
-    diaElemUInteger maxBframes(PX(bframes),QT_TRANSLATE_NOOP("ffnvenc","Maximum Consecutive B-Frames:"),0,31);
-#else
-    diaElemUInteger maxBframes(PX(bframes),QT_TRANSLATE_NOOP("ffnvenc","Maximum Consecutive B-Frames:"),0,5);
-#endif
 
-    diaElemUInteger lookAhead(PX(lookahead),QT_TRANSLATE_NOOP("ffnvenc","Lookahead:"),0,64);
+    int mx = 31;
+    if (caps.codecId && caps.maxBframes > 0)
+    {
+        if (caps.maxBframes < mx)
+            mx = caps.maxBframes;
+    }
+    diaElemUInteger maxBframes(PX(bframes), QT_TRANSLATE_NOOP("ffnvenc","Maximum Consecutive B-Frames:"), 0, mx);
+
+    diaElemUInteger lookAhead(PX(lookahead),QT_TRANSLATE_NOOP("ffnvenc","Lookahead:"), 0, 31); // <= 31 - bframes
     diaElemUInteger aqStrength(PX(aq_strength),QT_TRANSLATE_NOOP("ffnvenc","AQ Strength:"),1,15);
 
     diaElemToggle spatAq(PX(spatial_aq),QT_TRANSLATE_NOOP("ffnvenc","Spatial AQ"));
@@ -480,7 +516,6 @@ bool ffNvEncConfigure(void)
     rateControl.swallow(&bitrate);
     rateControl.swallow(&maxBitrate);
 
-    rcmode.link(meRcMode,1,&bitrate);
     rcmode.link(meRcMode+1,1,&qual);
     rcmode.link(meRcMode+2,1,&bitrate);
     rcmode.link(meRcMode+3,1,&qual);
@@ -526,7 +561,7 @@ bool ffNvEncConfigure(void)
     diaElemTabs tabAdvanced(QT_TRANSLATE_NOOP("ffnvenc","Advanced Settings"),NB_ELEM(advanced),advanced);
 
     diaElemTabs *tabs[]={&tabBasic,&tabAdvanced};
-    if(diaFactoryRunTabs(
+    void *cookie = diaFactoryRunTabsPrepare(
 #ifdef H265_ENCODER
             QT_TRANSLATE_NOOP("ffnvenc","NVENC HEVC configuration"),
 #elif defined(AV1_ENCODER)
@@ -534,8 +569,18 @@ bool ffNvEncConfigure(void)
 #else
             QT_TRANSLATE_NOOP("ffnvenc","NVENC H.264 configuration"),
 #endif
-            2,tabs))
+            2, tabs);
+
+    // Disable unsupported stuff
+    maxBframes.enable(caps.codecId && caps.maxBframes > 0);
+    bFrameRef.enable(caps.codecId && (caps.bframeRef & 3));
+    wPred.enable(caps.codecId && caps.lookahead);
+    tempAq.enable(caps.codecId && caps.temporalAq);
+    lookAhead.enable(caps.codecId && (caps.lookahead & 1));
+
+    if (diaFactoryRunTabsFinish(cookie))
         return true;
+
     return false;
 }
 // EOF

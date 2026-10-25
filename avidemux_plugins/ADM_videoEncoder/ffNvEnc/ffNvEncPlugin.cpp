@@ -19,7 +19,6 @@
 #include "ADM_default.h"
 #include "ADM_ffNvEnc.h"
 #include "ADM_coreVideoEncoderInternal.h"
-#include "ADM_coreNvenc.h"
 #include "ffnvenc_desc.cpp"
 extern bool            ffNvEncConfigure(void);
 extern ffnvenc_encoder NvEncSettings;
@@ -36,20 +35,8 @@ void resetConfigurationData()
  */
 static bool nvEncProbe(void)
 {
-    admNvencCaps caps;
-    caps.codecId =
-#ifdef H265_ENCODER
-        ADM_NVENC_HEVC_IS_SUPPORTED;
-#elif defined(AV1_ENCODER)
-        ADM_NVENC_AV1_IS_SUPPORTED;
-#else
-        ADM_NVENC_H264_IS_SUPPORTED;
-#endif
-
-    if (false == ADM_getNvencCodecSupportFlags(&caps))
-        return false;
-
-    return !!caps.codecId;
+    encCapsHelper caps;
+    return caps.getCaps(NULL);
 }
 
 ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(ADM_ffNvEncEncoder);
