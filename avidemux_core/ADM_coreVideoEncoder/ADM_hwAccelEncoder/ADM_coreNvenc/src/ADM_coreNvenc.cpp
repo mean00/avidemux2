@@ -119,6 +119,7 @@ static void checkH264Caps(NV_ENCODE_API_FUNCTION_LIST *list, void *instance)
     QUERY_CAP(NV_ENC_CAPS_SUPPORT_TEMPORAL_AQ, temporalAq)
     QUERY_CAP(NV_ENC_CAPS_SUPPORT_WEIGHTED_PREDICTION, weightedPred)
     QUERY_CAP(NV_ENC_CAPS_SUPPORT_10BIT_ENCODE, highBitDepth)
+    QUERY_CAP(NV_ENC_CAPS_SUPPORT_MULTIPLE_REF_FRAMES, multRefFrames)
 
 #undef QUERY_CAP
 
@@ -130,7 +131,7 @@ static void checkH264Caps(NV_ENCODE_API_FUNCTION_LIST *list, void *instance)
         v = checkCap(list, instance, NV_ENC_CODEC_H264_GUID, NV_ENC_CAPS_SUPPORT_HIERARCHICAL_BFRAMES);
         if (v > 0)
         {
-            nvEncH264Caps.bframeRef |= (1<<3);
+            nvEncH264Caps.bframeRef |= (1<<2);
             ADM_info("Hierarchical B-frames are supported.\n");
         }
     }
@@ -194,6 +195,7 @@ static void checkHEVCCaps(NV_ENCODE_API_FUNCTION_LIST *list, void *instance)
     QUERY_CAP(NV_ENC_CAPS_SUPPORT_TEMPORAL_AQ, temporalAq)
     QUERY_CAP(NV_ENC_CAPS_SUPPORT_WEIGHTED_PREDICTION, weightedPred)
     QUERY_CAP(NV_ENC_CAPS_SUPPORT_10BIT_ENCODE, highBitDepth)
+    QUERY_CAP(NV_ENC_CAPS_SUPPORT_MULTIPLE_REF_FRAMES, multRefFrames)
 
 #undef QUERY_CAP
 
@@ -205,7 +207,7 @@ static void checkHEVCCaps(NV_ENCODE_API_FUNCTION_LIST *list, void *instance)
         v = checkCap(list, instance, NV_ENC_CODEC_HEVC_GUID, NV_ENC_CAPS_SUPPORT_HIERARCHICAL_BFRAMES);
         if (v > 0)
         {
-            nvEncHEVCCaps.bframeRef |= (1<<3);
+            nvEncHEVCCaps.bframeRef |= (1<<2);
             ADM_info("Hierarchical B-frames are supported.\n");
         }
     }
@@ -270,6 +272,7 @@ static void checkAV1Caps(NV_ENCODE_API_FUNCTION_LIST *list, void *instance)
     QUERY_CAP(NV_ENC_CAPS_SUPPORT_TEMPORAL_AQ, temporalAq)
     QUERY_CAP(NV_ENC_CAPS_SUPPORT_WEIGHTED_PREDICTION, weightedPred)
     QUERY_CAP(NV_ENC_CAPS_SUPPORT_10BIT_ENCODE, highBitDepth)
+    QUERY_CAP(NV_ENC_CAPS_SUPPORT_MULTIPLE_REF_FRAMES, multRefFrames)
 
 #undef QUERY_CAP
 
@@ -281,7 +284,7 @@ static void checkAV1Caps(NV_ENCODE_API_FUNCTION_LIST *list, void *instance)
         v = checkCap(list, instance, NV_ENC_CODEC_AV1_GUID, NV_ENC_CAPS_SUPPORT_HIERARCHICAL_BFRAMES);
         if (v > 0)
         {
-            nvEncAV1Caps.bframeRef |= (1<<3);
+            nvEncAV1Caps.bframeRef |= (1<<2);
             ADM_info("Hierarchical B-frames are supported.\n");
         }
     }

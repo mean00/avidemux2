@@ -31,12 +31,13 @@ typedef struct {
     uint32_t maxWidth;
     uint32_t maxHeight;
     int maxBframes;
-    uint32_t bframeRef; // if (bframeRef >> 2) hierarchical = true; /* H264 only */
+    uint32_t bframeRef; // bitmask of 0 = unsupported, 1 = each, 2 = middle, 4 = hierarchical
     uint32_t lookahead; // if (lookahead & 1) level = (lookahead >> 1) & 0xF;
     bool lossless;
     bool temporalAq;
     bool weightedPred;
     bool highBitDepth;
+    bool multRefFrames;
 } admNvencCaps;
 
 bool ADM_getNvencCodecSupportFlags(admNvencCaps *caps);
