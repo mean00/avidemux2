@@ -386,6 +386,7 @@ void HandleAction(Action action)
         switch (action)
         {
         case ACT_PlayAvi:
+        case ACT_PlayLoop:
         case ACT_StopAvi:
             break;
         default:
@@ -494,6 +495,9 @@ void HandleAction(Action action)
         break;
     case ACT_PlayAvi:
         GUI_PlayAvi();
+        break;
+    case ACT_PlayLoop:
+        GUI_PlayAvi(false, true);
         break;
 
 #define TOGGLE_PREVIEW ADM_PREVIEW_OUTPUT
