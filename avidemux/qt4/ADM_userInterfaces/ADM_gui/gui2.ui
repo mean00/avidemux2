@@ -771,13 +771,13 @@
    <property name="minimumSize">
     <size>
      <width>543</width>
-     <height>120</height>
+     <height>152</height>
     </size>
    </property>
    <property name="maximumSize">
     <size>
      <width>524287</width>
-     <height>120</height>
+     <height>152</height>
     </size>
    </property>
    <property name="features">
@@ -1391,13 +1391,13 @@
    <property name="minimumSize">
     <size>
      <width>182</width>
-     <height>120</height>
+     <height>152</height>
     </size>
    </property>
    <property name="maximumSize">
     <size>
      <width>182</width>
-     <height>120</height>
+     <height>152</height>
     </size>
    </property>
    <property name="features">
@@ -1525,6 +1525,91 @@
          </item>
         </layout>
        </item>
+       <item>
+        <layout class="QHBoxLayout" name="selectionMarkerButtons">
+         <property name="spacing">
+          <number>2</number>
+         </property>
+         <item>
+          <widget class="QToolButton" name="toolButtonSelectionMarkA">
+           <property name="toolTip">
+            <string>Set start marker</string>
+           </property>
+           <property name="text">
+            <string>A</string>
+           </property>
+           <property name="icon">
+            <iconset resource="avidemux.qrc">
+             <normaloff>:/new/prefix1/pics/markA.png</normaloff>:/new/prefix1/pics/markA.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>22</width>
+             <height>22</height>
+            </size>
+           </property>
+           <property name="autoRaise">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="toolButtonSelectionMarkB">
+           <property name="toolTip">
+            <string>Set end marker</string>
+           </property>
+           <property name="text">
+            <string>B</string>
+           </property>
+           <property name="icon">
+            <iconset resource="avidemux.qrc">
+             <normaloff>:/new/prefix1/pics/markB.png</normaloff>:/new/prefix1/pics/markB.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>22</width>
+             <height>22</height>
+            </size>
+           </property>
+           <property name="autoRaise">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="toolButtonSelectionPlayLoop">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="toolTip">
+            <string>Play selection in a loop [L]</string>
+           </property>
+           <property name="text">
+            <string>Loop</string>
+           </property>
+           <property name="icon">
+            <iconset resource="avidemux.qrc">
+             <normaloff>:/new/prefix1/pics/player_play.png</normaloff>:/new/prefix1/pics/player_play.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>22</width>
+             <height>22</height>
+            </size>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextBesideIcon</enum>
+           </property>
+           <property name="autoRaise">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
       </layout>
      </item>
     </layout>
@@ -1540,13 +1625,13 @@
    <property name="minimumSize">
     <size>
      <width>42</width>
-     <height>120</height>
+     <height>152</height>
     </size>
    </property>
    <property name="maximumSize">
     <size>
      <width>42</width>
-     <height>120</height>
+     <height>152</height>
     </size>
    </property>
    <property name="features">
@@ -1654,13 +1739,13 @@
    <property name="minimumSize">
     <size>
      <width>82</width>
-     <height>120</height>
+     <height>152</height>
     </size>
    </property>
    <property name="maximumSize">
     <size>
      <width>82</width>
-     <height>120</height>
+     <height>152</height>
     </size>
    </property>
    <property name="features">
@@ -2091,6 +2176,9 @@
   <tabstop>currentTime</tabstop>
   <tabstop>pushButtonJumpToMarkerA</tabstop>
   <tabstop>pushButtonJumpToMarkerB</tabstop>
+  <tabstop>toolButtonSelectionMarkA</tabstop>
+  <tabstop>toolButtonSelectionMarkB</tabstop>
+  <tabstop>toolButtonSelectionPlayLoop</tabstop>
   <tabstop>toolButtonAudioToggle</tabstop>
   <tabstop>horizontalSlider_2</tabstop>
  </tabstops>

@@ -64,6 +64,14 @@ class GUIPlayback
     ADM_coreVideoFilter *videoFilter;
     ADM_videoFilterChain *videoChain;
 
+    bool loopSelection;
+    uint64_t loopA, loopB;
+    uint64_t absolutePts;
+    uint64_t audioStartPts;
+    uint64_t ptsClockBase;
+    bool buildVideoChain(uint64_t startPts, uint64_t endPts);
+    bool restartSelection(void);
+    bool rewindPlaybackAudio(void);
     bool initializeAudio();
     bool cleanup(void);
     bool audioPump(bool wait);
@@ -74,9 +82,14 @@ class GUIPlayback
   public:
     bool run(void);
     bool initialize(void);
+    void setSelectionLoop(uint64_t startPts, uint64_t endPts);
     uint64_t getLastPts(void)
     {
         return lastPts;
+    }
+    uint64_t getAbsolutePts(void)
+    {
+        return absolutePts;
     }
     GUIPlayback();
     ~GUIPlayback();
@@ -95,6 +108,12 @@ GUIPlayback::GUIPlayback(void)
     audioLatency = 0;
     videoLagTimer = 0;
     playbackDuration = 0;
+    loopSelection = false;
+    loopA = 0;
+    loopB = 0;
+    absolutePts = 0;
+    audioStartPts = 0;
+    ptsClockBase = 0;
 }
 /**
     \fn ~GUIPlayback
@@ -109,7 +128,7 @@ GUIPlayback::~GUIPlayback()
     \brief      MainLoop for internal movie playback
 
 */
-void GUI_PlayAvi(bool quit)
+void GUI_PlayAvi(bool quit, bool loopSelection)
 {
     exiting = quit;
     // check we got everything...
@@ -119,6 +138,37 @@ void GUI_PlayAvi(bool quit)
     {
         stop_req = 1;
         return;
+    }
+
+    uint64_t loopA = 0, loopB = 0;
+    if (loopSelection)
+    {
+        loopA = video_body->getMarkerAPts();
+        loopB = video_body->getMarkerBPts();
+        if (loopA > loopB)
+        {
+            uint64_t swapPts = loopA;
+            loopA = loopB;
+            loopB = swapPts;
+        }
+        uint64_t increment = video_body->getFrameIncrement();
+        if (!increment)
+            increment = 1;
+        if (loopB <= loopA || (loopB - loopA) < increment)
+        {
+            GUI_Error_HIG(QT_TRANSLATE_NOOP("adm", "Selection is empty"),
+                          QT_TRANSLATE_NOOP("adm", "Set marker A and marker B around the part you want to loop."));
+            return;
+        }
+        uint64_t current = admPreview::getCurrentPts();
+        if (current < loopA || current >= loopB)
+        {
+            if (false == admPreview::seekToTime(loopA))
+            {
+                GUI_Error_HIG(QT_TRANSLATE_NOOP("adm", "Cannot seek to marker A"), NULL);
+                return;
+            }
+        }
     }
 
     uint64_t oldTimeFrame, newTimeFrame;
@@ -142,10 +192,15 @@ void GUI_PlayAvi(bool quit)
     // admPreview::samePicture();
 
     GUIPlayback *playLoop = new GUIPlayback;
+    if (loopSelection)
+        playLoop->setSelectionLoop(loopA, loopB);
     if (playLoop->initialize())
     {
         playLoop->run();
-        newTimeFrame += playLoop->getLastPts();
+        if (loopSelection)
+            newTimeFrame = playLoop->getAbsolutePts();
+        else
+            newTimeFrame += playLoop->getLastPts();
     }
     delete playLoop;
     playLoop = NULL;
@@ -177,6 +232,20 @@ void GUI_PlayAvi(bool quit)
     UI_purge();
     GUI_setCurrentFrameAndTime();
     UI_purge();
+}
+/**
+    \fn rewindPlaybackAudio
+    \brief Seek the existing playback filter back to its start and drop
+           samples already queued in the device.
+*/
+bool GUIPlayback::rewindPlaybackAudio(void)
+{
+    if (!playbackAudio)
+        return false;
+    if (!playbackAudio->rewind())
+        return false;
+    AVDM_AudioFlush();
+    return true;
 }
 /**
     \fn cleanupAudio
@@ -218,6 +287,69 @@ bool GUIPlayback::cleanup(void)
 }
 
 /**
+    \fn setSelectionLoop
+*/
+void GUIPlayback::setSelectionLoop(uint64_t startPts, uint64_t endPts)
+{
+    loopSelection = true;
+    loopA = startPts;
+    loopB = endPts;
+}
+/**
+    \fn buildVideoChain
+*/
+bool GUIPlayback::buildVideoChain(uint64_t startPts, uint64_t endPts)
+{
+    if (videoChain)
+    {
+        destroyVideoFilterChain(videoChain);
+        videoChain = NULL;
+        videoFilter = NULL;
+    }
+    if (ADM_PREVIEW_NONE == admPreview::getPreviewMode())
+        videoChain = createEmptyVideoFilterChain(startPts, endPts, loopSelection);
+    else
+        videoChain = createVideoFilterChain(startPts, endPts, loopSelection);
+    if (!videoChain)
+    {
+        ADM_warning("Cannot create video chain\n");
+        return false;
+    }
+    int nb = videoChain->size();
+    videoFilter = (*videoChain)[nb - 1];
+    playbackDuration = videoFilter->getInfo()->totalDuration;
+    return true;
+}
+/**
+    \fn restartSelection
+    \brief Rewind the existing chain to marker A. Rebuild it only if seek fails.
+*/
+bool GUIPlayback::restartSelection(void)
+{
+    firstPts = loopA;
+    lastPts = 0;
+    absolutePts = loopA;
+    ptsClockBase = 0;
+    audioStartPts = loopA;
+    if (!videoFilter || false == videoFilter->goToTime(0, false))
+    {
+        if (false == buildVideoChain(loopA, loopB))
+            return false;
+    }
+    if (playbackAudio && false == rewindPlaybackAudio())
+    {
+        cleanupAudio();
+        if (false == initializeAudio())
+            ticktock.reset();
+    }
+    else
+        ticktock.reset();
+    tocktick.reset();
+    vuMeterPts = 0;
+    videoLagTimer = 0;
+    return true;
+}
+/**
         \fn initialize
 */
 bool GUIPlayback::initialize(void)
@@ -227,24 +359,37 @@ bool GUIPlayback::initialize(void)
     prefs->get(FEATURES_CAP_REFRESH_ENABLED, &refreshCapEnabled);
     prefs->get(FEATURES_CAP_REFRESH_VALUE, &refreshCapValue);
 
-    firstPts = admPreview::getCurrentPts();
-    if (ADM_PREVIEW_NONE == admPreview::getPreviewMode()) // copy
+    uint64_t playFrom = admPreview::getCurrentPts();
+    absolutePts = playFrom;
+    audioStartPts = playFrom;
+    ptsClockBase = 0;
+    firstPts = playFrom;
+    // The selection chain starts at marker A so a later rewind lands on A.
+    // Playback itself still begins at the current frame when it is inside the range.
+    if (loopSelection)
     {
-        videoChain = createEmptyVideoFilterChain(firstPts, ADM_NO_PTS);
+        if (false == buildVideoChain(loopA, loopB))
+            return false;
+        firstPts = loopA;
+        if (playFrom > loopA)
+        {
+            if (videoFilter->goToTime(playFrom - loopA, true))
+            {
+                ptsClockBase = playFrom - loopA;
+            }
+            else
+            {
+                videoFilter->goToTime(0, false);
+                audioStartPts = loopA;
+                absolutePts = loopA;
+            }
+        }
     }
-    else
+    else if (false == buildVideoChain(playFrom, ADM_NO_PTS))
     {
-        videoChain = createVideoFilterChain(firstPts, ADM_NO_PTS);
-    }
-    if (!videoChain)
-    {
-        ADM_warning("Cannot create video chain\n");
         return false;
     }
-    int nb = videoChain->size();
-    videoFilter = (*videoChain)[nb - 1];
     FilterInfo *info = videoFilter->getInfo();
-    playbackDuration = info->totalDuration;
     float currentZoom = admPreview::getCurrentZoom();
     float zoom = ZOOM_AUTO;
     // if the video output has same width/height as input, we keep the same zoom
@@ -275,6 +420,9 @@ bool GUIPlayback::run(void)
     bool gotAudio = true;
     bool first = true;
     bool endOfVideo = false;
+    bool producedFrame = false;
+    bool havePlaybackPts = false;
+    uint64_t previousPlaybackPts = 0;
     int refreshCounter = 0;
     ticktock.reset();
     tocktick.reset();
@@ -304,15 +452,52 @@ bool GUIPlayback::run(void)
             GUI_setCurrentFrameAndTime(firstPts);
         }
         lastPts = admPreview::getCurrentPts();
+        if (producedFrame)
+            absolutePts = firstPts + lastPts;
         if (false == videoFilter->getNextFrameAs(hwImageFormat, &fn, previewBuffer))
         {
+            if (loopSelection && producedFrame && !stop_req && restartSelection())
+            {
+                if (previewBuffer)
+                    previewBuffer->Pts = 0;
+                producedFrame = false;
+                havePlaybackPts = false;
+                first = true;
+                gotAudio = true;
+                continue;
+            }
             ADM_info("[Play] Cancelling playback, nextPicture failed\n");
             endOfVideo = true;
+        }
+        else
+        {
+            producedFrame = true;
+            uint64_t span = (loopB > loopA) ? (loopB - loopA) : 0;
+            if (loopSelection && havePlaybackPts && previousPlaybackPts > previewBuffer->Pts &&
+                (previousPlaybackPts - previewBuffer->Pts) > span / 4)
+            {
+                if (playbackAudio && false == rewindPlaybackAudio())
+                {
+                    cleanupAudio();
+                    initializeAudio();
+                }
+                ticktock.reset();
+                ptsClockBase = 0;
+                gotAudio = true;
+                videoLagTimer = 0;
+            }
+            previousPlaybackPts = previewBuffer->Pts;
+            havePlaybackPts = true;
         }
         if (gotAudio)
             gotAudio = audioPump(false);
         systemTime = ticktock.getElapsedMS();
-        movieTime = (uint32_t)(previewBuffer->Pts / 1000); // next pic PTS
+        uint64_t picturePts = previewBuffer->Pts;
+        if (picturePts > ptsClockBase)
+            picturePts -= ptsClockBase;
+        else
+            picturePts = 0;
+        movieTime = (uint32_t)(picturePts / 1000); // next pic PTS, relative to where this lap started
         if (endOfVideo)
             movieTime = (uint32_t)(playbackDuration / 1000);
         movieTime += audioLatency;
@@ -440,7 +625,7 @@ bool GUIPlayback::initializeAudio(void)
     uint32_t channels, frequency;
 
     wavbuf = 0;
-    uint64_t startPts = firstPts;
+    uint64_t startPts = (loopSelection) ? loopA : audioStartPts;
     int32_t shift = 0; // unit is ms, + => delay audio, -=> advance audio
 
     // if audio shift is activated, take it into account
@@ -463,6 +648,25 @@ bool GUIPlayback::initializeAudio(void)
     // 4 sec buffer..
     wavbuf = (float *)ADM_alloc((20 * sizeof(float) * preload)); // 4 secs buffers
     ADM_assert(wavbuf);
+    // The filter rewinds to marker A. Drop the head when this lap starts later.
+    if (loopSelection && audioStartPts > loopA)
+    {
+        uint64_t skipUs = audioStartPts - loopA;
+        uint64_t skipFloats = (skipUs / 1000000ULL) * frequency;
+        skipFloats += ((skipUs % 1000000ULL) * frequency) / 1000000ULL;
+        skipFloats *= channels;
+        AUD_Status skipStatus;
+        while (skipFloats)
+        {
+            uint32_t chunk = preload;
+            if ((uint64_t)chunk > skipFloats)
+                chunk = (uint32_t)skipFloats;
+            uint32_t got = playbackAudio->fill(chunk, wavbuf, &skipStatus);
+            if (!got)
+                break;
+            skipFloats -= got;
+        }
+    }
     // Read a at least one block to have the proper channel mapping
     uint32_t fill = 0;
     AUD_Status status;

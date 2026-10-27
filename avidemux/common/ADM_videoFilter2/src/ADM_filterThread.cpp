@@ -25,6 +25,7 @@ ADM_videoFilterQueue::ADM_videoFilterQueue(ADM_coreVideoFilter *previous,CONFcou
 {
     // 
     myName="threadQueue";
+    loopAtEnd=false;
     // Allocate buffer
     for(int i=0;i<ADM_THREAD_QUEUE_SIZE;i++)
     {
@@ -58,12 +59,31 @@ ADM_videoFilterQueue::~ADM_videoFilterQueue()
 }
 /**
     \fn     goToTime
-    \brief
+    \brief  Stop the producer, drop queued frames and seek the upstream filter.
+            The producer thread exits on its own at end of stream but stays
+            joinable, so the next getNextFrameAs() can start it again.
 */
-bool         ADM_videoFilterQueue::goToTime(uint64_t usSeek)
+bool         ADM_videoFilterQueue::goToTime(uint64_t usSeek, bool fineSeek)
 {
-    ADM_assert(0);
-    return false;
+    if(started)
+    {
+        if(threadState==RunStateRunning)
+            stopThread();
+        void *ret=NULL;
+        pthread_join(myThread,&ret);
+        started=false;
+        threadState=RunStateIdle;
+    }
+    mutex->lock();
+    while(list.size())
+    {
+        freeList.append(list[0]);
+        list.popFront();
+    }
+    mutex->unlock();
+    if(!previousFilter)
+        return false;
+    return previousFilter->goToTime(usSeek,fineSeek);
 }
 /**
     \fn     getNextFrame
@@ -155,12 +175,19 @@ bool         ADM_videoFilterQueue::runAction(void)
 
         if(false==previousFilter->getNextFrameAs(ADM_HW_ANY,&fn,source))
         {
-           
-            ADM_info("Video Thread, no more data\n");
-            mutex->lock();
-            freeList.append(pkt);
-            mutex->unlock();
-            goto theEnd;
+            // Seek back while this thread still owns the chain. Frames already
+            // queued keep playback moving across the seam.
+            bool retried=false;
+            if(loopAtEnd && previousFilter->goToTime(0,false))
+                retried=previousFilter->getNextFrameAs(ADM_HW_ANY,&fn,source);
+            if(!retried)
+            {
+                ADM_info("Video Thread, no more data\n");
+                mutex->lock();
+                freeList.append(pkt);
+                mutex->unlock();
+                goto theEnd;
+            }
         }
         // Got it, push it
         mutex->lock();
