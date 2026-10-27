@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Avidemux Jobs
+GenericName=Video Editor
+Comment=Multiplatform video editor
+Exec=avidemux3_jobs_${QT_EXTENSION}
+Icon=org.avidemux.AvidemuxJobs
+Terminal=false
+Type=Application
+Categories=AudioVideo;AudioVideoEditing;Video;
+StartupWMClass=avidemux3_jobs_${QT_EXTENSION}
