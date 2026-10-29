@@ -523,7 +523,7 @@ uint8_t    MP4Header::open(const char *name)
         { // Same story for H263 : Analyze 1st frame to get the real width/height
             uint32_t w,h,sz;
             uint8_t *bfer=NULL;
-            sz=VDEO.index[0].size;
+            sz = (VDEO.index[0].size > ADM_COMPRESSED_MAX_DATA_LENGTH)? 0 : VDEO.index[0].size;
             if(sz)
             {
                 bfer=new uint8_t[sz];
@@ -564,8 +564,9 @@ uint8_t    MP4Header::open(const char *name)
                     uint32_t nalSize = ADM_getNalSizeH264(VDEO.extraData,VDEO.extraDataSize);
                     uint32_t prevSpsLen=0;
                     uint8_t *prevSps=NULL, *curSps=NULL;
-#define MAX_FRAME_LENGTH (1920*1080*3) // ~7 MiB, should be enough even for 4K
-                    uint8_t *bfer=new uint8_t[MAX_FRAME_LENGTH];
+#define INITIAL_BUFFER_SIZE 0x400000 // 4 MiB
+                    uint32_t curBferSize = INITIAL_BUFFER_SIZE;
+                    uint8_t *bfer = new uint8_t[curBferSize];
                     ADMCompressedImage img;
                     img.data=bfer;
                     uint32_t i,fields=0,nb=VDEO.nbIndex;
@@ -580,10 +581,23 @@ uint8_t    MP4Header::open(const char *name)
                             cancelled = true;
                             break; // cancelling frame type decoding is non-fatal
                         }
-                        if(VDEO.index[i].size > MAX_FRAME_LENGTH)
+                        if(VDEO.index[i].size > ADM_COMPRESSED_MAX_DATA_LENGTH)
                         {
                             ADM_warning("Frame %u too large (%" PRIu64" bytes) while decoding H.264 frame type, skipping.\n",i,VDEO.index[i].size);
                             continue;
+                        }
+                        if(VDEO.index[i].size > curBferSize)
+                        {
+                            ADM_warning("H.264 probe buffer size %u insufficient for frame %u, reallocating.\n", curBferSize, i);
+                            delete [] bfer;
+                            uint64_t larger = VDEO.index[i].size;
+                            larger = ((larger / INITIAL_BUFFER_SIZE) + 1) * INITIAL_BUFFER_SIZE;
+                            if (larger > ADM_COMPRESSED_MAX_DATA_LENGTH)
+                               larger = ADM_COMPRESSED_MAX_DATA_LENGTH;
+                            curBferSize = larger;
+                            bfer = new uint8_t[curBferSize];
+                            img.data = bfer;
+                            ADM_info("H.264 probe buffer reallocated, new size: %u bytes.\n", curBferSize);
                         }
                         if(!getFrame(i,&img))
                         {
@@ -712,7 +726,8 @@ uint8_t    MP4Header::open(const char *name)
                 if (!indexLoadedFromDisk)
                 {
                     uint32_t nalSize = ADM_getNalSizeH265(VDEO.extraData,VDEO.extraDataSize);
-                    uint8_t *bfer = new uint8_t[MAX_FRAME_LENGTH];
+                    uint32_t curBferSize = INITIAL_BUFFER_SIZE;
+                    uint8_t *bfer = new uint8_t[curBferSize];
                     ADMCompressedImage img;
                     img.data = bfer;
                     int poc = INT_MIN;
@@ -727,10 +742,23 @@ uint8_t    MP4Header::open(const char *name)
                             cancelled = true;
                             break; // cancelling frame type decoding is non-fatal
                         }
-                        if(VDEO.index[i].size > MAX_FRAME_LENGTH)
+                        if(VDEO.index[i].size > ADM_COMPRESSED_MAX_DATA_LENGTH)
                         {
                             ADM_warning("Frame %u too large (%" PRIu64" bytes) while decoding HEVC frame type, skipping.\n",i,VDEO.index[i].size);
                             continue;
+                        }
+                        if(VDEO.index[i].size > curBferSize)
+                        {
+                            ADM_warning("HEVC probe buffer size %u insufficient for frame %u, reallocating.\n", curBferSize, i);
+                            delete [] bfer;
+                            uint64_t larger = VDEO.index[i].size;
+                            larger = ((larger / INITIAL_BUFFER_SIZE) + 1) * INITIAL_BUFFER_SIZE;
+                            if (larger > ADM_COMPRESSED_MAX_DATA_LENGTH)
+                               larger = ADM_COMPRESSED_MAX_DATA_LENGTH;
+                            curBferSize = larger;
+                            bfer = new uint8_t[curBferSize];
+                            img.data = bfer;
+                            ADM_info("HEVC probe buffer reallocated, new size: %u bytes.\n", curBferSize);
                         }
                         if(!getFrame(i,&img))
                         {
