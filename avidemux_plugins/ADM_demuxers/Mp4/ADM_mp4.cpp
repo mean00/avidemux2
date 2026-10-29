@@ -244,8 +244,8 @@ uint8_t  MP4Header::getFrame(uint32_t framenum,ADMCompressedImage *img)
 
     } else if(sz > ADM_COMPRESSED_MAX_DATA_LENGTH)
     {
-        ADM_warning("Frame %u size %llu exceeds max %u, truncating.\n",framenum,sz,ADM_COMPRESSED_MAX_DATA_LENGTH);
-        sz = ADM_COMPRESSED_MAX_DATA_LENGTH;
+        ADM_error("Frame %u size %llu exceeds maximum supported size of %u bytes!\n", framenum, sz, ADM_COMPRESSED_MAX_DATA_LENGTH);
+        return 0;
     }
 
     uint64_t offset=idx->offset; //+_mdatOffset;
