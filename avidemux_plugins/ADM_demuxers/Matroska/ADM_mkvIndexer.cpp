@@ -514,7 +514,7 @@ uint8_t mkvHeader::addIndexEntry(uint32_t track,ADM_ebml_file *parser,uint64_t w
             uint8_t *begin=readBuffer;
             uint8_t *end=readBuffer+size-3+rpt;
             int frameType;
-            if(size + rpt > INT_MAX + 3)
+            if((uint64_t)size + rpt > (uint64_t)(INT_MAX) + 3)
             {
                 ADM_warning("Index entry too large to determine VC1 frame type.\n");
             } else if(ADM_VC1getFrameType(begin, (int)(end-begin), &frameType))
