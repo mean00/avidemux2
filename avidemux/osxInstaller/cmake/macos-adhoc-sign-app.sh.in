@@ -3,6 +3,7 @@
 # Called from admFixupBundle.cmake after install_name_tool rewrites.
 # /bin/bash on macOS is 3.2, so this script avoids mapfile and other bash 4 syntax.
 set -eu
+set -o pipefail
 
 APP="@BUNDLE@"
 
@@ -96,7 +97,7 @@ PLIST
         [ -e "${item}" ] || [ -L "${item}" ] || continue
         base=$(basename "${item}")
         if [ -e "${fw}/${base}" ] || [ -L "${fw}/${base}" ]; then
-            rm -rf "${fw}/${base}"
+            rm -rf "${fw:?}/${base:?}"
         fi
         ln -s "Versions/Current/${base}" "${fw}/${base}"
     done
@@ -128,121 +129,74 @@ if [ -n "${dangling}" ]; then
     fail "framework layout left dangling symlinks"
 fi
 
+sign()
+{
+    echo "  codesign $1"
+    /usr/bin/codesign --force --sign - --timestamp=none "$1" || fail "ad-hoc signing $1"
+}
+
+# Deepest path first. Bundle paths do not contain newlines or tabs.
+deepest_first()
+{
+    awk '{ n = split($0, parts, "/"); printf "%04d\t%s\n", n, $0 }' | sort -nr | cut -f 2-
+}
+
+# Foo.framework/Versions/<ver>/Foo is sealed when the framework bundle is signed.
+# Signing that Mach-O on its own makes codesign treat it as having no resources.
+is_framework_main_binary()
+{
+    parent=$(dirname "$1")
+    grand=$(dirname "$parent")
+    if [ "$(basename "$grand")" != "Versions" ]; then
+        return 1
+    fi
+    fwdir=$(dirname "$grand")
+    fwname=$(basename "$fwdir" .framework)
+    [ "$(basename "$1")" = "$fwname" ]
+}
+
+should_sign_file()
+{
+    base=$(basename "$1")
+    dir=$(dirname "$1")
+    if [ "$dir" = "${APP}/Contents/MacOS" ]; then
+        case "$base" in
+            Avidemux*) return 1 ;;
+        esac
+    fi
+    if is_framework_main_binary "$1"; then
+        return 1
+    fi
+    if file -b "$1" | grep -q 'Mach-O'; then
+        return 0
+    fi
+    case "$1" in
+        "${APP}/Contents/MacOS/ADM_plugins6"/*)
+            case "$base" in
+                *.json|*.py|*.shader) return 0 ;;
+            esac
+            ;;
+    esac
+    return 1
+}
+
 echo "Ad-hoc signing ${APP} inside-out"
-python3 - "${APP}" <<'PY'
-import os
-import subprocess
-import sys
 
-app = sys.argv[1]
-main_dir = os.path.join(app, "Contents", "MacOS")
+# Nested Mach-O files, then presets / scripts / shaders, deepest first.
+# find -type f skips symlinks. The main executable is signed with the .app.
+find "${APP}" -type f -print | deepest_first | while IFS= read -r f; do
+    if should_sign_file "$f"; then
+        sign "$f"
+    fi
+done
 
+find "${APP}" -type d -name '*.framework' -print | deepest_first | while IFS= read -r fw; do
+    sign "$fw"
+done
 
-def is_macho(path):
-    if os.path.islink(path) or not os.path.isfile(path):
-        return False
-    try:
-        kind = subprocess.check_output(["file", "-b", path], text=True)
-    except (OSError, subprocess.CalledProcessError):
-        return False
-    return "Mach-O" in kind
+sign "${APP}"
 
-
-def is_framework_main_binary(path):
-    parts = path.split(os.sep)
-    if "Versions" not in parts:
-        return False
-    idx = parts.index("Versions")
-    if idx < 1 or not parts[idx - 1].endswith(".framework"):
-        return False
-    fwname = parts[idx - 1][: -len(".framework")]
-    return os.path.basename(path) == fwname and idx == len(parts) - 2
-
-
-def sign(path):
-    print("  codesign %s" % path, flush=True)
-    subprocess.check_call(
-        ["/usr/bin/codesign", "--force", "--sign", "-", "--timestamp=none", path]
-    )
-
-
-machos = []
-frameworks = []
-for root, dirs, files in os.walk(app):
-    for name in dirs:
-        if name.endswith(".framework"):
-            frameworks.append(os.path.join(root, name))
-    for name in files:
-        path = os.path.join(root, name)
-        if not is_macho(path) or is_framework_main_binary(path):
-            continue
-        # The bundle executable is sealed when the .app itself is signed.
-        if os.path.dirname(path) == main_dir and os.path.basename(path).startswith("Avidemux"):
-            continue
-        machos.append(path)
-
-# Presets, tinyPy scripts, and shaders live inside the bundle and codesign
-# treats them as nested code. Sign every one of them before the app.
-extra_roots = [
-    os.path.join(app, "Contents", "MacOS", "ADM_plugins6"),
-]
-extra = []
-for root in extra_roots:
-    if not os.path.isdir(root):
-        continue
-    for dirpath, dirnames, filenames in os.walk(root):
-        for name in filenames:
-            path = os.path.join(dirpath, name)
-            if os.path.islink(path) or is_macho(path):
-                continue
-            if name.endswith((".json", ".py", ".shader")):
-                extra.append(path)
-
-machos.sort(key=lambda p: p.count(os.sep), reverse=True)
-frameworks.sort(key=lambda p: p.count(os.sep), reverse=True)
-extra.sort(key=lambda p: p.count(os.sep), reverse=True)
-
-for path in machos + extra:
-    sign(path)
-for path in frameworks:
-    sign(path)
-
-
-def sign_bundle(bundle):
-    """Sign bundle, sealing any nested item codesign reports as unsigned."""
-    cmd = ["/usr/bin/codesign", "--force", "--sign", "-", "--timestamp=none", bundle]
-    for _ in range(300):
-        proc = subprocess.run(cmd, capture_output=True, text=True)
-        err = (proc.stderr or "") + (proc.stdout or "")
-        if proc.returncode == 0:
-            if err.strip():
-                print(err, end="" if err.endswith("\n") else "\n")
-            return
-        print(err, end="" if err.endswith("\n") else "\n", file=sys.stderr)
-        marker = "In subcomponent: "
-        sub = ""
-        for line in err.splitlines():
-            if marker in line:
-                sub = line.split(marker, 1)[1].strip()
-        if not sub or not os.path.exists(sub):
-            raise SystemExit(proc.returncode)
-        sign(sub)
-    raise SystemExit("too many unsigned nested items while signing %s" % bundle)
-
-
-sign_bundle(app)
-
-verify = ["/usr/bin/codesign", "--verify", "--deep", "--strict", "--verbose=2", app]
-proc = subprocess.run(verify, capture_output=True, text=True)
-out = (proc.stderr or "") + (proc.stdout or "")
-if out.strip():
-    print(out, end="" if out.endswith("\n") else "\n")
-if proc.returncode != 0:
-    print("Strict verify failed after inside-out signing; retrying with --deep", file=sys.stderr)
-    subprocess.check_call(
-        ["/usr/bin/codesign", "--force", "--deep", "--sign", "-", "--timestamp=none", app]
-    )
-    subprocess.check_call(verify)
-PY
+echo "Verifying ${APP}"
+/usr/bin/codesign --verify --deep --strict --verbose=2 "${APP}" || fail "codesign --verify --deep --strict"
 
 echo "** Ad-hoc signing completed. **"
