@@ -93,6 +93,7 @@ uint8_t DIA_Preferences(void)
     bool altKeyboardShortcuts = false;
     bool swapUpDown = false;
     bool swapWheel = false;
+    bool rememberWindowPosition = false;
 
 #ifdef USE_LIBPOSTPROC
     uint32_t pp_type = 3;
@@ -310,6 +311,9 @@ uint8_t DIA_Preferences(void)
     // Optionally reverse mouse wheel for navigation
     prefs->get(FEATURES_SWAP_MOUSE_WHEEL, &swapWheel);
 
+    // Optionally remember the position of the main window between sessions
+    prefs->get(FEATURES_REMEMBER_WINDOW_POSITION, &rememberWindowPosition);
+
     // Multithreads
     prefs->get(FEATURES_THREADING_LAVC, &lavcThreads);
 
@@ -355,6 +359,8 @@ uint8_t DIA_Preferences(void)
         &useSwap,
         QT_TRANSLATE_NOOP("adm", "_Swap markers if marker A is set past marker B or marker B before A in video"));
     diaElemToggle checkForUpdate(&doAutoUpdate, QT_TRANSLATE_NOOP("adm", "_Check for new release"));
+    diaElemToggle rememberWinPos(&rememberWindowPosition,
+                                 QT_TRANSLATE_NOOP("adm", "Remember main window _position and keep its screen corner"));
 
     diaElemFrame frameSimd(QT_TRANSLATE_NOOP("adm", "SIMD"));
 
@@ -658,7 +664,8 @@ uint8_t DIA_Preferences(void)
 #define NB_ELEM(x) sizeof(x) / sizeof(diaElem *)
     /* User Interface */
     diaElem *diaUser[] = {&menuMessage,    &menuLanguage,   &resetEncoder, &enableAltShortcuts,
-                          &swapUpDownKeys, &swapMouseWheel, &swapMarkers,  &checkForUpdate};
+                          &swapUpDownKeys, &swapMouseWheel, &swapMarkers,  &checkForUpdate,
+                          &rememberWinPos};
     diaElemTabs tabUser(QT_TRANSLATE_NOOP("adm", "User Interface"), NB_ELEM(diaUser), diaUser);
 
     /* Automation */
@@ -940,6 +947,8 @@ uint8_t DIA_Preferences(void)
         //
 
         prefs->set(UPDATE_ENABLED, doAutoUpdate);
+        // Remember main window position
+        prefs->set(FEATURES_REMEMBER_WINDOW_POSITION, rememberWindowPosition);
         // Video render
         prefs->set(VIDEODEVICE, render);
         // Auto-append

@@ -26,6 +26,7 @@ extern const ADM_paramList my_prefs_struct_param[]={
  {"features.sdlDriver",offsetof(my_prefs_struct,features.sdlDriver),"std::string",ADM_param_stdstring},
  {"features.use_last_read_dir_as_target",offsetof(my_prefs_struct,features.use_last_read_dir_as_target),"bool",ADM_param_bool},
  {"features.swap_mouse_wheel",offsetof(my_prefs_struct,features.swap_mouse_wheel),"bool",ADM_param_bool},
+ {"features.remember_window_position",offsetof(my_prefs_struct,features.remember_window_position),"bool",ADM_param_bool},
  {"keyboard_shortcuts.use_alternate_kbd_shortcuts",offsetof(my_prefs_struct,keyboard_shortcuts.use_alternate_kbd_shortcuts),"bool",ADM_param_bool},
  {"keyboard_shortcuts.swap_up_down_keys",offsetof(my_prefs_struct,keyboard_shortcuts.swap_up_down_keys),"bool",ADM_param_bool},
  {"keyboard_shortcuts.alt_mark_a",offsetof(my_prefs_struct,keyboard_shortcuts.alt_mark_a),"std::string",ADM_param_stdstring},
