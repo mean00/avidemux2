@@ -51,6 +51,16 @@ LIST(APPEND bundleDirs  "${BUNDLE}/Contents/Resources/lib")
 IF(ENABLE_QT6)
   # A gross hack to work around the failure to resolve @loader_path for libbrotli.
   LIST(APPEND bundleDirs "/usr/local/lib")
+  # Let fixup_bundle resolve the @rpath/Qt*.framework references carried by the
+  # Qt platform and style plugins against the Qt actually used for this build
+  # (Homebrew on arm64 or Intel, or a custom MYQT installation alike). Whether
+  # the app binaries otherwise carry a usable rpath for this depends on the
+  # install-rpath machinery, which e.g. a LIBRARY_PATH environment variable
+  # silently disables.
+  IF(Qt6_DIR)
+    get_filename_component(ADM_QT_LIB_DIR "${Qt6_DIR}/../.." ABSOLUTE)
+    LIST(APPEND bundleDirs "${ADM_QT_LIB_DIR}")
+  ENDIF()
 ENDIF()
 #
 
