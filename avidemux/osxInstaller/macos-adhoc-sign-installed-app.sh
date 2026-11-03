@@ -1,100 +1,88 @@
 #!/bin/sh
+# Re-sign valid Avidemux app installed to the default location.
+set -eu
+set -o pipefail
+
+APP="/Applications/Avidemux-2.8.2.app"
+
 fail()
 {
-    echo "** $1 **"
+    echo "** $1 **" >&2
     exit 1
 }
+
+if [ ! -d "${APP}/Contents" ]; then
+    fail "directory \"${APP}/Contents\" does not exist"
+fi
+
 sign()
 {
-    codesign --force -s - $1 || fail "Error ad-hoc signing $1"
+    echo "  codesign $1"
+    /usr/bin/codesign --force --sign - --timestamp=none "$1" || fail "ad-hoc signing $1"
 }
 
-BUNDLE_CONTENT="/Applications/Avidemux-2.8.2.app/Contents"
+# Deepest path first. Bundle paths do not contain newlines or tabs.
+deepest_first()
+{
+    awk '{ n = split($0, parts, "/"); printf "%04d\t%s\n", n, $0 }' | sort -nr | cut -f 2-
+}
 
-if [ ! -d ${BUNDLE_CONTENT} ]
-then
-    fail "Error: directory ${BUNDLE_CONTENT} doesn't exist."
-fi
-#
-# Qt frameworks
-#
-for fw in \
-QtCore \
-QtDBus \
-QtGui \
-QtNetwork \
-QtOpenGL \
-QtOpenGLWidgets \
-QtWidgets
-do
-    sign ${BUNDLE_CONTENT}/Frameworks/${fw}.framework/Versions/A/${fw}
+# Foo.framework/Versions/<ver>/Foo is sealed when the framework bundle is signed.
+# Signing that Mach-O on its own makes codesign treat it as having no resources.
+is_framework_main_binary()
+{
+    parent=$(dirname "$1")
+    grand=$(dirname "$parent")
+    if [ "$(basename "$grand")" != "Versions" ]; then
+        return 1
+    fi
+    fwdir=$(dirname "$grand")
+    fwname=$(basename "$fwdir" .framework)
+    [ "$(basename "$1")" = "$fwname" ]
+}
+
+should_sign_file()
+{
+    base=$(basename "$1")
+    dir=$(dirname "$1")
+    if [ "$dir" = "${APP}/Contents/MacOS" ]; then
+        case "$base" in
+            Avidemux*) return 1 ;;
+        esac
+    fi
+    if is_framework_main_binary "$1"; then
+        return 1
+    fi
+    if file -b "$1" | grep -q 'Mach-O'; then
+        return 0
+    fi
+    case "$1" in
+        "${APP}/Contents/MacOS/ADM_plugins6"/*)
+            case "$base" in
+                *.json|*.py|*.shader) return 0 ;;
+            esac
+            ;;
+    esac
+    return 1
+}
+
+echo "Ad-hoc signing ${APP} inside-out"
+
+# Nested Mach-O files, then presets / scripts / shaders, deepest first.
+# find -type f skips symlinks. The main executable is signed with the .app.
+find "${APP}" -type f -print | deepest_first | while IFS= read -r f; do
+    if should_sign_file "$f"; then
+        sign "$f"
+    fi
 done
-#
-# Qt plugins
-#
-for folder in \
-platforms \
-styles
-do
-    for lib in ${BUNDLE_CONTENT}/PlugIns/${folder}/*.dylib
-    do
-        sign ${lib}
-    done
+
+find "${APP}" -type d -name '*.framework' -print | deepest_first | while IFS= read -r fw; do
+    sign "$fw"
 done
-#
-# Other frameworks
-#
-for lib in ${BUNDLE_CONTENT}/Frameworks/*.dylib
-do
-    sign ${lib}
-done
-#
-# Avidemux plugins
-#
-PLUGDIR=${BUNDLE_CONTENT}/MacOS/ADM_plugins6
-for folder in \
-audioDecoder \
-audioDevices \
-audioEncoders \
-demuxers \
-muxers \
-scriptEngines \
-videoDecoders \
-videoEncoders \
-videoEncoders/qt6 \
-videoFilters \
-videoFilters/cli \
-videoFilters/qt6
-do
-    for lib in ${PLUGDIR}/${folder}/*.dylib
-    do
-        sign ${lib}
-    done
-done
-#
-# Do JSON encoder presets, tinyPy scripts & Co. need a signature too?
-#
-for textfile in \
-${PLUGDIR}/autoScripts/*.py \
-${PLUGDIR}/autoScripts/lib/*.py \
-${PLUGDIR}/pluginSettings/x264/3/*.json \
-${PLUGDIR}/shaderDemo/1/*.shader
-do
-    sign ${textfile}
-done
-#
-# Executables
-#
-for exe in \
-avidemux_cli \
-avidemux_jobs
-do
-    sign ${BUNDLE_CONTENT}/MacOS/${exe}
-done
-#
-# Re-signing the main Avidemux executable is expected to return an error, the app should work nevertheless.
-#
-codesign --force -s - ${BUNDLE_CONTENT}/MacOS/Avidemux2.8
-echo "** Bundle format warning, if issued, should be ignored. **"
-echo "** All done. **"
-exit 0
+
+sign "${APP}"
+
+echo "Verifying ${APP}"
+/usr/bin/codesign --verify --deep --strict --verbose=2 "${APP}" || fail "codesign --verify --deep --strict"
+
+echo "** Ad-hoc signing completed. **"
