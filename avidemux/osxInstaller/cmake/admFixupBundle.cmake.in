@@ -50,25 +50,14 @@ FOREACH(v ${vs})
         FILE(REMOVE "${v}")
 ENDFOREACH(v ${vs})
 
-# Remove the copies of Qt lib in framework, we only keep "5"
-FILE(GLOB  frameworks "@BUNDLE@/Contents/Frameworks/*")
-MESSAGE(STATUS "Frameworks to clean : ${frameworks}")
-FOREACH(frame ${frameworks})
-        MESSAGE(STATUS "    Cleaning ${frame}")
-        FILE(REMOVE_RECURSE  "${frame}/Headers")
-        FILE(GLOB  qtop      "${frame}/Qt*")
-        FOREACH(q ${qtop})
-                MESSAGE(STATUS "  >${q}")
-                FILE(REMOVE    "${q}")
-        ENDFOREACH(q ${qtop})
-        FILE(REMOVE_RECURSE  "${frame}/Versions/Current")
-        FILE(REMOVE_RECURSE  "${frame}/Versions/@ADM_QT_VERSION@/Headers")
-        # Create symlinks ?
-ENDFOREACH(frame ${frameworks})
-
-IF(ADM_CPU_ARM64)
-    MESSAGE(STATUS "")
-    MESSAGE(STATUS "Trying to adhoc-sign the app, script: @CMAKE_BINARY_DIR@/macos-adhoc-sign-app.sh")
-    MESSAGE(STATUS "")
-    EXECUTE_PROCESS(COMMAND bash "@CMAKE_BINARY_DIR@/macos-adhoc-sign-app.sh")
-ENDIF(ADM_CPU_ARM64)
+# Framework layout and ad-hoc signing happen in macos-adhoc-sign-app.sh
+# after install_name changes. Do not delete Versions/Current or the top-level
+# framework symlinks here: codesign --verify --strict requires them.
+MESSAGE(STATUS "")
+MESSAGE(STATUS "Repairing frameworks and ad-hoc signing: @CMAKE_BINARY_DIR@/macos-adhoc-sign-app.sh")
+MESSAGE(STATUS "")
+EXECUTE_PROCESS(COMMAND bash "@CMAKE_BINARY_DIR@/macos-adhoc-sign-app.sh"
+                RESULT_VARIABLE adm_sign_result)
+IF(NOT adm_sign_result EQUAL 0)
+    MESSAGE(FATAL_ERROR "Ad-hoc signing failed with status ${adm_sign_result}")
+ENDIF()

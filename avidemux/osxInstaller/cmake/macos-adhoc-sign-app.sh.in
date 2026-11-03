@@ -1,100 +1,202 @@
 #!/bin/bash
+# Turn the finished .app into a codesign-strict bundle.
+# Called from admFixupBundle.cmake after install_name_tool rewrites.
+# /bin/bash on macOS is 3.2, so this script avoids mapfile and other bash 4 syntax.
+set -eu
+set -o pipefail
+
+APP="@BUNDLE@"
+
 fail()
 {
-    echo "** $1 **"
+    echo "** $1 **" >&2
     exit 1
 }
-sign()
+
+if [ ! -d "${APP}/Contents" ]; then
+    fail "directory \"${APP}/Contents\" does not exist"
+fi
+
+echo "Repairing framework layout and modes in ${APP}"
+
+# Homebrew bottles and fixup_bundle leave files mode 0444. Owner write is
+# required before we replace symlinks, and so later tools (xattr) succeed.
+find "${APP}" -type d -exec chmod u+w {} +
+find "${APP}" -type f -exec chmod u+w {} +
+
+repair_framework()
 {
-    /usr/bin/codesign --force -s - $1 || fail "Error ad-hoc signing $1"
+    fw="$1"
+    name=$(basename "${fw}" .framework)
+    versions="${fw}/Versions"
+    mkdir -p "${versions}"
+
+    ver=""
+    if [ -d "${versions}/A" ]; then
+        ver="A"
+    else
+        for d in "${versions}"/*; do
+            [ -e "${d}" ] || [ -L "${d}" ] || continue
+            base=$(basename "${d}")
+            if [ "${base}" = "Current" ]; then
+                continue
+            fi
+            ver="${base}"
+            break
+        done
+    fi
+    if [ -z "${ver}" ]; then
+        ver="A"
+        mkdir -p "${versions}/A"
+    fi
+
+    # Keep the versioned copy when the top level is a real file, not a symlink.
+    for item in "${fw}"/*; do
+        [ -e "${item}" ] || [ -L "${item}" ] || continue
+        base=$(basename "${item}")
+        if [ "${base}" = "Versions" ]; then
+            continue
+        fi
+        if [ -L "${item}" ]; then
+            continue
+        fi
+        if [ ! -e "${versions}/${ver}/${base}" ]; then
+            mv "${item}" "${versions}/${ver}/${base}"
+        fi
+    done
+
+    # codesign --strict looks for Resources/Info.plist via Versions/Current.
+    if [ ! -f "${versions}/${ver}/Resources/Info.plist" ]; then
+        mkdir -p "${versions}/${ver}/Resources"
+        cat > "${versions}/${ver}/Resources/Info.plist" <<PLIST
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CFBundleExecutable</key>
+  <string>${name}</string>
+  <key>CFBundleIdentifier</key>
+  <string>org.qt-project.Qt.${name}</string>
+  <key>CFBundleName</key>
+  <string>${name}</string>
+  <key>CFBundlePackageType</key>
+  <string>FMWK</string>
+  <key>CFBundleVersion</key>
+  <string>1.0</string>
+  <key>CFBundleShortVersionString</key>
+  <string>1.0</string>
+</dict>
+</plist>
+PLIST
+    fi
+
+    rm -rf "${versions}/Current"
+    ln -s "${ver}" "${versions}/Current"
+
+    for item in "${versions}/${ver}"/*; do
+        [ -e "${item}" ] || [ -L "${item}" ] || continue
+        base=$(basename "${item}")
+        if [ -e "${fw}/${base}" ] || [ -L "${fw}/${base}" ]; then
+            rm -rf "${fw:?}/${base:?}"
+        fi
+        ln -s "Versions/Current/${base}" "${fw}/${base}"
+    done
+
+    if [ ! -e "${fw}/${name}" ]; then
+        fail "framework ${fw} has no ${name} binary after layout repair"
+    fi
 }
 
-BUNDLE_CONTENT="@BUNDLE@/Contents"
+for fw in "${APP}/Contents/Frameworks/"*.framework; do
+    if [ -d "${fw}" ]; then
+        repair_framework "${fw}"
+    fi
+done
 
-if [ ! -d "${BUNDLE_CONTENT}" ]
-then
-    fail "Error: directory \"${BUNDLE_CONTENT}\" doesn't exist."
+# Directories and Mach-O binaries are 0755. Other files are 0644.
+find "${APP}" -type d -exec chmod 0755 {} +
+find "${APP}" -type f -exec chmod 0644 {} +
+find "${APP}" -type f -print0 | while IFS= read -r -d '' f; do
+    if file -b "${f}" | grep -q 'Mach-O'; then
+        chmod 0755 "${f}"
+    fi
+done
+
+dangling=$(find "${APP}" -type l ! -exec test -e {} \; -print || true)
+if [ -n "${dangling}" ]; then
+    echo "Dangling symlinks:" >&2
+    printf '%s\n' "${dangling}" >&2
+    fail "framework layout left dangling symlinks"
 fi
-#
-# Qt frameworks
-#
-for fw in \
-QtCore \
-QtDBus \
-QtGui \
-QtNetwork \
-QtOpenGL \
-QtOpenGLWidgets \
-QtWidgets
-do
-    sign ${BUNDLE_CONTENT}/Frameworks/${fw}.framework/Versions/A/${fw}
+
+sign()
+{
+    echo "  codesign $1"
+    /usr/bin/codesign --force --sign - --timestamp=none "$1" || fail "ad-hoc signing $1"
+}
+
+# Deepest path first. Bundle paths do not contain newlines or tabs.
+deepest_first()
+{
+    awk '{ n = split($0, parts, "/"); printf "%04d\t%s\n", n, $0 }' | sort -nr | cut -f 2-
+}
+
+# Foo.framework/Versions/<ver>/Foo is sealed when the framework bundle is signed.
+# Signing that Mach-O on its own makes codesign treat it as having no resources.
+is_framework_main_binary()
+{
+    parent=$(dirname "$1")
+    grand=$(dirname "$parent")
+    if [ "$(basename "$grand")" != "Versions" ]; then
+        return 1
+    fi
+    fwdir=$(dirname "$grand")
+    fwname=$(basename "$fwdir" .framework)
+    [ "$(basename "$1")" = "$fwname" ]
+}
+
+should_sign_file()
+{
+    base=$(basename "$1")
+    dir=$(dirname "$1")
+    if [ "$dir" = "${APP}/Contents/MacOS" ]; then
+        case "$base" in
+            Avidemux*) return 1 ;;
+        esac
+    fi
+    if is_framework_main_binary "$1"; then
+        return 1
+    fi
+    if file -b "$1" | grep -q 'Mach-O'; then
+        return 0
+    fi
+    case "$1" in
+        "${APP}/Contents/MacOS/ADM_plugins6"/*)
+            case "$base" in
+                *.json|*.py|*.shader) return 0 ;;
+            esac
+            ;;
+    esac
+    return 1
+}
+
+echo "Ad-hoc signing ${APP} inside-out"
+
+# Nested Mach-O files, then presets / scripts / shaders, deepest first.
+# find -type f skips symlinks. The main executable is signed with the .app.
+find "${APP}" -type f -print | deepest_first | while IFS= read -r f; do
+    if should_sign_file "$f"; then
+        sign "$f"
+    fi
 done
-#
-# Qt plugins
-#
-for folder in \
-platforms \
-styles
-do
-    for lib in ${BUNDLE_CONTENT}/PlugIns/${folder}/*.dylib
-    do
-        sign ${lib}
-    done
+
+find "${APP}" -type d -name '*.framework' -print | deepest_first | while IFS= read -r fw; do
+    sign "$fw"
 done
-#
-# Other frameworks
-#
-for lib in ${BUNDLE_CONTENT}/Frameworks/*.dylib
-do
-    sign ${lib}
-done
-#
-# Avidemux plugins
-#
-PLUGDIR=${BUNDLE_CONTENT}/MacOS/ADM_plugins6
-for folder in \
-audioDecoder \
-audioDevices \
-audioEncoders \
-demuxers \
-muxers \
-scriptEngines \
-videoDecoders \
-videoEncoders \
-videoEncoders/qt6 \
-videoFilters \
-videoFilters/cli \
-videoFilters/qt6
-do
-    for lib in ${PLUGDIR}/${folder}/*.dylib
-    do
-        sign ${lib}
-    done
-done
-#
-# Do JSON encoder presets, tinyPy scripts & Co. need a signature too?
-#
-for textfile in \
-${PLUGDIR}/autoScripts/*.py \
-${PLUGDIR}/autoScripts/lib/*.py \
-${PLUGDIR}/pluginSettings/x264/3/*.json \
-${PLUGDIR}/shaderDemo/1/*.shader
-do
-    sign ${textfile}
-done
-#
-# Executables
-#
-for exe in \
-avidemux_cli \
-avidemux_jobs
-do
-    sign ${BUNDLE_CONTENT}/MacOS/${exe}
-done
-#
-# Re-signing the main Avidemux executable is expected to return an error, the app should work nevertheless.
-#
-/usr/bin/codesign --force -s - ${BUNDLE_CONTENT}/MacOS/Avidemux2.8
-echo "** Bundle format warning, if issued, should be ignored. **"
+
+sign "${APP}"
+
+echo "Verifying ${APP}"
+/usr/bin/codesign --verify --deep --strict --verbose=2 "${APP}" || fail "codesign --verify --deep --strict"
+
 echo "** Ad-hoc signing completed. **"
-exit 0

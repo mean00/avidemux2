@@ -49,8 +49,17 @@ FILE(MAKE_DIRECTORY "${BUNDLE}/Contents/Resources")
 #
 LIST(APPEND bundleDirs  "${BUNDLE}/Contents/Resources/lib")
 IF(ENABLE_QT6)
-  # A gross hack to work around the failure to resolve @loader_path for libbrotli.
-  LIST(APPEND bundleDirs "/usr/local/lib")
+  # fixup_bundle needs the Homebrew lib directory to resolve @rpath/Qt*.framework
+  # references carried by Qt plugins, and @loader_path dependencies such as libbrotli.
+  # Hardcoding /usr/local/lib (Intel Homebrew) makes otool fail on Apple Silicon,
+  # where Homebrew lives in /opt/homebrew and /usr/local/lib usually does not exist.
+  # Only directories that exist are added: BundleUtilities invokes otool on the
+  # search path and aborts if a listed directory is missing.
+  FOREACH(brewlib /opt/homebrew/lib /opt/homebrew/opt/qtbase/lib /usr/local/lib)
+    IF(EXISTS "${brewlib}")
+      LIST(APPEND bundleDirs "${brewlib}")
+    ENDIF()
+  ENDFOREACH()
 ENDIF()
 #
 
@@ -108,6 +117,13 @@ ENDFOREACH()
 #
 LIST(APPEND all ${myPlugins})
 LIST(APPEND all ${all_adm_plugin})
+# Helper executables are not the bundle's CFBundleExecutable, so fixup_bundle
+# would otherwise leave them pointing at absolute build or Homebrew paths.
+FOREACH(helper avidemux_cli avidemux_jobs)
+  IF(EXISTS "${BUNDLE}/Contents/MacOS/${helper}")
+    LIST(APPEND all "${BUNDLE}/Contents/MacOS/${helper}")
+  ENDIF()
+ENDFOREACH()
 MESSAGE(STATUS "Plugin to fix : ${all}")
 
 # Create Qt.conf
