@@ -658,6 +658,12 @@ bool GUI_SeekByTime(int64_t time)
 */
 bool GUI_CoarseSeekByTime(int64_t time)
 {
+    /* We cannot seek during playback because pts we get from preview
+    during active playback are relative to where playback was started,
+    not to the start of the video. */
+    if (playing)
+        return false;
+
     uint64_t pts = admPreview::getCurrentPts();
 
     if (time < 0 && pts < -time)
