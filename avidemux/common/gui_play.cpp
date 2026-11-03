@@ -91,6 +91,8 @@ GUIPlayback::GUIPlayback(void)
     wavbuf = NULL;
     videoFilter = NULL;
     videoChain = NULL;
+    firstPts = 0;
+    lastPts = 0;
     vuMeterPts = 0;
     audioLatency = 0;
     videoLagTimer = 0;
@@ -149,11 +151,13 @@ void GUI_PlayAvi(bool quit)
     }
     delete playLoop;
     playLoop = NULL;
-    playing = 0;
 
     // Don't touch display on application exit
     if (exiting)
+    {
+        playing = 0;
         return;
+    }
 
     admPreview::deferDisplay(false);
     // Resize the output window to original size...
@@ -174,6 +178,7 @@ void GUI_PlayAvi(bool quit)
         if (false == admPreview::seekToTime(newTimeFrame))
             admPreview::nextPicture();
     }
+    playing = 0;
     UI_purge();
     GUI_setCurrentFrameAndTime();
     UI_purge();
