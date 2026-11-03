@@ -316,19 +316,23 @@ else
         export QTDIR="/opt/homebrew/opt/qt@6"
     elif [ -d "/opt/homebrew/opt/qt6" ]; then
         export QTDIR="/opt/homebrew/opt/qt6"
+    elif [ -d "/opt/homebrew/opt/qt" ]; then
+        # Current Homebrew formula name is "qt" (Qt 6), not qt@6 / qt6.
+        export QTDIR="/opt/homebrew/opt/qt"
     fi
     if [ -z "$QTDIR" ]; then
         echo -e "\n****************************************************************"
         echo -e "Qt6 from Homebrew not found at expected locations"
         echo -e "/opt/homebrew/opt/qt@6"
         echo -e "/opt/homebrew/opt/qt6"
+        echo -e "/opt/homebrew/opt/qt"
         echo -e "Please provide the true location via MYQT env variable."
         echo -e "****************************************************************\n"
         exit 1
     fi
 fi
-export PATH="$PATH":"${QTDIR}/bin"
-if $(which -s qmake) && [ -f "${QTDIR}/bin/qmake" ]; then
+export PATH="${QTDIR}/bin:$PATH"
+if [ -x "${QTDIR}/bin/qmake" ]; then
     echo "Using $QTDIR as Qt install path"
 else
     echo "Error: No matching qmake executable found, aborting."
@@ -373,7 +377,7 @@ if [ "x$do_plugins" = "x1" ] ; then
 fi
 if [ "x$do_plugins" = "x1" -a "x$do_qt4" = "x1" ] ; then
     echo "** Plugins Qt **"
-    Process buildPlugins${QT_EXT} "${SRCTOP}/avidemux_plugins" "-DPLUGIN_UI=QT4 EXTRA_CMAKE_DEFS"
+    Process buildPlugins${QT_EXT} "${SRCTOP}/avidemux_plugins" "-DPLUGIN_UI=QT4 $EXTRA_CMAKE_DEFS"
 fi
 if [ "x$do_plugins" = "x1" -a "x$do_cli" = "x1" ] ; then
     echo "** Plugins CLI **"
@@ -415,6 +419,7 @@ if [ "x$create_app_bundle" = "x1" ] ; then
         mkdir installer || fail "creating new installer directory"
         cd installer
         cmake \
+        -G "Unix Makefiles" \
         -DAVIDEMUX_VERSION="$ADM_VERSION" \
         -DAVIDEMUX_MAJOR_MINOR="${MAJOR}.${MINOR}" \
         -DDMG_BASENAME="$dmg_base" \
@@ -422,7 +427,7 @@ if [ "x$create_app_bundle" = "x1" ] ; then
         $FLAVOR \
         "${SRCTOP}/avidemux/osxInstaller" || fail "cmake"
         echo "** Preparing packaging **"
-        make package
+        make package || fail "packaging"
     fi
 fi
 echo "** ALL DONE **"
