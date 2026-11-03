@@ -244,14 +244,8 @@ bool xvid4Encoder::setup(void)
                             single. averaging_period;      
                             single. buffer;                
 */
-                            break;
-                    case COMPRESS_CQ:
-                            
-                            break;
-                    case COMPRESS_SAME:
-
-                            break;
-                   }
+                    default:break;
+                  }
             break;
      default:
             return false;

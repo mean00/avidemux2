@@ -34,7 +34,7 @@ class ADM_Qvideo : public QWidget
   public:
     ADM_Qvideo(QFrame *z);
     ~ADM_Qvideo();
-    void paintEvent(QPaintEvent *ev);
+    void paintEvent(QPaintEvent *ev) override;
     void setADMSize(int width, int height);
     bool eventFilter(QObject *obj, QEvent *event) override;
     void setDrawer(ADM_QvideoDrawer *d)
@@ -43,7 +43,7 @@ class ADM_Qvideo : public QWidget
     }
     // This disables internal double buffer of Qt
     // Set it to false if the native Qt redraw system is used
-    QPaintEngine *paintEngine() const
+    QPaintEngine *paintEngine() const override
     {
         return NULL; // Disable
     }
@@ -53,7 +53,7 @@ class ADM_Qvideo : public QWidget
         setAttribute(Qt::WA_PaintOnScreen, external);
 #endif
     }
-    QSize sizeHint() const
+    QSize sizeHint() const override
     {
         if (!_width || !_height)
             return QWidget::sizeHint();

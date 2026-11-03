@@ -30,7 +30,7 @@ void resetConfigurationData()
 {
 	x264_encoder defaultConf = X264_DEFAULT_CONF;
 
-	memcpy(&x264Settings, &defaultConf, sizeof(x264_encoder));
+	memcpy((void *)&x264Settings, &defaultConf, sizeof(x264_encoder));
 }
 
 ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(x264Encoder);

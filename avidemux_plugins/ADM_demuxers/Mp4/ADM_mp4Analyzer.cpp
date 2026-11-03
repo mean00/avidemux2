@@ -2466,7 +2466,7 @@ uint8_t MP4Header::updateCtts(MPsampleinfo *info )
 //***********************************
 MPsampleinfo::MPsampleinfo(void)
 {
-  memset(this,0,sizeof( MPsampleinfo));
+    memset((void *)this, 0, sizeof(MPsampleinfo));
 }
 MPsampleinfo::~MPsampleinfo()
 {

@@ -25,7 +25,7 @@
 
 flvTrak::flvTrak(int nb)
 {
-  memset(this,0,sizeof(flvTrak)); 
+  memset((void *)this, 0, sizeof(flvTrak));
   _index=new flvIndex[nb];
   _indexMax=nb;
 }

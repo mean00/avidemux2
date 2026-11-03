@@ -29,7 +29,7 @@ void resetConfigurationData()
 {
 	x265_settings defaultConf = X265_DEFAULT_CONF;
 
-	memcpy(&x265Settings, &defaultConf, sizeof(x265_settings));
+	memcpy((void *)&x265Settings, &defaultConf, sizeof(x265_settings));
 }
 
 ADM_DECLARE_VIDEO_ENCODER_PREAMBLE(x265Encoder);

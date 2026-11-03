@@ -63,7 +63,7 @@ again:
                 uint64_t delta=labs((int64_t)newDts-(int64_t)lastDts);
                 const char *sign="+";
                 if(newDts<lastDts) sign="-";
-                printf("[ADM_audioStreamBuffered::refill] Warning skew in dts = %s%lu, ",sign,delta);
+                printf("[ADM_audioStreamBuffered::refill] Warning skew in dts = %s%llu, ",sign,delta);
                 printf("lastDts = %s ",ADM_us2plain(lastDts));
                 printf("newDts = %s\n",ADM_us2plain(newDts));
                 setDts(newDts);
