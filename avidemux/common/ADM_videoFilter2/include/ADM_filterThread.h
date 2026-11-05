@@ -40,12 +40,14 @@ public:
        virtual void         setCoupledConf(CONFcouple *couples) {}
        virtual bool         configure(void) {return true;}             /// Start graphical user interface
 /**/
-       virtual bool         goToTime(uint64_t usSeek);
+       virtual bool         goToTime(uint64_t usSeek, bool fineSeek = false);
+                    void         setEndOfStreamLoop(bool loop) {loopAtEnd=loop;}
        virtual bool         getNextFrame(uint32_t *frameNumber,ADMImage *image);
        virtual bool         getNextFrameAs( ADM_HW_IMAGE type,uint32_t *frameNumber,ADMImage *image) ;
        virtual FilterInfo  *getInfo(void)    ;
 
 protected:
+        bool                        loopAtEnd;
         virtual bool                runAction(void);
 };
 

@@ -31,6 +31,7 @@ ADM_COREAUDIODEVICE6_EXPORT void 		AVDM_switch( AUDIO_DEVICE action );
 ADM_COREAUDIODEVICE6_EXPORT uint8_t 	AVDM_AudioPlay(float *ptr, uint32_t nb);
 ADM_COREAUDIODEVICE6_EXPORT uint32_t 	AVDM_AudioSetup(uint32_t fq, uint8_t channel, CHANNEL_TYPE    *channelMapping);
 ADM_COREAUDIODEVICE6_EXPORT void 		AVDM_AudioClose(void);
+ADM_COREAUDIODEVICE6_EXPORT void        AVDM_AudioFlush(void);
 ADM_COREAUDIODEVICE6_EXPORT uint32_t    AVDM_GetLayencyMs(void);
 ADM_COREAUDIODEVICE6_EXPORT AUDIO_DEVICE 	AVDM_getCurrentDevice( void);
 ADM_COREAUDIODEVICE6_EXPORT uint8_t         AVDM_setVolume(int volume);

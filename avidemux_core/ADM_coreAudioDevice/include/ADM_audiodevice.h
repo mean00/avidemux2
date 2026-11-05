@@ -84,6 +84,7 @@ public:
     virtual     uint8_t     stop(void);
 
     virtual     uint8_t     play(uint32_t len, float *data);
+                void        flush(void);
     virtual     bool        getVolumeStats(int32_t *vol); // Return stats about volume for each channel [8] as integer dBFS (valid range -100 to +3), mark inactive channel with +255
 };
 

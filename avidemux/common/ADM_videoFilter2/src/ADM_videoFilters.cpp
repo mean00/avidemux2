@@ -211,7 +211,7 @@ bool ADM_vf_absolvePartialized(int index)
     \fn createVideoFilterChain
     \brief Create a filter chain
 */
-ADM_videoFilterChain *createVideoFilterChain(uint64_t startAt,uint64_t endAt)
+ADM_videoFilterChain *createVideoFilterChain(uint64_t startAt,uint64_t endAt,bool loopAtEnd)
 {
     ADM_videoFilterChain *chain=new ADM_videoFilterChain;
     // 1- Add bridge always # 1
@@ -250,6 +250,7 @@ ADM_videoFilterChain *createVideoFilterChain(uint64_t startAt,uint64_t endAt)
         int m=chain->size();
         ADM_coreVideoFilter *last=(*chain)[m-1];
         ADM_videoFilterQueue *thread=new ADM_videoFilterQueue(last);
+        thread->setEndOfStreamLoop(loopAtEnd);
         chain->push_back(thread);
     }
 #endif
@@ -259,7 +260,7 @@ ADM_videoFilterChain *createVideoFilterChain(uint64_t startAt,uint64_t endAt)
     \fn createEmptyVideoFilterChain
     \brief Create an empty filter chain
 */
-ADM_videoFilterChain *createEmptyVideoFilterChain(uint64_t startAt,uint64_t endAt)
+ADM_videoFilterChain *createEmptyVideoFilterChain(uint64_t startAt,uint64_t endAt,bool loopAtEnd)
 {
     ADM_videoFilterChain *chain=new ADM_videoFilterChain;
     // 1- Add bridge always # 1
@@ -270,6 +271,7 @@ ADM_videoFilterChain *createEmptyVideoFilterChain(uint64_t startAt,uint64_t endA
     int m=chain->size();
     ADM_coreVideoFilter *last=(*chain)[m-1];
     ADM_videoFilterQueue *thread=new ADM_videoFilterQueue(last);
+    thread->setEndOfStreamLoop(loopAtEnd);
     chain->push_back(thread);
 #endif
     return chain;

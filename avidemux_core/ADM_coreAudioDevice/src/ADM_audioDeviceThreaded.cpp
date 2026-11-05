@@ -162,9 +162,15 @@ uint32_t audioDeviceThreaded::getBufferFullness(void)
     return 1 + (uint32_t)nbBytes;
 }
 /**
-    \fn stop
-    \brief stop
+    \fn flush
+    \brief Discard buffered samples. The playback thread keeps running.
 */
+void audioDeviceThreaded::flush(void)
+{
+    mutex.lock();
+    rdIndex = wrIndex = 0;
+    mutex.unlock();
+}
 uint8_t audioDeviceThreaded::stop()
 {
     uint32_t maxWait = 3 * 1000; // Should be enough to drain

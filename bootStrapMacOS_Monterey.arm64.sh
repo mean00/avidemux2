@@ -7,6 +7,102 @@ fail()
     echo "** Failed at $1 **"
     exit 1
 }
+# Formulae from: brew install cmake pkg-config nasm yasm qt xvid x264 x265
+# libvpx aom opus fdk-aac lame libass mp4v2 a52dec ccache
+requireBrewPackages()
+{
+    local packages="cmake pkg-config nasm yasm qt xvid x264 x265 libvpx aom opus fdk-aac lame libass"
+    if [ "x$external_libmp4v2" = "x1" ]; then
+        packages="$packages mp4v2"
+    fi
+    if [ "x$external_liba52" = "x1" ]; then
+        packages="$packages a52dec"
+    fi
+    packages="$packages ccache"
+    if ! command -v brew >/dev/null 2>&1; then
+        echo "Homebrew is required to build Avidemux."
+        echo "Install it from https://brew.sh and then run:"
+        echo
+        echo "    brew install $packages"
+        exit 1
+    fi
+    local installed
+    if ! installed=$(HOMEBREW_NO_AUTO_UPDATE=1 brew list --formula 2>/dev/null); then
+        echo "Could not list installed Homebrew packages."
+        exit 1
+    fi
+    local missing=""
+    local pkg
+    for pkg in $packages; do
+        if [ "$pkg" = "qt" ]; then
+            if printf '%s\n' "$installed" | grep -Eqx 'qt|qt@6|qt6'; then
+                continue
+            fi
+            if [ -n "$MYQT" ]; then
+                continue
+            fi
+        elif [ "$pkg" = "pkg-config" ]; then
+            if printf '%s\n' "$installed" | grep -Eqx 'pkg-config|pkgconf'; then
+                continue
+            fi
+        elif printf '%s\n' "$installed" | grep -qx "$pkg"; then
+            continue
+        fi
+        missing="$missing $pkg"
+    done
+    missing=${missing# }
+    if [ -n "$missing" ]; then
+        echo "Homebrew packages required for the build are missing."
+        echo "Install them with:"
+        echo
+        echo "    brew install $missing"
+        echo
+        exit 1
+    fi
+    echo "Homebrew build dependencies are installed."
+}
+# Default APFS is case-insensitive, and an in-tree build fails there.
+# Out-of-tree builds are supported, so move BUILDTOP onto a sparse
+# case-sensitive volume. hdiutil is required: `diskutil image create --fs
+# "Case-sensitive APFS"` still formats a case-insensitive volume.
+ensureCaseSensitiveBuildDir()
+{
+    local cache_dir="${HOME}/Library/Caches/avidemux-cs-build"
+    local key
+    key=$(printf '%s' "$SRCTOP" | shasum -a 256 | awk '{print substr($1,1,12)}')
+    local image="${cache_dir}/${key}.sparseimage"
+    local mount="${cache_dir}/${key}-mnt"
+
+    mkdir -p "$cache_dir" || fail "creating cache directory for the case-sensitive build volume"
+    if [ -d "$mount" ] && [ "$(stat -f '%d' "$mount")" != "$(stat -f '%d' "$cache_dir")" ]; then
+        echo "Using mounted case-sensitive build volume \"${mount}\"."
+    else
+        echo "Build directory file system is not case-sensitive."
+        echo "Creating an out-of-tree build on a case-sensitive APFS sparse image."
+        if [ ! -e "$image" ]; then
+            echo "Image: \"${image}\" (sparse, up to 20 GB)."
+            hdiutil create -type SPARSE -fs "Case-sensitive APFS" -size 20g -volname "avidemux-${key}" "$image" || fail "creating case-sensitive build image"
+        else
+            echo "Reusing image \"${image}\"."
+        fi
+        mkdir -p "$mount" || fail "creating mount point"
+        if [ -n "$(ls -A "$mount" 2>/dev/null)" ]; then
+            echo "Mount point \"${mount}\" is not empty."
+            fail "mounting case-sensitive build image"
+        fi
+        hdiutil attach "$image" -nobrowse -mountpoint "$mount" || fail "mounting case-sensitive build image"
+    fi
+
+    cd "$mount" || fail "entering case-sensitive build directory"
+    BUILDTOP=$(pwd -P)
+    if [[ $BUILDTOP = *" "* ]]; then
+        echo "The build directory path \"${BUILDTOP}\" contains one or more spaces."
+        echo "This is unsupported by FFmpeg configure."
+        fail bootstrap
+    fi
+    echo "Top build dir : \"${BUILDTOP}\""
+    isCaseSensitive || { echo "Error: mounted build volume is still not case-sensitive." && exit 1; }
+}
 setupPaths()
 {
 # Specify the the directory where you want to install avidemux (a.k.a. the cmake_install_prefix)
@@ -42,7 +138,7 @@ Process()
     if [ -n "$FAKEROOT_DIR" ] ; then
         FAKEROOT="-DFAKEROOT=\"${FAKEROOT_DIR}\""
     fi
-    echo "Building in \"${BUILDDIR}\" from \"${SOURCEDIR}\" with EXTRA=<$EXTRA>, DEBUG=<$DEBUG>"
+    echo "Building in \"${BUILDDIR}\" from \"${SOURCEDIR}\" with EXTRA=<$EXTRA>, DEBUG=<$DEBUG>, jobs=${BUILD_JOBS}"
     if [ "x$do_rebuild" != x1 ] ; then
         rm -Rf "$BUILDDIR"
     fi
@@ -59,9 +155,10 @@ Process()
     $EXTRA \
     $FLAVOR \
     $DEBUG \
+    $CCACHE_CMAKE \
     -G "$BUILDER" \
     "$SOURCEDIR" || fail cmakeZ
-    make > /tmp/log${BASE} || fail make
+    make -j "$BUILD_JOBS" > /tmp/log${BASE} || fail make
     if [ -n "$FAKEROOT_DIR" ] ; then
         echo "** installing to $FAKEROOT_DIR **"
     else
@@ -112,7 +209,7 @@ usage()
         echo "  --no-bundle             : Don't create macOS app bundle structure"
         echo "  --nopkg                 : Don't make macOS app bundle self-contained and package it as DMG"
         echo "  --debug                 : Switch debugging on"
-        echo "  --rebuild               : Preserve existing build directories"
+        echo "  --rebuild               : Preserve existing build directories (incremental build)"
         echo "  --output=NAME           : Specify a custom basename for dmg"
         echo "  --version=STRING        : Specify a custom Avidemux version string"
         echo "  --with-core             : Build core (default)"
@@ -266,9 +363,24 @@ while [ $# != 0 ] ;do
 shift
 done
 
+requireBrewPackages
+
+if [ -z "$BUILD_JOBS" ]; then
+    BUILD_JOBS=$(sysctl -n hw.ncpu)
+fi
+CCACHE_CMAKE=""
+if command -v ccache >/dev/null 2>&1; then
+    CCACHE_CMAKE="-DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
+    echo "Using ccache ($(ccache --version | head -n 1)), compile jobs: ${BUILD_JOBS}"
+else
+    echo "Compile jobs: ${BUILD_JOBS} (install ccache to speed up rebuilds)"
+fi
+
 # Probe case-sensitivity of the file system where the build directory is located.
 . "${SRCTOP}/checkCaseSensitivity.sh"
-isCaseSensitive || { echo "Error: build directory file system is not case-sensitive." && exit 1; }
+if ! isCaseSensitive; then
+    ensureCaseSensitiveBuildDir
+fi
 
 validate adm_version "$adm_version" || exit 1
 validate output "$dmg_base" || exit 1

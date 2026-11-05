@@ -142,3 +142,4 @@ ACT(SAVE_PY_SCRIPT)
 //
 ACT(SaveAsDefault)
 ACT(LoadDefault)
+ACT(PlayLoop)
