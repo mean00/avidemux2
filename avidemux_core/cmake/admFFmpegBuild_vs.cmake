@@ -30,6 +30,7 @@ ENDIF()
 xadd(--extra-cflags  -I${VS_ROOT}/include )
 xadd(--extra-ldflags  user32.lib )
 xadd(--stdc=c11 )
+xadd(--extra-cflags='-std:c11')
 
 # Ref build env, we use ccache
 IF(EXISTS "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
