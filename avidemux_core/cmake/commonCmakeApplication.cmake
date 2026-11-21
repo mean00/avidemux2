@@ -107,7 +107,12 @@ MACRO(ADD_LIB_IF cond lib)
   ENDIF()
 ENDMACRO()
 
-ADD_LIB_IF(USE_DXVA2 ADM_coreDxva26)
+# ADM_coreDxva26 is only created by the GUI project (ADM_render_qt/ADM_coreDxva2).
+# Adding it unconditionally makes the non-GUI roots (CLI) ask the linker for a .lib
+# that is never generated -> LNK1104, so restrict it to the GUI.
+IF(USE_DXVA2 AND "${UI_TYPE}" STREQUAL "ADM_UI_QT4")
+  LIST(APPEND commonLibs1 ADM_coreDxva26)
+ENDIF()
 ADD_LIB_IF(USE_VDPAU ADM_coreVDPAU6)
 ADD_LIB_IF(USE_XVBA ADM_coreXvba6)
 ADD_LIB_IF(USE_LIBVA ADM_coreLibVA6 ADM_coreLibVAEnc6)

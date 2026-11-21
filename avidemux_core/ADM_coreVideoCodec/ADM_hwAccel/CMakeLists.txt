@@ -10,9 +10,9 @@ endif (USE_XVBA)
 if (USE_LIBVA)
 	ADD_SUBDIRECTORY(ADM_coreLibVA)
 endif (USE_LIBVA)
-IF(USE_DXVA2)# AND NOT MSVC)
-# TEMPORARY	ADD_SUBDIRECTORY(ADM_coreDxva2)
-ENDIF(USE_DXVA2)# AND NOT MSVC)
+# ADM_coreDxva2 is not built here: it lives in the GUI tree and is built by the Qt
+# project (avidemux/qt4/ADM_render_qt/ADM_coreDxva2, added under IF(USE_DXVA2) by
+# avidemux/qt4/ADM_render_qt/CMakeLists.txt). Nothing DXVA2-related is disabled.
 
 SET(_CFG "${CMAKE_BINARY_DIR}/config/ADM_coreConfig.cmake")
 
