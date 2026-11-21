@@ -6,7 +6,7 @@ MACRO(checkNvEnc)
         MESSAGE(STATUS "*****************")
 
         IF(NVENC)
-            PKG_CHECK_MODULES(FFNVENC ffnvcodec)
+            ADM_PKG_CHECK_MODULES(FFNVENC ffnvcodec)
             IF(FFNVENC_FOUND)
                 FIND_PATH(NVENC_INCLUDE_DIR dynlink_loader.h
                         PATHS /usr/local/include/ffnvcodec /usr/include/ffnvcodec /include/ffnvcodec ${FFNVENC_CFLAGS} ${CROSS}/include)

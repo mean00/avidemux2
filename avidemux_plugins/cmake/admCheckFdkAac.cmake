@@ -12,7 +12,7 @@ MACRO(checkFdkAAC)
 
         IF(FDK_AAC)
             #FIND_HEADER_AND_LIB(FDK_AAC fdk-aac/aacenc_lib.h fdk-aac) # Use pkg config ?
-            PKG_CHECK_MODULES(FDK_AAC fdk-aac)
+            ADM_PKG_CHECK_MODULES(FDK_AAC fdk-aac)
 #            DUMP_ALL_VARS()
 
             IF(FDK_AAC_FOUND)

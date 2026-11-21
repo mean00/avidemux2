@@ -97,6 +97,88 @@ MACRO(ADM_COMPILE _file _def _include _lib _varToSet _output)
 ENDMACRO()
 
 
+#
+# pkg-config hands out GNU style link flags ("-L<dir>;-l<name>"). link.exe does not
+# understand them: it turns them into '/LF:...' and '/lvpx', ignores them (LNK4044) and
+# the link then fails with an unresolved symbol - so function probes silently conclude
+# "not found" and the matching plugin is disabled. On MSVC only, rewrite those flags into
+# absolute .lib paths, which is what LINK_LIBRARIES expects. Tokens with no MSVC
+# equivalent (e.g. -lm) are dropped.
+#
+# Private helper: use ADM_PKG_CHECK_MODULES() below, do not call this directly.
+# No-op for every non-MSVC toolchain: Linux / macOS / MinGW keep the GNU flags untouched.
+#
+MACRO(_ADM_PKG_LDFLAGS_TO_MSVC _varName)
+  IF(MSVC AND "${${_varName}}" MATCHES "(^|[ ;])-[Ll]")
+    STRING(REPLACE ";" " " _adm_flags "${${_varName}}")
+    SEPARATE_ARGUMENTS(_adm_flags UNIX_COMMAND "${_adm_flags}")
+
+    SET(_adm_dirs "")
+    SET(_adm_libs "")
+    SET(_adm_other "")
+    FOREACH(_adm_token ${_adm_flags})
+      IF(_adm_token MATCHES "^-L(.+)$")
+        LIST(APPEND _adm_dirs "${CMAKE_MATCH_1}")
+      ELSEIF(_adm_token MATCHES "^-l(.+)$")
+        LIST(APPEND _adm_libs "${CMAKE_MATCH_1}")
+      ELSE()
+        LIST(APPEND _adm_other "${_adm_token}")
+      ENDIF()
+    ENDFOREACH()
+
+    IF(_adm_dirs)
+      LIST(GET _adm_dirs 0 _adm_first_dir)
+    ELSE()
+      SET(_adm_first_dir "")
+    ENDIF()
+
+    SET(_adm_result ${_adm_other})
+    FOREACH(_adm_lib ${_adm_libs})
+      UNSET(_adm_resolved)
+      UNSET(_adm_resolved CACHE)
+      IF(_adm_dirs)
+        FIND_LIBRARY(_adm_resolved NAMES ${_adm_lib} PATHS ${_adm_dirs} NO_DEFAULT_PATH)
+      ENDIF()
+      IF(NOT _adm_resolved)
+        # not where pkg-config said: fall back to the toolchain search path
+        FIND_LIBRARY(_adm_resolved NAMES ${_adm_lib})
+      ENDIF()
+      IF(NOT _adm_resolved AND _adm_first_dir AND EXISTS "${_adm_first_dir}/${_adm_lib}.lib")
+        SET(_adm_resolved "${_adm_first_dir}/${_adm_lib}.lib")
+      ENDIF()
+      UNSET(_adm_resolved CACHE)
+      IF(_adm_resolved)
+        LIST(APPEND _adm_result "${_adm_resolved}")
+      ELSE()
+        MESSAGE(STATUS "    [msvc] no import library for '-l${_adm_lib}', dropping it")
+      ENDIF()
+    ENDFOREACH()
+
+    SET(${_varName} "${_adm_result}")
+    MESSAGE(STATUS "    [msvc] ${_varName} -> ${${_varName}}")
+  ENDIF()
+ENDMACRO()
+
+#
+# Platform neutral drop-in replacement for PKG_CHECK_MODULES().
+#
+# Same syntax, same semantics, same outputs in the caller's scope
+# (<prefix>_FOUND/_VERSION/_INCLUDE_DIRS/_LIBRARY_DIRS/_LIBRARIES/_LINK_LIBRARIES/
+# _CFLAGS/_LDFLAGS/_LDFLAGS_OTHER), so `REQUIRED`, `QUIET` and version constraints
+# (e.g. aom>=3.2.0) all keep working. The only difference: on MSVC the link flags are
+# converted to something link.exe understands (see above).
+#
+# Use this instead of PKG_CHECK_MODULES() everywhere, so that no platform specific code
+# has to leak into the individual checks.
+#
+MACRO(ADM_PKG_CHECK_MODULES _prefix)
+  PKG_CHECK_MODULES(${_prefix} ${ARGN})
+  IF(MSVC)
+    _ADM_PKG_LDFLAGS_TO_MSVC(${_prefix}_LDFLAGS)
+  ENDIF()
+ENDMACRO()
+
+
 #ARGV3 = extra libraries
 #ARGV4 = extra compile flags
 MACRO(ADM_CHECK_FUNCTION_EXISTS _function _lib _varToSet)

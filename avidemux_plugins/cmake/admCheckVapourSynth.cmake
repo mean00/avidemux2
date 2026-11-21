@@ -24,7 +24,7 @@ MACRO(checkVapourSynth)
 		MESSAGE(STATUS "***********************")
 
 		IF(VAPOURSYNTH)
-                        PKG_CHECK_MODULES(VAPOURSYNTHSCRIPT vapoursynth-script)
+                        ADM_PKG_CHECK_MODULES(VAPOURSYNTHSCRIPT vapoursynth-script)
                         IF(VAPOURSYNTHSCRIPT_FOUND)
                             IF(VAPOURSYNTHSCRIPT_VERSION GREATER 72)
                                 MESSAGE(STATUS "Unsupported VapourSynth version ${VAPOURSYNTHSCRIPT_VERSION}, must be <= 72, disabling.")
