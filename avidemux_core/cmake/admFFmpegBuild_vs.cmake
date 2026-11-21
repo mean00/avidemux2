@@ -38,6 +38,7 @@ xadd(--disable-debug)
 IF(EXISTS "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
   xadd(--cc="ccache cl")
   xadd(--cxx="ccache cl")
+  xadd(--dep-cc="cl")
 ENDIF()
 MESSAGE(STATUS "Using VS compilation flag: ${FFMPEG_FLAGS}")
 
