@@ -105,7 +105,17 @@ ELSE()
         SET(ADM_CPU_64BIT 1)
         SET(ADM_CPU_X86 1)
         SET(ADM_CPU_X86_64 1)
-		ADD_DEFINITIONS("/F40000000 -D__STDC_LIMIT_MACROS") # increase stack size to 4M, linux32 is 2 MB by default, MS is 1MB by default
+		ADD_DEFINITIONS("-D__STDC_LIMIT_MACROS")
+		# NB: the stack size used to be requested here as
+		#   ADD_DEFINITIONS("/F40000000 -D__STDC_LIMIT_MACROS")   # increase stack to 4M
+		# /F is a cl option that only has an effect when cl drives the link, which never
+		# happens with CMake (compile = /c, link = link.exe), so it was inert there - but
+		# it landed on *every* compile line, including the resource-compiler step, where
+		# rc.exe rejects it ("invalid option, /F40000000") as soon as the Ninja generator
+		# is used (MSBuild's RC rule ignores the definitions). Ask the linker instead:
+		#   SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /STACK:4000000")
+		# (the GUI already gets /STACK:4000000 in Debug, see
+		#  avidemux/qt4/cmake/adm_win32_vs.cmake)
 ENDIF()
 
 MESSAGE("")
