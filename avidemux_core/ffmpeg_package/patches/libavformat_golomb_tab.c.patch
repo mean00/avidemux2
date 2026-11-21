@@ -1,0 +1,13 @@
+--- libavformat/golomb_tab.c.orig	2022-07-22 19:58:39.000000000 +0200
++++ libavformat/golomb_tab.c	2026-11-21 12:00:00.000000000 +0100
+@@ -1 +1,9 @@
+-#include "libavcodec/golomb.c"
++#ifndef _MSC_VER
++/*
++ * Avidemux: on MSVC the golomb tables are imported from avcodec.dll (see the
++ * libavcodec/golomb.h patch, which declares them __declspec(dllimport)).
++ * Defining private copies here as well makes the linker fail with LNK2005
++ * when linking avformat against avcodec.lib, so do not define them for MSVC.
++ */
++#include "libavcodec/golomb.c"
++#endif
