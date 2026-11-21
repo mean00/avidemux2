@@ -1,5 +1,7 @@
 INCLUDE(admFFmpegBuild_helpers)
 
+set(EXTRA_FFMPEG_CONFIGURE "unset CFLAGS CXXFLAGS CPPFLAGS LDFLAGS\nexport VSLANG=1033\n")
+
 #@@
 ADM_FF_SET_DEFAULT()
 
@@ -18,23 +20,24 @@ ADM_FF_ADD_OPTIONS()
 xadd(--enable-w32threads)
 #
 xadd(--toolchain=msvc)
+xadd(--extra-cflags  "-Z7")
+xadd(--extra-ldflags  "user32.lib //machine:x64")
+xadd(--target-os=win64)
+xadd(--arch=x86_64)
 
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-  MESSAGE(STATUS "Compiling ffmpeg in debug mode")
-  xadd(--extra-cflags  "-Z7")
-  xadd(--extra-ldflags "/DEBUG:FASTLINK")
-  xadd(--extra-ldflags "/DEBUGTYPE:CV")
-ENDIF()
+#if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+#MESSAGE(STATUS "Compiling ffmpeg in debug mode")
+#xadd(--extra-ldflags "/DEBUG:FASTLINK")
+#xadd(--extra-ldflags "/DEBUGTYPE:CV")
+#ENDIF(/c/Users/fx/AppData/Local/nvim)
+xadd(--disable-debug)
 
 #  Cross compiler override (win32 & win64)
-xadd(--extra-cflags  -I${VS_ROOT}/include )
-xadd(--extra-ldflags  user32.lib )
-xadd(--stdc=c11 )
-xadd(--extra-cflags='-std:c11')
 
 # Ref build env, we use ccache
 IF(EXISTS "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
   xadd(--cc="ccache cl")
+  xadd(--cxx="ccache cl")
 ENDIF()
 MESSAGE(STATUS "Using VS compilation flag: ${FFMPEG_FLAGS}")
 
