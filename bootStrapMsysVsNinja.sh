@@ -10,10 +10,9 @@
 #   * Ninja Multi-Config keeps the --config semantics of the VS generator.
 #   * Ninja rejects -A x64: the arch is whatever cl.exe use_msvc selected.
 #
-fail()
-{
-    echo "FAILURE AT STEP $1"
-    exit 1
+fail() {
+  echo "FAILURE AT STEP $1"
+  exit 1
 }
 
 cd "/f/$(cygpath -u "$WORKSPACE")" 2>/dev/null || cd "$(cygpath -u "$WORKSPACE")" || fail "workspace cd"
@@ -38,45 +37,48 @@ export CFLAGS="-DWIN32 -D_WINDOWS"
 export CXXFLAGS="-DWIN32 -D_WINDOWS /EHsc"
 
 build_modules() {
-    local folder_name=$1
-    local source=$2
-    shift 2
+  local folder_name=$1
+  local source=$2
+  shift 2
 
-    echo "*** building module $source into folder $folder_name"
-    cd "$AVIDEMUX_START_POINT" || fail $folder_name
-    rm -Rf "$folder_name" && mkdir "$folder_name" || fail $folder_name
-    cd "$folder_name" || fail $folder_name
+  echo "*** building module $source into folder $folder_name"
+  cd "$AVIDEMUX_START_POINT" || fail $folder_name
+  rm -Rf "$folder_name" && mkdir "$folder_name" || fail $folder_name
+  cd "$folder_name" || fail $folder_name
 
-    cmake -G "$GEN" \
-          -DLRELEASE_EXECUTABLE=F:/vcpkg/vcpkg/installed/x64-windows/tools/Qt6/bin/lrelease.exe \
-          -DCMAKE_INSTALL_PREFIX="$(cygpath -m "$AVIDEMUX_START_POINT")/win64" \
-          -DCMAKE_CONFIGURATION_TYPES="$CONFIG" \
-          -DCMAKE_BUILD_TYPE="$CONFIG" \
-          -DCMAKE_TRY_COMPILE_CONFIGURATION="$CONFIG" \
-          -DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=Embedded \
-          -DCMAKE_TOOLCHAIN_FILE="$(cygpath -m "$VCPKG_ROOT")/scripts/buildsystems/vcpkg.cmake" \
-          -DVCPKG_TARGET_TRIPLET=x64-windows \
-          -S "../$source" "$@" || fail "$folder_name (configure)"
+  cmake -G "$GEN" \
+    -DLRELEASE_EXECUTABLE=F:/vcpkg/vcpkg/installed/x64-windows/tools/Qt6/bin/lrelease.exe \
+    -DCMAKE_INSTALL_PREFIX="$(cygpath -m "$AVIDEMUX_START_POINT")/win64" \
+    -DCMAKE_CONFIGURATION_TYPES="$CONFIG" \
+    -DCMAKE_BUILD_TYPE="$CONFIG" \
+    -DCMAKE_TRY_COMPILE_CONFIGURATION="$CONFIG" \
+    -DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=Embedded \
+    -DCMAKE_TOOLCHAIN_FILE="$(cygpath -m "$VCPKG_ROOT")/scripts/buildsystems/vcpkg.cmake" \
+    -DVCPKG_TARGET_TRIPLET=x64-windows \
+    -S "../$source" "$@" || fail "$folder_name (configure)"
 
-    # /Z7 (Embedded) + Ninja + launcher => ccache can actually store the objects
-    if grep -rqs ccache --include='*.ninja' . ; then
-        echo "    ccache: wired into the ninja rules"
-    else
-        echo "    ccache: WARNING - not found in the ninja rules"
-    fi
+  # /Z7 (Embedded) + Ninja + launcher => ccache can actually store the objects
+  if grep -rqs ccache --include='*.ninja' .; then
+    echo "    ccache: wired into the ninja rules"
+  else
+    echo "    ccache: WARNING - not found in the ninja rules"
+  fi
 
-    cmake --build . --config "$CONFIG" --target install || fail "$folder_name (build/install)"
+  cmake --build . --config "$CONFIG" --target install || fail "$folder_name (build/install)"
 }
 
 # The core must be installed into win64 *before* the other projects: they resolve
 # ADM_HEADER_DIR = <prefix>/include/avidemux/2.8 and abort if it is missing.
-#build_modules buildCore  avidemux_core
-#build_modules buildQt4   avidemux/qt4          -DENABLE_QT6=True
+build_modules buildCore avidemux_core
+build_modules buildQt4 avidemux/qt4 -DENABLE_QT6=True
+# avidemux/cli is its own project root, and the only thing that installs
+# <prefix>/include/avidemux/2.8/cli/config.h -- which the CLI plugin pass needs.
+#build_modules buildCli   avidemux/cli
 
 build_modules buildPluginCommon avidemux_plugins -DPLUGIN_UI=COMMON
-build_modules buildPluginQt4    avidemux_plugins -DPLUGIN_UI=QT4 -DENABLE_QT6=True
-#build_modules buildPluginCli    avidemux_plugins -DPLUGIN_UI=CLI
-build_modules buildSettings     avidemux_plugins -DPLUGIN_UI=SETTINGS
+build_modules buildPluginQt4 avidemux_plugins -DPLUGIN_UI=QT4 -DENABLE_QT6=True
+build_modules buildPluginCli avidemux_plugins -DPLUGIN_UI=CLI
+build_modules buildSettings avidemux_plugins -DPLUGIN_UI=SETTINGS
 
 echo
 echo "ccache stats:"
