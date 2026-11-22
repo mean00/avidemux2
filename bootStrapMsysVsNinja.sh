@@ -68,6 +68,57 @@ build_modules() {
   cmake --build . --config "$CONFIG" --target install || fail "$folder_name (build/install)"
 }
 
+# Qt Installer Framework. avidemux/winInstaller/qtifw is a project of its own and
+# needs the core already installed (ADM_HEADER_DIR = <prefix>/include/avidemux/2.8).
+# The payload comes from split.bash, which wipes and recreates packages/*/data
+# relative to the *current directory*, hence the split has to be run from the
+# installer build dir, after configure and before the install step. That install
+# step executes binarycreator (hardcoded to f:/QTIFW/bin/binarycreator.exe in
+# avidemux/winInstaller/qtifw/CMakeLists.txt) and leaves
+# "Avidemux_<version> VC++ 64bits <timestamp>.exe" in that build dir.
+build_installer() {
+  local folder_name=buildInstaller
+  local payload
+  payload="$(cygpath -m "$AVIDEMUX_START_POINT")/win64"
+
+  echo "*** building the QTIFW installer from $payload"
+  cd "$AVIDEMUX_START_POINT" || fail $folder_name
+  rm -Rf "$folder_name" && mkdir "$folder_name" || fail $folder_name
+  cd "$folder_name" || fail $folder_name
+
+  cmake -G "$GEN" \
+    -DCMAKE_INSTALL_PREFIX="$payload" \
+    -DCMAKE_CONFIGURATION_TYPES="$CONFIG" \
+    -DCMAKE_BUILD_TYPE="$CONFIG" \
+    -DCMAKE_TRY_COMPILE_CONFIGURATION="$CONFIG" \
+    -DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=Embedded \
+    -DCMAKE_TOOLCHAIN_FILE="$(cygpath -m "$VCPKG_ROOT")/scripts/buildsystems/vcpkg.cmake" \
+    -DVCPKG_TARGET_TRIPLET=x64-windows \
+    -DPLUGIN_UI=SETTINGS \
+    -S ../avidemux/winInstaller/qtifw || fail "$folder_name (configure)"
+
+  # runtime -> org.avidemux.run/data, headers + import libs -> org.avidemux.dev/data
+  bash ../avidemux/winInstaller/qtifw/split.bash "$payload" || fail "$folder_name (split)"
+
+  # vcpkg runtimes are added to the payload by this install, then binarycreator runs
+  cmake --build . --config "$CONFIG" --target install || fail "$folder_name (binarycreator)"
+
+  local installer
+  installer=$(ls Avidemux_*.exe 2>/dev/null | head -1)
+  if [ -z "$installer" ]; then
+    fail "$folder_name (no installer produced)"
+  fi
+  # binarycreator names it "Avidemux_<ver> VC++ 64bits <ddmmyy>.exe"; normalise to
+  # "Avidemux_<ver>_VC++<MM-DD-YYYY>.exe" (American date, underscores, no spaces).
+  local ver date_us final
+  ver=$(sed -n 's/^Avidemux_\([^ ]*\) .*/\1/p' <<<"$installer")
+  date_us=$(date +%m-%d-%Y)
+  final="Avidemux_${ver}_VC++${date_us}.exe"
+  mv -f "$installer" "$final" || fail "$folder_name (rename)"
+  echo "*** installer : $(cygpath -m "$PWD")/$final"
+  ls -l "$final"
+}
+
 # The core must be installed into win64 *before* the other projects: they resolve
 # ADM_HEADER_DIR = <prefix>/include/avidemux/2.8 and abort if it is missing.
 build_modules buildCore avidemux_core
@@ -80,6 +131,9 @@ build_modules buildPluginCommon avidemux_plugins -DPLUGIN_UI=COMMON
 build_modules buildPluginQt4 avidemux_plugins -DPLUGIN_UI=QT4 -DENABLE_QT6=True
 build_modules buildPluginCli avidemux_plugins -DPLUGIN_UI=CLI
 build_modules buildSettings avidemux_plugins -DPLUGIN_UI=SETTINGS
+
+# Installer last: it packages whatever ended up in win64.
+build_installer
 
 echo
 echo "ccache stats:"
