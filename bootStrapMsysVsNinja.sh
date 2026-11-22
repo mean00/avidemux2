@@ -129,7 +129,7 @@ build_modules buildQt4 avidemux/qt4 -DENABLE_QT6=True
 
 build_modules buildPluginCommon avidemux_plugins -DPLUGIN_UI=COMMON
 build_modules buildPluginQt4 avidemux_plugins -DPLUGIN_UI=QT4 -DENABLE_QT6=True
-build_modules buildPluginCli avidemux_plugins -DPLUGIN_UI=CLI
+#build_modules buildPluginCli avidemux_plugins -DPLUGIN_UI=CLI
 build_modules buildSettings avidemux_plugins -DPLUGIN_UI=SETTINGS
 
 # Installer last: it packages whatever ended up in win64.
