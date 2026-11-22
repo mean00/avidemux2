@@ -28,7 +28,8 @@ echo "ccache: $(command -v ccache) $(ccache --version 2>/dev/null | head -1)"
 export AVIDEMUX_START_POINT=$PWD
 export GEN="Ninja Multi-Config"
 export CONFIG=RelWithDebInfo
-
+export PKG_CONFIG_PATH="$(cygpath -m "$VCPKG_ROOT")/installed/x64-windows/lib/pkgconfig"
+unset PKG_CONFIG_SYSTEM_INCLUDE_PATH PKG_CONFIG_SYSTEM_LIBRARY_PATH
 # admMainChecks.cmake does SET(CMAKE_C_FLAGS $ENV{CFLAGS}) /
 # SET(CMAKE_CXX_FLAGS $ENV{CXXFLAGS}), replacing CMake's defaults. With the
 # multi-config VS generator MSBuild supplied them; with Ninja these variables

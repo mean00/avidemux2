@@ -40,14 +40,15 @@ ENDIF()
 
 IF(WIN32)
   IF(NOT CROSS)
-    # Add the rootfs
-    IF(NOT VS_ROOT)
-      SET(VS_ROOT "f:/mingw")
+    # Optional extra MSVC "rootfs" (prebuilt ffmpeg/libs): pass -DVS_ROOT=<prefix>.
+    # There is deliberately no default any more: the old "f:/mingw" one injected a
+    # non-existent include/, lib/ and bin/ into every MSVC target of every project.
+    IF(VS_ROOT)
+      MESSAGE(STATUS "VS:using ${VS_ROOT} to import libs and headers")
+      INCLUDE_DIRECTORIES(${VS_ROOT}/include)
+      LINK_DIRECTORIES(${VS_ROOT}/lib)
+      LINK_DIRECTORIES(${VS_ROOT}/bin)
     ENDIF()
-    MESSAGE(STATUS "VS:using ${VS_ROOT} to import libs and headers")
-    INCLUDE_DIRECTORIES(${VS_ROOT}/include)
-    LINK_DIRECTORIES(${VS_ROOT}/lib)
-    LINK_DIRECTORIES(${VS_ROOT}/bin)
     # Add prefix and suffix so that libraries xxx.dll.a can be found
     LIST(APPEND CMAKE_FIND_LIBRARY_PREFIXES "" lib)
     LIST(APPEND CMAKE_FIND_LIBRARY_SUFFIXES .lib .dll.a .a)
@@ -190,8 +191,17 @@ IF(NOT SYSTEM_HEADERS_CHECKED)
   INCLUDE(CheckFunctionExists)
 
   IF(MSVC)
-    INCLUDE_DIRECTORIES("${AVIDEMUX_CORE_SOURCE_DIR}/foreignBuilds/msvc/include")
-    SET(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} "${AVIDEMUX_CORE_SOURCE_DIR}/foreignBuilds/msvc/include")
+    # MSVC compatibility headers (stdint.h / inttypes.h / GL/glext.h) live in the
+    # top-level foreignBuilds/msvc/include. Derive it from this file rather than from
+    # ${AVIDEMUX_CORE_SOURCE_DIR}: that variable is unset in the plugin project, where
+    # the old code degraded into a relative "-I/foreignBuilds/msvc/include" (i.e.
+    # <drive>:\foreignBuilds\...), and when this file is read from the installed copy
+    # there is no source tree at all -- in both cases the include must simply be skipped.
+    GET_FILENAME_COMPONENT(ADM_MSVC_SHIM_DIR "${CMAKE_CURRENT_LIST_DIR}/../../foreignBuilds/msvc/include" ABSOLUTE)
+    IF(EXISTS "${ADM_MSVC_SHIM_DIR}")
+      INCLUDE_DIRECTORIES("${ADM_MSVC_SHIM_DIR}")
+      SET(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} "${ADM_MSVC_SHIM_DIR}")
+    ENDIF()
   ENDIF()
 
   SET(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} ${CMAKE_INCLUDE_PATH})
