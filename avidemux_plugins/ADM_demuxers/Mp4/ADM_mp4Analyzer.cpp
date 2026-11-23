@@ -1672,8 +1672,8 @@ uint8_t MP4Header::parseStsd(adm_atom *tom, MPsampleinfo *info, uint32_t trackTy
                                     tmp=NULL;
                                     mixDump(VDEO.extraData,VDEO.extraDataSize);
                                 }
-                                av1c.skipAtom();
                             }
+                            av1c.skipAtom();
                         }
                         son.skipAtom();
                         break;
