@@ -21,8 +21,8 @@
 #include "ADM_coreVideoFilter.h"
 #include <vector>
 typedef std::vector <ADM_coreVideoFilter *>ADM_videoFilterChain;
-ADM_videoFilterChain *createEmptyVideoFilterChain(uint64_t startAt,uint64_t endAt);
-ADM_videoFilterChain *createVideoFilterChain(uint64_t startAt,uint64_t endAt);
+ADM_videoFilterChain *createEmptyVideoFilterChain(uint64_t startAt,uint64_t endAt,bool loopAtEnd=false);
+ADM_videoFilterChain *createVideoFilterChain(uint64_t startAt,uint64_t endAt,bool loopAtEnd=false);
 bool                 destroyVideoFilterChain(ADM_videoFilterChain *chain);
 
 

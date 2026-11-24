@@ -4,6 +4,9 @@ PROCESS(pushButtonAudioConf, ACT_AUDIO_CODEC_CONFIGURE) \
 PROCESS(pushButtonAudioFilter, ACT_AUDIO_FILTERS) \
 PROCESS(pushButtonFormatConfigure, ACT_ContainerConfigure) \
 PROCESS(toolButtonPlay, ACT_PlayAvi) \
+PROCESS(toolButtonSelectionMarkA, ACT_MarkA) \
+PROCESS(toolButtonSelectionMarkB, ACT_MarkB) \
+PROCESS(toolButtonSelectionPlayLoop, ACT_PlayLoop) \
 PROCESS(toolButtonPreviousFrame, ACT_PreviousFrame) \
 PROCESS(toolButtonNextFrame, ACT_NextFrame) \
 PROCESS(toolButtonPreviousIntraFrame, ACT_PreviousKFrame) \

@@ -226,6 +226,15 @@ void AVDM_AudioClose(void)
 {
     device->stop();
 }
+/**
+    \fn AVDM_AudioFlush
+    \brief Drop queued samples without stopping the device
+*/
+void AVDM_AudioFlush(void)
+{
+    if (device)
+        device->flush();
+}
 
 /**
     \fn AVDM_AudioSetup

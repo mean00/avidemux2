@@ -522,10 +522,10 @@ void MainWindow::busyTimerTimeout(void)
 */
 void MainWindow::actionSlot(Action a)
 {
-    if (a == ACT_EXIT || a == ACT_CLOSE || (a == ACT_PlayAvi && !playing) ||
+    if (a == ACT_EXIT || a == ACT_CLOSE || ((a == ACT_PlayAvi || a == ACT_PlayLoop) && !playing) ||
         (a > ACT_NAVIGATE_BEGIN && a < ACT_NAVIGATE_END))
         thumbSlider->reset();
-    if (a == ACT_PlayAvi && avifileinfo) // ugly
+    if ((a == ACT_PlayAvi || a == ACT_PlayLoop) && avifileinfo) // ugly
     {
         playing = !playing;
         setMenuItemsEnabledState();
@@ -1279,6 +1279,8 @@ void MainWindow::buildActionLists(void)
 
     for (int i = 1; i < ui.menuGo->actions().size(); i++)
     { // let "Play/Stop" stay enabled during playback
+        if (myMenuGo.at(i).event == ACT_PlayLoop)
+            continue;
         if (myMenuGo.at(i).event == ACT_GotoMarkA)
             continue;
         if (myMenuGo.at(i).event == ACT_GotoMarkB)
@@ -1369,6 +1371,9 @@ void MainWindow::buildButtonLists(void)
 #define ADD_BUTTON_PLAYBACK(x) ButtonsDisabledOnPlayback.push_back(ui.x);
 
     ADD_BUTTON_LOADED(toolButtonPlay)
+    ADD_BUTTON_LOADED(toolButtonSelectionMarkA)
+    ADD_BUTTON_LOADED(toolButtonSelectionMarkB)
+    ADD_BUTTON_LOADED(toolButtonSelectionPlayLoop)
     ADD_BUTTON_LOADED(toolButtonPreviousFrame)
     ADD_BUTTON_LOADED(toolButtonNextFrame)
     ADD_BUTTON_LOADED(toolButtonPreviousIntraFrame)
@@ -1385,6 +1390,8 @@ void MainWindow::buildButtonLists(void)
     ADD_BUTTON_LOADED(toolButtonBackOneMinute)
     ADD_BUTTON_LOADED(toolButtonForwardOneMinute)
 
+    ADD_BUTTON_PLAYBACK(toolButtonSelectionMarkA)
+    ADD_BUTTON_PLAYBACK(toolButtonSelectionMarkB)
     ADD_BUTTON_PLAYBACK(toolButtonPreviousFrame)
     ADD_BUTTON_PLAYBACK(toolButtonNextFrame)
     ADD_BUTTON_PLAYBACK(toolButtonPreviousIntraFrame)
@@ -1436,6 +1443,7 @@ void MainWindow::setMenuItemsEnabledState(void)
             ButtonsDisabledOnPlayback[i]->setEnabled(false);
 
         ui.toolButtonPlay->setIcon(QIcon(MKICON(player_stop)));
+        ui.toolButtonSelectionPlayLoop->setIcon(QIcon(MKICON(player_stop)));
         ui.menuGo->actions().at(0)->setIcon(QIcon(MKICON(player_stop)));
 
         int npb = PushButtonsDisabledOnPlayback.size();
@@ -1510,6 +1518,7 @@ void MainWindow::setMenuItemsEnabledState(void)
         ActionsAlwaysAvailable[i]->setEnabled(true);
 
     ui.toolButtonPlay->setIcon(QIcon(MKICON(player_play)));
+    ui.toolButtonSelectionPlayLoop->setIcon(QIcon(MKICON(player_play)));
     ui.menuGo->actions().at(0)->setIcon(QIcon(MKICON(player_play)));
 
     ui.toolButtonDeleteSelection->setEnabled(canDelete);
@@ -1789,6 +1798,16 @@ void MainWindow::widgetsUpdateTooltips(void)
 
     tt = QT_TRANSLATE_NOOP("qgui2", "Play/Stop");
     tt += SHORTCUT(ACT_PlayAvi, Go) ui.toolButtonPlay->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2", "Play selection in a loop");
+    tt += SHORTCUT(ACT_PlayLoop, Go)
+    ui.toolButtonSelectionPlayLoop->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2", "Set start marker");
+    tt += SHORTCUT(ACT_MarkA, Edit) ui.toolButtonSelectionMarkA->setToolTip(tt);
+
+    tt = QT_TRANSLATE_NOOP("qgui2", "Set end marker");
+    tt += SHORTCUT(ACT_MarkB, Edit) ui.toolButtonSelectionMarkB->setToolTip(tt);
 
     tt = QT_TRANSLATE_NOOP("qgui2", "Go to previous frame");
     tt += SHORTCUT(ACT_PreviousFrame, Go) ui.toolButtonPreviousFrame->setToolTip(tt);
