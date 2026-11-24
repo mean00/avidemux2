@@ -358,6 +358,8 @@ MACRO(ADM_FF_BUILD_UNIX_STYLE)
 
   SET(ffmpeg_gnumake_executable ${GNUMAKE_EXECUTABLE})
   convertPathToUnix(ffmpeg_gnumake_executable ${BASH_EXECUTABLE})
+  # Lets ffmpeg_make.sh.cmake emit a literal "$" for the optional job-count variable.
+  SET(DOLLAR "$")
   CONFIGURE_FILE("${AVIDEMUX_CORE_SOURCE_DIR}/cmake/ffmpeg_make.sh.cmake" "${FFMPEG_BINARY_DIR}/ffmpeg_make.sh")
   registerFFmpeg("${FFMPEG_SOURCE_DIR}" "${FFMPEG_BINARY_DIR}" 0)
 ENDMACRO()
