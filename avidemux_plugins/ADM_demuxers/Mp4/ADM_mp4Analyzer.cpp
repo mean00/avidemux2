@@ -1732,8 +1732,8 @@ uint8_t MP4Header::parseStsd(adm_atom *tom, MPsampleinfo *info, uint32_t trackTy
                                 }
                                 delete [] tmp;
                                 tmp = NULL;
-                                vpc.skipAtom();
                             }
+                            vpc.skipAtom();
                         }
                         son.skipAtom();
                         break;
