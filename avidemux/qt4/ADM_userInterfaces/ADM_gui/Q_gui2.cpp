@@ -33,6 +33,11 @@
 #endif
 #include <QStyleFactory>
 
+#ifdef _WIN32
+#include <qt_windows.h>
+#include <QTimer>
+#endif
+
 #ifdef __APPLE__
 #include <QFileOpenEvent>
 #endif
@@ -80,6 +85,49 @@ using namespace std;
 #define ADM_QT_THEME_DEFAULT 0
 #define ADM_QT_THEME_LIGHT 1
 #define ADM_QT_THEME_DARK 2
+
+#ifdef _WIN32
+// Keep the native Windows title bar in sync with the selected Qt theme.
+static void setWindowsTitleBarTheme(QWidget *window, bool dark)
+{
+    // The saved theme is applied before the main window is shown.
+    if (!window->isVisible())
+        return;
+
+    // Run after Qt has finished changing the style and closing the theme menu.
+    QTimer::singleShot(0, window, [window, dark]()
+    {
+        HMODULE dwm = LoadLibraryExW(L"dwmapi.dll", NULL, LOAD_LIBRARY_SEARCH_SYSTEM32);
+        if (!dwm)
+            return;
+
+        typedef HRESULT (WINAPI *DwmSetWindowAttributeFn)(HWND, DWORD, LPCVOID, DWORD);
+        DwmSetWindowAttributeFn setAttribute = reinterpret_cast<DwmSetWindowAttributeFn>(
+            GetProcAddress(dwm, "DwmSetWindowAttribute"));
+        if (setAttribute)
+        {
+            const HWND hwnd = reinterpret_cast<HWND>(window->winId());
+            const BOOL enabled = dark ? TRUE : FALSE;
+            // Attribute 20 is current; older Windows 10 builds use attribute 19.
+            HRESULT result = setAttribute(hwnd, 20, &enabled, sizeof(enabled));
+            if (FAILED(result))
+                result = setAttribute(hwnd, 19, &enabled, sizeof(enabled));
+            if (SUCCEEDED(result))
+            {
+                SetWindowPos(hwnd, NULL, 0, 0, 0, 0,
+                             SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED);
+
+                // Refresh the native caption directly, without delivering artificial
+                // activation messages to Qt's window procedure.
+                const BOOL active = GetActiveWindow() == hwnd;
+                DefWindowProcW(hwnd, WM_NCACTIVATE, !active, 0);
+                DefWindowProcW(hwnd, WM_NCACTIVATE, active, 0);
+            }
+        }
+        FreeLibrary(dwm);
+    });
+}
+#endif
 
 #if defined(USE_SDL) && (!defined(_WIN32) && !defined(__APPLE__))
 #define SDL_ON_LINUX
@@ -1986,6 +2034,7 @@ void MainWindow::setDefaultThemeSlot(bool b)
 #endif
 #ifdef _WIN32
     setTimeDisplaySize();
+    setWindowsTitleBarTheme(this, false);
 #endif
     defaultThemeAction->setChecked(true);
     lightThemeAction->setChecked(false);
@@ -2036,6 +2085,7 @@ void MainWindow::setLightTheme(void)
 #endif
 #ifdef _WIN32
     setTimeDisplaySize();
+    setWindowsTitleBarTheme(this, false);
 #endif
     defaultThemeAction->setChecked(false);
     lightThemeAction->setChecked(true);
@@ -2098,6 +2148,7 @@ void MainWindow::setDarkTheme(void)
 #endif
 #ifdef _WIN32
     setTimeDisplaySize();
+    setWindowsTitleBarTheme(this, true);
 #endif
     defaultThemeAction->setChecked(false);
     lightThemeAction->setChecked(false);
@@ -2962,6 +3013,9 @@ uint8_t initGUI(const vector<IScriptEngine *> &scriptEngines)
     uiIsMaximized = false;
     bool vuMeterIsHidden = false;
     bool statusbarHidden = false;
+#ifdef _WIN32
+    bool darkTitleBar = false;
+#endif
     QSettings *qset = qtSettingsCreate();
     if (qset)
     {
@@ -2975,6 +3029,9 @@ uint8_t initGUI(const vector<IScriptEngine *> &scriptEngines)
             break;
         case ADM_QT_THEME_DARK:
             mw->setDarkTheme();
+#ifdef _WIN32
+            darkTitleBar = true;
+#endif
             break;
         default:
             break;
@@ -3008,6 +3065,7 @@ uint8_t initGUI(const vector<IScriptEngine *> &scriptEngines)
     // results in window state and window size going out of sync.
     // As a workaround, open non-maximized and maximize later in UI_RunApp().
     QuiMainWindows->show();
+    setWindowsTitleBarTheme(mw, darkTitleBar);
 #else
     if (uiIsMaximized)
     {
