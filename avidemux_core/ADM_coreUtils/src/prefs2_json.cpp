@@ -34,6 +34,7 @@ json.addUint32("cap_refresh_value",key->features.cap_refresh_value);
 json.addString("sdlDriver",key->features.sdlDriver);
 json.addBool("use_last_read_dir_as_target",key->features.use_last_read_dir_as_target);
 json.addBool("swap_mouse_wheel",key->features.swap_mouse_wheel);
+json.addBool("remember_window_position",key->features.remember_window_position);
 json.endNode();
 json.addNode("keyboard_shortcuts");
 json.addBool("use_alternate_kbd_shortcuts",key->keyboard_shortcuts.use_alternate_kbd_shortcuts);

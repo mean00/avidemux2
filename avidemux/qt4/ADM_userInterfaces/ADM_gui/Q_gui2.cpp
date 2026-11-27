@@ -2948,6 +2948,60 @@ int UI_Init(int nargc, char **nargv)
     return 1;
 }
 
+/**
+ * \brief Main window frame saved on the previous exit, used if "remember window position" is enabled
+ */
+static QRect savedMainWindowFrame;
+static bool hasSavedMainWindowFrame = false;
+
+/**
+ * \fn admRememberWindowPosition
+ * \brief True if the user wants the main window to keep its position and its screen corner
+ */
+static bool admRememberWindowPosition(void)
+{
+    bool remember = false;
+    if (!prefs || !prefs->get(FEATURES_REMEMBER_WINDOW_POSITION, &remember))
+        return false;
+    return remember;
+}
+
+/**
+ * \fn admAnchoredFramePosition
+ * \brief Compute the top left corner of a window frame having the size newSize so that the window stays
+ * in the corner of the screen it was closest to when it had the geometry oldFrame.
+ * The result is clamped so that the window does not leave the available screen area.
+ */
+static QPoint admAnchoredFramePosition(const QRect &oldFrame, const QSize &newSize)
+{
+    const QPoint center = oldFrame.center();
+#if QT_VERSION < QT_VERSION_CHECK(5, 11, 0)
+    QDesktopWidget *desktop = QApplication::desktop();
+    const QRect avail = desktop->availableGeometry(desktop->screenNumber(center));
+#else
+    QScreen *screen = QGuiApplication::screenAt(center);
+    if (!screen)
+        screen = QGuiApplication::primaryScreen();
+    const QRect avail = screen->availableGeometry();
+#endif
+    int x = oldFrame.x();
+    int y = oldFrame.y();
+    if (center.x() > avail.center().x()) // closer to the right edge, keep the right edge in place
+        x = oldFrame.x() + oldFrame.width() - newSize.width();
+    if (center.y() > avail.center().y()) // closer to the bottom edge, keep the bottom edge in place
+        y = oldFrame.y() + oldFrame.height() - newSize.height();
+    // Make sure the window fits into the available area
+    if (x + newSize.width() > avail.x() + avail.width())
+        x = avail.x() + avail.width() - newSize.width();
+    if (y + newSize.height() > avail.y() + avail.height())
+        y = avail.y() + avail.height() - newSize.height();
+    if (x < avail.x())
+        x = avail.x();
+    if (y < avail.y())
+        y = avail.y();
+    return QPoint(x, y);
+}
+
 uint8_t initGUI(const vector<IScriptEngine *> &scriptEngines)
 {
     MainWindow *mw = new MainWindow(scriptEngines);
@@ -2983,6 +3037,11 @@ uint8_t initGUI(const vector<IScriptEngine *> &scriptEngines)
         mw->ui.horizontalSlider_2->setValue(qset->value("volume", 100).toInt());
         mw->ui.horizontalSlider_2->blockSignals(false);
         statusbarHidden = qset->value("statusbarHidden", false).toBool();
+        if (qset->contains("frameRect"))
+        {
+            savedMainWindowFrame = qset->value("frameRect").toRect();
+            hasSavedMainWindowFrame = savedMainWindowFrame.isValid();
+        }
         qset->endGroup();
         // Hack: allow to drop other Qt-specific settings on application restart
         char *dropSettingsOnLaunch = getenv("ADM_QT_DROP_SETTINGS");
@@ -3019,6 +3078,15 @@ uint8_t initGUI(const vector<IScriptEngine *> &scriptEngines)
         QuiMainWindows->show();
     }
 #endif
+
+    // Put the main window back to the screen corner where it was when the application was closed.
+    // The window keeps its default size until a video gets loaded, only the corner is restored.
+    if (!uiIsMaximized && hasSavedMainWindowFrame && admRememberWindowPosition())
+    {
+        const QPoint pos = admAnchoredFramePosition(savedMainWindowFrame, QuiMainWindows->frameGeometry().size());
+        ADM_info("Restoring the main window position to (%d, %d)\n", pos.x(), pos.y());
+        QuiMainWindows->move(pos);
+    }
 
     uint32_t w, h;
 
@@ -3082,6 +3150,10 @@ void UI_closeGui(void)
         qset->setValue("showMaximized", QuiMainWindows->isMaximized());
         qset->setValue("volume", WIDGET(horizontalSlider_2)->value());
         qset->setValue("statusbarHidden", !(((MainWindow *)QuiMainWindows)->statusBarEnabled()));
+        // Remember where the main window is. Keep the previous value if the window is maximized or minimized.
+        if (admRememberWindowPosition() && !QuiMainWindows->isMaximized() && !QuiMainWindows->isMinimized() &&
+            !QuiMainWindows->isFullScreen())
+            qset->setValue("frameRect", QuiMainWindows->frameGeometry());
         qset->endGroup();
         delete qset;
         qset = NULL;
@@ -3752,8 +3824,25 @@ void UI_resize(uint32_t w, uint32_t h)
         reqh = space.height();
 
     UI_setBlockZoomChangesFlag(true);
+    // Optionally keep the window in the screen corner it is closest to instead of growing towards the center
+    const bool keepCorner = admRememberWindowPosition() && !QuiMainWindows->isMaximized() &&
+                            !QuiMainWindows->isMinimized() && !QuiMainWindows->isFullScreen();
+    const QRect oldFrame = QuiMainWindows->frameGeometry();
+    const QSize oldSize = QuiMainWindows->size();
     QuiMainWindows->resize(reqw, reqh);
     ADM_info("Resizing the main window to %dx%d px (Screen: %dx%d)\n", reqw, reqh, space.width(), space.height());
+    if (keepCorner)
+    {
+        const QSize newSize = QuiMainWindows->size();
+        const QSize newFrameSize(oldFrame.width() + newSize.width() - oldSize.width(),
+                                 oldFrame.height() + newSize.height() - oldSize.height());
+        const QPoint pos = admAnchoredFramePosition(oldFrame, newFrameSize);
+        if (pos != oldFrame.topLeft())
+        {
+            ADM_info("Keeping the main window in its screen corner, moving to (%d, %d)\n", pos.x(), pos.y());
+            QuiMainWindows->move(pos);
+        }
+    }
 #ifdef _WIN32
     QRect fs = QuiMainWindows->frameGeometry();
     int x = fs.x() + fs.width() - space.x() - space.width();

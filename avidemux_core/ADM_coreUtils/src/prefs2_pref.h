@@ -37,6 +37,7 @@ static optionDesc myOptions[] = {
     {FEATURES_SDLDRIVER, "features.sdlDriver", ADM_param_stdstring, "", 0, 0},
     {FEATURES_USE_LAST_READ_DIR_AS_TARGET, "features.use_last_read_dir_as_target", ADM_param_bool, "0", 0, 1},
     {FEATURES_SWAP_MOUSE_WHEEL, "features.swap_mouse_wheel", ADM_param_bool, "0", 0, 1},
+    {FEATURES_REMEMBER_WINDOW_POSITION, "features.remember_window_position", ADM_param_bool, "0", 0, 1},
     {KEYBOARD_SHORTCUTS_USE_ALTERNATE_KBD_SHORTCUTS, "keyboard_shortcuts.use_alternate_kbd_shortcuts", ADM_param_bool,
      "0", 0, 1},
     {KEYBOARD_SHORTCUTS_SWAP_UP_DOWN_KEYS, "keyboard_shortcuts.swap_up_down_keys", ADM_param_bool, "0", 0, 1},

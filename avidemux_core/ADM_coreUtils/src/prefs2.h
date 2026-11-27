@@ -31,6 +31,7 @@ struct  {
 	std::string sdlDriver;
 	bool use_last_read_dir_as_target;
 	bool swap_mouse_wheel;
+	bool remember_window_position;
 }features;
 struct  {
 	bool use_alternate_kbd_shortcuts;
